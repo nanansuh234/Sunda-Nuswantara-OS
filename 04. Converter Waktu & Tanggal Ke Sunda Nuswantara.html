@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Induction Portal v15.1</title>
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --card: #111; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        .container { max-width: 500px; width: 100%; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid var(--neon); padding-bottom: 10px; }
+        .section { background: var(--card); border: 1px solid #222; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        h2 { font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; color: #888; margin-top: 0; }
+        .input-group { margin: 15px 0; display: flex; flex-direction: column; gap: 10px; }
+        label { font-size: 0.8rem; color: #555; }
+        input { background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 8px; font-size: 1rem; outline: none; }
+        .result-box { margin-top: 20px; padding: 15px; background: #000; border-radius: 10px; border-left: 4px solid var(--neon); display: none; }
+        .res-label { font-size: 0.7rem; color: #666; text-transform: uppercase; }
+        .res-val { font-size: 1.4rem; font-weight: bold; color: #fff; margin: 5px 0; }
+        .res-sub { font-size: 0.9rem; color: var(--neon); font-weight: bold; }
+        .footer { text-align: center; font-size: 0.7rem; color: #333; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1 style="margin:0; letter-spacing: 5px;">INDUCTION PORTAL</h1>
+        <p style="font-size:0.8rem; color:#555;">Konversi Tanggal & Waktu Presisi</p>
+    </div>
+
+    <div class="section">
+        <h2>1. Space Portal (Tanggal)</h2>
+        <div class="input-group">
+            <label>Masukkan Tanggal Masehi:</label>
+            <input type="date" id="masehiDate" onchange="convertDate()">
+        </div>
+        <div id="dateResult" class="result-box">
+            <div class="res-label">Hasil Konversi:</div>
+            <div id="resNusDay" class="res-sub" style="font-size: 1.1rem; color: #fff; margin-bottom: 5px;">-</div>
+            <div id="resNusDate" class="res-val">-</div>
+            <div id="resPasaran" class="res-sub">-</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>2. Time Shift (Waktu)</h2>
+        <div class="input-group">
+            <label>Input Jam Masehi (24 Jam):</label>
+            <input type="time" id="masehiTime" onchange="convertTime()">
+        </div>
+        <div id="timeResult" class="result-box">
+            <div class="res-label">Hasil Konversi Jam Nuswantara:</div>
+            <div id="resNusTime" class="res-val">-</div>
+            <div id="resPhase" class="res-sub">-</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const saptawara = ["Sukra (Jumat)", "Tumpak (Sabtu)", "Radite (Minggu)", "Soma (Senin)", "Anggara (Selasa)", "Budha (Rabu)", "Respati (Kamis)"];
+    
+    // Konfigurasi Awal Tahun (Tahun 001/2025 mulai dari Sukra/Index 0)
+    const yearConfig = {
+        "2025": { offset: 0 },
+        "2026": { offset: 1 },
+        "2027": { offset: 2 },
+        "2028": { offset: 4 }
+    };
+
+    function convertDate() {
+        const input = document.getElementById('masehiDate').value;
+        if(!input) return;
+        const d = new Date(input);
+        const yStr = d.getFullYear().toString();
+        
+        // Anchor: 21 Maret
+        let anchor = new Date(d.getFullYear(), 2, 21);
+        if (d < anchor) anchor = new Date(d.getFullYear() - 1, 2, 21);
+        
+        let diff = Math.floor((d - anchor) / 86400000);
+        let mIdx = Math.floor(diff / 28);
+        let dNus = (diff % 28) + 1;
+        
+        // Hitung Hari Saptawara
+        // Logic: (Awal Tahun Hari + Total Hari) % 7
+        let yearStartOffset = yearConfig[yStr] ? yearConfig[yStr].offset : 0;
+        let dayIdx = (yearStartOffset + (diff % 7)) % 7;
+        
+        // Hitung Pasaran
+        // Anchor Tetap: 21 Mar 2025 = Pon (Index 2)
+        let totalDaysFromBase = Math.floor((d - new Date(2025, 2, 21)) / 86400000);
+        let pIdx = (2 + (totalDaysFromBase % 5) + 5) % 5;
+
+        if (mIdx > 12) {
+            document.getElementById('resNusDay').innerText = "DINA SUWUNG";
+            document.getElementById('resNusDate').innerText = "Day Out of Time";
+            document.getElementById('resPasaran').innerText = "-";
+        } else {
+            document.getElementById('resNusDay').innerText = saptawara[dayIdx].toUpperCase();
+            document.getElementById('resNusDate').innerText = `${dNus} ${months[mIdx]} ${d.getFullYear() - 2024}`;
+            document.getElementById('resPasaran').innerText = `PASARAN: ${pasarans[pIdx]}`;
+        }
+        document.getElementById('dateResult').style.display = 'block';
+    }
+
+    function convertTime() {
+        const input = document.getElementById('masehiTime').value;
+        if(!input) return;
+        const [h, m] = input.split(':').map(Number);
+        let totalMasehiMin = ((h % 12) * 60) + m;
+        let nHoursTotal = totalMasehiMin / 90;
+        let nH = Math.floor(nHoursTotal) || 8;
+        let nM = Math.floor((nHoursTotal % 1) * 90);
+        document.getElementById('resNusTime').innerText = `WAKTU ${String(nH).padStart(2,'0')}:${String(nM).padStart(2,'0')}`;
+        document.getElementById('timeResult').style.display = 'block';
+    }
+</script>
+</body>
+</html>

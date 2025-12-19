@@ -1,0 +1,87 @@
+<div class="card" style="border: 2px solid #d4af37; background: #050505; border-radius: 20px; padding: 25px; font-family: 'Segoe UI', sans-serif; color: #ccc; max-width: 500px; margin: auto;">
+    <span class="badge" style="color: #d4af37; letter-spacing: 4px; display: block; text-align: center; font-size: 0.7rem; margin-bottom: 10px;">SCRIPT RESONATOR</span>
+    <h2 style="text-align: center; margin-bottom: 20px; color: #fff; text-transform: uppercase;">Aksara Hanacaraka</h2>
+
+    <div style="background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 10px; border: 1px dashed #444; margin-bottom: 20px; font-size: 0.8rem; line-height: 1.4;">
+        <i style="color: #d4af37;">"Aksara adalah getaran yang terwujud. Ketikkan namamu untuk melihat bentuk resonansinya."</i>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label style="font-size: 0.7rem; color: #888; text-transform: uppercase;">Ketik Latin di Sini:</label>
+        <input type="text" id="latin-input" oninput="convertToJawa()" placeholder="Contoh: hanacaraka" style="width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 1.1rem; margin-top: 5px; outline: none; border-color: #d4af37; box-sizing: border-box;">
+    </div>
+
+    <div style="background: #111; padding: 25px; border-radius: 15px; text-align: center; border: 1px solid #222; min-height: 100px; display: flex; align-items: center; justify-content: center;">
+        <div id="jawa-output" style="font-size: 2.8rem; color: #d4af37; font-family: 'Noto Sans Javanese', serif; line-height: 1.5; word-break: break-all;">ꦲꦤꦕꦫꦏ</div>
+    </div>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <button onclick="copyAksara()" style="background: none; border: 1px solid #444; color: #888; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; transition: 0.3s;" onmouseover="this.style.borderColor='#d4af37'; this.style.color='#d4af37'">SALIN AKSARA</button>
+    </div>
+</div>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Javanese&display=swap" rel="stylesheet">
+
+<script>
+    function convertToJawa() {
+        let latin = document.getElementById('latin-input').value.toLowerCase();
+        if (!latin) {
+            document.getElementById('jawa-output').innerText = "ꦲꦤꦕꦫꦏ";
+            return;
+        }
+
+        const map = {
+            'h': 'ꦲ', 'n': 'ꦤ', 'c': 'ꦕ', 'r': 'ꦫ', 'k': 'ꦏ',
+            'd': 'ꦢ', 't': 'ꦠ', 's': 'ꦱ', 'w': 'ꦮ', 'l': 'ꦭ',
+            'p': 'Entryꦥ', 'dh': 'ꦝ', 'j': 'ꦗ', 'y': 'ꦪ', 'ny': 'ꦚ',
+            'm': 'ꦩ', 'g': 'Selectionꦒ', 'b': 'ꦧ', 'th': 'ꦛ', 'ng': 'ꦔ',
+            'p': 'ꦥ', 'g': 'ꦒ'
+        };
+
+        const swara = {
+            'i': '\uA9B6', // Wulu
+            'u': '\uA9B8', // Suku
+            'e': '\uA9B9', // Taling (depan)
+            'o': '\uA9B9' + '◌' + '\uA9BA' // Taling Tarung (simulasi)
+        };
+
+        let res = "";
+        let i = 0;
+        while (i < latin.length) {
+            let found = false;
+            // Cek 3 huruf (nya, ng...)
+            let tiga = latin.substring(i, i + 3);
+            let dua = latin.substring(i, i + 2);
+            let satu = latin.substring(i, i + 1);
+
+            if (tiga === "nya") { res += "ꦚ"; i += 3; found = true; }
+            else if (dua === "ng") { res += "ꦔ"; i += 2; found = true; }
+            else if (dua === "dh") { res += "ꦝ"; i += 2; found = true; }
+            else if (dua === "th") { res += "ꦛ"; i += 2; found = true; }
+            else if (dua === "ny") { res += "ꦚ"; i += 2; found = true; }
+            else if (map[satu]) { 
+                // Logika vokal sederhana
+                let next = latin.substring(i + 1, i + 2);
+                if (next === "i") { res += map[satu] + "\uA9B6"; i += 2; }
+                else if (next === "u") { res += map[satu] + "\uA9B8"; i += 2; }
+                else if (next === "e") { res += "\uA9B9" + map[satu]; i += 2; }
+                else if (next === "o") { res += "\uA9B9" + map[satu] + "\uA9BA"; i += 2; }
+                else if (next === "a") { res += map[satu]; i += 2; }
+                else { res += map[satu]; i++; } // default 'a'
+                found = true;
+            } else {
+                res += satu; // Karakter lain (spasi dll)
+                i++;
+                found = true;
+            }
+        }
+        document.getElementById('jawa-output').innerText = res;
+    }
+
+    function copyAksara() {
+        const text = document.getElementById('jawa-output').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Aksara berhasil disalin ke clipboard!");
+        });
+    }
+</script>

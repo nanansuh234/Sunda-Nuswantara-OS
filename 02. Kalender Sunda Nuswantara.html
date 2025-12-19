@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara OS v12.3 - Full Holiday Sync</title>
+    <style>
+        :root { --neon: #d4af37; --bg: #0a0a0a; --card: #151515; --holiday: #ff4444; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .year-title { font-size: 1rem; letter-spacing: 2px; font-style: italic; color: #888; }
+        .controls { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        select, button { background: #000; border: 1px solid var(--neon); color: var(--neon); padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .calendar-card { background: var(--card); border: 2px solid #222; border-radius: 15px; padding: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.5); width: 100%; max-width: 550px; }
+        .month-name { font-size: 1.8rem; font-weight: bold; text-align: center; margin-bottom: 20px; letter-spacing: 5px; text-transform: uppercase; color: #fff; }
+        .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .day-label { text-align: center; font-size: 0.65rem; color: #555; font-weight: bold; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .date-cell { aspect-ratio: 1/1; border: 1px solid #222; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; position: relative; }
+        .date-num { font-size: 1.1rem; font-weight: bold; color: #eee; }
+        .pasaran-label { font-size: 0.5rem; color: var(--neon); margin-top: 2px; }
+        .is-holiday { border-color: var(--holiday) !important; background: rgba(255, 68, 68, 0.05); }
+        .is-holiday .date-num { color: var(--holiday); }
+        .holiday-dot { width: 4px; height: 4px; background: var(--holiday); border-radius: 50%; position: absolute; bottom: 4px; }
+        .today { border: 2px solid var(--neon) !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+        .today::after { content: 'NOW'; position: absolute; top: -8px; background: var(--neon); color: #000; font-size: 0.45rem; padding: 1px 4px; border-radius: 3px; font-weight: bold; }
+        .holiday-info { width: 100%; max-width: 550px; margin-top: 20px; background: #111; padding: 15px; border-radius: 10px; border: 1px solid #222; }
+        .holiday-item { font-size: 0.85rem; color: #ccc; margin-bottom: 5px; border-left: 3px solid var(--holiday); padding-left: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 style="letter-spacing: 5px; margin: 0;">NUSWANTARA OS</h1>
+        <div id="yearLabel" class="year-title">Tahun 001 - Air</div>
+    </div>
+
+    <div class="controls">
+        <select id="yearSelect" onchange="render()"></select>
+        <button onclick="changeMonth(-1)"> < </button>
+        <select id="monthSelect" onchange="render()"></select>
+        <button onclick="changeMonth(1)"> > </button>
+    </div>
+
+    <div class="calendar-card">
+        <div id="monthDisplay" class="month-name">WIWITAN</div>
+        <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="holiday-info">
+        <div style="font-size: 0.7rem; color: #555; text-transform: uppercase; margin-bottom: 10px;">Agenda & Libur Nasional</div>
+        <div id="holidayList"></div>
+    </div>
+
+<script>
+    const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const baseDays = ["Sukra (S)", "Tumpak (T)", "Radite (R)", "Soma (S)", "Anggara (A)", "Budha (B)", "Respati (R)"];
+    
+    const yearConfig = {
+        "2025": { label: "Tahun 001 - Air (Venus)", offset: 0 },
+        "2026": { label: "Tahun 002 - Batu (Saturnus)", offset: 1 },
+        "2027": { label: "Tahun 003 - Surya (Matahari)", offset: 2 }
+    };
+
+    const holidays = {
+        "2025": [
+            {m:9, d:28, n:"Hari Raya Natal"},
+            {m:10, d:1, n:"Cuti Bersama Natal"},
+            {m:10, d:7, n:"Tahun Baru Masehi"},
+            {m:10, d:22, n:"Isra Mi'raj 1447 H"},
+            {m:11, d:25, n:"Cuti Bersama Imlek"},
+            {m:11, d:26, n:"Tahun Baru Imlek 2577"},
+            {m:12, d:27, n:"Cuti Bersama Nyepi"},
+            {m:12, d:28, n:"Hari Raya Nyepi 1948"}
+        ],
+        "2026": [
+            {m:0, d:1, n:"Hari Raya Idul Fitri 1447 H"},
+            {m:0, d:2, n:"Hari Raya Idul Fitri 1447 H"},
+            {m:0, d:14, n:"Wafat Yesus Kristus"},
+            {m:1, d:14, n:"Hari Buruh Internasional"},
+            {m:2, d:12, n:"Idul Adha 1447 H"},
+            {m:2, d:17, n:"Hari Lahir Pancasila"},
+            {m:5, d:10, n:"Proklamasi Kemerdekaan RI"},
+            {m:6, d:19, n:"Maulid Nabi Muhammad SAW"},
+            {m:9, d:28, n:"Hari Raya Natal"},
+            {m:11, d:15, n:"Tahun Baru Imlek 2578"}
+        ],
+        "2027": [
+            {m:0, d:1, n:"Hari Raya Idul Fitri 1448 H"},
+            {m:10, d:7, n:"Tahun Baru Masehi"}
+        ]
+    };
+
+    function init() {
+        const mSel = document.getElementById('monthSelect');
+        const ySel = document.getElementById('yearSelect');
+        months.forEach((m, i) => mSel.innerHTML += `<option value="${i}">Bulan ${i+1}: ${m}</option>`);
+        Object.keys(yearConfig).forEach(y => ySel.innerHTML += `<option value="${y}">Tahun ${y}</option>`);
+        
+        let now = new Date();
+        let anchor = new Date(now.getFullYear(), 2, 21);
+        if (now < anchor) anchor = new Date(now.getFullYear() - 1, 2, 21);
+        let diff = Math.floor((now - anchor) / 86400000);
+        
+        let targetMonth = Math.floor(diff / 28);
+        document.getElementById('monthSelect').value = targetMonth > 12 ? 12 : targetMonth;
+        document.getElementById('yearSelect').value = now.getFullYear();
+        render();
+    }
+
+    function render() {
+        const yr = document.getElementById('yearSelect').value;
+        const mIdx = parseInt(document.getElementById('monthSelect').value);
+        const config = yearConfig[yr];
+        
+        document.getElementById('monthDisplay').innerText = months[mIdx].toUpperCase();
+        document.getElementById('yearLabel').innerText = config.label;
+        
+        const grid = document.getElementById('grid');
+        grid.innerHTML = "";
+
+        let currentDays = [...baseDays];
+        for(let i=0; i<config.offset; i++) { currentDays.push(currentDays.shift()); }
+        currentDays.forEach(d => grid.innerHTML += `<div class="day-label">${d}</div>`);
+
+        const hList = document.getElementById('holidayList');
+        hList.innerHTML = "";
+        const mHolidays = (holidays[yr] || []).filter(h => h.m === mIdx);
+
+        let now = new Date();
+        let anchor = new Date(now.getFullYear(), 2, 21);
+        if (now < anchor) anchor = new Date(now.getFullYear() - 1, 2, 21);
+        let realDiff = Math.floor((now - anchor) / 86400000);
+        let realM = Math.floor(realDiff / 28);
+        let realD = (realDiff % 28) + 1;
+
+        for (let d = 1; d <= 28; d++) {
+            const isHoli = mHolidays.find(h => h.d === d);
+            let cell = document.createElement('div');
+            cell.className = 'date-cell';
+            if (isHoli) cell.classList.add('is-holiday');
+            if (mIdx === realM && d === realD && yr == now.getFullYear()) cell.classList.add('today');
+
+            let totalDaysForPasaran = ((yr - 2025) * 365) + (mIdx * 28) + (d - 1);
+            let pIdx = (2 + (totalDaysForPasaran % 5)) % 5;
+
+            cell.innerHTML = `<div class="date-num">${d}</div><div class="pasaran-label">${pasarans[pIdx]}</div>`;
+            if(isHoli) {
+                cell.innerHTML += `<div class="holiday-dot"></div>`;
+                hList.innerHTML += `<div class="holiday-item">Tgl ${d}: ${isHoli.n}</div>`;
+            }
+            grid.appendChild(cell);
+        }
+        if(!hList.innerHTML) hList.innerHTML = "<div style='color:#444; font-size:0.8rem;'>Tidak ada libur nasional.</div>";
+    }
+
+    function changeMonth(step) {
+        let s = document.getElementById('monthSelect');
+        let val = parseInt(s.value) + step;
+        if(val >= 0 && val <= 12) { s.value = val; render(); }
+    }
+
+    init();
+</script>
+</body>
+</html>

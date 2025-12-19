@@ -1,0 +1,150 @@
+<div class="card" style="border: 2px solid #27ae60; background: #050505; border-radius: 20px; padding: 25px; font-family: 'Segoe UI', sans-serif; color: #ccc;">
+    <span class="badge" style="color: #27ae60; letter-spacing: 4px; display: block; text-align: center; font-size: 0.7rem; margin-bottom: 10px;">LUMBUNG NUSWANTARA</span>
+    <h2 style="text-align: center; margin-bottom: 20px; color: #fff; text-transform: uppercase;">Blueprint Tanam Mandiri</h2>
+
+    <div style="margin-bottom: 25px;">
+        <label style="font-size: 0.75rem; color: #27ae60; font-weight: bold; display: block; margin-bottom: 8px;">PILIH KOMODITAS (PANGAN / REMPAH / HERBAL):</label>
+        <select id="plant-selector" onchange="showPlantLogic()" style="width: 100%; padding: 15px; background: #111; border: 1px solid #333; color: #fff; border-radius: 10px; cursor: pointer; font-size: 1rem; outline: none;">
+            <option value="">-- Ketuk Untuk Memilih --</option>
+            <optgroup label="PANGAN UTAMA">
+                <option value="padi">Padi Sawah (Energi Karbo)</option>
+                <option value="jagung">Jagung (Ketahanan Pangan)</option>
+                <option value="singkong">Singkong (Cadangan Pangan)</option>
+            </optgroup>
+            <optgroup label="REMPAH & BUMBU">
+                <option value="cabai">Cabai Rawit (Stimulan)</option>
+                <option value="tomat">Tomat (Antioksidan)</option>
+                <option value="bawang">Bawang Merah (Antibiotik Alami)</option>
+            </optgroup>
+            <optgroup label="HERBAL / APOTEK HIDUP">
+                <option value="jahe">Jahe Merah (Penghangat Tubuh)</option>
+                <option value="kunyit">Kunyit (Detoks Atma)</option>
+                <option value="kencur">Kencur (Energi Paru)</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <div id="plant-display" style="display: none; background: #000; padding: 20px; border-radius: 15px; border: 1px solid #222;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+            <div>
+                <h3 id="plant-name" style="margin: 0; color: #27ae60; font-size: 1.4rem; letter-spacing: 1px;">---</h3>
+                <div id="ideal-start" style="font-size: 0.85rem; color: #aaa; margin-top: 5px;">Waktu Tanam: ---</div>
+            </div>
+            <div style="text-align: right;">
+                <div id="duration-tag" style="background: #27ae60; color: #000; padding: 4px 12px; border-radius: 5px; font-weight: bold; font-size: 0.8rem;">---</div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 10px; font-size: 0.65rem; color: #555; letter-spacing: 2px; text-transform: uppercase;">Blueprint Pertumbuhan (Visual Progres)</div>
+        <div id="plant-strips" style="display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; margin-bottom: 20px;"></div>
+
+        <div style="background: #111; padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60;">
+            <div id="current-phase-title" style="font-weight: bold; color: #fff; margin-bottom: 8px; font-size: 0.9rem;">FILOSOFI & ESTIMASI:</div>
+            <div id="phase-description" style="font-size: 0.85rem; color: #999; line-height: 1.6;">---</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const plantDatabase = {
+        padi: {
+            name: "PADI SAWAH",
+            start: "Bulan Wiwitan (Maret/April)",
+            duration: "120 Hari",
+            desc: "Pangan pokok Ksatria. Menanam di awal musim hujan memastikan bulir berisi penuh.",
+            phases: ["Penyemaian (20 hari)", "Vegetatif (40 hari)", "Pembungaan (30 hari)", "Pematangan (30 hari)"]
+        },
+        jagung: {
+            name: "JAGUNG",
+            start: "Bulan Trubus (Mei/Juni)",
+            duration: "90 Hari",
+            desc: "Pangan pendamping yang tangguh. Sangat efisien dalam penggunaan air tanah sisa hujan.",
+            phases: ["Awal (15 hari)", "Pertumbuhan (30 hari)", "Tongkol (20 hari)", "Panen (25 hari)"]
+        },
+        singkong: {
+            name: "SINGKONG",
+            start: "Bulan Wiwitan s/d Trubus",
+            duration: "270 Hari",
+            desc: "Tabungan energi di bawah tanah. Semakin tenang tanahnya, semakin besar umbinya.",
+            phases: ["Tunas (30 hari)", "Daun (60 hari)", "Umbi (150 hari)", "Purnaka (30 hari)"]
+        },
+        cabai: {
+            name: "CABAI RAWIT",
+            start: "Bulan Baskara (Agustus)",
+            duration: "150 Hari",
+            desc: "Pembangkit semangat. Membutuhkan panas matahari terik untuk mematangkan rasa pedasnya.",
+            phases: ["Semaian (30 hari)", "Tumbuh (40 hari)", "Berbunga (30 hari)", "Panen (50 hari)"]
+        },
+        bawang: {
+            name: "BAWANG MERAH",
+            start: "Bulan Teja (Juli/Agustus)",
+            duration: "60-70 Hari",
+            desc: "Obat alami. Menanam di musim kemarau menghasilkan umbi yang lebih awet dan kuat aromanya.",
+            phases: ["Tunas (15 hari)", "Vegetatif (20 hari)", "Umbi (20 hari)", "Panen (10 hari)"]
+        },
+        tomat: {
+            name: "TOMAT",
+            start: "Bulan Huma (Oktober)",
+            duration: "100 Hari",
+            desc: "Penyegar raga. Menanam saat suhu mulai stabil untuk menghindari rontoknya bunga.",
+            phases: ["Awal (30 hari)", "Bunga (20 hari)", "Buah (30 hari)", "Matang (20 hari)"]
+        },
+        jahe: {
+            name: "JAHE MERAH",
+            start: "Bulan Wiwitan (Hujan Awal)",
+            duration: "300 Hari",
+            desc: "Herbal inti. Membutuhkan waktu lama di bawah naungan untuk memadatkan minyak atsiri.",
+            phases: ["Tunas (45 hari)", "Rimpang Awal (90 hari)", "Pembesaran (120 hari)", "Panen (45 hari)"]
+        },
+        kunyit: {
+            name: "KUNYIT",
+            start: "Bulan Wiwitan / Gangga",
+            duration: "240-300 Hari",
+            desc: "Antibiotik semesta. Siklusnya mengikuti putaran tahunan matahari untuk kualitas kurkumin terbaik.",
+            phases: ["Tunas (30 hari)", "Batang (90 hari)", "Rimpang (120 hari)", "Tua/Panen (60 hari)"]
+        },
+        kencur: {
+            name: "KENCUR",
+            start: "Bulan Wiwitan",
+            duration: "180-240 Hari",
+            desc: "Penangkal stres. Tumbuh baik di tempat lembap di bawah tajuk pohon lain.",
+            phases: ["Awal (30 hari)", "Daun (60 hari)", "Rimpang (90 hari)", "Dormansi/Panen (60 hari)"]
+        }
+    };
+
+    function showPlantLogic() {
+        const val = document.getElementById('plant-selector').value;
+        const display = document.getElementById('plant-display');
+        
+        if (!val) {
+            display.style.display = 'none';
+            return;
+        }
+
+        const data = plantDatabase[val];
+        display.style.display = 'block';
+        document.getElementById('plant-name').innerText = data.name;
+        document.getElementById('ideal-start').innerText = "Waktu Tanam: " + data.start;
+        document.getElementById('duration-tag').innerText = data.duration;
+        
+        document.getElementById('phase-description').innerHTML = `
+            <span style="color:var(--neon)">[Filosofi]</span> ${data.desc}<br><br>
+            <span style="color:var(--neon)">[Tahapan Siklus]</span>:<br>
+            • ${data.phases.join('<br>• ')}
+        `;
+
+        // Render Strips
+        const container = document.getElementById('plant-strips');
+        container.innerHTML = "";
+        for (let i = 0; i < 28; i++) {
+            const s = document.createElement('div');
+            s.style.height = "10px";
+            s.style.borderRadius = "2px";
+            // Gradasi warna dari Hijau Hutan ke Kuning Emas
+            if (i < 10) s.style.background = "#1b5e20";
+            else if (i < 20) s.style.background = "#4caf50";
+            else s.style.background = "#d4af37";
+            container.appendChild(s);
+        }
+    }
+</script>

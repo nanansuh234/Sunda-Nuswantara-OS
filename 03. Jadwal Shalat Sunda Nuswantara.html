@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara OS v14 - Precision Sync</title>
+    <style>
+        :root { 
+            --neon: #d4af37; --bg: #050505; --tick: #ffffff;
+            --z1: rgba(255, 215, 0, 0.15); --z2: rgba(255, 69, 0, 0.15);
+            --z3: rgba(0, 255, 127, 0.15); --z4: rgba(30, 144, 255, 0.15);
+        }
+        * { box-sizing: border-box; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; }
+        
+        /* Jam Analog Bulat Sempurna */
+        .clock { position: relative; width: 320px; height: 320px; border: 6px solid var(--neon); border-radius: 50%; background: #000; box-shadow: 0 0 40px rgba(212, 175, 55, 0.2); margin-bottom: 25px; }
+        .zones { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(var(--z1) 0deg 90deg, var(--z2) 90deg 180deg, var(--z3) 180deg 270deg, var(--z4) 270deg 360deg); }
+        
+        /* Strip 6 Baris per Jam */
+        .tick { position: absolute; width: 100%; height: 100%; }
+        .tick::after { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 12px; background: var(--tick); transform: translateX(-50%); opacity: 0.4; }
+        .tick-main::after { height: 22px; background: #fff; width: 4px; opacity: 1; }
+        
+        .number { position: absolute; width: 100%; height: 100%; text-align: center; font-size: 1.8rem; font-weight: bold; padding-top: 25px; color: #fff; z-index: 6; }
+
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: var(--neon); border-radius: 10px; z-index: 10; transition: transform 0.5s cubic-bezier(0.4, 2.3, 0.6, 1); }
+        .hour-hand { width: 10px; height: 90px; }
+        .min-hand { width: 5px; height: 135px; background: #fff; opacity: 0.8; }
+        .center-dot { position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; background: var(--neon); border-radius: 50%; transform: translate(-50%, -50%); z-index: 11; border: 3px solid #000; }
+
+        /* Digital Display */
+        .digital-box { background: #111; padding: 15px 30px; border-radius: 12px; border: 1px solid #222; margin-bottom: 20px; text-align: center; width: 100%; max-width: 320px; }
+        .dig-time { font-size: 2.8rem; font-family: 'Courier New', monospace; font-weight: bold; color: #fff; text-shadow: 0 0 10px var(--neon); }
+        .dig-label { font-size: 0.8rem; letter-spacing: 4px; color: var(--neon); margin-top: 5px; }
+
+        /* Prayer Panel Sync */
+        .prayer-sync { width: 100%; max-width: 400px; background: rgba(20,20,20,0.8); padding: 15px; border-radius: 15px; border: 1px solid #333; }
+        .p-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dotted #333; font-size: 0.9rem; }
+        .p-name { color: #888; text-transform: uppercase; font-size: 0.7rem; }
+        .p-nus { color: var(--neon); font-weight: bold; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <h2 style="letter-spacing: 6px; margin-bottom: 10px;">NUSWANTARA OS</h2>
+
+    <div class="clock" id="clock">
+        <div class="zones"></div>
+        <div class="center-dot"></div>
+        <div class="hand hour-hand" id="hrHand"></div>
+        <div class="hand min-hand" id="minHand"></div>
+    </div>
+
+    <div class="digital-box">
+        <div id="dig-time" class="dig-time">00:00</div>
+        <div id="dig-ampm" class="dig-label">SIANG / MALAM</div>
+    </div>
+
+    <div class="prayer-sync">
+        <div style="font-size:0.6rem; color:#555; text-align:center; margin-bottom:10px; letter-spacing:2px;">GARUT PRAYER SYNC (NUSWANTARA TIME)</div>
+        <div id="p-list"></div>
+    </div>
+
+<script>
+    // 1. Build Analog Face (48 Ticks = 8 hours * 6 strips)
+    const clock = document.getElementById('clock');
+    for(let i=0; i<48; i++) {
+        let t = document.createElement('div');
+        t.className = (i % 6 === 0) ? 'tick tick-main' : 'tick';
+        t.style.transform = `rotate(${i * 7.5}deg)`;
+        clock.appendChild(t);
+    }
+    [8, 1, 2, 3, 4, 5, 6, 7].forEach((num, i) => {
+        let n = document.createElement('div'); n.className = 'number';
+        n.style.transform = `rotate(${i * 45}deg)`;
+        n.innerHTML = `<div style="transform: rotate(-${i * 45}deg)">${num}</div>`;
+        clock.appendChild(n);
+    });
+
+    // 2. Prayer Times Garut (Masehi)
+    const prayersMasehi = [
+        { n: "Subuh", t: "04:18" }, { n: "Dzuhur", t: "11:51" }, 
+        { n: "Ashar", t: "15:13" }, { n: "Maghrib", t: "18:07" }, { n: "Isya", t: "19:22" }
+    ];
+
+    function convertToNus(timeStr) {
+        const [h, m] = timeStr.split(':').map(Number);
+        let mTotal = ((h % 12) * 60) + m;
+        let nHoursTotal = mTotal / 90;
+        let nH = Math.floor(nHoursTotal) || 8;
+        let nM = Math.floor((nHoursTotal % 1) * 90);
+        return `${String(nH).padStart(2,'0')}:${String(nM).padStart(2,'0')}`;
+    }
+
+    // 3. Update Function
+    function update() {
+        const now = new Date();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        const s = now.getSeconds();
+
+        // NUSWANTARA LOGIC
+        let mTotalMin = ((h % 12) * 60) + m + (s/60);
+        let nTotalHours = mTotalMin / 90;
+        
+        let dH = Math.floor(nTotalHours) || 8;
+        let dM = Math.floor((nTotalHours % 1) * 90);
+
+        // Analog Hands
+        document.getElementById('hrHand').style.transform = `translateX(-50%) rotate(${nTotalHours * 45}deg)`;
+        document.getElementById('minHand').style.transform = `translateX(-50%) rotate(${(nTotalHours % 1) * 360}deg)`;
+
+        // Digital Display
+        document.getElementById('dig-time').innerText = `${String(dH).padStart(2,'0')}:${String(dM).padStart(2,'0')}`;
+        document.getElementById('dig-ampm').innerText = (h >= 6 && h < 18) ? 'SIANG CYCLE' : 'MALAM CYCLE';
+
+        // Prayer Sync Rendering
+        const pList = document.getElementById('p-list');
+        pList.innerHTML = "";
+        prayersMasehi.forEach(p => {
+            pList.innerHTML += `<div class="p-row"><span class="p-name">${p.n}</span><span class="p-nus">${convertToNus(p.t)}</span></div>`;
+        });
+    }
+
+    setInterval(update, 1000);
+    update();
+</script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<div class="card" style="border: 1px solid #00ff88; background: #080808;">
+    <span class="badge" style="color: #00ff88;">RESONANCE HUB</span>
+    <h2>Resonansi Kesadaran</h2>
+    
+    <div class="manual-box" style="margin-bottom:15px; border-color: #00ff88;">
+        <b>Rekomendasi Gelombang Otak:</b><br>
+        <span id="brainwave-info" style="color:#fff; font-size:1rem;">...</span>
+    </div>
+
+    <div style="text-align:center;">
+        <p style="font-size:0.75rem; color:#666;">Punya keraguan hari ini? Tanya semesta.</p>
+        <button onclick="askOracle()" style="background:none; border:1px solid #00ff88; color:#00ff88; padding:10px; font-size:0.8rem; width:auto;">TANYA KEPUTUSAN</button>
+    </div>
+
+    <div id="oracleRes" class="result-panel" style="border-left-color: #00ff88; background:#000;">
+        <div id="oracleText" style="font-size:0.85rem; color:#fff;"></div>
+    </div>
+</div>
+
+<script>
+    function updateResonance() {
+        const h = new Date().getHours();
+        let wave = "";
+        let color = "";
+
+        if (h >= 9 && h < 12) { // Jam Karya
+            wave = "GAMMA (40Hz) - Fokus Tajam & Eksekusi";
+        } else if (h >= 21 || h < 3) { // Jam Hening/Sirepan
+            wave = "DELTA (0.5-4Hz) - Deep Healing & Sleep";
+        } else if (h >= 12 && h < 15) { // Jam Istiwa
+            wave = "THETA (4-8Hz) - Relaksasi & Kreativitas";
+        } else {
+            wave = "ALPHA (8-13Hz) - Tenang & Waspada";
+        }
+        document.getElementById('brainwave-info').innerText = wave;
+    }
+
+    function askOracle() {
+        const now = new Date();
+        const anchor = new Date(2025, 2, 21);
+        const diff = Math.floor((now - anchor) / 86400000);
+        const pIdx = (2 + (diff % 5) + 5) % 5;
+        const psrn = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"][pIdx];
+
+        const logic = {
+            "Legi": "Energi sedang 'Manis'. Ambil keputusan yang berkaitan dengan profit atau memulai hal baru.",
+            "Pahing": "Energi sedang 'Panas'. Bagus untuk memutuskan hal-hal yang butuh ketegasan dan keberanian.",
+            "Pon": "Energi sedang 'Tampil'. Cocok untuk keputusan soal branding, publikasi, atau hubungan sosial.",
+            "Wage": "Energi sedang 'Padat'. Fokus pada keputusan teknis, finansial, dan audit detail.",
+            "Kliwon": "Energi sedang 'Ghaib'. Tunda keputusan material, fokus pada pembersihan masalah lama."
+        };
+
+        document.getElementById('oracleText').innerHTML = `<b>Analisis Pasaran ${psrn}:</b><br>${logic[psrn]}`;
+        document.getElementById('oracleRes').style.display = 'block';
+    }
+
+    setInterval(updateResonance, 60000);
+    updateResonance();
+</script>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Daily Oracle</title>
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --card: #111; }
+        body { background: var(--bg); color: #ccc; font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .oracle-card { max-width: 700px; width: 100%; background: var(--card); border: 2px solid var(--neon); border-radius: 20px; padding: 25px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); }
+        
+        .oracle-header { text-align: center; margin-bottom: 25px; }
+        .pasaran-tag { display: inline-block; background: var(--neon); color: #000; padding: 5px 20px; border-radius: 50px; font-weight: bold; font-size: 1.2rem; letter-spacing: 2px; }
+        .energy-desc { font-style: italic; color: #888; margin-top: 10px; font-size: 0.9rem; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
+        th { background: #1a1a1a; color: var(--neon); padding: 12px; text-align: left; border-bottom: 2px solid var(--neon); text-transform: uppercase; letter-spacing: 1px; }
+        td { padding: 12px; border-bottom: 1px solid #222; vertical-align: top; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+
+        .time-col { font-family: monospace; font-weight: bold; color: #fff; white-space: nowrap; }
+        .phase-badge { font-size: 0.7rem; font-weight: bold; padding: 2px 6px; border-radius: 4px; background: #333; color: #fff; }
+        
+        .modern-tip { color: var(--neon); font-weight: bold; }
+        .majapahit-act { color: #aaa; }
+    </style>
+</head>
+<body>
+
+<div class="oracle-card">
+    <div class="oracle-header">
+        <div style="font-size: 0.7rem; letter-spacing: 3px; color: #555; margin-bottom: 5px;">STRATEGI HARIAN NUSWANTARA</div>
+        <div id="pasaranDisplay" class="pasaran-tag">...</div>
+        <div id="energyDesc" class="energy-desc">...</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Jam</th>
+                <th>Fase</th>
+                <th>Aktivitas Ksatria</th>
+                <th>Saran Modern</th>
+            </tr>
+        </thead>
+        <tbody id="oracleTable">
+            </tbody>
+    </table>
+
+    <div style="margin-top: 20px; font-size: 0.7rem; color: #444; text-align: center;">
+        *Jadwal ini disinkronkan dengan Bio-Ritme Tubuh & Energi Pasaran Semesta.
+    </div>
+</div>
+
+<script>
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const energyTips = {
+        "Legi": { desc: "Karakter MANIS (Optimisme & Peluang)", tip: "Cari Cuan / Negosiasi" },
+        "Pahing": { desc: "Karakter BARA (Eksekusi & Kekuatan)", tip: "Hajar Deadline / Olahraga" },
+        "Pon": { desc: "Karakter PAMER (Diplomasi & Branding)", tip: "Show Off / Networking" },
+        "Wage": { desc: "Karakter KAKU (Riset & Ketelitian)", tip: "Data / Beresin Hutang" },
+        "Kliwon": { desc: "Karakter ASIH (Spiritual & Problem Solving)", tip: "Meditasi / Ide Kreatif" }
+    };
+
+    const schedule = [
+        { jam: "8 - 2 (Mlm)", fase: "HENING", maja: "Tapa Brata / Tidur Dalam", mod: "Deep Sleep & Recovery" },
+        { jam: "2 - 4 (Mlm)", fase: "FAJAR", maja: "Membaca Lontar / Olah Rasa", mod: "Ide & Strategi Kreatif" },
+        { jam: "4 - 6 (Sng)", fase: "DUHA", maja: "Latihan Panah / Kanuragan", mod: "Olahraga & Planning" },
+        { jam: "6 - 8 (Sng)", fase: "KARYA", maja: "Berdagang / Bertani", mod: "Kerja Fokus (Deep Work)" },
+        { jam: "8 - 2 (Sng)", fase: "ISTIWA", maja: "Istirahat di Pendopo", mod: "Power Nap & Reset" },
+        { jam: "2 - 4 (Sng)", fase: "ASAR", maja: "Diskusi Rakyat / Berburu", mod: "Meeting & Evaluasi" },
+        { jam: "4 - 6 (Mlm)", fase: "SANDIKALA", maja: "Jamuan Keluarga", mod: "Social Time & Dinner" },
+        { jam: "6 - 8 (Mlm)", fase: "SIREPAN", maja: "Kontemplasi / Istirahat", mod: "Digital Detox & Reading" }
+    ];
+
+    function updateOracle() {
+        const now = new Date();
+        const anchor = new Date(2025, 2, 21); // 21 Mar 2025 = Pon (Index 2)
+        const diff = Math.floor((now - anchor) / 86400000);
+        const pIdx = (2 + (diff % 5) + 5) % 5;
+        const curPasaran = pasarans[pIdx];
+
+        document.getElementById('pasaranDisplay').innerText = curPasaran.toUpperCase();
+        document.getElementById('energyDesc').innerText = energyTips[curPasaran].desc;
+
+        const tableBody = document.getElementById('oracleTable');
+        tableBody.innerHTML = "";
+
+        schedule.forEach(item => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td class="time-col">${item.jam}</td>
+                    <td><span class="phase-badge">${item.fase}</span></td>
+                    <td class="majapahit-act">${item.maja}</td>
+                    <td class="modern-tip">${getCustomTip(item, curPasaran)}</td>
+                </tr>
+            `;
+        });
+    }
+
+    function getCustomTip(item, pasaran) {
+        // Logika saran dinamis: Menyesuaikan aktivitas dengan pasaran
+        if (item.fase === "KARYA") {
+            return `Kerja Fokus: ${energyTips[pasaran].tip}`;
+        }
+        if (item.fase === "ASAR") {
+            if (pasaran === "Pon") return "Meeting: Branding Diri";
+            if (pasaran === "Legi") return "Meeting: Jualan/Closing";
+            return "Meeting: Evaluasi Teknis";
+        }
+        return item.mod;
+    }
+
+    updateOracle();
+</script>
+</body>
+</html>
+
+
+<div class="oracle-card" style="margin-top: 20px; border-top: 1px dashed var(--neon); padding-top: 20px; text-align: center;">
+    <div id="mantraDisplay" style="min-height: 80px; display: flex; align-items: center; justify-content: center;">
+        <p style="font-style: italic; color: #888;">"Klik untuk menerima pesan semesta hari ini..."</p>
+    </div>
+    
+    <button onclick="generateMantra()" style="margin-top: 15px; background: none; border: 1px solid var(--neon); color: var(--neon); padding: 10px 25px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s;">
+        DAPATKAN MANTRA
+    </button>
+</div>
+
+<script>
+    const mantras = {
+        "Legi": [
+            "Sugih tanpo bondo, mulyo tanpo dunya. Kekayaan sejati ada pada rasa syukur.",
+            "Manisnya ucapanmu adalah pembuka pintu rezeki hari ini.",
+            "Tanamkan niat yang baik, maka alam akan mengantarkan hasilnya padamu."
+        ],
+        "Pahing": [
+            "Kobarkan api semangatmu, namun jangan sampai membakar ketenangan hatimu.",
+            "Kekuatan fisik adalah titipan, kekuatan mental adalah hasil tempaan.",
+            "Hantam keraguanmu dengan aksi nyata yang berani."
+        ],
+        "Pon": [
+            "Wibawa terpancar dari kejujuran, bukan dari kata-kata yang dibuat-buat.",
+            "Jadilah mercusuar bagi sekitarmu, berikan cahaya tanpa mengharapkan pujian.",
+            "Hari ini adalah panggungmu, tunjukkan karya terbaikmu pada semesta."
+        ],
+        "Wage": [
+            "Ketelitian adalah bentuk penghormatanmu terhadap waktu.",
+            "Dalam diam ada kekuatan yang teratur. Bereskan yang terserak hari ini.",
+            "Kokohkan pijakanmu sebelum melompat lebih jauh."
+        ],
+        "Kliwon": [
+            "Kembali ke dalam diri, temukan jawaban yang selama ini kau cari di luar.",
+            "Kasih sayang adalah bahasa semesta yang paling sakti.",
+            "Heningkan cipta, biarkan ilham mengalir mengisi ruang kosong di kepalamu."
+        ]
+    };
+
+    function generateMantra() {
+        const now = new Date();
+        const anchor = new Date(2025, 2, 21); // 21 Mar 2025 = Pon
+        const diff = Math.floor((now - anchor) / 86400000);
+        const pIdx = (2 + (diff % 5) + 5) % 5;
+        const curPasaran = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"][pIdx];
+        
+        const possibleMantras = mantras[curPasaran];
+        const randomMantra = possibleMantras[Math.floor(Math.random() * possibleMantras.length)];
+        
+        const display = document.getElementById('mantraDisplay');
+        display.style.opacity = 0;
+        
+        setTimeout(() => {
+            display.innerHTML = `
+                <div style="animation: fadeInUp 0.5s ease forwards;">
+                    <span style="font-size: 0.6rem; color: var(--neon); letter-spacing: 2px;">MANTRA ${curPasaran.toUpperCase()}</span>
+                    <p style="font-size: 1.1rem; color: #fff; line-height: 1.6; margin-top: 10px;">"${randomMantra}"</p>
+                </div>
+            `;
+            display.style.opacity = 1;
+        }, 300);
+    }
+</script>
+
+<style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Dashboard OS</title>
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --card: #111; --danger: #ff4444; }
+        body { background: var(--bg); color: #ccc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 550px; width: 100%; }
+        .card { background: var(--card); border: 1px solid #333; padding: 25px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { margin: 10px 0; color: #fff; letter-spacing: 2px; text-transform: uppercase; text-align: center; }
+        .badge { font-size: 0.6rem; letter-spacing: 3px; color: var(--neon); text-align: center; display: block; margin-bottom: 5px; }
+        
+        /* Jam Blocks */
+        .jam-grid { display: flex; gap: 5px; height: 25px; margin: 15px 0; background: #000; padding: 5px; border-radius: 10px; border: 1px solid #222; }
+        .jam-block { flex: 1; border-radius: 5px; background: #1a1a1a; transition: 0.5s; opacity: 0.3; }
+        
+        /* Progress Bar */
+        .bar-outer { width: 100%; height: 35px; background: #000; border-radius: 10px; border: 1px solid #333; overflow: hidden; position: relative; margin: 10px 0; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, #443300, var(--neon)); width: 0%; transition: width 1s linear; }
+        .bar-text { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: bold; color: #000; font-size: 0.8rem; z-index: 2; }
+
+        /* Input Audit */
+        input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--danger); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; text-transform: uppercase; }
+        .result-panel { display: none; margin-top: 20px; padding: 15px; background: #000; border-left: 4px solid var(--danger); border-radius: 5px; }
+
+        .info-box { font-size: 0.75rem; color: #666; text-align: center; line-height: 1.6; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card" style="border-color: var(--neon);">
+        <span class="badge">Siklus Energi Harian</span>
+        <h2 id="clock-nus-digital">00:00:00</h2>
+        <div id="clock-phase-name" style="text-align: center; font-weight: bold; font-size: 0.9rem;">FASE ---</div>
+        
+        <div class="jam-grid">
+            <div class="jam-block"></div><div class="jam-block"></div><div class="jam-block"></div><div class="jam-block"></div>
+            <div class="jam-block"></div><div class="jam-block"></div><div class="jam-block"></div><div class="jam-block"></div>
+        </div>
+        <div class="info-box" id="clock-guide">Mensinkronkan dengan alam...</div>
+    </div>
+
+    <div class="card">
+        <span class="badge">Kapasitas Kesadaran Bulanan</span>
+        <h2 id="month-name">---</h2>
+        <div class="bar-outer">
+            <div class="bar-text" id="month-pct">0%</div>
+            <div id="month-fill" class="bar-fill"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-top: 5px;">
+            <div id="flow-status" style="color: var(--neon);">Proses Purnaka</div>
+            <div><span id="day-num" style="color:#fff; font-weight:bold;">0</span> / 28 Langkah</div>
+        </div>
+    </div>
+
+    <div class="card" style="border-color: var(--danger);">
+        <span class="badge" style="color: var(--danger);">Time Leakage Audit</span>
+        <h2>Audit Atma</h2>
+        <div class="info-box" style="margin-bottom: 10px;">
+            1 Jam Nuswantara = 90 Menit Masehi. <br>Hargai setiap 90 detik masehi sebagai 1 menit Nuswantara.
+        </div>
+        <input type="number" id="leakInput" placeholder="Menit Masehi terbuang (Scroll/Leha-leha)">
+        <button onclick="auditLoss()">Hitung Kebocoran</button>
+        
+        <div id="auditResult" class="result-panel">
+            <div style="font-size: 0.7rem; color: #888;">KEHILANGAN WAKTU NUSWANTARA:</div>
+            <div id="nusLossVal" style="font-size: 1.2rem; font-weight: bold; color: var(--danger); margin: 5px 0;"></div>
+            <div id="knightAdvice" style="font-size: 0.8rem; color: #fff; border-top: 1px dashed #333; pt: 10px; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const nMonths = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pNames = ["HENING", "FAJAR", "DUHA", "KARYA", "ISTIWA", "ASAR", "SANDIKALA", "SIREPAN"];
+    const pColors = ["#2c3e50", "#e67e22", "#f1c40f", "#f39c12", "#e74c3c", "#d35400", "#c0392b", "#2c3e50"];
+    const guides = [
+        "Waktunya regenerasi sel tubuh.", "Saatnya aktivasi kesadaran & ide.", 
+        "Persiapkan rencana karyamu.", "Puncak energi eksekusi. Gas pol!", 
+        "Istirahatkan mesin tubuh sejenak.", "Selesaikan tugas, bersiap pulang.", 
+        "Waktunya koneksi sosial & keluarga.", "Detoks pikiran, bersiap istirahat."
+    ];
+
+    function updateEverything() {
+        const now = new Date();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        const s = now.getSeconds();
+
+        // --- LOGIKA JAM NUSWANTARA ---
+        let totalMshMin = (h * 60) + m + (s / 60);
+        let rawNusH = totalMshMin / 90;
+        let nH = Math.floor(rawNusH) % 8; // 0-7
+        let displayH = (nH === 0) ? 8 : nH;
+        let nM = Math.floor((rawNusH % 1) * 90);
+        let nS = Math.floor((((rawNusH % 1) * 90) % 1) * 60);
+
+        document.getElementById('clock-nus-digital').innerText = 
+            `${String(displayH).padStart(2,'0')}:${String(nM).padStart(2,'0')}:${String(nS).padStart(2,'0')}`;
+
+        let fIdx = Math.floor(h / 3);
+        const elPhase = document.getElementById('clock-phase-name');
+        elPhase.innerText = "FASE " + pNames[fIdx];
+        elPhase.style.color = pColors[fIdx];
+        document.getElementById('clock-guide').innerText = guides[fIdx];
+
+        const blocks = document.querySelectorAll('.jam-block');
+        let currentIdx = (nH === 0) ? 7 : nH - 1;
+        blocks.forEach((block, i) => {
+            if (i < currentIdx) {
+                block.style.background = pColors[fIdx];
+                block.style.opacity = "1";
+                block.style.boxShadow = "none";
+            } else if (i === currentIdx) {
+                let progress = (nM / 90) * 100;
+                block.style.background = `linear-gradient(90deg, ${pColors[fIdx]} ${progress}%, #1a1a1a ${progress}%)`;
+                block.style.opacity = "1";
+                block.style.boxShadow = `0 0 ${10 + Math.sin(Date.now()/1000)*5}px ${pColors[fIdx]}`;
+            } else {
+                block.style.background = "#1a1a1a";
+                block.style.opacity = "0.3";
+                block.style.boxShadow = "none";
+            }
+        });
+
+        // --- LOGIKA BEJANA BULAN ---
+        let anchor = new Date(now.getFullYear(), 2, 21);
+        if (now < anchor) anchor = new Date(now.getFullYear() - 1, 2, 21);
+        let diffDays = Math.floor((now - anchor) / 86400000);
+        let mIdx = Math.floor(diffDays / 28);
+        if(mIdx > 12) mIdx = 12;
+        let dNus = (diffDays % 28) + 1;
+
+        const totalSecMonth = 28 * 24 * 3600;
+        const passedSec = ((dNus - 1) * 24 * 3600) + (h * 3600) + (m * 60) + s;
+        let monthPct = (passedSec / totalSecMonth) * 100;
+
+        document.getElementById('month-name').innerText = nMonths[mIdx].toUpperCase();
+        document.getElementById('month-fill').style.width = monthPct + "%";
+        document.getElementById('month-pct').innerText = Math.floor(monthPct) + "%";
+        document.getElementById('day-num').innerText = dNus;
+
+        let statusText = "";
+        if (dNus <= 7) statusText = "Menanam Niat";
+        else if (dNus <= 21) statusText = "Proses Pertumbuhan";
+        else statusText = "Menuju Purnaka";
+        document.getElementById('flow-status').innerText = statusText;
+    }
+
+    function auditLoss() {
+        const msh = parseFloat(document.getElementById('leakInput').value);
+        if(!msh) return;
+        let nusTotalMin = msh / 1.5;
+        let nusH = Math.floor(nusTotalMin / 60);
+        let nusM = Math.floor(nusTotalMin % 60);
+        let nusS = Math.round((nusTotalMin % 1) * 60);
+
+        let res = "";
+        if(nusH > 0) res += nusH + " Jam ";
+        if(nusM > 0) res += nusM + " Menit ";
+        res += nusS + " Detik Nuswantara";
+        
+        document.getElementById('nusLossVal').innerText = res;
+        document.getElementById('auditResult').style.display = 'block';
+        
+        let adv = msh > 60 ? "Hati-hati bro, atensimu sedang dijajah Matrix. Ambil waktu Hening sekarang!" : "Kebocoran kecil terdeteksi. Segera kembali ke kesadaran penuh.";
+        document.getElementById('knightAdvice').innerText = adv;
+    }
+
+    setInterval(updateEverything, 1000);
+    updateEverything();
+</script>
+
+</body>
+</html>

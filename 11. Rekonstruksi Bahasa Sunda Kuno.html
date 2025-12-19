@@ -1,0 +1,80 @@
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sundanese&display=swap" rel="stylesheet">
+
+<div class="card" style="border: 2px solid #f1c40f; background: #080808; border-radius: 20px; padding: 25px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <span class="badge" style="color: #f1c40f; letter-spacing: 5px; display: block; text-align: center; font-size: 0.7rem; margin-bottom: 10px;">KAMUS REKONSTRUKSI v1.0</span>
+    <h2 style="text-align: center; margin-bottom: 20px; color: #fff; text-transform: uppercase;">Sunda Buhun Modern</h2>
+
+    <div style="margin-bottom: 20px;">
+        <input type="text" id="indoInput" oninput="translateBuhun()" placeholder="Ketik: Kerja, Fokus, Lihat, Api, Air..." 
+               style="width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 1rem; border-color: #f1c40f; outline: none; box-sizing: border-box;">
+    </div>
+
+    <div id="resultArea" style="display: none; background: #111; padding: 20px; border-radius: 15px; border-left: 5px solid #f1c40f;">
+        <div style="font-size: 0.7rem; color: #f1c40f; font-weight: bold; margin-bottom: 5px; text-transform: uppercase;">Hasil Rekonstruksi:</div>
+        
+        <div id="buhunOutput" style="font-size: 2.2rem; color: #fff; font-weight: bold; margin-bottom: 5px;"></div>
+        
+        <div id="buhunAksara" style="font-family: 'Noto Sans Sundanese', serif; font-size: 3rem; color: #f1c40f; margin-bottom: 15px; line-height: 1.2;"></div>
+        
+        <div style="padding-top: 15px; border-top: 1px dashed #333;">
+            <div id="buhunLogic" style="font-size: 0.9rem; color: #ccc; line-height: 1.5;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const buhunDatabase = {
+        "kerja": {b: "Hanca", l: "Memegang kendali atau tanggung jawab karya.", a: "ᮠᮔ᮪ᮎ"},
+        "fokus": {b: "Huleng", l: "Kondisi statis sempurna untuk menstabilkan energi.", a: "ᮠᮥᮜᮨᮀ"},
+        "lihat": {b: "Sawang", l: "Memantau atau mendeteksi keberadaan objek.", a: "ᮞᮝᮀ"},
+        "nyala": {b: "Hurung", l: "Transisi menuju fase aktif atau berpijar.", a: "ᮠᮥᮛᮥᮀ"},
+        "getar": {b: "Geter", l: "Resonansi materi pada frekuensi tertentu.", a: "ᮌᮨᮒᮨᮛ᮪"},
+        "satu": {b: "Tunggal", l: "Penyatuan seluruh elemen menjadi inti tunggal.", a: "ᮒᮥᮀᮌᮜ᮪"},
+        "selesai": {b: "Purnaka", l: "Kondisi sempurna, tidak ada lagi yang perlu ditambah.", a: "ᮕᮥᮛ᮪ᮔᮊ"},
+        "hidup": {b: "Hurip", l: "Energi murni yang terus mengalir dan menghidupi.", a: "ᮠᮥᮛᮤᮕ᮪"},
+        "makan": {b: "Mangan", l: "Proses memasukkan energi padat ke dalam tubuh.", a: "ᮙᮍᮔ᮪"},
+        "tidur": {b: "Mondok", l: "Fase sirepan, istirahat total untuk regenerasi sel.", a: "ᮙᮧᮔ᮪ᮓᮧᮊ᮪"},
+        "bicara": {b: "Sabda", l: "Mengeluarkan getaran suara yang bermakna (frekuensi).", a: "ᮞᮘ᮪ᮓ"},
+        "paham": {b: "Kahartos", l: "Logika yang sudah masuk ke dalam pemahaman rasa.", a: "ᮊᮠᮛ᮪ᮒᮧᮞ᮪"},
+        "bangun": {b: "Hudang", l: "Bangkitnya kesadaran dari fase sirep (istirahat).", a: "ᮠᮥᮓᮀ"},
+        "pergi": {b: "Mangkat", l: "Perpindahan posisi materi dari titik awal koordinat.", a: "ᮙᮀᮊᮒ᮪"},
+        "datang": {b: "Rawuh", l: "Kehadiran energi atau objek di medan koordinat.", a: "ᮛᮝᮥᮂ"},
+        "bagus": {b: "Saé", l: "Kondisi yang selaras dengan nilai estetika alam.", a: "ᮞᮆ"},
+        "api": {b: "Geni", l: "Elemen dasar transformasi panas (energi).", a: "ᮌᮨᮔᮤ"},
+        "angin": {b: "Bayu", l: "Elemen penggerak atau propulsi udara.", a: "ᮘᮚᮥ"},
+        "air": {b: "Banyu", l: "Elemen pendingin dan pembawa informasi.", a: "ᮘᮑᮥ"},
+        "tanah": {b: "Bumi", l: "Elemen gravitasi dan kepadatan materi bumi.", a: "ᮘᮥᮙᮤ"}
+    };
+
+    function translateBuhun() {
+        const input = document.getElementById('indoInput').value.toLowerCase().trim();
+        const outputArea = document.getElementById('resultArea');
+        const buhunTxt = document.getElementById('buhunOutput');
+        const aksaraTxt = document.getElementById('buhunAksara');
+        const logicTxt = document.getElementById('buhunLogic');
+
+        // Sembunyikan jika input kosong
+        if (input === "") {
+            outputArea.style.display = 'none';
+            return;
+        }
+
+        if (buhunDatabase[input]) {
+            outputArea.style.display = 'block';
+            buhunTxt.innerText = buhunDatabase[input].b.toUpperCase();
+            aksaraTxt.innerText = buhunDatabase[input].a;
+            logicTxt.innerHTML = `<b>Logika Dasar:</b> ${buhunDatabase[input].l}`;
+        } else {
+            // Pencarian kecocokan parsial
+            let foundKey = Object.keys(buhunDatabase).find(key => key.includes(input));
+            if (foundKey && input.length > 2) {
+                outputArea.style.display = 'block';
+                buhunTxt.innerText = buhunDatabase[foundKey].b.toUpperCase();
+                aksaraTxt.innerText = buhunDatabase[foundKey].a;
+                logicTxt.innerHTML = `<b>Logika Dasar:</b> ${buhunDatabase[foundKey].l}`;
+            } else {
+                outputArea.style.display = 'none';
+            }
+        }
+    }
+</script>

@@ -1,0 +1,171 @@
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sundanese&amp;display=swap" rel="stylesheet"></link>
+
+<div class="card" style="background: rgb(5, 5, 5); border-radius: 20px; border: 2px solid rgb(212, 175, 55); font-family: &quot;Segoe UI&quot;, sans-serif; padding: 25px; text-align: center;">
+    <span class="badge" style="color: #d4af37; font-size: 0.7rem; letter-spacing: 5px;">ᮕᮥᮞᮊ ᮃᮊ᮪ᮞᮛ | PUSAKA AKSARA</span>
+    
+    <div style="margin: 25px 0px;">
+        <div id="aksara-large" style="color: white; font-family: &quot;Noto Sans Sundanese&quot;, serif; font-size: 4.5rem; line-height: 1.2; text-shadow: rgba(212, 175, 55, 0.3) 0px 0px 15px;">ᮊᮞᮓᮛᮔ᮪</div>
+        <div id="aksara-latin" style="color: #d4af37; font-size: 0.9rem; font-weight: bold; letter-spacing: 4px;">KASADARAN</div>
+    </div>
+
+    <div style="background: rgb(17, 17, 17); border-radius: 12px; border: 1px solid rgb(34, 34, 34); margin-bottom: 20px; padding: 15px;">
+        <p style="color: #666666; font-size: 0.7rem; margin-bottom: 10px; text-transform: uppercase;"><span style="color: white;">Pelajari Ejaan Dasar:</span></p>
+        <div style="color: white; display: flex; font-family: &quot;Noto Sans Sundanese&quot;; font-size: 1.2rem; justify-content: space-around;">
+            <div>ᮃ <br /><span style="color: #444444; font-size: 0.6rem;">A</span></div>
+            <div>ᮄ <br /><span style="color: #444444; font-size: 0.6rem;">I</span></div>
+            <div>ᮅ <br /><span style="color: #444444; font-size: 0.6rem;">U</span></div>
+            <div>ᮈ <br /><span style="color: #444444; font-size: 0.6rem;">E</span></div>
+            <div>ᮇ <br /><span style="color: #444444; font-size: 0.6rem;">O</span></div>
+        </div>
+    </div>
+
+    <div style="position: relative;">
+        <input id="latinInput" oninput="convertAksaraSunda()" style="background: rgb(0, 0, 0); border-color: #d4af37; border-radius: 10px; border: 1px solid rgb(212, 175, 55); color: white; font-size: 1rem; outline: none; padding: 15px; text-align: center; width: 100%;" type="text" />
+        <div id="aksaraResult" style="color: #d4af37; font-family: &quot;Noto Sans Sundanese&quot;; font-size: 3rem; margin-top: 20px; min-height: 60px;"></div>
+    </div>
+</div>
+
+<script>
+const n_map = {
+    'ka':'ᮊ','ga':'ᮌ','nga':'ᮍ','ca':'ᮎ','ja':'ᮏ','nya':'ᮑ','ta':'ᮒ','da':'ᮓ','na':'ᮔ','pa':'ᮕ','ba':'ᮘ','ma':'ᮙ','ya':'ᮚ','ra':'ᮛ','la':'ᮜ','wa':'ᮝ','sa':'ᮞ','ha':'ᮠ','fa':'ᮖ','va':'ᮗ','qa':'ᮋ','xa':'ᮐ','za':'ᮑ'
+};
+const v_map = {'i':'ᮤ','u':'ᮥ','e':'ᮨ','o':'ᮧ','+':'᮪'}; // Rarangken (i, u, e, o, pamaeh)
+
+function convertAksaraSunda() {
+    let txt = document.getElementById('latinInput').value.toLowerCase().replace(/[^a-z]/g, '');
+    let res = "";
+    let i = 0;
+
+    while (i < txt.length) {
+        let chunk = txt.substr(i, 3); // Cek 3 huruf (nga, nya)
+        let chunk2 = txt.substr(i, 2); // Cek 2 huruf (ka, ga, dll)
+        
+        if (n_map[chunk]) {
+            res += n_map[chunk]; i += 3;
+        } else if (n_map[chunk2]) {
+            res += n_map[chunk2]; i += 2;
+        } else if (n_map[txt[i] + 'a']) {
+            // Konsonan tunggal (asumsi mati, tambah pamaeh)
+            res += n_map[txt[i] + 'a'] + v_map['+']; i += 1;
+        } else {
+            // Vokal mandiri
+            const vowels = {'a':'ᮃ','i':'ᮄ','u':'ᮅ','e':'ᮈ','o':'ᮇ'};
+            if (vowels[txt[i]]) res += vowels[txt[i]];
+            i += 1;
+        }
+    }
+    document.getElementById('aksaraResult').innerText = res || "ᮃᮊ᮪ᮞᮛ";
+}
+
+// Sinkronisasi Mantra dengan Jam Nuswantara
+function syncMantra() {
+    const h = new Date().getHours();
+    const big = document.getElementById('aksara-large');
+    const lat = document.getElementById('aksara-latin');
+
+    if (h >= 9 && h < 12) { 
+        big.innerText = "ᮊᮛᮡ"; lat.innerText = "KARYA";
+    } else if (h >= 0 && h < 3) {
+        big.innerText = "ᮠᮨᮔᮤᮀ"; lat.innerText = "HENING";
+    } else if (h >= 18 && h < 21) {
+        big.innerText = "ᮞᮔ᮪ᮓᮤᮊᮜ"; lat.innerText = "SANDIKALA";
+    } else {
+        big.innerText = "ᮓᮛᮙ"; lat.innerText = "DARMA";
+    }
+}
+syncMantra();
+setInterval(syncMantra, 60000);
+</script>&nbsp;&nbsp;<div class="separator" style="clear: both; text-align: center;"><div class="separator" style="clear: both; text-align: center;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpiLqrYdLlSru8ICY_hDxaTIiIJoqBUX3KwVRhUb_vtuI25zZlq7soFM31arLSFYyEgmDVmhsPOMq7gYR_iJicOpRli7MvRVmt-wja3Rj4Q75XT8ZBA7Omd3qGryGL2-qEo7H6auKftzn-y924kOOy3orNuLtPo2bDneUMvMRPU0SgMaMN8Td3dee7wYBW/s1200/61d802e82fa59dd.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" data-original-height="800" data-original-width="1200" height="385" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpiLqrYdLlSru8ICY_hDxaTIiIJoqBUX3KwVRhUb_vtuI25zZlq7soFM31arLSFYyEgmDVmhsPOMq7gYR_iJicOpRli7MvRVmt-wja3Rj4Q75XT8ZBA7Omd3qGryGL2-qEo7H6auKftzn-y924kOOy3orNuLtPo2bDneUMvMRPU0SgMaMN8Td3dee7wYBW/w578-h385/61d802e82fa59dd.png" width="578" /></a></div><br /><br /></div><br />
+
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sundanese&display=swap" rel="stylesheet">
+
+<div class="card" style="border: 2px solid #2ecc71; background: #080808; border-radius: 20px; padding: 25px; font-family: 'Segoe UI', sans-serif;">
+    <span class="badge" style="color: #2ecc71; letter-spacing: 5px; display: block; text-align: center; font-size: 0.7rem; margin-bottom: 10px;">AUTO-RARANGKEN v3.0</span>
+    <h2 style="text-align: center; margin-bottom: 20px; color: #fff; text-transform: uppercase;">Konverter Suku Kata</h2>
+
+    <div style="margin-bottom: 20px;">
+        <input type="text" id="modernInput" oninput="reconstructBuhun()" placeholder="Ketik kata bebas (Contoh: Bumi, Bakti, Sakti)..." 
+               style="width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 1rem; border-color: #2ecc71; outline: none; box-sizing: border-box;">
+    </div>
+
+    <div id="reconstructArea" style="display: none; background: #111; padding: 20px; border-radius: 15px; border-left: 5px solid #2ecc71;">
+        <div style="font-size: 0.7rem; color: #27ae60; font-weight: bold; margin-bottom: 5px;">STRUKTUR SUKU KATA:</div>
+        <div id="visualAksara" style="font-family: 'Noto Sans Sundanese'; font-size: 3.5rem; color: #2ecc71; margin-bottom: 10px; line-height: 1.2;"></div>
+        
+        <div style="padding-top: 15px; border-top: 1px dashed #333;">
+            <div id="morfologiInfo" style="font-size: 0.85rem; color: #ccc; line-height: 1.6;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Database Ngalagena (Konsonan Dasar)
+    const ngalagena = {
+        'k':'ᮊ', 'g':'ᮌ', 'ng':'ᮍ', 'c':'ᮎ', 'j':'ᮏ', 'ny':'ᮑ',
+        't':'ᮒ', 'd':'ᮓ', 'n':'ᮔ', 'p':'ᮕ', 'b':'ᮘ', 'm':'ᮙ',
+        'y':'ᮚ', 'r':'ᮛ', 'l':'ᮜ', 'w':'ᮝ', 's':'ᮞ', 'h':'ᮠ'
+    };
+
+    // Database Rarangkén (Vokalisasi)
+    const rarangken = {
+        'i': 'ᮤ', // panghulu (atas)
+        'u': 'ᮥ', // panyuku (bawah)
+        'e': 'ᮨ', // pamepet (atas)
+        'o': 'ᮧ', // panolong (belakang)
+        'x': '᮪'  // pamaéh (mati)
+    };
+
+    function reconstructBuhun() {
+        let input = document.getElementById('modernInput').value.toLowerCase().trim();
+        let display = document.getElementById('reconstructArea');
+        let aksaraBox = document.getElementById('visualAksara');
+        let infoBox = document.getElementById('morfologiInfo');
+
+        if (input.length < 1) { display.style.display = 'none'; return; }
+
+        let result = "";
+        let explanation = [];
+        let i = 0;
+
+        while (i < input.length) {
+            let char = input[i];
+            let nextChar = input[i+1];
+
+            // Cek Konsonan Bergabung (ng, ny)
+            let currentConsonant = char;
+            if (char === 'n' && (nextChar === 'g' || nextChar === 'y')) {
+                currentConsonant = char + nextChar;
+                i++;
+                nextChar = input[i+1];
+            }
+
+            if (ngalagena[currentConsonant]) {
+                result += ngalagena[currentConsonant];
+                
+                // Cek Vokal setelah Konsonan
+                if (nextChar && rarangken[nextChar]) {
+                    result += rarangken[nextChar];
+                    explanation.push(`[${currentConsonant.toUpperCase()} + Rarangkén ${nextChar.toUpperCase()}]`);
+                    i++;
+                } else if (nextChar && nextChar !== 'a') {
+                    // Jika huruf selanjutnya konsonan lagi (mati)
+                    // (Hanya simulasi dasar pamaeh)
+                    explanation.push(`[${currentConsonant.toUpperCase()} Dasar]`);
+                } else if (nextChar === 'a') {
+                    explanation.push(`[${currentConsonant.toUpperCase()} + Vokal A]`);
+                    i++;
+                } else {
+                    explanation.push(`[${currentConsonant.toUpperCase()} Mandiri]`);
+                }
+            }
+            i++;
+        }
+
+        if (result !== "") {
+            display.style.display = 'block';
+            aksaraBox.innerText = result;
+            infoBox.innerHTML = `<b>Analisis:</b> ${explanation.join(' → ')}<br><br><i style="font-size:0.75rem; color:#666">*Sesuai pedoman Ngalagena & Rarangkén Kompas.</i>`;
+        }
+    }
+</script>

@@ -1,0 +1,103 @@
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sundanese&display=swap" rel="stylesheet">
+
+<div class="card" style="border: 2px solid #9b59b6; background: #080808; border-radius: 20px; padding: 25px; font-family: 'Segoe UI', sans-serif;">
+    <span class="badge" style="color: #9b59b6; letter-spacing: 5px; display: block; text-align: center; font-size: 0.7rem; margin-bottom: 10px;">ULUN OLAHAXARA v3.5</span>
+    <h2 style="text-align: center; margin-bottom: 20px; color: #fff; text-transform: uppercase;">Master Konverter Buhun</h2>
+
+    <div style="margin-bottom: 20px;">
+        <input type="text" id="modernInput" oninput="reconstructBuhun()" placeholder="Ketik (Aji, Bumi, Sakti, Geni)..." 
+               style="width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 1rem; border-color: #9b59b6; outline: none; box-sizing: border-box;">
+    </div>
+
+    <div id="reconstructArea" style="display: none; background: #111; padding: 20px; border-radius: 15px; border-left: 5px solid #9b59b6;">
+        <div style="font-size: 0.7rem; color: #9b59b6; font-weight: bold; margin-bottom: 5px;">KOSMETIKAL AKSARA:</div>
+        <div id="visualAksara" style="font-family: 'Noto Sans Sundanese'; font-size: 3.5rem; color: #fff; margin-bottom: 10px; line-height: 1.2; text-shadow: 0 0 10px rgba(155, 89, 182, 0.5);"></div>
+        
+        <div style="padding-top: 15px; border-top: 1px dashed #333;">
+            <div id="morfologiInfo" style="font-size: 0.8rem; color: #aaa; line-height: 1.6;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Aksara Swara (Vokal Mandiri di Awal Kata)
+    const swara = {
+        'a': 'ᮃ', 'i': 'ᮄ', 'u': 'ᮅ', 'e': 'ᮈ', 'o': 'ᮇ'
+    };
+
+    // 2. Ngalagena (Konsonan Dasar)
+    const ngalagena = {
+        'k':'ᮊ', 'g':'ᮌ', 'ng':'ᮍ', 'c':'ᮎ', 'j':'ᮏ', 'ny':'ᮑ',
+        't':'ᮒ', 'd':'ᮓ', 'n':'ᮔ', 'p':'ᮕ', 'b':'ᮘ', 'm':'ᮙ',
+        'y':'ᮚ', 'r':'ᮛ', 'l':'ᮜ', 'w':'ᮝ', 's':'ᮞ', 'h':'ᮠ'
+    };
+
+    // 3. Rarangkén (Vokal Penempel)
+    const rarangken = {
+        'i': 'ᮤ', 'u': 'ᮥ', 'e': 'ᮨ', 'o': 'ᮧ', 'x': '᮪'
+    };
+
+    function reconstructBuhun() {
+        let input = document.getElementById('modernInput').value.toLowerCase().trim();
+        let display = document.getElementById('reconstructArea');
+        let aksaraBox = document.getElementById('visualAksara');
+        let infoBox = document.getElementById('morfologiInfo');
+
+        if (input.length < 1) { display.style.display = 'none'; return; }
+
+        let result = "";
+        let steps = [];
+        let i = 0;
+
+        while (i < input.length) {
+            let char = input[i];
+            let nextChar = input[i+1];
+
+            // LOGIKA 1: Cek Vokal Mandiri (Awal Kata)
+            if (i === 0 && swara[char]) {
+                result += swara[char];
+                steps.push(`<b>${char.toUpperCase()}</b> (Swara)`);
+                i++;
+                continue;
+            }
+
+            // LOGIKA 2: Cek Konsonan Gabung (ng, ny)
+            let currCons = char;
+            if (char === 'n' && (nextChar === 'g' || nextChar === 'y')) {
+                currCons = char + nextChar;
+                i++;
+                nextChar = input[i+1];
+            }
+
+            // LOGIKA 3: Proses Ngalagena & Rarangken
+            if (ngalagena[currCons]) {
+                result += ngalagena[currCons];
+                if (nextChar && rarangken[nextChar]) {
+                    result += rarangken[nextChar];
+                    steps.push(`<b>${currCons.toUpperCase()}</b>+${nextChar}`);
+                    i++;
+                } else if (nextChar === 'a') {
+                    steps.push(`<b>${currCons.toUpperCase()}</b>+a`);
+                    i++;
+                } else if (nextChar && !['a','i','u','e','o'].includes(nextChar)) {
+                    // Konsonan Mati (Contoh: Bak-ti, k mati)
+                    result += rarangken['x'];
+                    steps.push(`<b>${currCons.toUpperCase()}</b>(mati)`);
+                } else {
+                    steps.push(`<b>${currCons.toUpperCase()}</b>`);
+                }
+            } else if (swara[char]) {
+                // Vokal di tengah kata (jarang, tapi buat jaga-jaga)
+                result += swara[char];
+                steps.push(`<b>${char.toUpperCase()}</b>`);
+            }
+            i++;
+        }
+
+        if (result !== "") {
+            display.style.display = 'block';
+            aksaraBox.innerText = result;
+            infoBox.innerHTML = `<b>Proses:</b> ${steps.join(' → ')}`;
+        }
+    }
+</script>

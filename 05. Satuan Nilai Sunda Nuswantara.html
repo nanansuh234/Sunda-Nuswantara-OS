@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Value System - Manual</title>
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --card: #111; --text: #ccc; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; line-height: 1.6; }
+        .container { max-width: 650px; width: 100%; }
+        
+        /* Typography */
+        h1 { text-align: center; letter-spacing: 8px; color: var(--neon); margin-bottom: 30px; }
+        h2 { font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; border-bottom: 2px solid var(--neon); padding-bottom: 8px; margin-top: 0; }
+        
+        /* Layout Modules */
+        .card { background: var(--card); border: 1px solid #222; border-radius: 15px; padding: 25px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .manual-box { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; border: 1px dashed #444; }
+        .manual-box b { color: var(--neon); }
+
+        /* Calculator Styles */
+        .input-area { display: flex; gap: 10px; margin: 15px 0; }
+        input, select { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 8px; outline: none; font-size: 1rem; }
+        button { background: var(--neon); color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        button:hover { background: #fff; box-shadow: 0 0 15px var(--neon); }
+        
+        .result-panel { padding: 15px; background: #000; border-radius: 8px; border-left: 4px solid var(--neon); margin-top: 15px; display: none; }
+        
+        .badge { display: inline-block; background: #222; color: var(--neon); padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>VALUE SYSTEM</h1>
+
+    <div class="card">
+        <div class="badge">BIO-MATHEMATICS</div>
+        <h2>1. Takaran Kuo (Cairan Tubuh)</h2>
+        
+        <div class="manual-box">
+            <b>Apa ini?</b> Standar volume asupan berdasarkan kapasitas lambung manusia rata-rata. <br>
+            <b>Cara Pakai:</b> Masukkan target liter Masehi Anda, sistem akan mengonversinya ke jumlah <b>"Cangkul"</b> (Gelas Natur). <br>
+            <b>Panduan:</b> Minumlah 1 Cangkul setiap pergantian Jam Nuswantara (setiap 90 menit) untuk hidrasi selaras.
+        </div>
+
+        <div class="input-area">
+            <input type="number" id="literInput" placeholder="Contoh: 2 (Liter)">
+            <button onclick="calcKuo()">Konversi</button>
+        </div>
+        <div id="kuoResult" class="result-panel">
+            <div id="kuoText" style="color: #fff;"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="badge">GEOMETRIC SPACE</div>
+        <h2>2. Langkah Ksatria (Jarak)</h2>
+        
+        <div class="manual-box">
+            <b>Apa ini?</b> Mengukur jarak bukan dengan angka mati, tapi dengan aksi nyata tubuh (Langkah). <br>
+            <b>Cara Pakai:</b> Masukkan jarak tujuan dalam meter. <br>
+            <b>Filosofi:</b> Menghilangkan mental blok "Jauh/Dekat". Setiap meter adalah akumulasi langkah yang memberikan energi bagi tubuh.
+        </div>
+
+        <div class="input-area">
+            <input type="number" id="meterInput" placeholder="Contoh: 1000 (Meter)">
+            <button onclick="calcStep()">Hitung Langkah</button>
+        </div>
+        <div id="stepResult" class="result-panel">
+            <div id="stepText" style="color: #fff;"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="badge">ENERGY ALIGNMENT</div>
+        <h2>3. Penyelarasan Pancawara</h2>
+        
+        <div class="manual-box">
+            <b>Apa ini?</b> Menentukan kualitas pekerjaan berdasarkan hari <b>Pasaran</b>. <br>
+            <b>Cara Pakai:</b> Pilih jenis kegiatan yang akan Anda lakukan hari ini. <br>
+            <b>Panduan:</b> Cek kesesuaian kegiatan Anda dengan energi Pasaran yang sedang berjalan untuk meminimalisir hambatan.
+        </div>
+
+        <select id="taskSelect" style="width: 100%; margin-bottom: 15px;">
+            <option value="Legi">Mencari Peluang / Bisnis (Legi)</option>
+            <option value="Pahing">Kerja Keras / Fisik / Olahraga (Pahing)</option>
+            <option value="Pon">Pemasaran / Sosialisasi / Networking (Pon)</option>
+            <option value="Wage">Administrasi / Riset / Ketelitian (Wage)</option>
+            <option value="Kliwon">Meditasi / Ide Kreatif / Problem Solving (Kliwon)</option>
+        </select>
+        <button onclick="checkValue()" style="width: 100%;">Analisis Energi</button>
+        
+        <div id="valueResult" class="result-panel">
+            <div id="valueText" style="color: #fff;"></div>
+        </div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; opacity: 0.4;">
+        NUSWANTARA OPERATING SYSTEM v17.1 | KAB. GARUT REFERENCE
+    </p>
+</div>
+
+<script>
+    function calcKuo() {
+        const l = document.getElementById('literInput').value;
+        if(!l || l <= 0) return;
+        const result = l / 0.25;
+        document.getElementById('kuoText').innerHTML = `<b>Hasil:</b> ${result.toFixed(1)} Cangkul (Gelas). <br><small>Distribusikan asupan ini dalam siklus 8 jam Anda.</small>`;
+        document.getElementById('kuoResult').style.display = 'block';
+    }
+
+    function calcStep() {
+        const m = document.getElementById('meterInput').value;
+        if(!m || m <= 0) return;
+        const result = m / 0.75;
+        document.getElementById('stepText').innerHTML = `<b>Hasil:</b> ${Math.round(result)} Langkah Ksatria. <br><small>Jarak ini setara dengan ritual gerak tubuh yang sehat.</small>`;
+        document.getElementById('stepResult').style.display = 'block';
+    }
+
+    function checkValue() {
+        const val = document.getElementById('taskSelect').value;
+        const tips = {
+            "Legi": "<b>Karakter MANIS:</b> Hari ini sangat baik untuk negosiasi keuangan atau akad baru. Gunakan daya tarik personal Anda.",
+            "Pahing": "<b>Karakter API:</b> Fokuskan energi pada tugas yang melelahkan secara fisik. Jangan menunda eksekusi berat.",
+            "Pon": "<b>Karakter PAMER:</b> Waktu terbaik untuk tampil di depan publik, presentasi, atau memperluas relasi sosial.",
+            "Wage": "<b>Karakter KAKU:</b> Sangat ideal untuk membereskan hutang pekerjaan, meriset data, atau pekerjaan teknis mendetail.",
+            "Kliwon": "<b>Karakter ASIH:</b> Jangan paksa bekerja fisik. Gunakan untuk menenangkan pikiran, mencari inspirasi, atau berdamai dengan konflik."
+        };
+        document.getElementById('valueText').innerHTML = tips[val];
+        document.getElementById('valueResult').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>

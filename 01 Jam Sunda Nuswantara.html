@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Master Clock v8</title>
+    <style>
+        :root { 
+            --neon: #d4af37; 
+            --bg: #050505; 
+            --tick: #ffffff;
+            /* Zona Warna (4 Segmen) */
+            --color-8-2: rgba(255, 215, 0, 0.25); /* Hening/Istiwa (Emas) */
+            --color-2-4: rgba(255, 69, 0, 0.25);  /* Fajar/Asar (Oranye) */
+            --color-4-6: rgba(0, 255, 127, 0.25); /* Duha/Sandikala (Hijau) */
+            --color-6-8: rgba(30, 144, 255, 0.25); /* Karya/Sirepan (Biru) */
+        }
+        
+        * { box-sizing: border-box; }
+        body { 
+            background: var(--bg); color: var(--neon); 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 20px;
+        }
+        
+        .clock-frame {
+            position: relative;
+            width: 320px; height: 320px;
+            aspect-ratio: 1 / 1;
+            border: 6px solid var(--neon);
+            border-radius: 50%;
+            background: #000;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            margin-bottom: 25px;
+        }
+
+        /* 4 Zona Warna per 2 Jam Nuswantara */
+        .zones-bg {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--color-8-2) 0deg 90deg, 
+                var(--color-2-4) 90deg 180deg, 
+                var(--color-4-6) 180deg 270deg, 
+                var(--color-6-8) 270deg 360deg
+            );
+        }
+
+        /* Strip (Ticks) */
+        .tick { position: absolute; width: 100%; height: 100%; z-index: 5; }
+        .tick::after { 
+            content: ''; position: absolute; top: 0; left: 50%; 
+            width: 2px; height: 12px; background: var(--tick); transform: translateX(-50%); opacity: 0.4;
+        }
+        .tick-main::after { height: 20px; background: #fff; width: 4px; opacity: 1; }
+        
+        /* Angka 1-8 */
+        .number {
+            position: absolute; width: 100%; height: 100%;
+            text-align: center; font-size: 1.8rem; font-weight: bold;
+            padding-top: 25px; z-index: 6; color: #fff;
+        }
+
+        /* Jarum */
+        .hand { 
+            position: absolute; bottom: 50%; left: 50%; 
+            transform-origin: bottom; border-radius: 10px; background: var(--neon); z-index: 10;
+        }
+        .hour-hand { width: 10px; height: 90px; }
+        .min-hand { width: 5px; height: 135px; background: #fff; opacity: 0.7; }
+        .center-dot { 
+            position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; 
+            background: var(--neon); border-radius: 50%; transform: translate(-50%, -50%); 
+            z-index: 11; border: 3px solid #000;
+        }
+
+        /* Info Card */
+        .card {
+            background: #111; border: 1px solid #222; border-radius: 15px;
+            padding: 20px; width: 100%; max-width: 400px; text-align: left;
+        }
+        .waktu-title { font-size: 0.8rem; color: #666; letter-spacing: 2px; text-transform: uppercase; }
+        .fase-name { font-size: 2.2rem; font-weight: bold; color: #fff; margin: 5px 0; letter-spacing: 3px; }
+        .engine-status { color: var(--neon); font-weight: bold; font-size: 1.1rem; border-left: 3px solid var(--neon); padding-left: 10px; margin: 10px 0; }
+        .desc-text { color: #aaa; font-size: 0.9rem; line-height: 1.5; }
+        .digital-nus { font-family: monospace; font-size: 1.2rem; margin-top: 15px; color: #444; }
+    </style>
+</head>
+<body>
+
+    <h2 style="letter-spacing: 5px; margin-bottom: 20px;">NUSWANTARA OS v8</h2>
+
+    <div class="clock-frame" id="clock">
+        <div class="zones-bg"></div>
+        <div class="center-dot"></div>
+        <div class="hand hour-hand" id="hrHand"></div>
+        <div class="hand min-hand" id="minHand"></div>
+    </div>
+
+    <div class="card">
+        <div id="waktu-id" class="waktu-title">WAKTU ...</div>
+        <div id="fase-name" class="fase-name">...</div>
+        <div id="engine-status" class="engine-status">...</div>
+        <div id="fase-desc" class="desc-text">-</div>
+        <div id="digital-clock" class="digital-nus">00:00</div>
+    </div>
+
+<script>
+    const clock = document.getElementById('clock');
+    
+    // Database Rinci sesuai Keterangan.csv
+    const phaseDB = [
+        { id: 7, name: "ISTIWA", engine: "Pause & Reset", desc: "Matahari di puncak. Wajib Power Nap (Tidur Qailulah) walau 15 menit. Jangan paksa kerja rodi.", range: "8-2 Siang" },
+        { id: 8, name: "ASAR", engine: "Wrapping Up", desc: "Evaluasi kerjaan hari ini. Santai sore. Persiapan masuk Sandikala.", range: "2-4 Siang" },
+        { id: 1, name: "SANDIKALA", engine: "Transisi & Sosial", desc: "Makan malam, kumpul keluarga. Haram kerja berat. Ini waktu 'Mendarat'.", range: "4-6 Malam" },
+        { id: 2, name: "SIREPAN", engine: "Istirahat Fisik", desc: "Deep Sleep. Ini jam detoks organ paling vital. Jangan begadang!", range: "6-8 Malam" },
+        { id: 3, name: "HENING", engine: "Istirahat Mental", desc: "Lucid Dream. Alam bawah sadar aktif. Download data dari semesta.", range: "8-2 Malam" },
+        { id: 4, name: "FAJAR", engine: "The Golden Hour", desc: "Bangun. Tahajjud/Meditasi. Time Dilation terjadi, ide brilian muncul di sini.", range: "2-4 Malam" },
+        { id: 5, name: "DUHA", engine: "Start Engine", desc: "Olahraga ringan, sarapan, Planning hari ini. Rezeki dijemput di sini.", range: "4-6 Siang" },
+        { id: 6, name: "KARYA", engine: "High Performance", desc: "Kerja keras, eksekusi, meeting. Fokus Monotasking.", range: "6-8 Siang" }
+    ];
+
+    // Build Face
+    for(let i=0; i<48; i++) {
+        let t = document.createElement('div');
+        t.className = (i % 6 === 0) ? 'tick tick-main' : 'tick';
+        t.style.transform = `rotate(${i * 7.5}deg)`;
+        clock.appendChild(t);
+    }
+
+    // Numbers placement (8 at 12 o'clock, 2 at 3 o'clock, 4 at 6 o'clock, 6 at 9 o'clock)
+    [8, 1, 2, 3, 4, 5, 6, 7].forEach((num, i) => {
+        let n = document.createElement('div');
+        n.className = 'number';
+        n.style.transform = `rotate(${i * 45}deg)`;
+        n.innerHTML = `<div style="transform: rotate(-${i * 45}deg)">${num}</div>`;
+        clock.appendChild(n);
+    });
+
+    function update() {
+        const now = new Date();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        const s = now.getSeconds();
+
+        // LOGIC: 12 Jam Masehi = 8 Jam Nuswantara
+        let mTotalMin = ((h % 12) * 60) + m + (s/60);
+        let nTotalHours = mTotalMin / 90; 
+        
+        let dHour = Math.floor(nTotalHours) || 8;
+        let dMin = Math.floor((nTotalHours % 1) * 90);
+
+        // Hands
+        document.getElementById('hrHand').style.transform = `translateX(-50%) rotate(${nTotalHours * 45}deg)`;
+        document.getElementById('minHand').style.transform = `translateX(-50%) rotate(${(nTotalHours % 1) * 360}deg)`;
+
+        // Digital
+        document.getElementById('digital-clock').innerText = 
+            `Nuswantara Digital: ${String(dHour).padStart(2, '0')}:${String(dMin).padStart(2, '0')} ${h >= 6 && h < 18 ? 'SIANG' : 'MALAM'}`;
+
+        // Phase Info (3 Jam Masehi per Fase)
+        // 00-03=Hening(3), 03-06=Fajar(4), 06-09=Duha(5), 09-12=Karya(6), 12-15=Istiwa(7), 15-18=Asar(8), 18-21=Sandikala(1), 21-00=Sirepan(2)
+        const phaseSequence = [3, 4, 5, 6, 7, 8, 1, 2]; // 00, 03, 06, 09, 12, 15, 18, 21
+        let seqIdx = Math.floor(h / 3);
+        let currentID = phaseSequence[seqIdx];
+        let p = phaseDB.find(item => item.id === currentID);
+
+        document.getElementById('waktu-id').innerText = `WAKTU ${p.id} (${p.range})`;
+        document.getElementById('fase-name').innerText = p.name;
+        document.getElementById('engine-status').innerText = `Fase: ${p.engine}`;
+        document.getElementById('fase-desc').innerText = p.desc;
+    }
+
+    setInterval(update, 1000);
+    update();
+</script>
+</body>

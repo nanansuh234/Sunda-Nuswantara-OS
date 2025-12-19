@@ -1,0 +1,50 @@
+<div class="card" style="border: 2px solid #27ae60; background: #050505; border-radius: 20px; padding: 25px; font-family: 'Courier New', monospace;">
+    <span class="badge" style="color: #27ae60; letter-spacing: 3px; font-size: 0.7rem;">CORE LOGIC: MORFOLOGI BUHUN</span>
+    <h2 style="color: #fff; text-align: center; font-size: 1.2rem;">CRACKING ENGINE v1.0</h2>
+
+    <div style="background: #111; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #222;">
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <input type="text" id="rootInput" placeholder="Akar Kata (Geni)" style="flex: 2; padding: 10px; background: #000; border: 1px solid #27ae60; color: #fff;">
+            <select id="operatorInput" style="flex: 1; background: #000; color: #27ae60; border: 1px solid #27ae60;">
+                <option value="N-">N- (Aktif)</option>
+                <option value="KA-">KA- (Pasif/Terkena)</option>
+                <option value="PA-AN">PA-AN (Alat/Tempat)</option>
+                <option value="-UM-">-UM- (Sifat)</option>
+            </select>
+        </div>
+        <button onclick="crackWord()" style="width: 100%; padding: 10px; background: #27ae60; color: #000; font-weight: bold; border: none; cursor: pointer;">EKSEKUSI LOGIKA</button>
+    </div>
+
+    <div id="crackDisplay" style="display: none; border-left: 3px solid #27ae60; padding-left: 15px;">
+        <div style="color: #888; font-size: 0.8rem;">HASIL KONSTRUKSI:</div>
+        <div id="finalWord" style="font-size: 1.5rem; color: #fff; margin: 5px 0;"></div>
+        <div id="finalMeaning" style="font-size: 0.85rem; color: #27ae60; font-style: italic;"></div>
+    </div>
+</div>
+
+<script>
+    function crackWord() {
+        let root = document.getElementById('rootInput').value.toLowerCase();
+        let op = document.getElementById('operatorInput').value;
+        let res = "";
+        let mean = "";
+
+        if(root === "geni") {
+            if(op === "N-") { res = "Ngeni"; mean = "Mentransformasi menjadi energi/api."; }
+            else if(op === "KA-") { res = "Kageni"; mean = "Terbakar atau terkena paparan energi panas."; }
+            else if(op === "PA-AN") { res = "Panggenian"; mean = "Wadah/Reaktor pengolah energi."; }
+            else { res = "Gumeni"; mean = "Memiliki sifat seperti api (bersemangat/panas)."; }
+        } else {
+            // Logika General
+            if(op === "N-") res = "Ng-" + root;
+            else if(op === "KA-") res = "Ka-" + root;
+            else if(op === "PA-AN") res = "Pa-" + root + "-an";
+            else res = root.charAt(0) + "um" + root.substr(1);
+            mean = "Hasil konstruksi morfologi baru.";
+        }
+
+        document.getElementById('crackDisplay').style.display = 'block';
+        document.getElementById('finalWord').innerText = res.toUpperCase();
+        document.getElementById('finalMeaning').innerText = "Makna: " + mean;
+    }
+</script>
