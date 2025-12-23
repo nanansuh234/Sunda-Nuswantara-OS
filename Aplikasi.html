@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara OS - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #111;
+            --gold: #d4af37;
+            --green: #27ae60;
+            --blue: #2980b9;
+            --red: #c0392b;
+            --purple: #9b59b6;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- STATUS BAR --- */
+        .status-bar {
+            height: 40px;
+            background: rgba(20, 20, 20, 0.95);
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+        .status-left { color: var(--gold); letter-spacing: 2px; }
+        .status-right { color: #666; }
+
+        /* --- HERO WIDGET --- */
+        .hero-section {
+            padding: 20px 30px 0 30px;
+        }
+
+        .widget-card {
+            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .widget-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 60%);
+            animation: pulse 10s infinite;
+        }
+
+        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
+
+        .widget-time-group { z-index: 2; }
+        .nus-clock {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #fff;
+            line-height: 1;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .nus-phase {
+            font-size: 0.9rem;
+            color: var(--gold);
+            letter-spacing: 4px;
+            margin-top: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .widget-date-group { text-align: right; z-index: 2; }
+        .nus-dayname {
+            font-size: 1.2rem;
+            color: var(--green);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nus-full-date {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        .nus-pasaran {
+            display: inline-block;
+            background: var(--gold);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* --- MAIN GRID --- */
+        .dashboard-container {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            grid-auto-rows: 140px;
+            gap: 20px;
+            align-content: start;
+        }
+
+        a.app-card {
+            text-decoration: none;
+            background: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        a.app-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            background: #151515;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .app-icon { font-size: 2.8rem; margin-bottom: 10px; }
+        .app-label { 
+            font-size: 0.75rem; font-weight: bold; color: #bbb; 
+            text-align: center; letter-spacing: 1px; text-transform: uppercase;
+        }
+
+        /* Category Colors */
+        .cat-time .app-icon { color: var(--gold); }
+        .cat-nature .app-icon { color: var(--green); }
+        .cat-culture .app-icon { color: #fff; }
+        .cat-sys .app-icon { color: var(--red); }
+        .cat-blue .app-icon { color: var(--blue); }
+        .cat-lingo .app-icon { color: var(--purple); }
+
+        /* --- FOOTER --- */
+        .dock {
+            text-align: center;
+            padding: 8px;
+            font-size: 0.65rem;
+            color: #444;
+            border-top: 1px solid #111;
+            background: #000;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <div class="status-bar">
+        <div class="status-left">NUSWANTARA OS</div>
+        <div class="status-right" id="masehi-clock">Loading Masehi...</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="widget-card">
+            <div class="widget-time-group">
+                <div class="nus-clock" id="widget-clock">00:00</div>
+                <div class="nus-phase" id="widget-phase">---</div>
+            </div>
+            <div class="widget-date-group">
+                <div class="nus-dayname" id="widget-dayname">---</div>
+                <div class="nus-full-date" id="widget-fulldate">---</div>
+                <div class="nus-pasaran" id="widget-pasaran">---</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        
+        <a href="Readme.html" class="app-card cat-blue">
+            <div class="app-icon">ℹ️</div><div class="app-label">Tentang</div>
+        </a>
+
+        <a href="01 Jam Sunda Nuswantara.html" class="app-card cat-time">
+            <div class="app-icon">🕐</div><div class="app-label">Jam Utama</div>
+        </a>
+        <a href="02. Kalender Sunda Nuswantara.html" class="app-card cat-time">
+            <div class="app-icon">📅</div><div class="app-label">Kalender</div>
+        </a>
+        <a href="03. Jadwal Shalat Sunda Nuswantara.html" class="app-card cat-time">
+            <div class="app-icon">🕌</div><div class="app-label">Shalat</div>
+        </a>
+
+        <a href="04. Converter Waktu & Tanggal Ke Sunda Nuswantara.html" class="app-card cat-sys">
+            <div class="app-icon">🔄</div><div class="app-label">Konverter</div>
+        </a>
+        <a href="05. Satuan Nilai Sunda Nuswantara.html" class="app-card cat-sys">
+            <div class="app-icon">⚖️</div><div class="app-label">Satuan Nilai</div>
+        </a>
+        <a href="06. Contoh Jadwal Kegiatan Sunda Nuswantara.html" class="app-card cat-blue">
+            <div class="app-icon">📝</div><div class="app-label">Jadwal</div>
+        </a>
+
+        <a href="07. Panduan Manual Contoh Pertanian.html" class="app-card cat-nature">
+            <div class="app-icon">🌾</div><div class="app-label">Lumbung</div>
+        </a>
+        <a href="08. Panduan Manual Contoh Produktifitas dan Karya.html" class="app-card cat-nature">
+            <div class="app-icon">🔨</div><div class="app-label">Karya</div>
+        </a>
+
+        <a href="09. Aksara Hanacaraka.html" class="app-card cat-culture">
+            <div class="app-icon">ꦲ</div><div class="app-label">Hanacaraka</div>
+        </a>
+        <a href="10. Aksara Sunda Kuno.html" class="app-card cat-culture">
+            <div class="app-icon">ᮊ</div><div class="app-label">Sunda Kuno</div>
+        </a>
+        <a href="11. Rekonstruksi Bahasa Sunda Kuno.html" class="app-card cat-lingo">
+            <div class="app-icon">📖</div><div class="app-label">Kamus</div>
+        </a>
+        <a href="12. Sunda Kuno.html" class="app-card cat-lingo">
+            <div class="app-icon">✒️</div><div class="app-label">Olaxara</div>
+        </a>
+        <a href="Tools.html" class="app-card cat-nature">
+            <div class="app-icon">🧠</div><div class="app-label">Logic Engine</div>
+        </a>
+
+        <a href="13. Kumpulan Renungan.html" class="app-card cat-lingo">
+            <div class="app-icon">📚</div><div class="app-label">Renungan</div>
+        </a>
+
+    </div>
+
+    <div class="dock">SYSTEM READY // FREQUENCY ALIGNED</div>
+
+    <script>
+        // === DATABASE LOGIC ===
+        const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+        const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+        const saptawara = ["Sukra", "Tumpak", "Radite", "Soma", "Anggara", "Budha", "Respati"]; 
+        const phases = ["HENING", "FAJAR", "DUHA", "KARYA", "ISTIWA", "ASAR", "SANDIKALA", "SIREPAN"];
+
+        function updateWidget() {
+            const now = new Date();
+            
+            // 1. UPDATE JAM MASEHI
+            document.getElementById('masehi-clock').innerText = "Masehi: " + now.toLocaleTimeString('id-ID');
+
+            // 2. HITUNG JAM NUSWANTARA
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+            
+            let totalMin = ((h % 12) * 60) + m + (s/60);
+            let nHours = totalMin / 90;
+            let dH = Math.floor(nHours) || 8; 
+            let dM = Math.floor((nHours % 1) * 90);
+            
+            document.getElementById('widget-clock').innerText = 
+                `${String(dH).padStart(2,'0')}:${String(dM).padStart(2,'0')}`;
+
+            const phaseIdx = Math.floor(h / 3); 
+            let currentPhase = phases[phaseIdx];
+            let cycle = (h >= 6 && h < 18) ? "SIANG" : "MALAM";
+            document.getElementById('widget-phase').innerText = `${currentPhase} (${cycle})`;
+
+            // 3. HITUNG KALENDER
+            let anchor = new Date(now.getFullYear(), 2, 21);
+            if (now < anchor) { anchor = new Date(now.getFullYear() - 1, 2, 21); }
+            
+            const oneDay = 24 * 60 * 60 * 1000;
+            let diffDays = Math.floor((now - anchor) / oneDay);
+            
+            let mIdx = Math.floor(diffDays / 28);
+            let dNus = (diffDays % 28) + 1;
+            
+            let yearBase = 2025;
+            let currentNusYear = now.getFullYear() - yearBase + 1;
+            if (now < new Date(now.getFullYear(), 2, 21)) { currentNusYear -= 1; }
+            let yearStr = String(Math.max(1, currentNusYear)).padStart(3, '0');
+
+            let monthName = "";
+            if (mIdx >= 13) { monthName = "SUWUNG"; dNus = "Eternity"; } 
+            else { monthName = months[mIdx]; }
+
+            let baseAbsolute = new Date(2025, 2, 21);
+            let diffAbs = Math.floor((now - baseAbsolute) / oneDay);
+            let pIdx = (2 + (diffAbs % 5)) % 5;
+            if (pIdx < 0) pIdx += 5;
+            
+            let sIdx = (diffAbs % 7);
+            if (sIdx < 0) sIdx += 7;
+
+            document.getElementById('widget-dayname').innerText = saptawara[sIdx].toUpperCase();
+            document.getElementById('widget-pasaran').innerText = pasarans[pIdx].toUpperCase();
+            document.getElementById('widget-fulldate').innerText = `${dNus} ${monthName.toUpperCase()} ${yearStr}`;
+        }
+
+        setInterval(updateWidget, 1000);
+        updateWidget();
+    </script>
+</body>
+</html>
