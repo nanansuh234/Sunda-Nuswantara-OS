@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpustakaan Kesadaran</title>
+    <style>
+        :root { --bg: #050505; --card: #111; --purple: #9b59b6; --gold: #d4af37; --text: #ddd; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; }
+        
+        .container { width: 100%; max-width: 600px; }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--purple);
+            padding-bottom: 15px;
+        }
+        .header h1 { color: var(--purple); font-size: 1.5rem; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
+        .header p { font-size: 0.8rem; color: #666; margin-top: 5px; }
+
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-box:focus { border-color: var(--purple); box-shadow: 0 0 10px rgba(155, 89, 182, 0.3); }
+
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .link-card {
+            background: var(--card);
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            text-decoration: none;
+            color: #ccc;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .link-card:hover {
+            border-color: var(--gold);
+            color: #fff;
+            transform: translateX(5px);
+            background: #151515;
+        }
+
+        .link-card::before {
+            content: '📄';
+            margin-right: 15px;
+            font-size: 1.2rem;
+            opacity: 0.5;
+        }
+
+        .link-card:hover::before { opacity: 1; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+        .back-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--purple); color: #fff;
+            padding: 10px 20px; text-decoration: none;
+            border-radius: 50px; font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">🏠 Home</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>WARISAN KESADARAN</h1>
+            <p>Arsip Digital Pemikiran & Rangkuman Diskusi</p>
+        </div>
+
+        <input type="text" id="searchInput" class="search-box" onkeyup="filterList()" placeholder="Cari Judul Artikel...">
+
+        <div class="list-container" id="linkList">
+            </div>
+    </div>
+
+    <script>
+        // Database Link dari Request User
+        const db = [
+            {t: "Warisan Kesadaran: Krisis Nilai di Tengah Sistem Pendidikan Modern", u: "https://chatgpt.com/share/68fca0db-1038-8004-9cb8-e5bfe3b5df41"},
+            {t: "AI BUKAN MATA AIR, HANYA CERMIN", u: "https://gemini.google.com/share/7fd28ef94d44"},
+            {t: "Manifesto Kemanusiaan: Mengakhiri Perang Ideologi", u: "https://gemini.google.com/share/131fdb33e3bb"},
+            {t: "2030: Akhir Dunia atau Awal Kedaulatan Nilai?", u: "https://gemini.google.com/share/decfd84b8567"},
+            {t: "Penjaga Nilai vs. Ilusi Ekonomi (Sanggahan Harari Part 2)", u: "https://gemini.google.com/share/48cd62dac652"},
+            {t: "REVISI FILOSOFI AKSI GEN Z: Melawan Ilusi Kepastian", u: "https://gemini.google.com/share/c5cd1a2ae3ec"},
+            {t: "Lord Rangga, Kekaisaran Nilai, dan Kritik Tatanan Global", u: "https://gemini.google.com/share/7db5937a496b"},
+            {t: "Kedaulatan Digital: Strategi Ekstrem Melawan Pengawasan", u: "https://gemini.google.com/share/dd1b14d909e1"},
+            {t: "Kedaulatan Ekonomi & Mitigasi Hyperinflation Dolar", u: "https://gemini.google.com/share/1b0d04bad1e6"},
+            {t: "Kecerdasan vs. Kesadaran: Membedah Batas AI", u: "https://gemini.google.com/share/95e76036b45b"},
+            {t: "KESADARAN DIBUAT, BUKAN DICIPTAKAN: Formula Tanggung Jawab", u: "https://gemini.google.com/share/2ad8e64d118c"},
+            {t: "Kesadaran, Nilai, dan Kebijaksanaan: Memfilter Elit Culas", u: "https://gemini.google.com/share/b0b59abf228c"},
+            {t: "Rangkuman Filosofi Non-Linear: Tauhid & Peradaban Nusantara", u: "https://gemini.google.com/share/fa8bde427f54"},
+            {t: "Ilmu vs. Data: Kenapa Kesadaran Kolektif Mengalahkan Individualisme", u: "https://gemini.google.com/share/50bb0fd9cb32"},
+            {t: "Era 'System Stability Settlement' – Doktrin Kedaulatan Baru", u: "https://gemini.google.com/share/b97319fcd604"},
+            {t: "Akuntabilitas Individu vs. Perisai Institusi", u: "https://gemini.google.com/share/b3e7fc378303"},
+            {t: "Logika Ambyar vs. Kesadaran: Kritik Kreator Malaka", u: "https://gemini.google.com/share/1ac7c6285316"},
+            {t: "DAJJAL SEBAGAI SISTEM DAN ECHO CHAMBER", u: "https://gemini.google.com/share/bce5b9ed8e71"},
+            {t: "Dari 'KTP Nusantara' ke 'Kota Global': Membedah Risiko", u: "https://gemini.google.com/share/872092434165"},
+            {t: "KESADARAN ADALAH KUNCI, DATA CUMA ALAT", u: "https://gemini.google.com/share/22417699053d"},
+            {t: "Dari 'Dadu Kuantum' ke 'Blueprint Ruang Ujian'", u: "https://gemini.google.com/share/a67912195ffd"},
+            {t: "'Alien di Kandang Ayam': Membongkar Ilusi Hierarki", u: "https://gemini.google.com/share/df97b40af103"},
+            {t: "Reset Tatanan Sosial: Dari Matinya Demokrasi ke 'Firewall' Iman", u: "https://gemini.google.com/share/4ec18738930c"},
+            {t: "Jebakan Fatal Narasi 'Indonesia United' & Sejarah RIS", u: "https://gemini.google.com/share/3b74e26bf5c9"},
+            {t: "Realita Dunia Ilusi: Pabrik Budak & Aset Kripto Sitaan", u: "https://gemini.google.com/share/fe3d8694b892"},
+            {t: "Sistem Perbudakan Modern: Jebakan Simbol", u: "https://gemini.google.com/share/29fa3db625ab"},
+            {t: "Sains vs Kesadaran: Roti vs Remahan", u: "https://gemini.google.com/share/9dbc08072291"},
+            {t: "Apocalypse as a Sieve: Menuju Peradaban Nilai", u: "https://gemini.google.com/share/9e06b619f7e5"},
+            {t: "Proyek Cermin & Nilai Sejati: Membongkar Ilusi Dolar & AI", u: "https://gemini.google.com/share/d409b7332364"},
+            {t: "JANGAN JADI 'ECHO COMBERAN'! Hacking Spiritual", u: "https://gemini.google.com/share/6387fa19e1b0"},
+            {t: "Salah Server: Kritik Video 'Maha Tahu'", u: "https://gemini.google.com/share/2c2c9423fd4c"},
+            {t: "Krisis 'Manusia Casing': Saat Harga Membunuh Nilai", u: "https://gemini.google.com/share/017e39afef03"},
+            {t: "Di Balik Konflik: Ideologi yang Memakan Dirinya Sendiri", u: "https://gemini.google.com/share/a6b6d3c03e46"},
+            {t: "Lucifer Effect: Pembajakan Moral oleh Ideologi", u: "https://gemini.google.com/share/937ec2ea4e83"},
+            {t: "Masa Depan Sudah Tamat, Kiamat Adalah Proses Saat Ini", u: "https://gemini.google.com/share/4b746d3e3b5b"},
+            {t: "DEKONSTRUKSI WAKTU: DARI ILUSI LINIER KE SEBAB-AKIBAT", u: "https://grok.com/share/bGVnYWN5_917c410a-d97b-4fae-b020-a55a989cde15"},
+            {t: "Warisan Kesadaran di Atas Banjir Data", u: "https://gemini.google.com/share/6e59a0af3fd1"},
+            {t: "Dari 'Rumah Umat' ke 'Gedung Ibadah'", u: "https://gemini.google.com/share/06b71f5414e2"},
+            {t: "Proyek De-Evolusi: Dari 'Tumis Tikus' Hingga Feodalisme", u: "https://gemini.google.com/share/4657d3210ea4"},
+            {t: "Di Balik Tragedi SMAN 72: Natural Selection & Doktrinasi", u: "https://gemini.google.com/share/a79f48dd9063"},
+            {t: "Wejangan tentang Dosa Horizontal: Utang yang Tak Lunas", u: "https://gemini.google.com/share/d0866922f79e"},
+            {t: "Koreksi Kritis: Iman Adalah Ukuran, Bukan Keyakinan", u: "https://gemini.google.com/share/dc8d76a8c058"},
+            {t: "Nasihat Perang Kesadaran & Membongkar Echo Chamber", u: "https://gemini.google.com/share/64183dea8510"},
+            {t: "Review Bongkaran: Melawan Krisis Pikiran", u: "https://gemini.google.com/share/fb02d259ca50"},
+            {t: "Iman = Ukuran, Agama = Hard Mode, Ateis = Sandbox", u: "https://gemini.google.com/share/b9bf5ad4a916"},
+            {t: "Simulasi Dingin vs Kontrol Darurat: Manusia vs AI", u: "https://gemini.google.com/share/cebb5c26c6f6"},
+            {t: "Tinjauan Diskusi: Tupai Test & Pembajakan Kehendak", u: "https://gemini.google.com/share/ad652d1bda00"},
+            {t: "Membongkar Ulang Konsep Iman: Pengakuan ke Pembuktian", u: "https://gemini.google.com/share/eecb29ef74f7"},
+            {t: "Tumis Tikus & Bayi Besar: Blueprint Kebangkitan", u: "https://gemini.google.com/share/1c9fd201622c"},
+            {t: "Tragedi Saksi Kunci: Keterasingan Rasa", u: "https://gemini.google.com/share/5758e34e8f05"},
+            {t: "Perang Algoritma vs Kesadaran: Jebakan Akhir Zaman", u: "https://gemini.google.com/share/88d62255e0de"},
+            {t: "Warisan Kesadaran: Kompas Batin Melawan Fitnah Dajjal", u: "https://gemini.google.com/share/fe795b4324e1"},
+            {t: "Review Kritis: Membongkar Algoritma Homo Deus", u: "https://gemini.google.com/share/66d6d1388ba2"},
+            {t: "Peradaban Adab vs Jebakan Toleransi (Part 1)", u: "https://gemini.google.com/share/5b34ce006076"},
+            {t: "Peradaban Adab vs Jebakan Toleransi (Part 2)", u: "https://chatgpt.com/share/691284f5-9714-8004-9abb-3cc8e6b7735b"},
+            {t: "OTOPSI SISTEM: Utang Receh & Penjara Global", u: "https://gemini.google.com/share/e5f4a240dc6e"},
+            {t: "Bedah Video: Kenapa Yakin Dunia Ada Penciptanya?", u: "https://gemini.google.com/share/494f09d99b74"},
+            {t: "Dari Tuhan Bosen ke AI Malaikat: Kritik MorgueOfficial", u: "https://gemini.google.com/share/a1349e8c26a4"},
+            {t: "Lupakan Redenominasi, Rebut Kembali Denominasi", u: "https://gemini.google.com/share/e5b753ba7816"},
+            {t: "Iman = Ukuran: Membedah Jebakan Social Credit", u: "https://gemini.google.com/share/a63914608071"},
+            {t: "Bongkar Total Echo Chamber Redenominasi", u: "https://gemini.google.com/share/4b9b38b94f94"},
+            {t: "Ngaleng Bari Neke: Mengukur Ulang Iman Sains", u: "https://gemini.google.com/share/5f05b3b8d988"},
+            {t: "Iman Adalah Ukuran — Peta Logika Jasad, Jiwa, Ruh", u: "https://gemini.google.com/share/03e35a3f5cc1"},
+            {t: "Rangkuman Perang Tersembunyi Indonesia Era 80-90an", u: "https://gemini.google.com/share/b01b3d8e9ad8"},
+            {t: "Membongkar Mitos Susah Diedukasi", u: "https://gemini.google.com/share/0e09bab5585e"},
+            {t: "Bedah Playbook Elit Global: Invasi Fisik ke Digital", u: "https://gemini.google.com/share/0e8236c2c135"},
+            {t: "Dari Kebun ke Salon dan Spa", u: "https://gemini.google.com/share/e0995fba81a3"},
+            {t: "Reset 2026 — Manual Bertahan Hidup", u: "https://gemini.google.com/share/445d2e4bb168"},
+            {t: "Perang Peta vs Kesadaran Rasa", u: "https://gemini.google.com/share/ba93bfc4136c"},
+            {t: "Sejarah yang Dikaburkan: Sundaland & Utang Kolonial", u: "https://gemini.google.com/share/0c0edb968d83"},
+            {t: "Membongkar Bangkai & Pengaburan Sejarah Kolonial", u: "https://gemini.google.com/share/085868e327b2"},
+            {t: "Kedaulatan Keluarga vs Kontrol Algoritma", u: "https://gemini.google.com/share/7d2145552613"},
+            {t: "Kedaulatan Keluarga: Membongkar Isolasi Sosial", u: "https://gemini.google.com/share/ff90b4e6e489"},
+            {t: "Spiritualisme Steroid Ego & Filsafat Skop Pasir", u: "https://gemini.google.com/share/fe6293ceb58c"},
+            {t: "Ilmu Pasti Kedaulatan: Mereset Algoritma Ilusi", u: "https://gemini.google.com/share/8953046b60d1"},
+            {t: "Iman = Ukuran vs Iman = Kepercayaan (Adu Domba)", u: "https://gemini.google.com/share/3fc9ab0bc197"},
+            {t: "IMAN ADALAH UKURAN: Otoritas Kesadaran vs Data", u: "https://gemini.google.com/share/b9404c07f92e"},
+            {t: "Kotak Pandora Kesadaran: Ketika AI Mengancam Jiwa", u: "https://gemini.google.com/share/f530b21af080"},
+            {t: "Membongkar Bangkai Sejarah Nusantara & Bahtera Nuh", u: "https://gemini.google.com/share/d4ca4d894b65"},
+            {t: "MANIFESTO LOGIKA LANGIT: THE PRECISION OF FAITH", u: "https://gemini.google.com/share/c61206b03489"},
+            {t: "JEJAK KESADARAN YANG TERPUTUS: Ilusi Kemajuan", u: "https://gemini.google.com/share/8f4a8d140d80"},
+            {t: "FILE KASUS: THE VERTICAL TRAP & SILENT REVOLUTION", u: "https://gemini.google.com/share/5f13b0b41c53"},
+            {t: "RUNTUHNYA ILUSI BITCOIN & JEBAKAN DIGITAL", u: "https://gemini.google.com/share/399e9f290b90"},
+            {t: "Evolusi Kesadaran: Dari Mental Kucing sampai Tupai Test", u: "https://gemini.google.com/share/f19548dcd9ce"},
+            {t: "Intervensi Langit & Ilusi Kesadaran", u: "https://gemini.google.com/share/a6243cf156f5"},
+            {t: "MANIFESTO KEWARASAN: PETA JALAN DI ERA LINGLUNG", u: "https://gemini.google.com/share/89d76d118d8f"},
+            {t: "THE ENDGAME PROTOCOL: Melawan Ilusi Kertas", u: "https://gemini.google.com/share/93fec165a09e"},
+            {t: "WARISAN KESADARAN: Mengembalikan Iman Sebagai Ukuran", u: "https://gemini.google.com/share/fe951067445e"},
+            {t: "THE GREAT HIJACK (PEMBAJAKAN AGUNG)", u: "https://gemini.google.com/share/8ef7d4ea1066"},
+            {t: "JEBAKAN ALGORITMA ELIT GLOBAL: JFK HINGGA PETANI", u: "https://gemini.google.com/share/e75ac7baceff"},
+            {t: "MANIFESTO KESADARAN MUTLAK: Hukum Sebab-Akibat", u: "https://gemini.google.com/share/348e28b4856c"},
+            {t: "Kimi no Na wa & The Tikotok Paradox", u: "https://gemini.google.com/share/8faa56e9e6f9"},
+            {t: "JEBAKAN POTSDAM & RUNTUHNYA KESADARAN SAMURAI", u: "https://gemini.google.com/share/ba3afdc12387"},
+            {t: "MANIFESTO JALAN SUNYI: Runtuhnya Ilusi Fiat", u: "https://gemini.google.com/share/b7e4880111c5"},
+            {t: "The Manifesto of Consciousness (Amerika & Negara Global)", u: "https://gemini.google.com/share/a4cef2aa0e44"},
+            {t: "ILUSI KEMAJUAN: TEKNOLOGI KEHILANGAN JIWA", u: "https://gemini.google.com/share/12bf2a24bccc"},
+            {t: "AI, KESADARAN, & JEBAKAN SPIRITUAL", u: "https://gemini.google.com/share/68ce492d21ad"},
+            {t: "PROJECT BAHTERA: Mengembalikan Source Code Nusantara", u: "https://gemini.google.com/share/ab82e5743f3c"},
+            {t: "MANUSIA NUSANTARA: PEWARIS KESADARAN", u: "https://gemini.google.com/share/5acfc87adf09"},
+            {t: "PROJECT DIGITAL ARK: BLUEPRINT KEDAULATAN", u: "https://gemini.google.com/share/dfac4b71e577"},
+            {t: "VIMANA RONGSOKAN – RESEP TERAKHIR MANUSIA 5D", u: "https://grok.com/share/bGVnYWN5_d4f112f5-e08d-4e8a-965f-6f398c114a32"},
+            {t: "Sidang Mahkamah Diri: Kudeta Nafsu", u: "https://gemini.google.com/share/ba58fed34afd"},
+            {t: "MANIFESTO KESADARAN: Runtuhnya Filsafat Gelap", u: "https://gemini.google.com/share/27393b75efc2"},
+            {t: "REKONSILIASI SEJARAH: Melawan Amnesia", u: "https://gemini.google.com/share/a9b23df99338"},
+            {t: "RESET SEJARAH NUSANTARA: Melampaui Dogma Data", u: "https://gemini.google.com/share/ff57054102cc"},
+            {t: "Benang Merah Tauhid: Menyelaraskan Syariat Bapak & Anak", u: "https://gemini.google.com/share/87dc23779076"},
+            {t: "THE GRAND SHIFT: DARI ILUSI FIAT MENUJU SYSTEM STABILITY", u: "https://gemini.google.com/share/7cdd7542ee09"},
+            {t: "Dari Bumi Datar sampai Rasa Yakin", u: "https://grok.com/share/bGVnYWN5_8b230e32-3534-47ab-8a3b-7672a5a40296"},
+            {t: "MANIFESTO: IMAN = UKURAN Menjahit Logika Sains", u: "https://gemini.google.com/share/5c4d6e0f17a8"},
+            {t: "MANIFESTO KESADARAN SAGARA: Poros Peradaban Nusantara", u: "https://gemini.google.com/share/097fbf78b700"},
+            {t: "REVIEW EKSKLUSIF: Membongkar Distorsi Sejarah Al-Hind", u: "https://gemini.google.com/share/c8fbd13728ca"},
+            {t: "MANIFESTO 2027: MENYAPIH DIRI DARI ILUSI", u: "https://gemini.google.com/share/01be66d162ff"},
+            {t: "MANIFESTO IMAN BERKESADARAN: Dogma Buta ke Ukuran Nyata", u: "https://gemini.google.com/share/13346126da19"},
+            {t: "RESUME DISKUSI: JEJAK TEKNOLOGI LEMURIA", u: "https://gemini.google.com/share/bc8d4c2777a4"},
+            {t: "Negara dalam Negara & Ilusi Hak Milik", u: "https://gemini.google.com/share/bb7ad642a169"},
+            {t: "REVIEW FILE: THE GRAND SCHEME OF NUSANTARA", u: "https://gemini.google.com/share/066056890313"},
+            {t: "Ngobrol Bahasa Sunda", u: "https://grok.com/share/bGVnYWN5_033ebf19-8116-4369-b819-93910bf3c6b8"},
+            {t: "REVIEW SESI: LOGIKA DATA VS. KESADARAN RASA", u: "https://gemini.google.com/share/734c44977d96"},
+            {t: "THE DEATH OF TRUTH: Ternak Akun Menuju Matinya Internet", u: "https://gemini.google.com/share/501858a190c3"},
+            {t: "RUNTUHNYA LOGIKA TERBALIK & JALAN PULANG MANUSIA", u: "https://gemini.google.com/share/fff6ee7d0184"},
+            {t: "MANIFESTO AKAR: Melawan Ilusi Waktu", u: "https://gemini.google.com/share/ff97edde1dfd"},
+            {t: "Everything is Light: Elit Global Sembunyiin Konsep Ini", u: "https://grok.com/share/bGVnYWN5_0e9ecf7d-ab65-4dc1-b119-27440dd1afeb"},
+            {t: "THE GREAT TIME SHIFT: Survival Menghadapi Treadmill Setan", u: "https://gemini.google.com/share/1ee9aaea2c71"},
+            {t: "IMAN = UKURAN: Debugging Error Teologi", u: "https://gemini.google.com/share/7f4e6ab72014"},
+            {t: "PROTOKOL KEDAULATAN: MITIGASI BENCANA KE REVOLUSI MONETER", u: "https://gemini.google.com/share/df6a6fe24bf7"},
+            {t: "Logika: Ayat Tuhan yang Paling Sering Dilanggar", u: "https://gemini.google.com/share/beab93618b32"},
+            {t: "Saat Grok dipaksa Jujur, jawaban nya hanya mengulang?", u: "https://grok.com/share/bGVnYWN5_2ecef08f-a02c-44fb-a2b8-d4e5fa9dc5a8"},
+            {t: "BLUEPRINT 2026: NAVIGASI RASA DI TENGAH BLACKOUT", u: "https://gemini.google.com/share/3de8dfcab1a6"},
+            {t: "MENOLAK INFLASI SEMESTA: KEDAULATAN BIOLOGIS", u: "https://gemini.google.com/share/ddd4a380bcde"},
+            {t: "TERRARIUM: Mesin Jam Raksasa di Balik Kubah Langit", u: "https://gemini.google.com/share/b9b413c2533b"},
+            {t: "REVIEW FINAL: DARI RUNTUHNYA BETON SAMPAI REVOLUSI KESADARAN", u: "https://gemini.google.com/share/ce94d65dab61"},
+            {t: "GRAND DESIGN PERADABAN BARU: REALITA KEKUATAN", u: "https://gemini.google.com/share/7eb17480d15f"},
+            {t: "THE BLUEPRINT 2026: DARI ILUSI FIAT MENUJU REALITAS NILAI", u: "https://gemini.google.com/share/f77a1113df0f"},
+            {t: "THE GREAT RESET 2026: Runtuhnya Ilusi Angka", u: "https://gemini.google.com/share/864531047c2c"},
+            {t: "IMAN ADALAH UKURAN: Redefinisi Bangsa Pilihan", u: "https://gemini.google.com/share/b3dc359475cf"},
+            {t: "THE GREAT RESET: PROTOKOL WAKTU SUNDA NUSWANTARA", u: "https://gemini.google.com/share/fe52a9ef5486"},
+            {t: "PROTOKOL WAKTU NUSWANTARA: THE DIVINE SHIFT", u: "https://gemini.google.com/share/24cdad514ce9"},
+            {t: "Ketika Putus Asa Bertemu Hilangnya Adab, Lahirlah Monster", u: "https://gemini.google.com/share/11de71265643"},
+            {t: "Dari Jejak Emas Nusantara Menuju Reset Peradaban", u: "https://gemini.google.com/share/c7bcc4a4bf48"},
+            {t: "Kesimpulan: Reset Peradaban Nuswantara 2025", u: "https://grok.com/share/bGVnYWN5_22b97a3e-ab61-49b9-84ee-c0d6d21c816e"},
+            {t: "DAWLEETOO, BUMI VERTIKAL, & FILOSOFI GAGADUHAN", u: "https://gemini.google.com/share/698bbcb51ce3"}
+        ];
+
+        function renderList(data) {
+            const list = document.getElementById('linkList');
+            list.innerHTML = "";
+            data.forEach(item => {
+                list.innerHTML += `<a href="${item.u}" target="_blank" class="link-card">${item.t}</a>`;
+            });
+        }
+
+        function filterList() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = db.filter(item => item.t.toLowerCase().includes(query));
+            renderList(filtered);
+        }
+
+        // Init
+        renderList(db);
+    </script>
+</body>
+</html>
