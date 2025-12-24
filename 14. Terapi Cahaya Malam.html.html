@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Light Therapy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000;
+            --gold: #d4af37;
+            --text: #ccc;
+        }
+        
+        * { box-sizing: border-box; user-select: none; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- THE LIGHT SOURCE --- */
+        #light-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 1;
+            opacity: 0;
+            transition: background-color 1s ease;
+        }
+
+        /* Breathing Animation */
+        .breathe-anim {
+            animation: breathing 4s infinite ease-in-out;
+        }
+        
+        @keyframes breathing {
+            0% { opacity: var(--min-bright); }
+            50% { opacity: var(--max-bright); }
+            100% { opacity: var(--min-bright); }
+        }
+
+        /* --- CONTROLS PANEL --- */
+        .panel {
+            position: relative;
+            z-index: 10;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--gold);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            transition: opacity 0.5s;
+        }
+
+        h1 { margin: 0 0 5px 0; color: var(--gold); font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+        p { font-size: 0.8rem; color: #666; margin-bottom: 25px; }
+
+        .control-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Sliders */
+        input[type=range] {
+            width: 100%;
+            -webkit-appearance: none;
+            background: #333;
+            height: 6px;
+            border-radius: 5px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px; height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Color Buttons */
+        .color-grid { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .color-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 2px solid #333; cursor: pointer;
+            transition: 0.3s;
+        }
+        .color-btn.active { border-color: #fff; transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+        /* Action Buttons */
+        .btn-main {
+            background: var(--gold); color: #000; border: none;
+            padding: 15px 30px; border-radius: 50px;
+            font-weight: bold; font-size: 1rem; cursor: pointer;
+            width: 100%; margin-top: 10px;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .timer-display {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem; color: #fff;
+            margin: 10px 0; display: none;
+        }
+
+        /* Overlay Toggle */
+        .hidden-controls { opacity: 0; pointer-events: none; }
+        
+        #tap-hint {
+            position: fixed; bottom: 30px;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+            z-index: 5;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="light-layer"></div>
+    <div id="tap-hint">Ketuk layar untuk memunculkan menu</div>
+
+    <div class="panel" id="control-panel">
+        <h1>SIREPAN THERAPY</h1>
+        <p>Atur frekuensi cahaya untuk menginduksi tidur.</p>
+
+        <div class="control-group">
+            <label>Spektrum Warna</label>
+            <div class="color-grid">
+                <button class="color-btn active" style="background: #ff0000;" onclick="setColor('#ff0000', this)" title="Merah Murni (Melatonin)"></button>
+                <button class="color-btn" style="background: #ff4500;" onclick="setColor('#ff4500', this)" title="Jingga Senja (Relax)"></button>
+                <button class="color-btn" style="background: #ffb700;" onclick="setColor('#ffb700', this)" title="Emas Lilin (Warm)"></button>
+                <button class="color-btn" style="background: #00bfff;" onclick="setColor('#00bfff', this)" title="Biru Fajar (Bangun)"></button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Intensitas Cahaya</label>
+            <input type="range" id="brightRange" min="10" max="100" value="50" oninput="updateSettings()">
+        </div>
+
+        <div class="control-group">
+            <label>Kecepatan Napas (Pulsing)</label>
+            <input type="range" id="speedRange" min="2" max="8" value="4" oninput="updateSettings()">
+            <div style="text-align:right; font-size:0.7rem; color:#555; margin-top:5px;">Lambat (Rileks) <---> Cepat (Fokus)</div>
+        </div>
+
+        <div class="control-group">
+            <label>Timer Otomatis (Menit)</label>
+            <div style="display:flex; gap:10px;">
+                <button onclick="setTimer(15)" class="btn-timer" style="flex:1; padding:8px; background:#222; border:1px solid #444; color:#ccc; border-radius:5px; cursor:pointer;">15m</button>
+                <button onclick="setTimer(30)" class="btn-timer" style="flex:1; padding:8px; background:#222; border:1px solid #444; color:#ccc; border-radius:5px; cursor:pointer;">30m</button>
+                <button onclick="setTimer(60)" class="btn-timer" style="flex:1; padding:8px; background:#222; border:1px solid #444; color:#ccc; border-radius:5px; cursor:pointer;">60m</button>
+            </div>
+            <div id="timer-val" class="timer-display">00:00</div>
+        </div>
+
+        <button class="btn-main" onclick="toggleLight()">MULAI TERAPI</button>
+        <button onclick="location.href='index.html'" style="margin-top:15px; background:none; border:none; color:#666; cursor:pointer; text-decoration:underline; font-size:0.8rem;">Kembali ke Dashboard</button>
+    </div>
+
+<script>
+    let isRunning = false;
+    let currentColor = '#ff0000';
+    let timerInterval = null;
+
+    const layer = document.getElementById('light-layer');
+    const panel = document.getElementById('control-panel');
+    const hint = document.getElementById('tap-hint');
+
+    function setColor(hex, btn) {
+        currentColor = hex;
+        // Reset active styling
+        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        if(isRunning) layer.style.backgroundColor = currentColor;
+    }
+
+    function updateSettings() {
+        const bright = document.getElementById('brightRange').value;
+        const speed = document.getElementById('speedRange').value;
+
+        // CSS Variables for animation
+        // Min brightness is slightly lower to create pulsing effect
+        const maxOp = bright / 100;
+        const minOp = maxOp * 0.4; // Pulse goes down to 40% of max
+
+        layer.style.setProperty('--max-bright', maxOp);
+        layer.style.setProperty('--min-bright', minOp);
+        layer.style.animationDuration = (10 - speed) + "s"; // Invert logic: higher slider = faster (lower seconds)
+    }
+
+    function toggleLight() {
+        if (!isRunning) {
+            // TURN ON
+            isRunning = true;
+            enterFullscreen();
+            
+            layer.style.backgroundColor = currentColor;
+            layer.classList.add('breathe-anim');
+            updateSettings(); // Apply initial slider values
+            
+            panel.classList.add('hidden-controls');
+            hint.style.display = 'block';
+
+        } else {
+            // TURN OFF (Manual click usually handled by screen tap)
+            stopTherapy();
+        }
+    }
+
+    function stopTherapy() {
+        isRunning = false;
+        layer.style.backgroundColor = '#000';
+        layer.style.opacity = 0;
+        layer.classList.remove('breathe-anim');
+        
+        panel.classList.remove('hidden-controls');
+        hint.style.display = 'none';
+        
+        if (document.exitFullscreen) document.exitFullscreen();
+        clearInterval(timerInterval);
+        document.getElementById('timer-val').style.display = 'none';
+    }
+
+    // Screen Tap to Show/Hide Controls
+    document.body.addEventListener('click', (e) => {
+        // Only trigger if clicking outside panel when running
+        if (isRunning && !panel.contains(e.target) && e.target !== document.querySelector('.btn-main')) {
+            if (panel.classList.contains('hidden-controls')) {
+                panel.classList.remove('hidden-controls');
+                hint.style.display = 'none';
+            } else {
+                panel.classList.add('hidden-controls');
+                hint.style.display = 'block';
+            }
+        }
+    });
+
+    function setTimer(min) {
+        clearInterval(timerInterval);
+        let seconds = min * 60;
+        const display = document.getElementById('timer-val');
+        display.style.display = 'block';
+        
+        updateTimerDisplay(seconds);
+
+        timerInterval = setInterval(() => {
+            seconds--;
+            updateTimerDisplay(seconds);
+            if (seconds <= 0) {
+                stopTherapy();
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay(sec) {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        document.getElementById('timer-val').innerText = 
+            `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    function enterFullscreen() {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    }
+</script>
+</body>
+</html>
