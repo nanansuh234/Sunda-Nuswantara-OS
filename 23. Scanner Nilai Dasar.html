@@ -228,8 +228,9 @@
     </div>
 
     <script>
-        // URL CSV DARI BRO NANAN
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGkIRI-_XNlA7-5YP1amp9axQdYbGFLERIted9INYCDKpFa8AxtJ-qwVMf9kFLB-kLcmUoJPzCmend/pub?gid=326493804&single=true&output=csv';
+        // URL CSV (Dengan Timestamp Anti-Cache)
+        const baseUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGkIRI-_XNlA7-5YP1amp9axQdYbGFLERIted9INYCDKpFa8AxtJ-qwVMf9kFLB-kLcmUoJPzCmend/pub?gid=326493804&single=true&output=csv';
+        const csvUrl = baseUrl + '&t=' + new Date().getTime();
 
         let dbData = [];
 
@@ -248,34 +249,24 @@
                 status.innerText = "OFFLINE MODE";
                 status.style.borderColor = "#ff2a6d";
                 status.style.color = "#ff2a6d";
-                // Dummy Data kalau offline
-                dbData = [
-                    {nama:"Padi", r:"Logistik Utama", e:"Karbohidrat", n:"Energi Vital", f:"Pangan Pokok", d:"Sumber kehidupan utama masyarakat agraris."},
-                    {nama:"Kelapa", r:"Multiguna", e:"Lemak Nabati", n:"Isotonik", f:"Bahan Baku", d:"Pohon kehidupan, semua bagiannya berguna."}
-                ];
-                renderList();
             }
         }
 
         function parseCSV(text) {
             const rows = text.split('\n').slice(1); // Skip header
             dbData = rows.map(row => {
-                // Asumsi format kolom CSV bro Nanan:
-                // Nama | Rank/Kategori | Energy/Stats | Essence/Desc
-                // Kita akan coba mapping pintar
                 const cols = parseRow(row);
                 if(cols.length < 2) return null;
                 
-                // Mapping Data (Sesuaikan jika urutan kolom di CSV beda)
+                // DATA MAPPING
                 // Kolom 0: Nama
-                // Kolom 1: Rank/Kategori
-                // Kolom 2: Stats (Kita akan pecah string ini jika formatnya "Energy:X; Nutrisi:Y")
+                // Kolom 1: Kategori
+                // Kolom 2: Stats (Energi:X; Nutrisi:Y; Fungsi:Z)
                 // Kolom 3: Deskripsi
                 
                 let stats = cols[2] || "";
                 let energy = "-", nutrisi = "-", fungsi = "-";
 
-                // Coba parsing kolom Stats jika formatnya "Key:Val; Key:Val"
                 if(stats.includes(':')) {
                     let parts = stats.split(';');
                     parts.forEach(p => {
@@ -285,17 +276,11 @@
                             if(k.includes('energi') || k.includes('kalori')) energy = v.trim();
                             else if(k.includes('nutrisi') || k.includes('gizi')) nutrisi = v.trim();
                             else if(k.includes('fungsi') || k.includes('manfaat')) fungsi = v.trim();
-                            else if(k.includes('asal')) fungsi = v.trim(); // Fallback
                         }
                     });
                 } else {
-                    // Kalau stats cuma plain text, taruh di nutrisi
-                    nutrisi = stats; 
+                    nutrisi = stats; // Fallback jika format lama
                 }
-
-                // Fallback kalau kosong
-                if(energy === "-") energy = "Standard Bio-Energy";
-                if(fungsi === "-") fungsi = "Unknown Function";
 
                 return {
                     nama: cols[0].trim(),
@@ -311,7 +296,6 @@
         }
 
         function parseRow(row) {
-            // Simple CSV parser that handles quotes
             let res = [];
             let cur = '';
             let inQuote = false;
@@ -327,7 +311,6 @@
         function renderList() {
             const list = document.getElementById('listContent');
             list.innerHTML = "";
-            // Sort Alphabetical
             dbData.sort((a,b) => a.nama.localeCompare(b.nama));
             
             dbData.forEach(item => {
@@ -356,7 +339,6 @@
             const q = document.getElementById('searchInput').value.toLowerCase().trim();
             if(!q) return;
 
-            // Search Logic
             const item = dbData.find(i => i.nama.toLowerCase() === q) || 
                          dbData.find(i => i.nama.toLowerCase().includes(q));
 
@@ -369,14 +351,11 @@
 
         function showResult(data) {
             document.getElementById('rName').innerText = data.nama;
-            document.getElementById('rClass').innerText = data.r; // Rank/Kategori
-            
+            document.getElementById('rClass').innerText = data.r;
             document.getElementById('rEnergy').innerText = data.e;
             document.getElementById('rNutrisi').innerText = data.n;
             document.getElementById('rFungsi').innerText = data.f;
-            
             document.getElementById('rDesc').innerText = `"${data.d}"`;
-
             document.getElementById('resCard').style.display = 'block';
         }
 
@@ -385,9 +364,7 @@
             document.getElementById('searchInput').value = "";
         }
 
-        // Start
         loadDB();
-
     </script>
 </body>
 </html>
