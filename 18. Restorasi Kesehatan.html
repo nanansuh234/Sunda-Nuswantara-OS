@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restorasi Kesehatan Holistik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #111;
+            --heal: #1de9b6; /* Teal Healing Color */
+            --gold: #d4af37;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--heal);
+            padding-bottom: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--heal); margin: 0; letter-spacing: 3px; font-size: 1.4rem; }
+        .subtitle { font-size: 0.8rem; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- NAVIGATION --- */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 600px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .tab-btn {
+            background: #222;
+            border: 1px solid #444;
+            color: #888;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: bold;
+            font-size: 0.75rem;
+            flex: 1;
+            text-align: center;
+            transition: 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: var(--heal);
+            color: #000;
+            border-color: var(--heal);
+            box-shadow: 0 0 15px rgba(29, 233, 182, 0.3);
+        }
+
+        /* --- CONTENT CARDS --- */
+        .content-area { width: 100%; max-width: 600px; }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideUp 0.4s ease;
+            border-left: 4px solid var(--heal);
+        }
+        .info-card.active { display: block; }
+
+        h2 { color: #fff; margin-top: 0; border-bottom: 1px dashed #444; padding-bottom: 10px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- DIAGNOSIS STYLE --- */
+        .symptom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .chk-label {
+            display: block;
+            background: #222;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border: 1px solid #333;
+            transition: 0.3s;
+        }
+        .chk-label:hover { border-color: var(--heal); }
+        input[type="checkbox"] { display: none; }
+        input[type="checkbox"]:checked + span { color: var(--heal); font-weight: bold; }
+        .chk-box:checked + .chk-label { border-color: var(--heal); background: rgba(29, 233, 182, 0.1); }
+
+        .diag-result {
+            background: #000;
+            border: 1px solid var(--heal);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* --- JAMU RECIPE --- */
+        .recipe-select { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: #fff; border-radius: 8px; margin-bottom: 15px; }
+        .ingredient-list { margin-top: 15px; font-size: 0.9rem; }
+        .ing-row { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 8px 0; }
+        .ing-val { color: var(--heal); font-weight: bold; }
+
+        /* --- THERAPY VISUAL --- */
+        .therapy-box {
+            text-align: center;
+            border: 1px dashed #444;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .kerokan-pattern {
+            width: 100%; height: 150px;
+            background: repeating-linear-gradient(45deg, #222, #222 10px, #333 10px, #333 20px);
+            position: relative;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .spine {
+            position: absolute; left: 50%; top: 10px; bottom: 10px; width: 4px; background: var(--heal); transform: translateX(-50%);
+            box-shadow: 0 0 10px var(--heal);
+        }
+        .ribs {
+            position: absolute; width: 100%; height: 2px; background: rgba(29, 233, 182, 0.5); top: 30px;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-btn {
+            margin-top: 30px;
+            text-decoration: none;
+            color: #666;
+            font-size: 0.8rem;
+            border: 1px solid #333;
+            padding: 10px 25px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { color: var(--heal); border-color: var(--heal); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>TABIB DIGITAL</h1>
+        <div class="subtitle">Sistem Kesehatan Holistik Nuswantara</div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="tab-btn active" onclick="showTab('diagnosa')">DIAGNOSA</div>
+        <div class="tab-btn" onclick="showTab('jamu')">RACIKAN</div>
+        <div class="tab-btn" onclick="showTab('fisio')">FISIOTERAPI</div>
+        <div class="tab-btn" onclick="showTab('p3k')">P3K ALAM</div>
+    </div>
+
+    <div class="content-area">
+
+        <div id="tab-diagnosa" class="info-card active">
+            <h2>Cek Kondisi Badan</h2>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Pilih gejala yang dirasakan:</p>
+            
+            <div class="symptom-grid">
+                <label class="chk-label"><input type="checkbox" value="kembung" class="chk-box"> <span>Perut Kembung</span></label>
+                <label class="chk-label"><input type="checkbox" value="dingin" class="chk-box"> <span>Meriang/Dingin</span></label>
+                <label class="chk-label"><input type="checkbox" value="pegal" class="chk-box"> <span>Pegal Linu</span></label>
+                <label class="chk-label"><input type="checkbox" value="pusing" class="chk-box"> <span>Pusing/Cekot</span></label>
+                <label class="chk-label"><input type="checkbox" value="tenggorokan" class="chk-box"> <span>Sakit Telan</span></label>
+                <label class="chk-label"><input type="checkbox" value="lemas" class="chk-box"> <span>Lemas/Lesu</span></label>
+            </div>
+
+            <button onclick="diagnose()" style="width:100%; padding:12px; background:var(--heal); border:none; border-radius:8px; font-weight:bold; cursor:pointer; color:#000;">ANALISIS KONDISI</button>
+
+            <div id="diag-res" class="diag-result">
+                <div style="font-size:0.8rem; color:#aaa;">INDIKASI:</div>
+                <div id="diag-name" style="font-size:1.5rem; font-weight:bold; color:#fff; margin:5px 0;">-</div>
+                <div style="border-top:1px dashed #444; margin:10px 0;"></div>
+                <div id="diag-solusi" style="font-size:0.9rem; color:var(--heal); line-height:1.5;">-</div>
+            </div>
+        </div>
+
+        <div id="tab-jamu" class="info-card">
+            <h2>Apoteker Jawi</h2>
+            <p style="font-size:0.8rem; color:#aaa;">Kalkulator Bahan Jamu (Per Gelas)</p>
+            
+            <select id="jamu-select" class="recipe-select" onchange="calcJamu()">
+                <option value="">-- Pilih Resep --</option>
+                <option value="kunyitasam">Kunyit Asam (Detoks/Haid)</option>
+                <option value="beraskencur">Beras Kencur (Stamina/Batuk)</option>
+                <option value="wedanguwuh">Wedang Uwuh (Hangat/Antioksidan)</option>
+                <option value="temulawak">Temulawak (Liver/Nafsu Makan)</option>
+                <option value="jahemerah">Wedang Jahe Merah (Masuk Angin)</option>
+            </select>
+
+            <div style="display:flex; gap:10px; align-items:center; margin-bottom:15px;">
+                <label style="font-size:0.8rem; color:#888;">Jumlah Porsi (Gelas):</label>
+                <input type="number" id="porsi" value="1" min="1" oninput="calcJamu()" style="width:60px; padding:8px; background:#000; border:1px solid #444; color:#fff; text-align:center; border-radius:5px;">
+            </div>
+
+            <div id="resep-display" style="display:none; background:#000; padding:15px; border-radius:10px;">
+                <div style="font-size:0.8rem; color:#888; margin-bottom:10px;">BAHAN YANG DIBUTUHKAN:</div>
+                <div id="ing-list"></div>
+                <div style="margin-top:15px; font-size:0.8rem; color:#aaa; font-style:italic;">
+                    *Tumbuk kasar/geprek bahan rimpang. Rebus dengan api kecil hingga air menyusut 20%.
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-fisio" class="info-card">
+            <h2>Teknik Urat & Angin</h2>
+            
+            <div class="therapy-box">
+                <h3 style="color:var(--heal); margin:0;">KEROKAN (Gua Sha)</h3>
+                <p style="font-size:0.8rem; color:#ccc;">Membuka pori untuk membuang panas terjebak.</p>
+                
+                <div class="kerokan-pattern">
+                    <div class="spine"></div>
+                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; background:rgba(0,0,0,0.7); padding:5px;">POLA TULANG IKAN</div>
+                </div>
+                
+                <div style="text-align:left; font-size:0.85rem; line-height:1.6;">
+                    <b>Aturan Main:</b><br>
+                    1. Gunakan bawang merah + minyak kelapa (untuk anak) atau koin (dewasa).<br>
+                    2. Arah kerok: Atas ke Bawah & Miring keluar (mengikuti tulang rusuk).<br>
+                    3. <b>HARAM:</b> Mengerok tepat di atas tulang punggung (Bahaya Saraf!).
+                </div>
+            </div>
+
+            <div class="therapy-box">
+                <h3 style="color:var(--heal); margin:0;">PIJAT TUYUL (Refleksi)</h3>
+                <p style="font-size:0.8rem; color:#ccc;">Titik tekan darurat.</p>
+                <ul style="text-align:left; font-size:0.85rem; line-height:1.6; color:#ccc;">
+                    <li><b>Pusing:</b> Tekan jempol tangan & sela jari telunjuk-jempol.</li>
+                    <li><b>Mual:</b> Tekan pergelangan tangan dalam (3 jari dari telapak).</li>
+                    <li><b>Insomnia:</b> Tekan tengah telapak kaki.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="tab-p3k" class="info-card">
+            <h2>Unit Gawat Darurat Alam</h2>
+            
+            <div class="list-item" style="margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
+                <b style="color:var(--heal);">Luka Iris / Berdarah</b><br>
+                <span style="font-size:0.85rem; color:#ccc;">Teteskan getah <b>Pohon Pisang</b> muda atau kunyah <b>Daun Sirih/Babadotan</b> lalu tempelkan. Darah berhenti instan.</span>
+            </div>
+
+            <div class="list-item" style="margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
+                <b style="color:var(--heal);">Luka Bakar</b><br>
+                <span style="font-size:0.85rem; color:#ccc;">Oleskan <b>Madu Murni</b> atau lendir <b>Lidah Buaya</b>. JANGAN pakai odol/mentega (bikin infeksi panas).</span>
+            </div>
+
+            <div class="list-item" style="margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
+                <b style="color:var(--heal);">Sakit Gigi</b><br>
+                <span style="font-size:0.85rem; color:#ccc;">Kumur air garam hangat. Atau gigit <b>Bunga Cengkeh</b> / Kapas minyak cengkeh di gigi yang sakit.</span>
+            </div>
+
+            <div class="list-item" style="margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
+                <b style="color:var(--heal);">Diare / Mulas</b><br>
+                <span style="font-size:0.85rem; color:#ccc;">Minum air rebusan <b>Daun Jambu Biji</b> atau makan <b>Salak</b> muda sepet. Hindari teh manis kental.</span>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">🏠 KEMBALI KE DASHBOARD</a>
+
+    <script>
+        function showTab(id) {
+            document.querySelectorAll('.info-card').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            
+            const btns = document.querySelectorAll('.tab-btn');
+            if(id === 'diagnosa') btns[0].classList.add('active');
+            if(id === 'jamu') btns[1].classList.add('active');
+            if(id === 'fisio') btns[2].classList.add('active');
+            if(id === 'p3k') btns[3].classList.add('active');
+        }
+
+        // DATABASE JAMU
+        const recipes = {
+            kunyitasam: { n: "Kunyit 3 ruas, Asam Jawa 1 sdm, Gula Aren", u: "gram" },
+            beraskencur: { n: "Beras (rendam) 1 sdm, Kencur 3 ruas, Jahe 1 ruas", u: "gram" },
+            wedanguwuh: { n: "Secang, Jahe, Cengkeh, Kayu Manis, Pala", u: "paket" },
+            temulawak: { n: "Temulawak 3 iris, Madu 1 sdm", u: "iris" },
+            jahemerah: { n: "Jahe Merah 2 ruas (bakar), Serai 1 btg, Gula Batu", u: "ruas" }
+        };
+
+        function calcJamu() {
+            const type = document.getElementById('jamu-select').value;
+            const porsi = document.getElementById('porsi').value;
+            if(!type) return;
+
+            const r = recipes[type];
+            const list = document.getElementById('ing-list');
+            list.innerHTML = "";
+            
+            // Simple string parsing simulation
+            let items = r.n.split(',');
+            items.forEach(item => {
+                list.innerHTML += `
+                    <div class="ing-row">
+                        <span>${item.trim()}</span>
+                        <span class="ing-val">x ${porsi}</span>
+                    </div>
+                `;
+            });
+            document.getElementById('resep-display').style.display = 'block';
+        }
+
+        // LOGIKA DIAGNOSA SEDERHANA
+        function diagnose() {
+            const sym = Array.from(document.querySelectorAll('.chk-box:checked')).map(cb => cb.value);
+            const resBox = document.getElementById('diag-res');
+            const nameEl = document.getElementById('diag-name');
+            const solEl = document.getElementById('diag-solusi');
+
+            if(sym.length === 0) { alert("Pilih minimal satu gejala!"); return; }
+
+            resBox.style.display = 'block';
+
+            if(sym.includes('kembung') && sym.includes('dingin')) {
+                nameEl.innerText = "MASUK ANGIN";
+                solEl.innerText = "Tubuh kelebihan energi dingin. Lakukan KEROKAN di punggung, minum Wedang Jahe Merah, dan pakai baju tebal. Hindari kipas angin.";
+            } else if(sym.includes('tenggorokan') && sym.includes('dingin')) {
+                nameEl.innerText = "PANAS DALAM";
+                solEl.innerText = "Ketidakseimbangan panas tubuh. Minum air larutan (alang-alang), cincau, atau selasih. Kurangi gorengan.";
+            } else if(sym.includes('pegal') && sym.includes('lemas')) {
+                nameEl.innerText = "DARAH KOTOR / CAPEK";
+                solEl.innerText = "Sirkulasi darah tidak lancar. Lakukan PIJAT URUT seluruh badan dan minum Kunyit Asam untuk detoks.";
+            } else if(sym.includes('pusing')) {
+                nameEl.innerText = "TEKANAN PIKIRAN";
+                solEl.innerText = "Bukan penyakit fisik. Ini sinyal otak butuh istirahat (SIREPAN). Tidur dalam gelap minimal 8 jam.";
+            } else {
+                nameEl.innerText = "KETIDAKSEIMBANGAN ENERGI";
+                solEl.innerText = "Istirahatkan tubuh total (Bed Rest). Minum air hangat (Kuo) setiap jam.";
+            }
+        }
+    </script>
+</body>
+</html>
