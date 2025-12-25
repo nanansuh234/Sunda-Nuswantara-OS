@@ -72,7 +72,7 @@
             100% { top: 100%; opacity: 0; }
         }
 
-        /* --- NAVIGATION & STATUS (FIXED LAYOUT) --- */
+        /* --- NAVIGATION & STATUS --- */
         .home-btn {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
             color: #000; text-decoration: none; font-size: 0.8rem; font-weight: bold;
@@ -83,7 +83,7 @@
         }
 
         #db-status {
-            position: absolute; top: 65px; /* Geser ke bawah biar gak nempel */
+            position: absolute; top: 65px; 
             left: 50%; transform: translateX(-50%);
             font-size: 0.65rem; color: #666; z-index: 5;
             border: 1px solid #333; padding: 4px 12px; border-radius: 12px; background: #000;
@@ -93,12 +93,7 @@
 
         /* --- INPUT INTERFACE --- */
         .interface {
-            z-index: 10;
-            position: absolute;
-            bottom: 80px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
+            z-index: 10; position: absolute; bottom: 80px; width: 90%; max-width: 500px; text-align: center;
         }
 
         .target-box {
@@ -111,116 +106,93 @@
         }
 
         input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            outline: none;
-            padding: 5px;
+            width: 100%; background: transparent; border: none; color: #fff;
+            font-family: 'Orbitron', sans-serif; font-size: 1.2rem;
+            text-transform: uppercase; outline: none; padding: 5px;
         }
 
         button {
-            background: var(--hud);
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Orbitron', sans-serif;
+            background: var(--hud); color: #000; border: none; padding: 10px 20px;
+            font-weight: bold; cursor: pointer; font-family: 'Orbitron', sans-serif;
             clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%, 0 0);
         }
 
+        .dict-btn {
+            margin-bottom: 10px; background: none; border: 1px solid var(--hud); color: var(--hud);
+            font-size: 0.7rem; padding: 5px 15px; border-radius: 15px; cursor: pointer;
+            letter-spacing: 2px;
+        }
+        .dict-btn:hover { background: var(--hud); color: #000; }
+
+        /* --- DICTIONARY MODAL (KAMUS) --- */
+        .dict-modal {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 400px; max-height: 60vh;
+            background: rgba(0, 10, 5, 0.95); border: 2px solid var(--hud);
+            z-index: 50; display: none; flex-direction: column;
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.3);
+            border-radius: 10px;
+        }
+        .dict-header {
+            padding: 15px; border-bottom: 1px solid var(--hud);
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0, 255, 204, 0.1);
+        }
+        .dict-body {
+            flex: 1; overflow-y: auto; padding: 10px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+        }
+        .dict-item {
+            padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid #333;
+            color: #ccc; font-size: 0.8rem; cursor: pointer; text-align: left;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .dict-item:hover {
+            border-color: var(--hud); color: var(--hud); background: rgba(0, 255, 204, 0.1);
+        }
+        .dict-close { color: var(--alert); cursor: pointer; font-weight: bold; border: 1px solid var(--alert); padding: 2px 8px; border-radius: 5px; }
+
         /* --- RESULT CARD --- */
         .appraisal-card {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -60%) scale(0.9);
-            width: 90%; max-width: 400px;
-            background: rgba(10, 20, 15, 0.95);
-            border: 1px solid var(--hud);
-            padding: 2px;
-            display: none; 
-            z-index: 20;
-            box-shadow: 0 0 50px rgba(0, 255, 204, 0.2);
-            animation: popIn 0.3s forwards;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%) scale(0.9);
+            width: 90%; max-width: 400px; background: rgba(10, 20, 15, 0.95);
+            border: 1px solid var(--hud); padding: 2px; display: none; z-index: 20;
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.2); animation: popIn 0.3s forwards;
         }
 
-        @keyframes popIn {
-            to { transform: translate(-50%, -60%) scale(1); }
-        }
+        @keyframes popIn { to { transform: translate(-50%, -60%) scale(1); } }
 
         .card-header {
-            background: var(--hud);
-            color: #000;
-            padding: 5px 10px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
+            background: var(--hud); color: #000; padding: 5px 10px; font-weight: bold;
+            display: flex; justify-content: space-between; font-size: 0.8rem;
         }
-
-        .card-body {
-            padding: 20px;
-            text-align: left;
-        }
-
+        .card-body { padding: 20px; text-align: left; }
         .obj-name {
-            font-size: 2rem;
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            border-bottom: 1px solid #333;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px var(--hud);
-            word-wrap: break-word;
+            font-size: 2rem; color: #fff; font-family: 'Orbitron', sans-serif;
+            border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--hud); word-wrap: break-word;
         }
-
         .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: #aaa;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 2px;
+            display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem;
+            color: #aaa; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px;
         }
         .stat-val { color: var(--hud); font-weight: bold; text-align: right; }
-
         .essence-box {
-            margin-top: 20px;
-            border: 1px dashed var(--gold);
-            padding: 10px;
-            background: rgba(212, 175, 55, 0.05);
-            color: var(--gold);
+            margin-top: 20px; border: 1px dashed var(--gold); padding: 10px;
+            background: rgba(212, 175, 55, 0.05); color: var(--gold);
         }
         .essence-title { font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px; opacity: 0.8; }
         .essence-text { font-style: italic; font-size: 1rem; line-height: 1.4; }
-
         .rank-badge {
-            position: absolute; top: -15px; right: -15px;
-            background: #000;
-            border: 2px solid var(--gold);
-            color: var(--gold);
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
+            position: absolute; top: -15px; right: -15px; background: #000;
+            border: 2px solid var(--gold); color: var(--gold); width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-family: 'Orbitron', sans-serif; font-size: 1.5rem;
             box-shadow: 0 0 20px var(--gold);
         }
-
         .close-btn {
-            margin-top: 15px;
-            width: 100%;
-            background: transparent;
-            border: 1px solid #444;
-            color: #888;
-            cursor: pointer;
-            padding: 10px;
-            font-family: 'Share Tech Mono', monospace;
+            margin-top: 15px; width: 100%; background: transparent; border: 1px solid #444;
+            color: #888; cursor: pointer; padding: 10px; font-family: 'Share Tech Mono', monospace;
             text-transform: uppercase;
         }
         .close-btn:hover { border-color: var(--hud); color: var(--hud); }
@@ -236,7 +208,17 @@
     <div class="scan-line"></div>
     <div id="camera-feed"></div>
 
+    <div id="dictModal" class="dict-modal">
+        <div class="dict-header">
+            <span style="letter-spacing: 2px;">DATABASE LUMBUNG</span>
+            <span class="dict-close" onclick="toggleDict()">X</span>
+        </div>
+        <div id="dictBody" class="dict-body">
+            </div>
+    </div>
+
     <div class="interface">
+        <button class="dict-btn" onclick="toggleDict()">📂 BUKA KAMUS ITEM</button>
         <div style="font-size:0.7rem; margin-bottom:5px; color:var(--hud); letter-spacing: 2px;">OMNI-LENS v1.0 ONLINE</div>
         <div class="target-box">
             <span style="font-size:1.5rem; margin-right:10px;">⌖</span>
@@ -253,30 +235,24 @@
         </div>
         <div class="card-body">
             <div class="obj-name" id="resName">UNKNOWN</div>
-            
             <div style="font-size:0.7rem; color:#666; margin-bottom:10px;">DATA KOMPOSISI:</div>
-            <div id="statsContainer">
-                </div>
-
+            <div id="statsContainer"></div>
             <div class="essence-box">
                 <div class="essence-title">HAKIKAT NILAI (VALUE):</div>
                 <div class="essence-text" id="resEssence">---</div>
             </div>
-
             <button class="close-btn" onclick="closeCard()">TUTUP WINDOW</button>
         </div>
     </div>
 
 <script>
     // =========================================================================
-    // KONFIGURASI SPREADSHEET
+    // KONFIGURASI SPREADSHEET (Database 101 Komoditas)
     // =========================================================================
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQGkIRI-_XNlA7-5YP1amp9axQdYbGFLERIted9INYCDKpFa8AxtJ-qwVMf9kFLB-kLcmUoJPzCmend/pub?gid=0&single=true&output=csv"; 
     // =========================================================================
 
     let cloudDB = {}; 
-    
-    // Database Cadangan
     const localDB = {
         "jagung": { r: "B", s: "Gizi:Karbo;Sifat:Merakyat", e: "Emas nabati. Tumbuh di tanah kering, simbol ketangguhan rakyat." },
         "uang": { r: "F", s: "Bahan:Kertas;Nilai:Fiat", e: "Janji utang yang dicetak. Berguna di pasar, sampah di akhirat." }
@@ -294,22 +270,53 @@
                 const cols = parseCSVRow(row);
                 if(cols.length >= 4) {
                     const key = cols[0].trim().toLowerCase();
-                    cloudDB[key] = {
-                        r: cols[1].trim(),
-                        s: cols[2].trim(),
-                        e: cols[3].trim()
-                    };
+                    cloudDB[key] = { r: cols[1].trim(), s: cols[2].trim(), e: cols[3].trim() };
                 }
             });
 
             statusEl.innerText = "CLOUD DATABASE: CONNECTED";
             statusEl.classList.add('online');
-            console.log("Database Loaded:", Object.keys(cloudDB).length + " items");
+            populateDict(); // Isi Kamus setelah data masuk
 
         } catch (err) {
             console.log("Offline Mode:", err);
             statusEl.innerText = "LOCAL DATABASE (OFFLINE)";
+            populateDict();
         }
+    }
+
+    function populateDict() {
+        const dictBody = document.getElementById('dictBody');
+        dictBody.innerHTML = "";
+        
+        // Gabungkan Cloud & Local keys, sort alfabetis
+        const allKeys = [...new Set([...Object.keys(cloudDB), ...Object.keys(localDB)])].sort();
+        
+        if (allKeys.length === 0) {
+            dictBody.innerHTML = "<div style='grid-column: span 2; text-align: center; color: #666;'>Database Kosong</div>";
+            return;
+        }
+
+        allKeys.forEach(key => {
+            // Capitalize First Letter
+            const label = key.charAt(0).toUpperCase() + key.slice(1);
+            const div = document.createElement('div');
+            div.className = 'dict-item';
+            div.innerText = label;
+            div.onclick = () => selectFromDict(label);
+            dictBody.appendChild(div);
+        });
+    }
+
+    function toggleDict() {
+        const modal = document.getElementById('dictModal');
+        modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function selectFromDict(name) {
+        document.getElementById('objInput').value = name;
+        toggleDict(); // Tutup modal
+        scanObject(); // Auto scan
     }
 
     function parseCSVRow(str) {
@@ -329,21 +336,17 @@
     function analyzeUnknown(input) {
         let hash = 0;
         for (let i = 0; i < input.length; i++) hash = input.charCodeAt(i) + ((hash << 5) - hash);
-        
         const ranks = ["C", "B", "A", "D", "E", "S"];
         const rank = ranks[Math.abs(hash) % ranks.length];
-
         const props = ["Struktur:Solid", "Aura:Netral", "Asal:Bumi", "Potensi:Tinggi", "Fungsi:Unknown"];
         let sArr = [];
         for(let i=0; i<3; i++) sArr.push(props[Math.abs(hash + i) % props.length]);
-        
         const templates = [
             `Objek ini memiliki resonansi unik. ${input} menyimpan fungsi yang belum sepenuhnya dipahami.`,
             `Terdeteksi pola energi pada ${input}. Sepertinya biasa saja, namun memiliki peran dalam ekosistem.`,
             `Analisis struktur ${input} menunjukkan adanya nilai guna yang sering terabaikan.`
         ];
         const essence = templates[Math.abs(hash) % templates.length];
-
         return { r: rank, s: sArr.join(';'), e: essence };
     }
 
@@ -355,15 +358,11 @@
         if(!input) return;
 
         let data = cloudDB[input] || localDB[input];
-        
         if (!data) {
             const key = Object.keys(cloudDB).find(k => k.includes(input));
             if(key) data = cloudDB[key];
         }
-
-        if (!data) {
-            data = analyzeUnknown(input);
-        }
+        if (!data) data = analyzeUnknown(input);
 
         const nameDisplay = input.toUpperCase();
         document.getElementById('resName').innerText = nameDisplay;
@@ -391,19 +390,9 @@
         statsParts.forEach(part => {
             let [k, v] = part.split(':');
             if(k && v) {
-                sCon.innerHTML += `
-                    <div class="stat-row">
-                        <span>${k.trim()}</span>
-                        <span class="stat-val" style="color:${color}">${v.trim()}</span>
-                    </div>
-                `;
+                sCon.innerHTML += `<div class="stat-row"><span>${k.trim()}</span><span class="stat-val" style="color:${color}">${v.trim()}</span></div>`;
             } else {
-                sCon.innerHTML += `
-                    <div class="stat-row">
-                        <span>Info</span>
-                        <span class="stat-val" style="color:${color}">${part.trim()}</span>
-                    </div>
-                `;
+                sCon.innerHTML += `<div class="stat-row"><span>Info</span><span class="stat-val" style="color:${color}">${part.trim()}</span></div>`;
             }
         });
 
