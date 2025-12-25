@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estafet Amanah Nuswantara</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0c10;
+            --card: #1f2833;
+            --text: #c5c6c7;
+            --neon: #66fcf1; /* Cyan Neon */
+            --gold: #d4af37;
+            --line: #45a29e;
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center; margin-bottom: 40px;
+            border-bottom: 2px solid var(--gold); padding-bottom: 15px; width: 100%; max-width: 700px;
+        }
+        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; font-size: 1.8rem; letter-spacing: 3px; }
+        .subtitle { font-size: 0.9rem; color: var(--neon); margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* TIMELINE CONTAINER */
+        .relay-container {
+            width: 100%; max-width: 600px;
+            position: relative;
+            padding-left: 30px; /* Space for the line */
+        }
+
+        /* THE VERTICAL LINE */
+        .relay-line {
+            position: absolute; left: 15px; top: 20px; bottom: 20px;
+            width: 4px; background: linear-gradient(to bottom, var(--neon), var(--gold));
+            border-radius: 2px;
+            box-shadow: 0 0 15px var(--neon);
+            z-index: 0;
+        }
+
+        /* RELAY CARD */
+        .relay-card {
+            background: var(--card);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            margin-left: 20px;
+            transition: 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .relay-card::before {
+            content: ''; position: absolute; left: -28px; top: 50%; transform: translateY(-50%);
+            width: 16px; height: 16px; background: var(--bg);
+            border: 3px solid var(--neon); border-radius: 50%;
+            z-index: 1; box-shadow: 0 0 10px var(--neon);
+        }
+
+        .relay-card.active {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+            transform: translateX(10px);
+        }
+        .relay-card.active::before { border-color: var(--gold); background: var(--gold); }
+
+        /* CONTENT */
+        .role-badge {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--neon); margin-bottom: 5px; font-weight: bold;
+        }
+        
+        .role-title {
+            font-family: 'Cinzel', serif; font-size: 1.4rem; color: #fff; margin-bottom: 10px;
+        }
+
+        .task-box {
+            max-height: 0; overflow: hidden; transition: 0.5s ease;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+        }
+        .relay-card.active .task-box { max-height: 500px; margin-top: 15px; padding-top: 15px; }
+
+        .mission-item {
+            display: flex; gap: 10px; margin-bottom: 10px; font-size: 0.95rem;
+            align-items: flex-start;
+        }
+        .check-icon { color: var(--gold); font-weight: bold; }
+
+        .legacy-note {
+            margin-top: 15px; background: rgba(0,0,0,0.3); padding: 10px;
+            border-left: 3px solid var(--gold); font-style: italic; font-size: 0.85rem; color: #aaa;
+        }
+
+        /* BACK BUTTON */
+        .back-btn {
+            margin-top: 40px; text-decoration: none; color: #666; font-size: 0.8rem;
+            border: 1px solid #333; padding: 10px 30px; border-radius: 50px; transition: 0.3s;
+        }
+        .back-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ESTAFET GENERASI</h1>
+        <div class="subtitle">Rantai Tanggung Jawab & Warisan Nilai</div>
+    </div>
+
+    <div class="relay-container" id="relayList">
+        <div class="relay-line"></div>
+        </div>
+
+    <a href="index.html" class="back-btn">KEMBALI KE DASHBOARD</a>
+
+    <script>
+        const relayData = [
+            {
+                role: "SI KAKAK (Anak Besar)",
+                title: "PENJAGA ADIK",
+                tasks: [
+                    "Menjaga adik saat Ibu sedang sibuk (memasak/mandi).",
+                    "Memberi contoh merapikan mainan agar adik meniru.",
+                    "Tidak merebut mainan adik (Mengalah untuk menang).",
+                    "Melaporkan bahaya (listrik/api) ke orang tua segera."
+                ],
+                legacy: "Warisan: Rasa Tanggung Jawab Pertama. Belajar bahwa 'Aku lebih kuat, maka aku melindungi'."
+            },
+            {
+                role: "REMAJA (Akil Baligh)",
+                title: "PENJAGA NAMA BAIK",
+                tasks: [
+                    "Menjaga pergaulan agar tidak mencoreng nama keluarga.",
+                    "Membantu tugas fisik rumah yang berat (angkat galon/genteng).",
+                    "Menjadi tempat curhat adik agar adik tidak curhat ke orang salah.",
+                    "Mulai mandiri dalam urusan pribadi (cuci baju/piring sendiri)."
+                ],
+                legacy: "Warisan: Integritas & Harga Diri. Belajar bahwa tindakannya berdampak pada kehormatan keluarga."
+            },
+            {
+                role: "PEMUDA (Gen Z / Dewasa Awal)",
+                title: "TULANG PUNGGUNG MUDA",
+                tasks: [
+                    "Mandiri finansial agar tidak menjadi beban orang tua.",
+                    "Membantu biaya sekolah adik atau kebutuhan rumah semampunya.",
+                    "Mengajarkan skill digital/modern kepada orang tua.",
+                    "Merawat orang tua yang mulai sakit-sakitan (fisik)."
+                ],
+                legacy: "Warisan: Kemandirian & Bakti. Mengambil alih beban fisik dari pundak orang tua."
+            },
+            {
+                role: "ORANG TUA (Milenial / Dewasa Madya)",
+                title: "PONDASI & PAYUNG",
+                tasks: [
+                    "Memastikan ketersediaan pangan & papan yang layak.",
+                    "Membangun aset produktif untuk masa depan anak.",
+                    "Menjadi filter budaya luar yang masuk ke rumah.",
+                    "Menjaga kerukunan dengan keluarga besar (Om/Tante/Sepupu)."
+                ],
+                legacy: "Warisan: Keamanan & Stabilitas. Menciptakan ruang tumbuh yang aman bagi generasi penerus."
+            },
+            {
+                role: "SESEPUH (Lansia / Boomer)",
+                title: "SUMBER HIKMAH",
+                tasks: [
+                    "Mewariskan cerita leluhur dan nilai-nilai luhur.",
+                    "Menjadi penengah konflik tanpa memihak.",
+                    "Mendoakan seluruh keturunan tanpa putus.",
+                    "Melepaskan kendali duniawi, fokus pada ketenangan batin."
+                ],
+                legacy: "Warisan: Doa & Kebijaksanaan. Menjadi akar spiritual yang menguatkan seluruh pohon keluarga."
+            }
+        ];
+
+        const container = document.getElementById('relayList');
+
+        relayData.forEach((data, index) => {
+            const card = document.createElement('div');
+            card.className = 'relay-card';
+            // Auto open first card
+            if(index === 0) card.classList.add('active'); 
+            
+            card.onclick = function() {
+                // Close all others
+                document.querySelectorAll('.relay-card').forEach(c => c.classList.remove('active'));
+                // Open clicked
+                this.classList.add('active');
+            };
+
+            let tasksHtml = '';
+            data.tasks.forEach(t => {
+                tasksHtml += `
+                    <div class="mission-item">
+                        <span class="check-icon">❖</span>
+                        <span>${t}</span>
+                    </div>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="role-badge">FASE ${index + 1}: ${data.role}</div>
+                <div class="role-title">${data.title}</div>
+                <div class="task-box">
+                    ${tasksHtml}
+                    <div class="legacy-note">"${data.legacy}"</div>
+                </div>
+            `;
+
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>

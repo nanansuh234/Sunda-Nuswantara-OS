@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codex Manusia - Nuswantara OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Orbitron:wght@600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --neon-blue: #00f3ff;
+            --neon-gold: #ffd700;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; transition: 0.4s ease; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* BACKGROUND EFFECT */
+        .bg-grid {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle, black 40%, transparent 80%);
+        }
+
+        /* HEADER */
+        .main-title {
+            text-align: center; margin-bottom: 50px; z-index: 10;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif; font-size: 3rem; margin: 0;
+            background: linear-gradient(to right, var(--neon-blue), #fff, var(--neon-gold));
+            -webkit-background-clip: text; color: transparent;
+            letter-spacing: 5px; text-transform: uppercase;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+        .subtitle {
+            font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; color: #666; margin-top: 5px;
+        }
+
+        /* CONTAINER DUAL */
+        .portal-container {
+            display: flex; gap: 40px; width: 90%; max-width: 1000px; z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .portal-container { flex-direction: column; height: 70vh; }
+        }
+
+        /* CARD STYLE */
+        .portal-card {
+            flex: 1;
+            height: 400px;
+            border: 1px solid #333;
+            border-radius: 20px;
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .portal-card::before {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent);
+            opacity: 0; transition: 0.4s;
+        }
+
+        .card-icon { font-size: 4rem; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)); }
+        .card-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        .card-desc { font-size: 1rem; color: #888; text-align: center; width: 80%; line-height: 1.4; }
+        .btn-enter {
+            margin-top: 30px; padding: 10px 30px; border: 1px solid; border-radius: 50px;
+            font-weight: bold; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;
+        }
+
+        /* LEFT: SIKLUS HIDUP (BIOLOGIS) */
+        .card-blue { border-color: rgba(0, 243, 255, 0.3); }
+        .card-blue .card-title { color: var(--neon-blue); }
+        .card-blue .btn-enter { color: var(--neon-blue); border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.05); }
+        
+        .card-blue:hover { 
+            transform: scale(1.02); 
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2); 
+            border-color: var(--neon-blue);
+        }
+        .card-blue:hover::before { opacity: 1; }
+
+        /* RIGHT: ESTAFET (IDEOLOGIS) */
+        .card-gold { border-color: rgba(255, 215, 0, 0.3); }
+        .card-gold .card-title { color: var(--neon-gold); }
+        .card-gold .btn-enter { color: var(--neon-gold); border-color: var(--neon-gold); background: rgba(255, 215, 0, 0.05); }
+
+        .card-gold:hover { 
+            transform: scale(1.02); 
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.2); 
+            border-color: var(--neon-gold);
+        }
+        .card-gold:hover::before { opacity: 1; }
+
+        /* FOOTER BACK */
+        .back-btn {
+            position: absolute; bottom: 30px;
+            text-decoration: none; color: #444; font-size: 0.8rem; letter-spacing: 2px;
+            border-bottom: 1px solid #333; padding-bottom: 5px;
+        }
+        .back-btn:hover { color: #fff; border-color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <div class="main-title">
+        <h1>CODEX MANUSIA</h1>
+        <div class="subtitle">Sistem Operasi Kehidupan</div>
+    </div>
+
+    <div class="portal-container">
+        
+        <a href="24. Siklus Hidup.html" class="portal-card card-blue">
+            <div class="card-icon">🧬</div>
+            <div class="card-title">Peta Raga</div>
+            <div class="card-desc">
+                Panduan kebutuhan fisik, pangan, sandang, dan papan dari fase Bayi hingga Jompo.
+                <br><br>
+                <small>[HAK & KEBUTUHAN]</small>
+            </div>
+            <div class="btn-enter">Akses Data</div>
+        </a>
+
+        <a href="25. Estafet Generasi.html" class="portal-card card-gold">
+            <div class="card-icon">🔥</div>
+            <div class="card-title">Peta Jiwa</div>
+            <div class="card-desc">
+                Rantai tanggung jawab, tugas moral, dan warisan nilai antar generasi.
+                <br><br>
+                <small>[KEWAJIBAN & AMANAH]</small>
+            </div>
+            <div class="btn-enter">Mulai Estafet</div>
+        </a>
+
+    </div>
+
+    <a href="index.html" class="back-btn">KEMBALI KE DASHBOARD UTAMA</a>
+
+</body>
+</html>

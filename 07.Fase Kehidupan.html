@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siklus Hidup Nuswantara</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #0f0f0f;
+            --neon: #00e5ff; /* Cyan */
+            --gold: #ffd700;
+            --text: #e0e0e0;
+            --panel: rgba(0, 229, 255, 0.05);
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--neon);
+            padding-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+            text-shadow: 0 0 10px var(--neon);
+        }
+        
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--neon); margin: 0; letter-spacing: 4px; font-size: 2rem; }
+        .subtitle { font-size: 0.9rem; color: #888; margin-top: 5px; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* GRID SYSTEM */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* PHASE CARD */
+        .phase-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase-card:hover {
+            border-color: var(--neon);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            transform: translateY(-5px);
+            background: var(--panel);
+        }
+
+        .phase-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+        .phase-name { font-weight: bold; font-size: 1.1rem; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .phase-age { font-size: 0.8rem; color: var(--neon); margin-top: 5px; }
+
+        /* MODAL POPUP (HUD STYLE) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            width: 90%; max-width: 500px;
+            background: #0a0a0a;
+            border: 2px solid var(--neon);
+            border-radius: 15px;
+            padding: 2px; /* For Inner Border effect */
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.3);
+            animation: zoomIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-inner {
+            background: rgba(0, 20, 30, 0.95);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+        }
+
+        /* DECORATION CORNERS */
+        .corner { position: absolute; width: 15px; height: 15px; border: 2px solid var(--neon); }
+        .tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+        .tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; }
+        .bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; }
+        .br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+        /* CONTENT STYLES */
+        .modal-title {
+            font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--neon);
+            border-bottom: 1px dashed #444; padding-bottom: 10px; margin-bottom: 15px;
+            text-align: center; letter-spacing: 2px;
+        }
+
+        .stat-row {
+            display: flex; align-items: center; gap: 15px;
+            margin-bottom: 15px; background: rgba(255, 255, 255, 0.03);
+            padding: 10px; border-radius: 8px; border-left: 3px solid #333;
+        }
+        
+        .stat-icon { font-size: 1.5rem; width: 40px; text-align: center; }
+        .stat-info { flex: 1; }
+        .stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-val { font-size: 1rem; color: #fff; font-weight: bold; }
+        .stat-desc { font-size: 0.8rem; color: var(--gold); font-style: italic; }
+
+        /* Specific Colors per Stat */
+        .row-pangan { border-color: #ff9f43; }
+        .row-sandang { border-color: #54a0ff; }
+        .row-papan { border-color: #1dd1a1; }
+
+        .filosofi-box {
+            margin-top: 20px; border: 1px solid var(--gold); padding: 15px;
+            background: rgba(255, 215, 0, 0.05); text-align: center; border-radius: 8px;
+        }
+        .filo-title { color: var(--gold); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; }
+        .filo-text { font-size: 0.95rem; line-height: 1.4; color: #fff; }
+
+        .items-list {
+            margin-top: 15px; font-size: 0.8rem; color: #aaa; text-align: center;
+        }
+        .item-tag {
+            display: inline-block; padding: 3px 8px; border: 1px solid #444;
+            border-radius: 4px; margin: 2px; color: var(--neon);
+        }
+
+        .close-btn {
+            position: absolute; top: 10px; right: 10px;
+            background: transparent; border: 1px solid var(--neon); color: var(--neon);
+            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+            font-weight: bold; display: flex; align-items: center; justify-content: center;
+        }
+        .close-btn:hover { background: var(--neon); color: #000; }
+
+        .back-btn {
+            margin-top: 40px; text-decoration: none; color: #666; font-size: 0.8rem;
+            border: 1px solid #333; padding: 10px 30px; border-radius: 50px; transition: 0.3s;
+        }
+        .back-btn:hover { color: var(--neon); border-color: var(--neon); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>SIKLUS HIDUP</h1>
+        <div class="subtitle">Peta Jalan Kebutuhan Manusia Nuswantara</div>
+    </div>
+
+    <div class="grid-container" id="gridPhase">
+        </div>
+
+    <div class="modal-overlay" id="popup" onclick="closeModal(event)">
+        <div class="modal-box">
+            <div class="corner tl"></div><div class="corner tr"></div>
+            <div class="corner bl"></div><div class="corner br"></div>
+            
+            <div class="modal-inner">
+                <button class="close-btn" onclick="document.getElementById('popup').style.display='none'">X</button>
+                
+                <div class="modal-title" id="mTitle">PHASE NAME</div>
+                
+                <div class="stat-row row-pangan">
+                    <div class="stat-icon">🍚</div>
+                    <div class="stat-info">
+                        <div class="stat-label">PANGAN (NUTRISI)</div>
+                        <div class="stat-val" id="mPangan">...</div>
+                        <div class="stat-desc" id="mPanganDesc">...</div>
+                    </div>
+                </div>
+
+                <div class="stat-row row-sandang">
+                    <div class="stat-icon">👕</div>
+                    <div class="stat-info">
+                        <div class="stat-label">SANDANG (PELINDUNG)</div>
+                        <div class="stat-val" id="mSandang">...</div>
+                        <div class="stat-desc" id="mSandangDesc">...</div>
+                    </div>
+                </div>
+
+                <div class="stat-row row-papan">
+                    <div class="stat-icon">🏠</div>
+                    <div class="stat-info">
+                        <div class="stat-label">PAPAN (NAUNGAN)</div>
+                        <div class="stat-val" id="mPapan">...</div>
+                        <div class="stat-desc" id="mPapanDesc">...</div>
+                    </div>
+                </div>
+
+                <div class="items-list">
+                    <span style="display:block; margin-bottom:5px; font-size:0.7rem; color:#666;">KOMODITAS PENDUKUNG:</span>
+                    <div id="mItems"></div>
+                </div>
+
+                <div class="filosofi-box">
+                    <div class="filo-title">FILOSOFI FASE</div>
+                    <div class="filo-text" id="mFilo">...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn">KEMBALI KE DASHBOARD</a>
+
+    <script>
+        // DATA SIKLUS HIDUP (Fixed Database)
+        const lifeData = [
+            {
+                phase: "BAYI", age: "0 - 2 Tahun", icon: "👶",
+                pangan: "Sagu & Madu Hutan", pDesc: "Tekstur lembut, energi murni.",
+                sandang: "Kapas Murni", sDesc: "Lembut, tidak iritasi, menyerap keringat.",
+                papan: "Rotan (Ayunan)", paDesc: "Fleksibel, meninabobokan.",
+                items: ["Sagu", "Kapas", "Rotan", "Madu"],
+                filo: "Masa transisi dari rahim ke dunia. Membutuhkan material yang paling halus dan alami untuk adaptasi."
+            },
+            {
+                phase: "BALITA", age: "3 - 5 Tahun", icon: "🧸",
+                pangan: "Ubi Jalar & Pisang", pDesc: "Manis alami, karbohidrat tumbuh kembang.",
+                sandang: "Kapas Warna Alam", sDesc: "Baju main yang aman & adem.",
+                papan: "Bambu (Bale)", paDesc: "Aman, alami, melatih motorik.",
+                items: ["Ubi Jalar", "Pisang", "Bambu", "Nila"],
+                filo: "Fase gerak aktif (Eksplorasi). Tubuh membutuhkan asupan energi cepat dan lingkungan bermain yang aman."
+            },
+            {
+                phase: "ANAK", age: "6 - 12 Tahun", icon: "🏃",
+                pangan: "Jagung & Ikan", pDesc: "Protein otak & stamina main.",
+                sandang: "Kain Blacu / Mori", sDesc: "Sederhana, kuat untuk aktivitas.",
+                papan: "Kayu Kelapa (Meja)", paDesc: "Struktur belajar yang kokoh.",
+                items: ["Jagung", "Ikan Asin", "Kelapa", "Kacang Hijau"],
+                filo: "Masa Pertumbuhan. Membangun pondasi fisik (tulang/otot) dan mental melalui interaksi dengan alam."
+            },
+            {
+                phase: "REMAJA", age: "13 - 19 Tahun", icon: "🔥",
+                pangan: "Beras & Pedas", pDesc: "Energi tinggi, pemicu semangat.",
+                sandang: "Tenun Ikat", sDesc: "Mulai mengenal identitas budaya.",
+                papan: "Bilik Bambu", paDesc: "Privasi, ruang jati diri.",
+                items: ["Beras", "Lada", "Tenun", "Cabai"],
+                filo: "Pencarian Jati Diri. Energi berapi-api yang butuh disalurkan ke kreatifitas dan pengenalan budaya."
+            },
+            {
+                phase: "PEMUDA", age: "20 - 29 Tahun", icon: "⚔️",
+                pangan: "Kopi & Gula Aren", pDesc: "Stamina kerja, melek, fokus.",
+                sandang: "Batik Dasar", sDesc: "Seragam kerja, sosial, adaptasi.",
+                papan: "Kayu Jati (Mebel)", paDesc: "Mulai mengisi rumah masa depan.",
+                items: ["Kopi", "Gula Aren", "Jati", "Batik"],
+                filo: "Fase Perjuangan (Hustle). Membutuhkan stimulan alami dan mulai membangun pondasi karir yang kuat."
+            },
+            {
+                phase: "DEWASA", age: "30 - 45 Tahun", icon: "👑",
+                pangan: "Rempah (Cengkeh)", pDesc: "Imunitas, aroma kemapanan.",
+                sandang: "Sutra & Songket", sDesc: "Simbol status, wibawa, acara adat.",
+                papan: "Bata & Genteng", paDesc: "Rumah permanen, perlindungan.",
+                items: ["Cengkeh", "Pala", "Sutra", "Batu Bata"],
+                filo: "Puncak Produktivitas (Kemapanan). Fokus beralih pada kualitas, daya tahan, dan perlindungan keluarga."
+            },
+            {
+                phase: "MATANG", age: "46 - 59 Tahun", icon: "🌳",
+                pangan: "Teh & Beras Merah", pDesc: "Ketenangan, kontrol gula.",
+                sandang: "Lurik / Polos", sDesc: "Kesederhanaan yang elegan.",
+                papan: "Kayu Ulin (Teras)", paDesc: "Kokoh, tempat menerima tamu.",
+                items: ["Teh", "Beras Merah", "Ulin", "Kayu Manis"],
+                filo: "Fase Kebijaksanaan. Mulai mengurangi 'panas' dunia, beralih ke 'dingin' batin. Menjadi pilar keluarga."
+            },
+            {
+                phase: "LANSIA", age: "60 - 75 Tahun", icon: "🍵",
+                pangan: "Jahe & Kunyit", pDesc: "Hangat, anti-nyeri sendi.",
+                sandang: "Sarung Tenun", sDesc: "Kenyamanan ibadah & santai.",
+                papan: "Kursi Rotan", paDesc: "Kenyamanan istirahat sendi.",
+                items: ["Jahe", "Kunyit", "Sarung", "Sirih"],
+                filo: "Masa Pemeliharaan. Fokus menjaga 'mesin' tubuh agar tetap nyaman, hangat, dan tenang di masa tua."
+            },
+            {
+                phase: "JOMPO", age: "75+ Tahun", icon: "🕊️",
+                pangan: "Walet & Bubur", pDesc: "Regenerasi sel, mudah cerna.",
+                sandang: "Sutra Putih", sDesc: "Sangat lembut, suci, ringan.",
+                papan: "Gaharu (Aroma)", paDesc: "Terapi wangi, transendensi.",
+                items: ["Walet", "Gaharu", "Cendana", "Kapur Barus"],
+                filo: "Transendensi. Persiapan pulang. Tubuh butuh asupan elit (halus) dan jiwa membutuhkan wangi surga."
+            }
+        ];
+
+        // RENDER GRID
+        const grid = document.getElementById('gridPhase');
+        
+        lifeData.forEach((data, index) => {
+            const card = document.createElement('div');
+            card.className = 'phase-card';
+            card.innerHTML = `
+                <div class="phase-icon">${data.icon}</div>
+                <div class="phase-name">${data.phase}</div>
+                <div class="phase-age">${data.age}</div>
+            `;
+            card.onclick = () => showModal(index);
+            grid.appendChild(card);
+        });
+
+        // MODAL FUNCTIONS
+        function showModal(index) {
+            const d = lifeData[index];
+            document.getElementById('mTitle').innerText = `${d.phase} (${d.age})`;
+            
+            document.getElementById('mPangan').innerText = d.pangan;
+            document.getElementById('mPanganDesc').innerText = d.pDesc;
+            
+            document.getElementById('mSandang').innerText = d.sandang;
+            document.getElementById('mSandangDesc').innerText = d.sDesc;
+            
+            document.getElementById('mPapan').innerText = d.papan;
+            document.getElementById('mPapanDesc').innerText = d.paDesc;
+            
+            const itemContainer = document.getElementById('mItems');
+            itemContainer.innerHTML = d.items.map(i => `<span class="item-tag">${i}</span>`).join(' ');
+            
+            document.getElementById('mFilo').innerText = `"${d.filo}"`;
+
+            document.getElementById('popup').style.display = 'flex';
+        }
+
+        function closeModal(e) {
+            if (e.target.id === 'popup') {
+                document.getElementById('popup').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
