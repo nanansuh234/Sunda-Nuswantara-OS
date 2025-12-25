@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Isekai Life System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --bg: #010409; --card: #0d1117; --border: #30363d; --text: #e6edf3; --primary: #2ecc71; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; display: flex; justify-content: center; padding: 20px; }
+        .app-container { background: var(--card); border: 2px solid var(--primary); border-radius: 15px; padding: 20px; width: 100%; max-width: 900px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
+        .main-content { display: flex; flex-wrap: wrap; gap: 20px; }
+        .chart-box { flex: 1; min-width: 300px; background: #000; padding: 15px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+        .quest-box { flex: 1.2; min-width: 300px; display: flex; flex-direction: column; gap: 10px; }
+        .tab-btn { border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; transition: 0.3s; opacity: 0.7; }
+        .tab-btn:hover { opacity: 1; transform: translateY(-2px); }
+        .tab-active { opacity: 1; box-shadow: 0 0 10px currentColor; }
+        .task-list { background: #000; border: 1px solid var(--border); border-radius: 10px; padding: 15px; height: 380px; overflow-y: auto; }
+        .task-item { display: flex; align-items: center; gap: 10px; background: #161b22; padding: 10px; border-radius: 6px; margin-bottom: 8px; font-size: 0.85rem; border: 1px solid transparent; transition: 0.2s; }
+        .task-item:hover { border-color: var(--border); }
+        input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
+        .gacha-btn { width: 100%; background: #f1c40f; color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <div>
+            <div style="font-size: 0.7rem; color: #8b949e; letter-spacing: 2px;">REALITY STATUS</div>
+            <h2 id="hero-class" style="margin: 5px 0; color: var(--primary);">PENGEMBARA AWAL</h2>
+            <div id="hero-title" style="font-size: 0.8rem; color: #f1c40f;">Gelar: Pencari Harmoni</div>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 0.7rem; color: #8b949e;">SYNC RATE:</div>
+            <div id="total-sync" style="font-size: 2rem; font-weight: bold; color: #58a6ff;">0%</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="chart-box">
+            <canvas id="radarChart"></canvas>
+            <div id="log-box" style="margin-top: 15px; font-size: 0.75rem; color: #8b949e; line-height: 1.4; font-style: italic;">
+                "Menunggumu melakukan aksi nyata..."
+            </div>
+        </div>
+
+        <div class="quest-box">
+            <button class="gacha-btn" onclick="gachaQuest()">🎲 AMBIL DAILY GACHA (FREE XP)</button>
+            
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;" id="tab-container">
+                </div>
+
+            <div class="task-list">
+                <h4 id="tab-title" style="margin: 0 0 12px 0;">PILIH JALURMU</h4>
+                <div id="task-items"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const db = {
+    raga: { label: 'Raga', color: '#ff7b72', quests: [
+        "Minum air putih saat bangun tidur", "Jalan kaki tanpa HP 15 menit", "Makan tanpa nonton TikTok/YouTube", "Tidur HP ditaruh jauh dari kasur", "Push-up 10x saat nunggu download", "Ganti boba/kopi dengan air putih", "Jemur punggung 10 menit pagi hari", "Peregangan tiap 1 jam di depan PC", "Mandi air dingin pagi (Dopamine Reset)", "Bersihkan tempat tidur sendiri"
+    ]},
+    atma: { label: 'Atma', color: '#a5d6ff', quests: [
+        "Unfollow akun toxic/bikin FOMO", "Matikan notifikasi sosmed 3 jam", "Tulis 3 hal yang disyukuri hari ini", "Meditasi napas 5 menit", "No Screen Time 1 jam sebelum tidur", "Ucapkan afirmasi positif ke cermin", "Akui 1 kesalahan tanpa alasan", "Puasa mengeluh/sambat seharian", "Baca 5 halaman buku fisik", "Duduk diam 10 menit tanpa HP"
+    ]},
+    aji: { label: 'Aji', color: '#d2a8ff', quests: [
+        "Pelajari 1 istilah tech (AI/Web3)", "Cek cara kerja 1 benda di rumah", "Nonton 1 video dokumenter pendek", "Belajar 1 kata bahasa daerah/asing", "Masak/bikin sesuatu tanpa tutorial", "Rangkum 1 berita berat ke bahasa santai", "Install & buka aplikasi belajar", "Dengerin podcast edukasi 15 menit", "Selesaikan 1 teka-teki/logic puzzle", "Bikin rencana belajar skill baru"
+    ]},
+    darma: { label: 'Darma', color: '#7ee787', quests: [
+        "Jujur bilang 'Tidak' daripada janji palsu", "Datang 5 menit lebih awal", "Balikin barang pinjaman hari ini", "Kerjakan tugas paling sulit duluan", "Berhenti gosip/ghibah seharian", "Gunakan barang lama (bukan beli tren)", "Akui kalau tidak tahu (Jujur Intelek)", "Simpan sampah sampai nemu tempatnya", "Minta maaf duluan ke orang rumah", "Bela teman yang benar tapi dijauhi"
+    ]},
+    silih: { label: 'Silih', color: '#ffa657', quests: [
+        "Tanya kabar teman lama via personal chat", "Beli di pedagang kecil tanpa nawar", "Beri pujian tulus ke orang berbeda", "Dengar curhat orang tanpa memotong", "Sapa kurir atau driver ojek online", "Pindahkan batu/sampah dari jalanan", "Bantu pekerjaan rumah tanpa diminta", "Share info lowongan/peluang ke grup", "Ikut interaksi komunitas offline", "Kasih makan hewan liar di jalan"
+    ]},
+    karya: { label: 'Karya', color: '#f2cc60', quests: [
+        "Catat pengeluaran terkecil hari ini", "Nabung minimal Rp 2.000", "Rapikan folder/desktop berantakan", "Hapus 50 email/foto tidak guna", "Ciptakan 1 karya (tulisan/desain/code)", "Jual/donasikan barang tidak terpakai", "Cari ide dapet cuan dari hobi", "Update profil LinkedIn/CV", "Tahan beli barang diskon tak perlu", "Selesaikan 1 checklist utama kerja"
+    ]}
+};
+
+let userStats = JSON.parse(localStorage.getItem('isekai_v3_stats')) || {
+    raga: [], atma: [], aji: [], darma: [], silih: [], karya: []
+};
+
+let chart;
+let currentTab = 'raga';
+
+function init() {
+    // Generate Tabs
+    const tabContainer = document.getElementById('tab-container');
+    Object.keys(db).forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn btn-${key}`;
+        btn.style.backgroundColor = db[key].color;
+        btn.innerText = db[key].label;
+        btn.onclick = () => switchTab(key);
+        tabContainer.appendChild(btn);
+    });
+
+    renderChart();
+    switchTab('raga');
+}
+
+function switchTab(key) {
+    currentTab = key;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+    document.querySelector(`.btn-${key}`).classList.add('tab-active');
+    
+    const title = document.getElementById('tab-title');
+    title.innerText = "PATH OF " + db[key].label.toUpperCase();
+    title.style.color = db[key].color;
+
+    const list = document.getElementById('task-items');
+    list.innerHTML = "";
+    db[key].quests.forEach((q, i) => {
+        const checked = userStats[key].includes(i);
+        const item = document.createElement('div');
+        item.className = "task-item";
+        item.innerHTML = `
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleTask('${key}', ${i})">
+            <span style="${checked ? 'text-decoration:line-through; color:#666' : ''}">${q}</span>
+        `;
+        list.appendChild(item);
+    });
+}
+
+function toggleTask(key, index) {
+    if (userStats[key].includes(index)) {
+        userStats[key] = userStats[key].filter(i => i !== index);
+    } else {
+        userStats[key].push(index);
+    }
+    localStorage.setItem('isekai_v3_stats', JSON.stringify(userStats));
+    updateUI();
+    switchTab(key);
+}
+
+function updateUI() {
+    const values = Object.keys(db).map(key => userStats[key].length);
+    chart.data.datasets[0].data = values;
+    chart.update();
+
+    const total = values.reduce((a, b) => a + b, 0);
+    const sync = Math.round((total / 60) * 100);
+    document.getElementById('total-sync').innerText = sync + "%";
+
+    // Dynamic Class Logic
+    const hClass = document.getElementById('hero-class');
+    const hTitle = document.getElementById('hero-title');
+    const log = document.getElementById('log-box');
+
+    let className = "PENGEMBARA";
+    if (sync > 20) className = "PENYINTANG (SURVIVOR)";
+    if (sync > 50) className = "KSATRIA NUSWANTARA";
+    if (sync > 85) className = "ADIWIRA (LEGEND)";
+    hClass.innerText = className;
+
+    // Balancing Check
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    if (max - min > 4) {
+        log.innerText = "⚠️ SYSTEM UNBALANCED: Fokusmu terlalu berat sebelah. Segera kalibrasi kategori terendah!";
+        log.style.color = "#ff7b72";
+    } else {
+        log.innerText = "✅ RESONANSI STABIL: Keseimbangan terjaga. Jiwa dan ragamu sinkron.";
+        log.style.color = "#2ecc71";
+    }
+}
+
+function gachaQuest() {
+    const keys = Object.keys(db);
+    const randomKey = keys[Math.floor(Math.random() * keys.length)];
+    const randomQuest = db[randomKey].quests[Math.floor(Math.random() * 10)];
+    alert(`🎯 DAILY GACHA QUEST:\n\n[${randomKey.toUpperCase()}] : ${randomQuest}\n\nSelesaikan sekarang buat boost stat!`);
+}
+
+function renderChart() {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    chart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: Object.keys(db).map(k => db[k].label),
+            datasets: [{
+                data: [0,0,0,0,0,0],
+                backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                borderColor: '#2ecc71',
+                pointBackgroundColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: { r: { min: 0, max: 10, ticks: { display: false }, grid: { color: '#30363d' }, angleLines: { color: '#30363d' }, pointLabels: { color: '#8b949e', font: { size: 11 } } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+    updateUI();
+}
+
+init();
+</script>
+
+</body>
+</html>

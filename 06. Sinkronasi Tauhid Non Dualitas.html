@@ -1,0 +1,66 @@
+<div class="card" style="border: 3px solid #00f2ff; background: #020202; border-radius: 25px; padding: 30px; font-family: 'Segoe UI', sans-serif; color: #fff; box-shadow: 0 0 40px rgba(0, 242, 255, 0.15);">
+    <span class="badge" style="color: #00f2ff; letter-spacing: 6px; display: block; text-align: center; font-size: 0.75rem; margin-bottom: 15px; font-weight: bold;">SATU REALITAS (NON-DUALITAS)</span>
+    <h2 style="text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 4px;">Penenun Jati Diri</h2>
+
+    <div style="background: rgba(0, 242, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(0, 242, 255, 0.2); margin-bottom: 25px; text-align: center;">
+        <p id="reality-insight" style="font-size: 1rem; color: #00f2ff; line-height: 1.6;">"Dualitas adalah ilusi pikiran yang lelah. Realitas adalah harmoni yang utuh."</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="text-align: center;">
+            <label style="font-size: 0.8rem; color: #aaa; text-transform: uppercase;">Sinkronisasi Niat & Aksi</label>
+            <input type="range" id="syncNiat" min="1" max="100" value="50" oninput="weaveReality()" style="width: 100%; filter: hue-rotate(180deg);">
+        </div>
+        <div style="text-align: center;">
+            <label style="font-size: 0.8rem; color: #aaa; text-transform: uppercase;">Integrasi Materi & Esensi</label>
+            <input type="range" id="syncMateri" min="1" max="100" value="50" oninput="weaveReality()" style="width: 100%; filter: hue-rotate(180deg);">
+        </div>
+        <div style="text-align: center;">
+            <label style="font-size: 0.8rem; color: #aaa; text-transform: uppercase;">Keselarasan Diri & Alam</label>
+            <input type="range" id="syncAlam" min="1" max="100" value="50" oninput="weaveReality()" style="width: 100%; filter: hue-rotate(180deg);">
+        </div>
+    </div>
+
+    <div style="margin-top: 30px; border-top: 1px solid #222; padding-top: 25px; text-align: center;">
+        <div id="unity-circle" style="width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; border: 4px solid #00f2ff; display: flex; align-items: center; justify-content: center; transition: 0.5s; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);">
+            <div id="unity-core" style="width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: 0.5s;"></div>
+        </div>
+        <div id="reality-status" style="font-size: 1.4rem; font-weight: bold; color: #fff;">MENCARI TITIK TENGAH</div>
+        <p id="reality-desc" style="font-size: 0.85rem; color: #888; margin-top: 10px; line-height: 1.4;">
+            Geser pemandu di atas untuk melarutkan dualitas dalam dirimu.
+        </p>
+    </div>
+</div>
+
+<script>
+function weaveReality() {
+    let n = parseInt(document.getElementById('syncNiat').value);
+    let m = parseInt(document.getElementById('syncMateri').value);
+    let a = parseInt(document.getElementById('syncAlam').value);
+
+    // Menghitung Deviasi dari Titik Tengah (Non-Dualitas)
+    let average = (n + m + a) / 3;
+    let core = document.getElementById('unity-core');
+    let circle = document.getElementById('unity-circle');
+    let status = document.getElementById('reality-status');
+    let desc = document.getElementById('reality-desc');
+
+    // Animasi Core berdasarkan rata-rata
+    core.style.transform = `scale(${average / 20})`;
+    circle.style.boxShadow = `0 0 ${average / 2}px rgba(0, 242, 255, 0.6)`;
+
+    if (n > 80 && m > 80 && a > 80) {
+        status.innerText = "REALITAS TUNGGAL (EKATAN)";
+        status.style.color = "#00f2ff";
+        desc.innerText = "Selamat. Lu tidak lagi melihat pemisah antara dunia dan batin. Tindakanmu adalah doamu, dan setiap gerakmu adalah manfaat bagi alam.";
+    } else if (Math.abs(n - m) > 40 || Math.abs(m - a) > 40) {
+        status.innerText = "TERJEBAK DUALITAS";
+        status.style.color = "#ff4d4d";
+        desc.innerText = "Terjadi distorsi. Lu memisahkan keinginan materi dari kejujuran niat. Ini yang menciptakan konflik batin dan penderitaan.";
+    } else {
+        status.innerText = "PROSES PENYATUAN";
+        status.style.color = "#fff";
+        desc.innerText = "Lu sedang belajar menyelaraskan langkah. Kurangi pemisahan dalam pikiran, lihatlah bahwa materi hanyalah bentuk dari energi spiritual.";
+    }
+}
+</script>

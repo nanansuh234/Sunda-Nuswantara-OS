@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pionir Nuswantara: Fix Edition</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --bg: #0f172a; --card: #1e293b; --border: #334155; --text: #f1f5f9; --primary: #f59e0b; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; display: flex; justify-content: center; padding: 20px; }
+        .app-container { background: var(--card); border: 4px solid var(--primary); border-radius: 25px; padding: 25px; width: 100%; max-width: 900px; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2); }
+        .header { display: flex; justify-content: space-between; border-bottom: 2px dashed var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
+        .main-content { display: flex; flex-wrap: wrap; gap: 20px; }
+        .chart-box { flex: 1; min-width: 300px; background: #0f172a; padding: 15px; border-radius: 20px; border: 2px solid var(--border); text-align: center; }
+        .quest-box { flex: 1.2; min-width: 300px; display: flex; flex-direction: column; gap: 10px; }
+        .tab-btn { border: none; padding: 12px; border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; color: #000; transition: 0.2s; flex: 1 1 30%; }
+        .tab-btn:hover { transform: scale(1.05); }
+        .tab-active { border: 2px solid #fff; box-shadow: 0 0 10px currentColor; }
+        .task-list { background: #000; border: 2px solid var(--border); border-radius: 20px; padding: 15px; height: 420px; overflow-y: auto; }
+        .task-item { display: flex; align-items: center; gap: 12px; background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 10px; font-size: 1rem; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .task-item:hover { border-color: #f59e0b; }
+        input[type="checkbox"] { transform: scale(1.5); cursor: pointer; }
+        .gacha-btn { width: 100%; background: #10b981; color: #fff; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem; box-shadow: 0 4px 0 #059669; }
+        .gacha-btn:active { transform: translateY(2px); box-shadow: none; }
+        .parent-note { margin-top: 15px; font-size: 0.85rem; color: #94a3b8; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <div>
+            <div style="font-size: 0.8rem; color: #f59e0b; letter-spacing: 2px;">MISI PIONIR KECIL</div>
+            <h2 id="hero-class" style="margin: 5px 0; color: #f59e0b;">PENJELAJAH BUMI</h2>
+            <div id="hero-title" style="font-size: 0.9rem; color: #10b981;">Level: Belajar Hebat</div>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 0.8rem; color: #94a3b8;">BINTANG SAKTI:</div>
+            <div id="total-sync" style="font-size: 2.5rem; font-weight: bold; color: #f59e0b;">0%</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="chart-box">
+            <canvas id="radarChart"></canvas>
+            <div id="log-box" style="margin-top: 15px; font-size: 0.9rem; color: #cbd5e1;">"Halo Pionir! Siap berpetualang?"</div>
+            <div class="parent-note">💡 Guild Master (Ayah/Bunda): Tugasnya membimbing, bukan memaksa ya!</div>
+        </div>
+
+        <div class="quest-box">
+            <button class="gacha-btn" onclick="gachaQuest()">🎁 KEJUTAN MISI HARI INI</button>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="tab-container"></div>
+            <div class="task-list">
+                <h4 id="tab-title" style="margin: 0 0 12px 0;">PILIH PETUALANGANMU</h4>
+                <div id="task-items"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const db = {
+    raga: { label: 'Tubuh', color: '#fb7185', quests: ["Minum air putih saat bangun", "Makan sayur atau buah hari ini", "Lari/Lompat 10 menit", "Mandi sendiri sampai bersih", "Sikat gigi sebelum tidur", "Bereskan mainan sendiri", "Rapikan kasur sendiri", "Belajar pakai sepatu sendiri", "Makan sendiri (No suap)", "Istirahat siang tepat waktu"] },
+    atma: { label: 'Hati', color: '#38bdf8', quests: ["Napas dalam saat marah", "Berdoa sebelum makan", "Sebut 1 hal seru hari ini", "Senyum ke orang rumah", "Sabar menunggu giliran", "Main no-gadget 1 jam", "Bilang 'Sayang' ke Ortu", "Dengar cerita/dongeng", "Berani coba hal baru", "Tenang sebelum tidur"] },
+    aji: { label: 'Pintar', color: '#c084fc', quests: ["Baca buku 10 menit", "Tanya 'Kenapa?' ke hal baru", "Nama pohon di sekitar", "Belajar 1 kata daerah", "Menggambar alam", "Rapikan alat tulis", "Eksperimen air & sabun", "Menabung di celengan", "Hitung benda di dapur", "Nonton 1 video hewan"] },
+    darma: { label: 'Jujur', color: '#4ade80', quests: ["Jujur kalau berbuat salah", "Kembalikan barang pinjaman", "Tugas sekolah tepat waktu", "Izin sebelum pinjam", "Janji tidak nakal", "Baju kotor di tempatnya", "Matikan lampu no-pakai", "Hemat air saat mandi", "Makan sampai habis", "Bantu ortu tanpa ngeluh"] },
+    silih: { label: 'Teman', color: '#fb923c', quests: ["Berbagi mainan", "Bilang 'Tolong'", "Bilang 'Terima Kasih'", "Sapa tetangga sopan", "Kasih makan hewan", "Tolong teman jatuh", "Bilang 'Maaf' jika salah", "Buang sampah di tempatnya", "Tanam 1 biji tanaman", "Bikin kartu buat teman"] },
+    karya: { label: 'Karya', color: '#facc15', quests: ["Bikin karya barang bekas", "Siapkan meja makan", "Siram tanaman", "Selesaikan puzzle/lego", "Lipat baju kecil sendiri", "Masak bareng Bunda", "Sapu lantai kamar", "Rapikan rak sepatu", "Bikin kerajinan tangan", "Atur uang jajan"] }
+};
+
+let userStats = JSON.parse(localStorage.getItem('alpha_v2_stats')) || { raga: [], atma: [], aji: [], darma: [], silih: [], karya: [] };
+let chart;
+
+function init() {
+    const tabContainer = document.getElementById('tab-container');
+    tabContainer.innerHTML = "";
+    Object.keys(db).forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn btn-${key}`;
+        btn.style.backgroundColor = db[key].color;
+        btn.innerText = db[key].label;
+        btn.onclick = () => switchTab(key);
+        tabContainer.appendChild(btn);
+    });
+
+    renderChart();
+    switchTab('raga');
+}
+
+function switchTab(key) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+    document.querySelector(`.btn-${key}`).classList.add('tab-active');
+    
+    document.getElementById('tab-title').innerText = "MISI " + db[key].label.toUpperCase();
+    document.getElementById('tab-title').style.color = db[key].color;
+
+    const list = document.getElementById('task-items');
+    list.innerHTML = "";
+    db[key].quests.forEach((q, i) => {
+        const done = userStats[key].includes(i);
+        const item = document.createElement('div');
+        item.className = "task-item";
+        item.style.borderLeft = `8px solid ${db[key].color}`;
+        item.onclick = () => toggleTask(key, i);
+        item.innerHTML = `
+            <input type="checkbox" ${done ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask('${key}', ${i})">
+            <span style="${done ? 'text-decoration:line-through; opacity:0.5' : ''}">${q}</span>
+        `;
+        list.appendChild(item);
+    });
+}
+
+function toggleTask(key, idx) {
+    if (userStats[key].includes(idx)) {
+        userStats[key] = userStats[key].filter(i => i !== idx);
+    } else {
+        userStats[key].push(idx);
+    }
+    localStorage.setItem('alpha_v2_stats', JSON.stringify(userStats));
+    updateUI();
+    // Re-render tab biar strikethrough-nya update
+    const activeKey = document.getElementById('tab-title').innerText.replace("MISI ", "").toLowerCase();
+    // Mapping manual karena label != key
+    const map = {tubuh:'raga', hati:'atma', pintar:'aji', jujur:'darma', teman:'silih', karya:'karya'};
+    switchTab(map[activeKey] || key);
+}
+
+function updateUI() {
+    const values = Object.keys(db).map(k => userStats[k].length);
+    if (chart) {
+        chart.data.datasets[0].data = values;
+        chart.update();
+    }
+
+    const total = values.reduce((a, b) => a + b, 0);
+    const sync = Math.round((total / 60) * 100);
+    document.getElementById('total-sync').innerText = sync + "%";
+
+    const hClass = document.getElementById('hero-class');
+    if (sync > 30) hClass.innerText = "PENJELAJAH TANGKAS";
+    if (sync > 60) hClass.innerText = "KSATRIA CILIK";
+    if (sync > 90) hClass.innerText = "PIONIR AGUNG";
+}
+
+function renderChart() {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    chart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: Object.keys(db).map(k => db[k].label),
+            datasets: [{
+                label: 'Perkembangan',
+                data: Object.keys(db).map(k => userStats[k].length),
+                backgroundColor: 'rgba(245, 158, 11, 0.3)',
+                borderColor: '#f59e0b',
+                pointBackgroundColor: '#fff',
+                borderWidth: 3
+            }]
+        },
+        options: {
+            scales: { r: { min: 0, max: 10, ticks: { display: false }, grid: { color: '#475569' }, angleLines: { color: '#475569' }, pointLabels: { color: '#f1f5f9', font: { size: 12, weight: 'bold' } } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+}
+
+function gachaQuest() {
+    const keys = Object.keys(db);
+    const k = keys[Math.floor(Math.random() * keys.length)];
+    const q = db[k].quests[Math.floor(Math.random() * 10)];
+    alert(`🌟 MISI RAHASIA PIONIR:\n\n[${db[k].label}] : ${q}\n\nLakukan dengan gembira ya!`);
+}
+
+// Jalankan init setelah semua elemen ter-load
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

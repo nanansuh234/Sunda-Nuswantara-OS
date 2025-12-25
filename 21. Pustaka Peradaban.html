@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pustaka Peradaban - Character System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #111;
+            --silver: #bdc3c7;
+            --gold: #d4af37;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--silver);
+            padding-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--silver); margin: 0; letter-spacing: 4px; font-size: 1.8rem; text-shadow: 0 0 10px rgba(189, 195, 199, 0.3); }
+        .subtitle { font-size: 0.9rem; color: #666; margin-top: 8px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- GRID SYSTEM --- */
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* --- CARD STYLE --- */
+        .sys-card {
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sys-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 0 20px var(--shadow); }
+
+        .sys-icon { font-size: 2.5rem; margin-bottom: 15px; }
+        .sys-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .sys-desc { font-size: 0.85rem; color: #888; line-height: 1.5; margin-bottom: 20px; }
+        
+        .sys-btn {
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            background: transparent;
+            border: 1px solid #444;
+            color: #ccc;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sys-card:hover .sys-btn { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        /* --- THEMES PER GENERATION --- */
+        .boomer { --accent: #e74c3c; --shadow: rgba(231, 76, 60, 0.2); }
+        .milenial { --accent: #3498db; --shadow: rgba(52, 152, 219, 0.2); }
+        .genz { --accent: #2ecc71; --shadow: rgba(46, 204, 113, 0.2); }
+        .alpha { --accent: #f1c40f; --shadow: rgba(241, 196, 15, 0.2); }
+        .sufi { --accent: #1abc9c; --shadow: rgba(26, 188, 156, 0.2); }
+        .tauhid { --accent: #00f2ff; --shadow: rgba(0, 242, 255, 0.2); }
+
+        .back-btn {
+            margin-top: 50px;
+            text-decoration: none;
+            color: #666;
+            font-size: 0.8rem;
+            border: 1px solid #333;
+            padding: 10px 30px;
+            border-radius: 50px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { color: #fff; border-color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>MATRIX KESADARAN</h1>
+        <div class="subtitle">Pilih Sistem Operasi Karakter Anda</div>
+    </div>
+
+    <div class="system-grid">
+
+        <div class="sys-card boomer">
+            <div>
+                <div class="sys-icon" style="color: var(--accent);">👴</div>
+                <div class="sys-title">ANCESTOR SYSTEM</div>
+                <div class="sys-desc">
+                    <b>Edisi Boomer & Sesepuh.</b><br>
+                    Fokus pada manajemen ego, warisan (legacy), dan kebijaksanaan masa tua. Menjadi paku bumi keluarga.
+                </div>
+            </div>
+            <a href="01. Status Challenge Boomer.html" class="sys-btn">Aktivasi Mode</a>
+        </div>
+
+        <div class="sys-card milenial">
+            <div>
+                <div class="sys-icon" style="color: var(--accent);">🧑‍💼</div>
+                <div class="sys-title">BRIDGE SYSTEM</div>
+                <div class="sys-desc">
+                    <b>Edisi Milenial (Gen Y).</b><br>
+                    Penyeimbang antara beban orang tua dan masa depan anak (Sandwich Gen). Fokus pada stabilitas dan harmoni.
+                </div>
+            </div>
+            <a href="02. Status Challenge Milenial.html" class="sys-btn">Aktivasi Mode</a>
+        </div>
+
+        <div class="sys-card genz">
+            <div>
+                <div class="sys-icon" style="color: var(--accent);">🎮</div>
+                <div class="sys-title">ISEKAI SYSTEM</div>
+                <div class="sys-desc">
+                    <b>Edisi Gen Z.</b><br>
+                    Navigasi dunia digital yang chaotic. Fokus pada pencarian jati diri, kesehatan mental, dan aksi nyata.
+                </div>
+            </div>
+            <a href="03. Status Challenge Gen Z.html" class="sys-btn">Aktivasi Mode</a>
+        </div>
+
+        <div class="sys-card alpha">
+            <div>
+                <div class="sys-icon" style="color: var(--accent);">🚀</div>
+                <div class="sys-title">PIONIR SYSTEM</div>
+                <div class="sys-desc">
+                    <b>Edisi Gen Alpha & Beta.</b><br>
+                    Gamifikasi tugas harian untuk anak. Membangun pondasi karakter sejak dini dengan cara yang menyenangkan.
+                </div>
+            </div>
+            <a href="04. Status Challenge Gen Alpha dan Beta.html" class="sys-btn">Aktivasi Mode</a>
+        </div>
+
+        <div class="sys-card sufi">
+            <div>
+                <div class="sys-icon" style="color: var(--accent);">🕌</div>
+                <div class="sys-title">SUFI PATHWAY</div>
+                <div class="sys-desc">
+                    <b>Jalur Salik (Spiritual).</b><br>
+                    Manajemen Qalbu harian. Ceklis Riyadhah untuk Syariat, Tarekat, Hakikat, dan Makrifat dalam keseharian.
+                </div>
+            </div>
+            <a href="05. Status Challenge Muslimin dan Muslimat.html" class="sys-btn">Aktivasi Mode</a>
+        </div>
+
+        <div class="sys-card tauhid">
+            <div>
+                <div class="sys-icon" style="color: var(--accent);">🌌</div>
+                <div class="sys-title">NON DUALITAS</div>
+                <div class="sys-desc">
+                    <b>Sinkronisasi Kesadaran.</b><br>
+                    Alat ukur tingkat penyatuan antara Niat, Materi, dan Alam Semesta. Menghapus ilusi pemisah (Dualitas).
+                </div>
+            </div>
+            <a href="06. Sinkronasi Tauhid Non Dualitas.html" class="sys-btn">Aktivasi Mode</a>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">🏠 KEMBALI KE DASHBOARD UTAMA</a>
+
+</body>
+</html>
