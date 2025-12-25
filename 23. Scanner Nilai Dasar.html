@@ -1,5 +1,234 @@
-<script>
-        // URL CSV (Dengan Timestamp Anti-Cache biar update terus)
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Nilai Dasar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020202;
+            --main: #00ff88; /* Spring Green */
+            --sec: #00bcd4;  /* Cyan */
+            --alert: #ff2a6d;
+            --glass: rgba(0, 255, 136, 0.05);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--main);
+            font-family: 'Rajdhani', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        /* CAMERA BG */
+        #camera-feed {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #0a0a0a 30%, #000 90%);
+            z-index: 0;
+        }
+        #camera-feed::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* HUD */
+        .scan-bar {
+            position: absolute; top: 50%; left: 10%; width: 80%; height: 2px;
+            background: var(--main);
+            box-shadow: 0 0 20px var(--main);
+            animation: scanMove 3s infinite ease-in-out;
+            opacity: 0.7; z-index: 1;
+        }
+        @keyframes scanMove { 0% {top:10%; opacity:0;} 50% {opacity:1;} 100% {top:90%; opacity:0;} }
+
+        /* STATUS */
+        .status-pill {
+            position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+            border: 1px solid var(--main); padding: 5px 15px; border-radius: 20px;
+            font-size: 0.8rem; background: rgba(0,0,0,0.8); z-index: 10;
+            text-transform: uppercase; letter-spacing: 2px; white-space: nowrap;
+        }
+
+        /* INPUT AREA */
+        .interface {
+            z-index: 20; position: absolute; bottom: 40px; width: 90%; max-width: 500px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .list-btn {
+            background: rgba(0, 20, 10, 0.9); border: 1px solid var(--main); color: var(--main);
+            padding: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase;
+            letter-spacing: 1px; font-family: 'Share Tech Mono', monospace;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .list-btn:hover { background: var(--main); color: #000; }
+
+        .search-box {
+            display: flex; border: 2px solid var(--main); background: #000;
+        }
+        input {
+            flex: 1; background: transparent; border: none; padding: 15px; color: #fff;
+            font-size: 1.2rem; font-family: 'Share Tech Mono', monospace; text-transform: uppercase; outline: none;
+        }
+        .scan-btn {
+            background: var(--main); color: #000; border: none; padding: 0 25px;
+            font-weight: bold; font-size: 1.1rem; cursor: pointer;
+        }
+
+        /* RESULT CARD (ANATOMY STYLE) */
+        .bio-card {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%);
+            width: 90%; max-width: 420px;
+            background: rgba(5, 15, 10, 0.95);
+            border: 1px solid var(--main);
+            display: none; z-index: 50;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.15);
+            padding: 2px;
+        }
+        
+        .card-inner {
+            border: 1px solid rgba(0, 255, 136, 0.3); padding: 20px;
+            position: relative;
+        }
+
+        .item-title {
+            font-size: 2.2rem; font-weight: bold; text-transform: uppercase;
+            color: #fff; margin-bottom: 5px; line-height: 1; border-bottom: 1px solid #333; padding-bottom: 10px;
+        }
+        .item-class { font-size: 0.9rem; color: var(--sec); letter-spacing: 2px; margin-bottom: 20px; }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px; }
+        
+        .stat-box {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.05); padding: 10px 15px; border-left: 3px solid #555;
+        }
+        .sb-energy { border-color: #ffcc00; }
+        .sb-nutrisi { border-color: #00ff88; }
+        .sb-fungsi { border-color: #00bcd4; }
+
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; color: #888; display: block; }
+        .stat-val { font-size: 1.1rem; color: #fff; font-family: 'Share Tech Mono', monospace; }
+
+        .desc-box {
+            font-size: 0.95rem; color: #ccc; line-height: 1.5; font-style: italic;
+            border-top: 1px dashed #444; padding-top: 15px; margin-top: 10px;
+        }
+
+        .close-area { text-align: center; margin-top: 20px; }
+        .close-btn { 
+            background: transparent; border: 1px solid #444; color: #666; padding: 5px 20px; 
+            cursor: pointer; font-size: 0.8rem; 
+        }
+        .close-btn:hover { border-color: var(--main); color: var(--main); }
+
+        /* LIST MODAL */
+        .modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 100; display: none;
+            flex-direction: column; padding: 20px;
+        }
+        .modal-head { 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 2px solid var(--main); padding-bottom: 15px; margin-bottom: 15px;
+        }
+        .modal-body { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 1fr; gap: 5px; }
+        .db-item {
+            padding: 15px; border: 1px solid #333; color: #ccc; cursor: pointer;
+            display: flex; justify-content: space-between; font-size: 1rem;
+        }
+        .db-item:hover { border-color: var(--main); color: var(--main); background: rgba(0,255,136,0.1); }
+
+        .home-btn {
+            position: absolute; top: 20px; left: 20px; text-decoration: none;
+            color: #444; border: 1px solid #444; padding: 5px 15px; font-size: 0.8rem; z-index: 30;
+        }
+        .home-btn:hover { color: var(--main); border-color: var(--main); }
+
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="home-btn">◄ DASHBOARD</a>
+    <div class="status-pill" id="dbStatus">CONNECTING...</div>
+
+    <div id="camera-feed"></div>
+    <div class="scan-bar"></div>
+
+    <div id="listModal" class="modal">
+        <div class="modal-head">
+            <span style="font-size:1.2rem; letter-spacing:2px; font-weight:bold;">DATABASE SUMBERDAYA</span>
+            <button onclick="toggleList()" style="background:var(--alert); border:none; padding:5px 10px; font-weight:bold; cursor:pointer;">X</button>
+        </div>
+        <div id="listContent" class="modal-body">
+            </div>
+    </div>
+
+    <div class="interface">
+        <div class="list-btn" onclick="toggleList()">
+            <span>📂 BUKA DAFTAR ITEM</span>
+            <span id="dbCounter" style="font-size:0.8rem;">[DB-...]</span>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="KETIK NAMA BENDA..." onkeypress="handleEnter(event)">
+            <button class="scan-btn" onclick="scanItem()">SCAN</button>
+        </div>
+    </div>
+
+    <div id="resCard" class="bio-card">
+        <div class="card-inner">
+            <div class="item-title" id="rName">---</div>
+            <div class="item-class" id="rClass">UNKNOWN ENTITY</div>
+
+            <div class="stat-grid">
+                <div class="stat-box sb-energy">
+                    <div>
+                        <span class="stat-label">ENERGI (Kalori/Power)</span>
+                        <div class="stat-val" id="rEnergy">---</div>
+                    </div>
+                    <span style="font-size:1.5rem;">⚡</span>
+                </div>
+
+                <div class="stat-box sb-nutrisi">
+                    <div>
+                        <span class="stat-label">KANDUNGAN UTAMA</span>
+                        <div class="stat-val" id="rNutrisi">---</div>
+                    </div>
+                    <span style="font-size:1.5rem;">🧬</span>
+                </div>
+
+                <div class="stat-box sb-fungsi">
+                    <div>
+                        <span class="stat-label">FUNGSI DASAR</span>
+                        <div class="stat-val" id="rFungsi">---</div>
+                    </div>
+                    <span style="font-size:1.5rem;">🛠️</span>
+                </div>
+            </div>
+
+            <div class="desc-box" id="rDesc">
+                ---
+            </div>
+
+            <div class="close-area">
+                <button class="close-btn" onclick="closeCard()">TUTUP ANALISA</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL CSV (Dengan Timestamp Anti-Cache)
         const baseUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGkIRI-_XNlA7-5YP1amp9axQdYbGFLERIted9INYCDKpFa8AxtJ-qwVMf9kFLB-kLcmUoJPzCmend/pub?gid=326493804&single=true&output=csv';
         const csvUrl = baseUrl + '&t=' + new Date().getTime();
 
@@ -13,14 +242,14 @@
                 const text = await res.text();
                 parseCSV(text);
                 
-                // UPDATE STATUS DENGAN JUMLAH ITEM
-                status.innerText = "DATABASE ONLINE (" + dbData.length + " ITEM)";
+                // UPDATE COUNTER (PENANDA JUMLAH DATA)
+                const count = dbData.length;
+                status.innerText = "DATABASE ONLINE (" + count + " ITEM)";
                 status.style.borderColor = "#00ff88";
                 status.style.color = "#00ff88";
                 
-                // Update Tombol List juga
-                document.querySelector('.list-btn span:last-child').innerText = "[TOTAL: " + dbData.length + "]";
-                
+                document.getElementById('dbCounter').innerText = "[TOTAL: " + count + "]";
+
             } catch (err) {
                 console.error(err);
                 status.innerText = "OFFLINE MODE";
@@ -35,10 +264,15 @@
                 const cols = parseRow(row);
                 if(cols.length < 2) return null;
                 
+                // DATA MAPPING
+                // Kolom 0: Nama
+                // Kolom 1: Kategori
+                // Kolom 2: Stats (Energi:X; Nutrisi:Y; Fungsi:Z)
+                // Kolom 3: Deskripsi
+                
                 let stats = cols[2] || "";
                 let energy = "-", nutrisi = "-", fungsi = "-";
 
-                // Parsing Pintar (Cari kata kunci)
                 if(stats.includes(':')) {
                     let parts = stats.split(';');
                     parts.forEach(p => {
@@ -51,7 +285,7 @@
                         }
                     });
                 } else {
-                    nutrisi = stats; 
+                    nutrisi = stats; // Fallback jika format lama
                 }
 
                 return {
@@ -83,15 +317,12 @@
         function renderList() {
             const list = document.getElementById('listContent');
             list.innerHTML = "";
-            
-            // SORTING A-Z (Ini yang bikin Udang ada di bawah)
             dbData.sort((a,b) => a.nama.localeCompare(b.nama));
             
             dbData.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'db-item';
-                // Tampilkan Rank di sebelah kanan
-                div.innerHTML = `<span>${item.nama}</span> <span style="font-size:0.7rem; color:#00bcd4; border:1px solid #00bcd4; padding:2px 5px; border-radius:4px;">${item.r}</span>`;
+                div.innerHTML = `<span>${item.nama}</span> <span style="font-size:0.8rem; opacity:0.7;">${item.r}</span>`;
                 div.onclick = () => {
                     document.getElementById('searchInput').value = item.nama;
                     toggleList();
@@ -114,14 +345,13 @@
             const q = document.getElementById('searchInput').value.toLowerCase().trim();
             if(!q) return;
 
-            // Cari item (case insensitive)
             const item = dbData.find(i => i.nama.toLowerCase() === q) || 
                          dbData.find(i => i.nama.toLowerCase().includes(q));
 
             if(item) {
                 showResult(item);
             } else {
-                alert("Barang '" + q + "' belum ada di database.");
+                alert("Data objek belum terindeks di database.");
             }
         }
 
@@ -142,3 +372,5 @@
 
         loadDB();
     </script>
+</body>
+</html>
