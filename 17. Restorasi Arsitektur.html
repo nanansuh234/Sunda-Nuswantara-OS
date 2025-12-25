@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restorasi Arsitektur Nuswantara</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --wood: #cd853f; /* Peru / Wood Color */
+            --earth: #8d6e63;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--wood);
+            padding-bottom: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--wood); margin: 0; letter-spacing: 3px; font-size: 1.4rem; }
+        .subtitle { font-size: 0.8rem; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- NAVIGATION --- */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 600px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .tab-btn {
+            background: #222;
+            border: 1px solid #444;
+            color: #888;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: bold;
+            font-size: 0.75rem;
+            flex: 1;
+            text-align: center;
+            transition: 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: var(--wood);
+            color: #000;
+            border-color: var(--wood);
+            box-shadow: 0 0 15px rgba(205, 133, 63, 0.3);
+        }
+
+        /* --- CONTENT CARDS --- */
+        .content-area { width: 100%; max-width: 600px; }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideUp 0.4s ease;
+            border-left: 4px solid var(--wood);
+        }
+        .info-card.active { display: block; }
+
+        h2 { color: #fff; margin-top: 0; border-bottom: 1px dashed #444; padding-bottom: 10px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .feature-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: 10px;
+        }
+        .f-icon { font-size: 1.5rem; margin-right: 15px; min-width: 40px; text-align: center; }
+        .f-text h3 { margin: 0 0 5px 0; font-size: 0.9rem; color: var(--wood); }
+        .f-text p { margin: 0; font-size: 0.8rem; color: #ccc; line-height: 1.4; }
+
+        /* --- LEUIT CALCULATOR --- */
+        .calc-box {
+            background: #111;
+            border: 1px solid var(--wood);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .calc-input {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .calc-btn {
+            background: var(--wood);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            width: 100%;
+        }
+        
+        .result-display {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #444;
+            display: none;
+        }
+        .res-big { font-size: 2rem; font-weight: bold; color: var(--wood); font-family: 'Orbitron', sans-serif; }
+        .res-small { font-size: 0.8rem; color: #888; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-btn {
+            margin-top: 30px;
+            text-decoration: none;
+            color: #666;
+            font-size: 0.8rem;
+            border: 1px solid #333;
+            padding: 10px 25px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { color: var(--wood); border-color: var(--wood); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ARSITEKTUR BUMI</h1>
+        <div class="subtitle">Rumah Bernafas & Lumbung Kehidupan</div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="tab-btn active" onclick="showTab('filosofi')">FILOSOFI</div>
+        <div class="tab-btn" onclick="showTab('struktur')">STRUKTUR</div>
+        <div class="tab-btn" onclick="showTab('lumbung')">LUMBUNG</div>
+        <div class="tab-btn" onclick="showTab('calc')">KALKULATOR</div>
+    </div>
+
+    <div class="content-area">
+
+        <div id="tab-filosofi" class="info-card active">
+            <h2>Konsep "Rumah Bernafas"</h2>
+            
+            <div class="feature-box">
+                <div class="f-icon">🌬️</div>
+                <div class="f-text">
+                    <h3>Sirkulasi Kolong</h3>
+                    <p>Rumah panggung membiarkan angin mengalir di bawah lantai. Ini mendinginkan suhu ruangan secara alami (Air Conditioner tanpa listrik).</p>
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="f-icon">🌍</div>
+                <div class="f-text">
+                    <h3>Menghormati Tanah</h3>
+                    <p>Tanah tidak disemen mati (beton). Air hujan tetap bisa meresap ke bumi (Biopori Alami). Kita "menumpang" di atas tanah, bukan menjajahnya.</p>
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="f-icon">🌊</div>
+                <div class="f-text">
+                    <h3>Adaptasi Bencana</h3>
+                    <p>Struktur panggung aman dari banjir musiman dan serangan binatang buas. Struktur kayu yang fleksibel mengikuti getaran gempa, tidak patah seperti tembok.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-struktur" class="info-card">
+            <h2>Anatomi Bangunan</h2>
+            
+            <div class="feature-box">
+                <div class="f-icon">🪨</div>
+                <div class="f-text">
+                    <h3>Umpak (Pondasi Batu)</h3>
+                    <p>Tiang kayu tidak ditanam ke tanah (agar tidak lapuk), tapi "diletakkan" di atas batu kali. Saat gempa, rumah hanya bergeser, tidak roboh.</p>
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="f-icon">🪵</div>
+                <div class="f-text">
+                    <h3>Sistem Pasak (Tanpa Paku)</h3>
+                    <p>Sambungan kayu menggunakan pasak bambu/kayu. Paku besi akan berkarat dan merusak kayu. Pasak membuat struktur lentur dan dinamis.</p>
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="f-icon">🏠</div>
+                <div class="f-text">
+                    <h3>Atap Julang Ngapak</h3>
+                    <p>Bentuk atap terjal dengan material Rumbia/Ijuk. Melepaskan panas udara ke atas dengan cepat dan meredam suara hujan deras.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-lumbung" class="info-card">
+            <h2>Leuit: Bank Pangan Mandiri</h2>
+            <p style="font-size:0.85rem; color:#aaa; margin-bottom:15px;">Jangan bergantung pada stok pasar. Setiap rumah idealnya punya cadangan.</p>
+
+            <div class="feature-box">
+                <div class="f-icon">🐁</div>
+                <div class="f-text">
+                    <h3>Anti Hama (Geulebeg)</h3>
+                    <p>Di bagian atas tiang penyangga, dipasang piringan kayu/seng bulat. Tikus tidak bisa memanjat naik ke ruang penyimpanan padi.</p>
+                </div>
+            </div>
+
+            <div class="feature-box">
+                <div class="f-icon">🌾</div>
+                <div class="f-text">
+                    <h3>Sirkulasi Gabah</h3>
+                    <p>Dinding anyaman bambu membuat padi "bernafas". Gabah kering giling bisa tahan disimpan 2-5 tahun tanpa busuk.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-calc" class="info-card">
+            <h2>Kalkulator Ketahanan Pangan</h2>
+            <p style="font-size:0.8rem; color:#aaa; text-align:center;">Hitung kebutuhan Leuit untuk keluargamu.</p>
+            
+            <div class="calc-box">
+                <label style="font-size:0.8rem; color:#888;">Jumlah Anggota Keluarga:</label>
+                <input type="number" id="famSize" placeholder="Contoh: 4 (Orang)" class="calc-input">
+                
+                <label style="font-size:0.8rem; color:#888;">Target Ketahanan (Bulan):</label>
+                <input type="number" id="monthTarget" placeholder="Contoh: 12 (1 Tahun)" class="calc-input">
+                
+                <button class="calc-btn" onclick="calcLeuit()">HITUNG KAPASITAS</button>
+
+                <div id="leuitRes" class="result-display">
+                    <div style="font-size:0.8rem; color:#ccc;">ANDA MEMBUTUHKAN CADANGAN:</div>
+                    <div id="valBeras" class="res-big">0 Kg</div>
+                    <div class="res-small">Beras Putih</div>
+                    <br>
+                    <div style="font-size:0.8rem; color:#ccc;">ATAU SETARA GABAH KERING:</div>
+                    <div id="valGabah" class="res-big">0 Kg</div>
+                    <div class="res-small" id="leuitSize">Ukuran Leuit: Kecil (1x1m)</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">🏠 KEMBALI KE DASHBOARD</a>
+
+    <script>
+        function showTab(id) {
+            document.querySelectorAll('.info-card').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            
+            const btns = document.querySelectorAll('.tab-btn');
+            if(id === 'filosofi') btns[0].classList.add('active');
+            if(id === 'struktur') btns[1].classList.add('active');
+            if(id === 'lumbung') btns[2].classList.add('active');
+            if(id === 'calc') btns[3].classList.add('active');
+        }
+
+        function calcLeuit() {
+            const orang = parseInt(document.getElementById('famSize').value);
+            const bulan = parseInt(document.getElementById('monthTarget').value);
+            
+            if(!orang || !bulan) return;
+
+            // Asumsi: 1 Orang = 11 kg beras/bulan (Rata-rata BPS/Nasional)
+            const konsumsiPerBulan = 11; 
+            const totalBeras = orang * konsumsiPerBulan * bulan;
+            
+            // Konversi Beras ke Gabah Kering Giling (Rendemen ±63%)
+            // Rumus: Beras / 0.63 = Gabah
+            const totalGabah = Math.ceil(totalBeras / 0.63);
+
+            // Estimasi Ukuran Leuit
+            // Berat jenis gabah ± 500-600 kg/m3. Kita ambil aman 500kg/m3.
+            const volumeM3 = totalGabah / 500;
+            let ukuran = "";
+            if(volumeM3 < 1.5) ukuran = "Leuit Kecil (1.5 x 1.5 meter)";
+            else if(volumeM3 < 3) ukuran = "Leuit Sedang (2 x 2 meter)";
+            else ukuran = "Leuit Besar / Lumbung Desa";
+
+            document.getElementById('valBeras').innerText = totalBeras + " Kg";
+            document.getElementById('valGabah').innerText = totalGabah + " Kg";
+            document.getElementById('leuitSize').innerText = `Volume: ±${volumeM3.toFixed(1)} m³ (${ukuran})`;
+            
+            document.getElementById('leuitRes').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
