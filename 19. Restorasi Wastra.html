@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restorasi Wastra Nuswantara</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #111;
+            --indigo: #5c6bc0; /* Nila Color */
+            --soga: #8d6e63;   /* Soga Brown */
+            --gold: #d4af37;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--indigo);
+            padding-bottom: 15px;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--indigo); margin: 0; letter-spacing: 3px; font-size: 1.4rem; }
+        .subtitle { font-size: 0.8rem; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- NAVIGATION --- */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 600px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .tab-btn {
+            background: #222;
+            border: 1px solid #444;
+            color: #888;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: bold;
+            font-size: 0.75rem;
+            flex: 1;
+            text-align: center;
+            transition: 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: var(--indigo);
+            color: #fff;
+            border-color: var(--indigo);
+            box-shadow: 0 0 15px rgba(92, 107, 192, 0.3);
+        }
+
+        /* --- CONTENT CARDS --- */
+        .content-area { width: 100%; max-width: 600px; }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+            border-left: 4px solid var(--indigo);
+        }
+        .info-card.active { display: block; }
+
+        h2 { color: #fff; margin-top: 0; border-bottom: 1px dashed #444; padding-bottom: 10px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- COLOR & FIBER LIST --- */
+        .wastra-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.03);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #222;
+        }
+        .color-dot {
+            width: 40px; height: 40px; border-radius: 50%;
+            margin-right: 15px; border: 2px solid #444;
+            flex-shrink: 0;
+        }
+        .item-info h3 { margin: 0; font-size: 0.9rem; color: var(--indigo); }
+        .item-info p { margin: 3px 0 0 0; font-size: 0.8rem; color: #aaa; line-height: 1.4; }
+
+        /* --- MOTIF GRID --- */
+        .motif-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .motif-card {
+            background: #000; border: 1px solid #333;
+            padding: 15px; border-radius: 10px; text-align: center;
+        }
+        .motif-icon { font-size: 2rem; margin-bottom: 10px; color: var(--soga); }
+        .motif-name { font-weight: bold; font-size: 0.9rem; color: #fff; margin-bottom: 5px; }
+        .motif-desc { font-size: 0.7rem; color: #888; }
+
+        /* --- COLOR LAB --- */
+        .lab-box {
+            text-align: center; background: #000; padding: 20px; border-radius: 10px; border: 1px solid #333;
+        }
+        .mix-area {
+            display: flex; justify-content: center; align-items: center; gap: 10px; margin: 20px 0;
+        }
+        .mix-plus { font-size: 1.5rem; color: #666; }
+        .mix-slot {
+            width: 60px; height: 60px; border-radius: 10px; border: 2px dashed #444;
+            display: flex; align-items: center; justify-content: center; font-size: 2rem;
+            cursor: pointer; transition: 0.3s;
+        }
+        .mix-result {
+            width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fff;
+            background: #222; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #000; font-weight: bold;
+        }
+        
+        .palette { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+        .p-btn { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid #333; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-btn {
+            margin-top: 30px;
+            text-decoration: none;
+            color: #666;
+            font-size: 0.8rem;
+            border: 1px solid #333;
+            padding: 10px 25px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { color: var(--indigo); border-color: var(--indigo); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>WASTRA ALAM</h1>
+        <div class="subtitle">Teknologi Kain & Pewarna Leluhur</div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="tab-btn active" onclick="showTab('warna')">PEWARNA</div>
+        <div class="tab-btn" onclick="showTab('serat')">SERAT</div>
+        <div class="tab-btn" onclick="showTab('motif')">FILOSOFI</div>
+        <div class="tab-btn" onclick="showTab('lab')">COLOR LAB</div>
+    </div>
+
+    <div class="content-area">
+
+        <div id="tab-warna" class="info-card active">
+            <h2>Palet Warna Bumi</h2>
+            
+            <div class="wastra-item">
+                <div class="color-dot" style="background: #1a237e;"></div>
+                <div class="item-info">
+                    <h3>NILA (Indigofera)</h3>
+                    <p>Warna biru legendaris. Daunnya difermentasi menjadi pasta. Anti-bakteri alami dan semakin dicuci warnanya semakin hidup.</p>
+                </div>
+            </div>
+
+            <div class="wastra-item">
+                <div class="color-dot" style="background: #8d6e63;"></div>
+                <div class="item-info">
+                    <h3>SOGA (Peltophorum)</h3>
+                    <p>Cokelat klasik Batik Jawa. Diambil dari kulit kayu pohon tinggi. Warna kebumian yang melambangkan kerendahan hati.</p>
+                </div>
+            </div>
+
+            <div class="wastra-item">
+                <div class="color-dot" style="background: #b71c1c;"></div>
+                <div class="item-info">
+                    <h3>MENGKUDU (Morinda)</h3>
+                    <p>Warna merah tua (Maron). Akar mengkudu menghasilkan pewarna merah yang tahan lama pada kain tenun tradisional.</p>
+                </div>
+            </div>
+
+            <div class="wastra-item">
+                <div class="color-dot" style="background: #fbc02d;"></div>
+                <div class="item-info">
+                    <h3>KUNYIT & TEGERAN</h3>
+                    <p>Warna kuning emas. Kunyit untuk kuning cerah, Kayu Tegeran untuk kuning kecoklatan. Simbol kemuliaan dan cahaya.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-serat" class="info-card">
+            <h2>Serat Non-Polyester</h2>
+            <p style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">Kembali ke bahan yang bisa terurai tanah.</p>
+
+            <div class="wastra-item">
+                <div class="color-dot" style="background: #fff; border-color:#ccc;"></div>
+                <div class="item-info">
+                    <h3>KAPUK (Ceiba)</h3>
+                    <p>Serat buah randu. Ringan, mengapung di air, dan insulator panas terbaik. Dulu bahan wajib kasur dan pelampung.</p>
+                </div>
+            </div>
+
+            <div class="wastra-item">
+                <div class="color-dot" style="background: #f5f5dc;"></div>
+                <div class="item-info">
+                    <h3>ABAKA (Pisang)</h3>
+                    <p>Serat batang pisang Manila. Sangat kuat, tahan air laut. Digunakan untuk uang kertas (Dollar) dan tali kapal.</p>
+                </div>
+            </div>
+
+            <div class="wastra-item">
+                <div class="color-dot" style="background: #e6ee9c;"></div>
+                <div class="item-info">
+                    <h3>NANAS (Pina)</h3>
+                    <p>Serat daun nanas. Halus seperti sutra, namun kaku dan elegan. Bahan kemeja Barong Tagalog dan tenun halus.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-motif" class="info-card">
+            <h2>Membaca Kain</h2>
+            <div class="motif-grid">
+                <div class="motif-card">
+                    <div class="motif-icon">⚔️</div>
+                    <div class="motif-name">PARANG</div>
+                    <div class="motif-desc">Semangat tak putus (ombak samudra). Simbol perjuangan dan perbaikan diri terus menerus.</div>
+                </div>
+                <div class="motif-card">
+                    <div class="motif-icon">🥥</div>
+                    <div class="motif-name">KAWUNG</div>
+                    <div class="motif-desc">Irisan buah kolang-kaling. Simbol kesucian hati dan pengendalian diri yang sempurna.</div>
+                </div>
+                <div class="motif-card">
+                    <div class="motif-icon">✨</div>
+                    <div class="motif-name">TRUNTUM</div>
+                    <div class="motif-desc">Bintang di langit kelam. Simbol cinta tulus yang tumbuh kembali (bersemi) saat gelap.</div>
+                </div>
+                <div class="motif-card">
+                    <div class="motif-icon">⛰️</div>
+                    <div class="motif-name">MEGA MENDUNG</div>
+                    <div class="motif-desc">Awan penyejuk. Pemimpin harus bisa menyejukkan suasana walau dalam keadaan panas/marah.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-lab" class="info-card">
+            <h2>Simulator Pencelupan</h2>
+            <p style="font-size:0.8rem; color:#aaa; text-align:center;">Campurkan dua bahan alam.</p>
+            
+            <div class="lab-box">
+                <div class="mix-area">
+                    <div id="slot1" class="mix-slot" onclick="resetSlot(1)">?</div>
+                    <div class="mix-plus">+</div>
+                    <div id="slot2" class="mix-slot" onclick="resetSlot(2)">?</div>
+                    <div class="mix-plus">=</div>
+                    <div id="resColor" class="mix-result">???</div>
+                </div>
+
+                <div class="palette">
+                    <div class="p-btn" style="background:blue" onclick="fillSlot('blue')" title="Nila (Biru)"></div>
+                    <div class="p-btn" style="background:yellow" onclick="fillSlot('yellow')" title="Kunyit (Kuning)"></div>
+                    <div class="p-btn" style="background:red" onclick="fillSlot('red')" title="Mengkudu (Merah)"></div>
+                    <div class="p-btn" style="background:brown" onclick="fillSlot('brown')" title="Soga (Cokelat)"></div>
+                </div>
+                <div id="mixDesc" style="margin-top:15px; font-size:0.8rem; color:#fff; min-height:20px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">🏠 KEMBALI KE DASHBOARD</a>
+
+    <script>
+        function showTab(id) {
+            document.querySelectorAll('.info-card').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            
+            const btns = document.querySelectorAll('.tab-btn');
+            if(id === 'warna') btns[0].classList.add('active');
+            if(id === 'serat') btns[1].classList.add('active');
+            if(id === 'motif') btns[2].classList.add('active');
+            if(id === 'lab') btns[3].classList.add('active');
+        }
+
+        // --- LAB LOGIC ---
+        let s1 = null;
+        let s2 = null;
+
+        function fillSlot(color) {
+            if(!s1) {
+                s1 = color;
+                document.getElementById('slot1').style.background = color;
+                document.getElementById('slot1').innerText = "";
+            } else if(!s2) {
+                s2 = color;
+                document.getElementById('slot2').style.background = color;
+                document.getElementById('slot2').innerText = "";
+                calculateMix();
+            }
+        }
+
+        function resetSlot(n) {
+            if(n===1) { s1 = null; document.getElementById('slot1').style.background = 'none'; document.getElementById('slot1').innerText = "?"; }
+            if(n===2) { s2 = null; document.getElementById('slot2').style.background = 'none'; document.getElementById('slot2').innerText = "?"; }
+            document.getElementById('resColor').style.background = '#222';
+            document.getElementById('resColor').innerText = "???";
+            document.getElementById('mixDesc').innerText = "";
+        }
+
+        function calculateMix() {
+            const resBox = document.getElementById('resColor');
+            const desc = document.getElementById('mixDesc');
+            
+            // Sort colors to simplify logic (blue+yellow is same as yellow+blue)
+            const mix = [s1, s2].sort().join('+');
+
+            if(mix === 'blue+yellow') {
+                resBox.style.background = 'green';
+                desc.innerText = "HIJAU ALAMI (Daun Suji/Pandan)";
+            } else if(mix === 'blue+red') {
+                resBox.style.background = 'purple';
+                desc.innerText = "UNGU (Kulit Manggis)";
+            } else if(mix === 'red+yellow') {
+                resBox.style.background = 'orange';
+                desc.innerText = "JINGGA (Kesumba)";
+            } else if(mix === 'blue+brown') {
+                resBox.style.background = 'black';
+                desc.innerText = "HITAM (Indigo Pekat)";
+            } else if(s1 === s2) {
+                resBox.style.background = s1;
+                desc.innerText = "WARNA PEKAT (Pencelupan Berulang)";
+            } else {
+                resBox.style.background = '#555';
+                desc.innerText = "WARNA KOMPOSISI BARU (Eksperimen)";
+            }
+        }
+    </script>
+</body>
+</html>
