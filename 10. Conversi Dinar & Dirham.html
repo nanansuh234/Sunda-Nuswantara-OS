@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konverter Harta Murni (Full)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --gold: #d4af37;
+            --gold-light: #f9f1d8;
+            --silver: #bdc3c7;
+            --silver-light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg);
+            padding: 20px;
+            color: var(--dark);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h2 { text-align: center; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- TABLE STYLE --- */
+        .table-container {
+            overflow-x: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin-bottom: 40px;
+            background: #fff;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 15px; text-align: center; border-bottom: 1px solid #ddd; }
+        
+        thead th {
+            background-color: var(--dark);
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: normal;
+        }
+
+        .section-header {
+            background-color: #eee;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 20px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: #555;
+        }
+
+        /* Gold Rows */
+        .row-gold { background-color: rgba(212, 175, 55, 0.05); }
+        .row-gold td:first-child { border-left: 5px solid var(--gold); font-weight: bold; color: #b7950b; }
+        
+        /* Silver Rows */
+        .row-silver { background-color: rgba(189, 195, 199, 0.1); }
+        .row-silver td:first-child { border-left: 5px solid var(--silver); font-weight: bold; color: #7f8c8d; }
+
+        /* --- CALCULATOR STYLE --- */
+        .calc-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid #ddd;
+        }
+
+        .calc-header {
+            text-align: center; font-size: 1.2rem; margin-bottom: 20px; font-weight: bold;
+            color: var(--dark); border-bottom: 2px dashed #ddd; padding-bottom: 10px;
+        }
+
+        .input-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; gap: 10px; } }
+
+        .input-group { position: relative; }
+        
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
+        
+        input {
+            width: 100%; padding: 15px; font-size: 1.5rem;
+            border: 2px solid #ddd; border-radius: 8px;
+            font-family: 'Share Tech Mono', monospace; text-align: center;
+            transition: 0.3s;
+        }
+        
+        .inp-dinar:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+        .inp-dirham:focus { border-color: var(--silver); outline: none; box-shadow: 0 0 10px rgba(189, 195, 199, 0.5); }
+
+        .unit-badge {
+            position: absolute; right: 15px; top: 42px;
+            font-weight: bold; color: #aaa;
+        }
+
+        .result-panel {
+            background: #f8f9fa; border-radius: 8px; padding: 20px;
+            text-align: center; border: 1px solid #eee;
+        }
+        
+        .res-main { font-size: 1.1rem; margin-bottom: 5px; font-weight: bold; }
+        .res-sub { font-size: 0.9rem; color: #666; font-family: 'Share Tech Mono', monospace; }
+
+        .highlight-gold { color: #b7950b; }
+        .highlight-silver { color: #7f8c8d; }
+
+    </style>
+</head>
+<body>
+
+    <h2>Standar & Konversi Harta</h2>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th width="25%">PECAHAN (DENOMINASI)</th>
+                    <th width="25%">BERAT MURNI (Gram)</th>
+                    <th width="25%">NILAI TUKAR (1:27)</th>
+                    <th width="25%">KESETARAAN LOGAM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="4" class="section-header">DENOMINASI DINAR (EMAS 22K)</td></tr>
+                
+                <tr class="row-gold">
+                    <td>2 DINAR</td>
+                    <td>8.500 gr</td>
+                    <td>54 Dirham</td>
+                    <td>~160.65 gr Perak</td>
+                </tr>
+                <tr class="row-gold">
+                    <td>1 DINAR</td>
+                    <td>4.250 gr</td>
+                    <td>27 Dirham</td>
+                    <td>~80.32 gr Perak</td>
+                </tr>
+                <tr class="row-gold">
+                    <td>1/2 DINAR</td>
+                    <td>2.125 gr</td>
+                    <td>13.50 Dirham</td>
+                    <td>~40.16 gr Perak</td>
+                </tr>
+                <tr class="row-gold">
+                    <td>1/4 DINAR</td>
+                    <td>1.063 gr</td>
+                    <td>6.75 Dirham</td>
+                    <td>~20.08 gr Perak</td>
+                </tr>
+
+                <tr><td colspan="4" class="section-header">DENOMINASI DIRHAM (PERAK MURNI)</td></tr>
+
+                <tr class="row-silver">
+                    <td>5 DIRHAM</td>
+                    <td>14.875 gr</td>
+                    <td>0.185 Dinar</td>
+                    <td>~0.79 gr Emas</td>
+                </tr>
+                <tr class="row-silver">
+                    <td>2 DIRHAM</td>
+                    <td>5.950 gr</td>
+                    <td>0.074 Dinar</td>
+                    <td>~0.31 gr Emas</td>
+                </tr>
+                <tr class="row-silver">
+                    <td>1 DIRHAM</td>
+                    <td>2.975 gr</td>
+                    <td>0.037 Dinar</td>
+                    <td>~0.16 gr Emas</td>
+                </tr>
+                <tr class="row-silver">
+                    <td>3/4 DIRHAM</td>
+                    <td>2.231 gr</td>
+                    <td>0.028 Dinar</td>
+                    <td>~0.12 gr Emas</td>
+                </tr>
+                <tr class="row-silver">
+                    <td>1/2 DIRHAM</td>
+                    <td>1.488 gr</td>
+                    <td>0.019 Dinar</td>
+                    <td>~0.08 gr Emas</td>
+                </tr>
+                <tr class="row-silver">
+                    <td>1/4 DIRHAM</td>
+                    <td>0.744 gr</td>
+                    <td>0.009 Dinar</td>
+                    <td>~0.04 gr Emas</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="calc-box">
+        <div class="calc-header">KALKULATOR BEBAS (RATE 1:27)</div>
+        
+        <div class="input-grid">
+            <div class="input-group">
+                <label style="color: #b7950b;">INPUT DINAR (EMAS)</label>
+                <input type="number" id="inDinar" class="inp-dinar" placeholder="0" oninput="convertFromDinar()">
+                <span class="unit-badge">dn</span>
+                <div id="infoDinar" class="res-sub" style="margin-top:5px; text-align:center;">0 gr Emas</div>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:center; font-size:1.5rem; color:#ccc;">
+                ⇄
+            </div>
+
+            <div class="input-group">
+                <label style="color: #7f8c8d;">INPUT DIRHAM (PERAK)</label>
+                <input type="number" id="inDirham" class="inp-dirham" placeholder="0" oninput="convertFromDirham()">
+                <span class="unit-badge">dr</span>
+                <div id="infoDirham" class="res-sub" style="margin-top:5px; text-align:center;">0 gr Perak</div>
+            </div>
+        </div>
+
+        <div class="result-panel">
+            <div id="conversionText" class="res-main">Silakan masukkan angka di atas...</div>
+            <div id="metalText" class="res-sub">---</div>
+        </div>
+    </div>
+
+    <script>
+        // KONSTANTA INTI
+        const RATE = 27; // 1 Dinar = 27 Dirham
+        const W_DINAR = 4.25; // Gram Emas per 1 Dinar
+        const W_DIRHAM = 2.975; // Gram Perak per 1 Dirham
+
+        const inDinar = document.getElementById('inDinar');
+        const inDirham = document.getElementById('inDirham');
+        
+        const infoDinar = document.getElementById('infoDinar');
+        const infoDirham = document.getElementById('infoDirham');
+        
+        const resText = document.getElementById('conversionText');
+        const metalText = document.getElementById('metalText');
+
+        function convertFromDinar() {
+            let val = parseFloat(inDinar.value);
+            if(isNaN(val)) { reset(); return; }
+
+            // Hitung ke Dirham
+            let resDirham = val * RATE;
+            
+            // Update Input Sebelah
+            inDirham.value = resDirham.toFixed(2); // Tampilkan 2 desimal
+
+            updateInfo(val, resDirham);
+        }
+
+        function convertFromDirham() {
+            let val = parseFloat(inDirham.value);
+            if(isNaN(val)) { reset(); return; }
+
+            // Hitung ke Dinar
+            let resDinar = val / RATE;
+            
+            // Update Input Sebelah
+            inDinar.value = resDinar.toFixed(4); // Tampilkan 4 desimal biar presisi
+
+            updateInfo(resDinar, val);
+        }
+
+        function updateInfo(dinarVal, dirhamVal) {
+            // Update Info Berat Kecil di bawah input
+            let goldGram = dinarVal * W_DINAR;
+            let silverGram = dirhamVal * W_DIRHAM;
+
+            infoDinar.innerText = goldGram.toLocaleString('id-ID', {maximumFractionDigits:3}) + " gr Emas (22k)";
+            infoDirham.innerText = silverGram.toLocaleString('id-ID', {maximumFractionDigits:3}) + " gr Perak Murni";
+
+            // Update Kalimat Hasil
+            resText.innerHTML = `
+                <span class="highlight-gold">${dinarVal.toLocaleString('id-ID', {maximumFractionDigits:4})} Dinar</span> 
+                SETARA DENGAN 
+                <span class="highlight-silver">${dirhamVal.toLocaleString('id-ID', {maximumFractionDigits:2})} Dirham</span>
+            `;
+
+            metalText.innerText = `Total Nilai Intrinsik: ${goldGram.toFixed(2)} Gram Emas ATAU ${silverGram.toFixed(2)} Gram Perak`;
+        }
+
+        function reset() {
+            infoDinar.innerText = "0 gr Emas";
+            infoDirham.innerText = "0 gr Perak";
+            resText.innerText = "Menunggu input...";
+            metalText.innerText = "---";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimatum Nilai Hidup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000;
+            --card: #0a0a0a;
+            --border: #333;
+            --alert: #ff3333; /* Merah Marah */
+            --warn: #ffcc00; /* Kuning Peringatan */
+            --safe: #00ff99; /* Hijau Aman */
+            --gold: #d4af37;
+            --text: #ccc;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center; margin-bottom: 30px;
+            border-bottom: 3px solid var(--alert); padding-bottom: 15px; width: 100%; max-width: 650px;
+        }
+        h1 { font-family: 'Orbitron', sans-serif; color: var(--alert); margin: 0; font-size: 1.8rem; letter-spacing: 4px; text-transform: uppercase; }
+        .subtitle { font-size: 0.8rem; color: #666; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .container { width: 100%; max-width: 650px; }
+
+        /* --- CONFIG SECTION (DATA PRIBADI) --- */
+        .config-box {
+            background: #080808; border: 1px dashed #444; border-radius: 8px; padding: 15px; margin-bottom: 20px;
+        }
+        .config-header { font-size: 0.75rem; color: #666; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; font-weight: bold; }
+        
+        .row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .col { flex: 1; }
+        
+        label { display: block; font-size: 0.7rem; color: #888; margin-bottom: 5px; }
+        input { 
+            width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: #fff; 
+            font-family: 'Share Tech Mono', monospace; border-radius: 4px; outline: none;
+        }
+        input:focus { border-color: var(--gold); }
+
+        /* --- TARGET BARANG --- */
+        .target-box {
+            background: #111; border: 2px solid var(--border); border-radius: 12px; padding: 25px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); margin-bottom: 25px;
+        }
+        
+        .big-btn {
+            width: 100%; padding: 15px; margin-top: 15px;
+            background: var(--alert); color: #000; border: none; font-weight: bold;
+            font-family: 'Orbitron', sans-serif; font-size: 1.1rem; cursor: pointer;
+            letter-spacing: 2px; transition: 0.2s; clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%, 0 20%);
+        }
+        .big-btn:hover { background: #ff0000; box-shadow: 0 0 20px var(--alert); }
+
+        /* --- ANALISIS RESULT (HIDDEN) --- */
+        .analysis-area { display: none; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        .verdict {
+            text-align: center; border: 2px solid var(--alert); padding: 20px; 
+            background: rgba(255, 51, 51, 0.05); margin-bottom: 20px; border-radius: 10px;
+        }
+        .verdict-main { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--alert); margin-bottom: 10px; line-height: 1.1; }
+        .verdict-sub { font-size: 0.9rem; color: #fff; line-height: 1.5; font-style: italic; }
+
+        /* --- 4 PILAR KEHANCURAN --- */
+        .pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .pillar-card { 
+            background: #0f0f0f; border: 1px solid #333; padding: 15px; border-radius: 8px; 
+            position: relative; overflow: hidden; 
+        }
+        .pillar-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+        }
+        
+        .p-time { border-top: 2px solid #fff; } .p-time::before { background: #fff; }
+        .p-family { border-top: 2px solid #ff0099; } .p-family::before { background: #ff0099; }
+        .p-health { border-top: 2px solid #00ff99; } .p-health::before { background: #00ff99; }
+        .p-future { border-top: 2px solid #ffcc00; } .p-future::before { background: #ffcc00; }
+
+        .p-icon { font-size: 1.5rem; margin-bottom: 5px; display: block; }
+        .p-val { font-size: 1.1rem; font-weight: bold; color: #fff; margin-bottom: 3px; }
+        .p-label { font-size: 0.65rem; text-transform: uppercase; color: #777; letter-spacing: 1px; }
+        .p-detail { font-size: 0.7rem; color: #aaa; margin-top: 8px; border-top: 1px dashed #333; padding-top: 5px; line-height: 1.3; }
+
+        .opportunity-lost {
+            background: #1a1500; border: 1px solid var(--gold); padding: 15px; border-radius: 8px;
+            color: var(--gold); font-size: 0.85rem; text-align: center; margin-top: 20px;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-btn {
+            margin-top: 40px; text-decoration: none; color: #555; font-size: 0.75rem; 
+            border: 1px solid #333; padding: 10px 25px; border-radius: 50px; transition: 0.3s;
+        }
+        .back-btn:hover { color: #fff; border-color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>TIMBANGAN NYAWA</h1>
+        <div class="subtitle">Kalkulator Biaya Kehidupan Sebenarnya</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="config-box">
+            <div class="config-header">⚠️ KONFIGURASI REALITA ANDA</div>
+            <div class="row">
+                <div class="col">
+                    <label>Gaji Bersih / Bulan (Rp)</label>
+                    <input type="number" id="income" placeholder="Contoh: 6000000">
+                </div>
+                <div class="col">
+                    <label>Jam Kerja / Hari</label>
+                    <input type="number" id="hours" value="9" title="Termasuk perjalanan pulang pergi">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label>Hari Kerja / Bulan</label>
+                    <input type="number" id="days" value="22">
+                </div>
+            </div>
+        </div>
+
+        <div class="target-box">
+            <div style="margin-bottom:15px;">
+                <label style="color:#fff; font-size:0.9rem;">APA YANG INGIN KAMU BELI?</label>
+                <input type="text" id="itemName" placeholder="Nama Barang / Jasa..." style="font-size:1.2rem; padding:15px; border-color:#555;">
+            </div>
+            <div>
+                <label style="color:#fff; font-size:0.9rem;">HARGA LABEL (RP)</label>
+                <input type="number" id="itemPrice" placeholder="0" style="font-size:1.5rem; padding:15px; border-color:#555; color:var(--gold);">
+            </div>
+            <button class="big-btn" onclick="analyze()">HITUNG BIAYA NYAWA</button>
+        </div>
+
+        <div id="resultArea" class="analysis-area">
+            
+            <div class="verdict" id="verdictBox">
+                <div id="vTitle" class="verdict-main">---</div>
+                <div id="vDesc" class="verdict-sub">---</div>
+            </div>
+
+            <div class="pillar-grid">
+                
+                <div class="pillar-card p-time">
+                    <span class="p-icon">⛓️</span>
+                    <div class="p-label">HARGA WAKTU</div>
+                    <div id="resTime" class="p-val">0 Jam</div>
+                    <div id="resTimeDet" class="p-detail">Waktu dimana kamu tidak bisa melihat anak/istri karena harus bekerja menebus barang ini.</div>
+                </div>
+
+                <div class="pillar-card p-family">
+                    <span class="p-icon">💔</span>
+                    <div class="p-label">BIAYA HUBUNGAN</div>
+                    <div id="resFamily" class="p-val">0 Weekend</div>
+                    <div id="resFamilyDet" class="p-detail">Setara dengan membatalkan janji main sama anak X kali.</div>
+                </div>
+
+                <div class="pillar-card p-health">
+                    <span class="p-icon">❤️‍🩹</span>
+                    <div class="p-label">DEPRESIASI FISIK</div>
+                    <div id="resHealth" class="p-val">0% Stress</div>
+                    <div id="resHealthDet" class="p-detail">Biaya "Recovery" mental dan pijat yang harus kamu bayar nanti.</div>
+                </div>
+
+                <div class="pillar-card p-future">
+                    <span class="p-icon">📉</span>
+                    <div class="p-label">PENYUSUTAN DAYA BELI</div>
+                    <div id="resFuture" class="p-val" style="color:var(--alert)">-Rp 0</div>
+                    <div id="resFutureDet" class="p-detail">Uang kertas terus melemah. 5 Tahun lagi, nominal ini kehilangan kekuatannya setara nilai ini dibanding Emas.</div>
+                </div>
+
+            </div>
+
+            <div class="opportunity-lost">
+                <div style="font-weight:bold; margin-bottom:5px; color:#fff;">ALTERNATIF NILAI:</div>
+                <div id="altText">Daripada beli ini, uangnya bisa buat SPP Sekolah anak selama 3 bulan.</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">KEMBALI KE MENU UTAMA</a>
+
+    <script>
+        // KONSTANTA EKONOMI 
+        const GOLD_GROWTH = 0.12;    // Kenaikan emas tahunan (Estimasi)
+        const HEALTH_COST_PER_HOUR = 5000; // Stress tax
+        const FAMILY_QUALITY_TIME_COST = 500000; // Harga momen
+
+        function analyze() {
+            // 1. AMBIL INPUT
+            const income = parseFloat(document.getElementById('income').value);
+            const hoursPerDay = parseFloat(document.getElementById('hours').value);
+            const daysPerMonth = parseFloat(document.getElementById('days').value);
+            const price = parseFloat(document.getElementById('itemPrice').value);
+            const name = document.getElementById('itemName').value;
+
+            if(!income || !price) { alert("Isi Gaji dan Harga dulu! Jangan lari dari kenyataan."); return; }
+
+            // 2. HITUNG "NILAI NYAWA" (HOURLY RATE REAL)
+            const totalWorkHours = daysPerMonth * hoursPerDay;
+            const hourlyRate = income / totalWorkHours; 
+
+            // 3. KALKULASI PILAR
+            
+            // A. WAKTU
+            const hoursLost = price / hourlyRate;
+            const daysLost = hoursLost / hoursPerDay;
+            
+            // B. KELUARGA
+            const familyEventsLost = price / FAMILY_QUALITY_TIME_COST;
+
+            // C. KESEHATAN
+            const healthDepreciation = hoursLost * HEALTH_COST_PER_HOUR;
+            
+            // D. DEPRESIASI DAYA BELI (LOGIKA BARU)
+            // Rumus: Berapa nilai nominal ini di masa depan jika dibelikan Emas vs Disimpan Tunai/Barang
+            // Asumsi: Emas naik 12% per tahun (menjaga daya beli). Uang kertas 'tetap' nominalnya tapi 'turun' dayanya.
+            // Gap = (Nilai Emas 5 Tahun Lagi) - (Nominal Uang Asal)
+            const projectedGoldValue = price * Math.pow((1 + GOLD_GROWTH), 5);
+            const purchasingPowerLoss = projectedGoldValue - price; 
+
+            // 4. LOGIKA PSIKOLOGI (VERDICT)
+            const verdictBox = document.getElementById('verdictBox');
+            const vTitle = document.getElementById('vTitle');
+            const vDesc = document.getElementById('vDesc');
+            const ratio = price / income;
+
+            if (ratio > 2) {
+                verdictBox.style.borderColor = "#ff3333";
+                verdictBox.style.background = "rgba(255, 51, 51, 0.1)";
+                vTitle.innerText = "PERBUDAKAN SUKARELA";
+                vTitle.style.color = "#ff3333";
+                vDesc.innerText = `Sadar! Kamu harus bekerja ${Math.ceil(daysLost)} HARI (${(daysLost/22).toFixed(1)} Bulan) tanpa makan minum cuma buat benda mati ini.`;
+            } 
+            else if (ratio > 0.5) {
+                verdictBox.style.borderColor = "#ffcc00";
+                verdictBox.style.background = "rgba(255, 204, 0, 0.1)";
+                vTitle.innerText = "JEBAKAN TIKUS";
+                vTitle.style.color = "#ffcc00";
+                vDesc.innerText = `Kamu menukar setengah bulan nyawamu. Apakah ${name} ini sepadan dengan sakit punggungmu nanti?`;
+            }
+            else {
+                verdictBox.style.borderColor = "#00ff99";
+                verdictBox.style.background = "rgba(0, 255, 153, 0.1)";
+                vTitle.innerText = "PERTUKARAN WAJAR";
+                vTitle.style.color = "#00ff99";
+                vDesc.innerText = "Nilainya masih masuk akal. Tapi ingat, belilah FUNGSI, bukan GENGSI.";
+            }
+
+            // 5. RENDER TEXT
+            document.getElementById('resTime').innerText = Math.ceil(hoursLost) + " JAM KERJA";
+            document.getElementById('resTimeDet').innerText = `Setara dengan ${Math.ceil(daysLost)} hari kamu pergi pagi pulang malam, meninggalkan kehidupan pribadimu.`;
+
+            document.getElementById('resFamily').innerText = familyEventsLost.toFixed(1) + " x MOMEN";
+            document.getElementById('resFamilyDet').innerText = `Uang ini setara dengan ${Math.ceil(familyEventsLost)} kali mengajak keluargamu liburan/makan enak yang berkualitas.`;
+
+            document.getElementById('resHealth').innerText = "Rp " + healthDepreciation.toLocaleString();
+            document.getElementById('resHealthDet').innerText = `Kamu menimbun potensi biaya sakit di masa tua sebesar ini karena kelelahan kerja lembur demi ${name}.`;
+
+            // LOGIC BARU: DEPRESIASI
+            document.getElementById('resFuture').innerText = "-Rp " + purchasingPowerLoss.toLocaleString();
+            document.getElementById('resFutureDet').innerText = `Akibat inflasi, 5 tahun lagi daya beli uangmu anjlok. Jika tidak diamankan ke Emas sekarang, kamu 'kehilangan' nilai riil sebesar ini.`;
+
+            const altText = document.getElementById('altText');
+            const riceKg = Math.floor(price / 13000);
+            altText.innerText = `RENUNGKAN: Uang segini bisa membelikan ${riceKg} Kg Beras. Cukup untuk stok pangan darurat selama berbulan-bulan.`;
+
+            document.getElementById('resultArea').style.display = 'block';
+            document.getElementById('resultArea').scrollIntoView({behavior: "smooth"});
+        }
+    </script>
+</body>
+</html>

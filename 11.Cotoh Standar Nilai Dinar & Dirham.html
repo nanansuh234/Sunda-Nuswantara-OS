@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriks Standar Nilai (Value Anchor)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --text: #e2e8f0;
+            --border: #334155;
+            --accent-gold: #f59e0b;
+            --accent-silver: #94a3b8;
+            --highlight: #3b82f6;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Roboto Mono', monospace;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 2px; text-align: center; color: var(--accent-gold); }
+        .subtitle { text-align: center; color: #64748b; margin-bottom: 30px; font-size: 0.9rem; max-width: 600px; }
+
+        .matrix-container {
+            width: 100%;
+            max-width: 1000px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px; /* Biar gak hancur di HP */
+        }
+
+        thead {
+            background: #1e293b;
+            color: var(--highlight);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th { border-bottom: 2px solid var(--highlight); }
+
+        /* KOLOM DENOMINASI */
+        .col-denom { 
+            width: 20%; 
+            font-weight: bold; 
+            border-right: 2px solid var(--border);
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .val-gold { color: var(--accent-gold); font-size: 1.1rem; }
+        .val-silver { color: var(--accent-silver); font-size: 1.1rem; }
+
+        /* KOLOM MANFAAT */
+        .benefit-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #334155;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        /* ROW HOVER */
+        tr:hover { background: rgba(255,255,255,0.03); }
+
+        /* LEGEND */
+        .legend {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #64748b;
+            text-align: center;
+            border-top: 1px dashed var(--border);
+            padding-top: 10px;
+        }
+
+        .category-header {
+            font-size: 0.75rem; color: #64748b; text-transform: uppercase; margin-bottom: 5px; display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>MATRIKS KESETARAAN NILAI</h1>
+    <div class="subtitle">
+        Alat ukur universal untuk membandingkan Energi (Tenaga) dan Materi (Barang). 
+        Menggunakan Dinar & Dirham sebagai "Penggaris Nilai", bukan sekadar uang.
+    </div>
+
+    <div class="matrix-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-denom">ALAT UKUR (SATUAN)</th>
+                    <th>TENAGA MANUSIA<br><span style="font-size:0.7rem; opacity:0.7;">(Waktu & Jasa)</span></th>
+                    <th>ENERGI PANGAN<br><span style="font-size:0.7rem; opacity:0.7;">(Logistik Harian)</span></th>
+                    <th>ASET & UTILITAS<br><span style="font-size:0.7rem; opacity:0.7;">(Fisik & Sewa)</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td class="col-denom val-silver">1/4 DIRHAM</td>
+                    <td>
+                        <span class="category-header">UPAH MINIM</span>
+                        1 Jam Kerja Kasar<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Cuci Piring / Angkut)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">ASUPAN</span>
+                        1x Makan Siang Sederhana<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Nasi + Lauk Dasar + Air)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">UTILITAS</span>
+                        Parkir Seharian / Toilet Umum<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Layanan fasilitas dasar)</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-denom val-silver">1/2 DIRHAM</td>
+                    <td>
+                        <span class="category-header">JASA DASAR</span>
+                        Jasa Cukur Rambut<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Keahlian durasi 30 menit)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">LOGISTIK</span>
+                        1 Ekor Ayam Potong<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Protein keluarga sehari)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">TRANSPORT</span>
+                        Bensin Full Tank Motor<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Energi gerak 100km)</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-denom val-silver">1 DIRHAM</td>
+                    <td>
+                        <span class="category-header">UPAH HARIAN</span>
+                        1 Hari Kerja Buruh<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Standar kelayakan hidup 1 hari)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">STOK POKOK</span>
+                        3 - 4 Kg Beras Premium<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Karbohidrat 1 orang / minggu)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">SANDANG</span>
+                        1 Kaos Kualitas Standar<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Penutup tubuh layak)</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-denom val-silver">5 DIRHAM</td>
+                    <td>
+                        <span class="category-header">KEAHLIAN</span>
+                        Jasa Dokter Umum / Tukang Ahli<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Konsultasi / Perbaikan ringan)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">STOK KELUARGA</span>
+                        Belanja Sayur 1 Minggu<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Full kulkas keluarga kecil)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">SANDANG</span>
+                        1 Kemeja / Kain Batik<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Pakaian formal)</span>
+                    </td>
+                </tr>
+
+                <tr style="border-top: 3px solid var(--accent-gold);">
+                    <td class="col-denom val-gold">1/4 DINAR</td>
+                    <td>
+                        <span class="category-header">GAJI MINGGUAN</span>
+                        Upah Supervisor (1 Minggu)<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Tanggung jawab menengah)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">PESTA KECIL</span>
+                        Makan Enak 1 Keluarga Besar<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Restoran / Syukuran kecil)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">AKSES</span>
+                        Tiket Pesawat Domestik<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Perjalanan jarak jauh)</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-denom val-gold">1 DINAR</td>
+                    <td>
+                        <span class="category-header">GAJI BULANAN</span>
+                        1 Bulan Gaji UMR (Layak)<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Standar hidup 1 bulan full)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">ASET HIDUP</span>
+                        1 Ekor Kambing Dewasa<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Aqiqah / Qurban Standard)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">PAPAN</span>
+                        Sewa Kost/Kontrakan 1-2 Bulan<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Tergantung lokasi)</span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-denom val-gold">2 DINAR</td>
+                    <td>
+                        <span class="category-header">GAJI AHLI</span>
+                        Gaji Manajer / Senior<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Keahlian tinggi & tanggung jawab)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">CADANGAN PANGAN</span>
+                        Stok Beras 1 Tahun (1 Keluarga)<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Ketahanan pangan rumah tangga)</span>
+                    </td>
+                    <td>
+                        <span class="category-header">TEKNOLOGI</span>
+                        Laptop Kerja / HP Mid-Range<br>
+                        <span style="font-size:0.8rem; color:#64748b;">(Alat produktivitas)</span>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="legend">
+        *Tabel ini adalah PETA KONSEP. Harga pasar fluktuatif, tapi NILAI MANFAAT cenderung stabil dalam satuan ini.
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekonomi Nilai - Nuswantara OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0c0c0c;
+            --gold: #c5a059;
+            --silver: #8a9597;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Playfair Display', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* BACKGROUND */
+        .bg-pattern {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;
+            background-image: radial-gradient(#222 15%, transparent 16%);
+            background-size: 30px 30px;
+            opacity: 0.3;
+        }
+
+        /* HEADER */
+        .vault-header {
+            text-align: center; margin-bottom: 40px;
+            border: 2px solid var(--gold);
+            padding: 15px 40px;
+            border-radius: 5px;
+            background: rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.2);
+        }
+        h1 {
+            font-family: 'Cinzel', serif; font-size: 2.5rem; margin: 0;
+            color: var(--gold); letter-spacing: 5px; text-transform: uppercase;
+        }
+        .subtitle {
+            font-size: 0.9rem; letter-spacing: 3px; color: var(--silver); margin-top: 5px; text-transform: uppercase;
+        }
+
+        /* GRID MENU */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%; max-width: 1000px;
+        }
+
+        /* CARD STYLE */
+        .econ-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .econ-card::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px;
+            background: var(--gold); transform: scaleX(0); transition: 0.4s;
+        }
+
+        .econ-card:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 30, 30, 0.9);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .econ-card:hover::after { transform: scaleX(1); }
+
+        .card-icon { font-size: 3rem; margin-bottom: 15px; color: var(--gold); }
+        .card-title { font-family: 'Cinzel', serif; font-size: 1.2rem; color: #fff; margin-bottom: 10px; font-weight: bold; }
+        .card-desc { font-size: 0.9rem; color: #888; line-height: 1.4; }
+
+        /* SPECIFIC CARD COLORS */
+        .c-manifesto .card-icon { color: #8b0000; } /* Merah buat Manifesto */
+        .c-calc .card-icon { color: var(--silver); }
+        .c-history .card-icon { color: #cd7f32; } /* Tembaga buat Sejarah */
+        .c-matrix .card-icon { color: var(--gold); }
+
+        /* FOOTER */
+        .back-btn {
+            margin-top: 50px;
+            text-decoration: none; color: #666; font-size: 0.8rem; letter-spacing: 2px;
+            border: 1px solid #444; padding: 10px 30px; border-radius: 50px;
+            font-family: 'Cinzel', serif;
+        }
+        .back-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-pattern"></div>
+
+    <div class="vault-header">
+        <h1>EKONOMI NILAI</h1>
+        <div class="subtitle">Sistem Kemakmuran Nuswantara</div>
+    </div>
+
+    <div class="menu-grid">
+        
+        <a href="12.Bewara Ekonomi.html" class="econ-card c-manifesto">
+            <div class="card-icon">📜</div>
+            <div class="card-title">Manifesto Ekonomi</div>
+            <div class="card-desc">
+                Protokol dasar dan aturan main keseimbangan nilai agar tidak terjadi penindasan ekonomi.
+            </div>
+        </a>
+
+        <a href="10. Conversi Dinar & Dirham.html" class="econ-card c-calc">
+            <div class="card-icon">⚖️</div>
+            <div class="card-title">Konverter Harta</div>
+            <div class="card-desc">
+                Alat hitung konversi Dinar/Dirham ke berat emas/perak murni dan denominasinya.
+            </div>
+        </a>
+
+        <a href="11.Cotoh Standar Nilai Dinar & Dirham.html" class="econ-card c-matrix">
+            <div class="card-icon">📊</div>
+            <div class="card-title">Matriks Kesetaraan</div>
+            <div class="card-desc">
+                Peta standar nilai tukar antara Uang (Logam) dengan Tenaga, Pangan, dan Aset.
+            </div>
+        </a>
+
+        <a href="13. Contoh Acuan Jaman Kerajaan.html" class="econ-card c-history">
+            <div class="card-icon">🏺</div>
+            <div class="card-title">Acuan Sejarah</div>
+            <div class="card-desc">
+                Studi kasus harga pasar di era Majapahit sebagai tolak ukur kestabilan nilai.
+            </div>
+        </a>
+
+        <a href="09.Indikator Pertimbangan  Pengeluaran.html" class="econ-card">
+            <div class="card-icon">🧠</div>
+            <div class="card-title">Indikator Pengeluaran</div>
+            <div class="card-desc">
+                Kalkulator psikologis untuk menghitung "Biaya Nyawa" sebelum membeli barang konsumtif.
+            </div>
+        </a>
+
+    </div>
+
+    <a href="index.html" class="back-btn">KEMBALI KE DASHBOARD UTAMA</a>
+
+</body>
+</html>
