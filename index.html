@@ -14,6 +14,7 @@
             --blue: #2980b9;
             --red: #c0392b;
             --purple: #9b59b6;
+            --cyan: #00ffcc;
             --text: #e0e0e0;
         }
 
@@ -159,6 +160,7 @@
         .cat-sys .app-icon { color: var(--red); }
         .cat-blue .app-icon { color: var(--blue); }
         .cat-lingo .app-icon { color: var(--purple); }
+        .cat-tech .app-icon { color: var(--cyan); }
 
         /* --- FOOTER --- */
         .dock {
@@ -179,7 +181,7 @@
 
     <div class="status-bar">
         <div class="status-left">NUSWANTARA OS</div>
-        <div class="status-right" id="masehi-clock">Loading Masehi...</div>
+        <div class="status-right" id="masehi-clock">Loading...</div>
     </div>
 
     <div class="hero-section">
@@ -241,6 +243,7 @@
         <a href="12. Sunda Kuno.html" class="app-card cat-lingo">
             <div class="app-icon">✒️</div><div class="app-label">Olaxara</div>
         </a>
+        
         <a href="Tools.html" class="app-card cat-nature">
             <div class="app-icon">🧠</div><div class="app-label">Logic Engine</div>
         </a>
@@ -248,9 +251,13 @@
         <a href="13. Kumpulan Renungan.html" class="app-card cat-lingo">
             <div class="app-icon">📚</div><div class="app-label">Renungan</div>
         </a>
-        
-        <a href="14. Terapi Cahaya Malam.html" class="app-card cat-nature">
+
+        <a href="14. Terapi Cahaya Malam.html" class="app-card cat-sys">
             <div class="app-icon">🕯️</div><div class="app-label">Terapi Sirep</div>
+        </a>
+
+        <a href="15. Appraisal Scanner.html" class="app-card cat-tech">
+            <div class="app-icon">🔍</div><div class="app-label">Appraisal</div>
         </a>
 
     </div>
@@ -324,6 +331,4 @@
         updateWidget();
     </script>
 </body>
-
 </html>
-
