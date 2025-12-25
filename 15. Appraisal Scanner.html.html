@@ -45,112 +45,83 @@
         }
 
         /* --- HUD ELEMENTS --- */
-        .hud-corner {
-            position: absolute; width: 50px; height: 50px;
-            border: 2px solid var(--hud);
-            z-index: 2;
-        }
+        .hud-corner { position: absolute; width: 50px; height: 50px; border: 2px solid var(--hud); z-index: 2; }
         .tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
         .tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
         .bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
         .br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
 
         .scan-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 5px;
-            background: var(--hud);
-            box-shadow: 0 0 15px var(--hud);
-            opacity: 0.5;
-            animation: scan 3s infinite linear;
-            z-index: 1;
-            pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--hud);
+            box-shadow: 0 0 15px var(--hud); opacity: 0.5; animation: scan 3s infinite linear; z-index: 1; pointer-events: none;
         }
-
-        @keyframes scan {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
+        @keyframes scan { 0% { top: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
         /* --- NAVIGATION & STATUS --- */
         .home-btn {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
             color: #000; text-decoration: none; font-size: 0.8rem; font-weight: bold;
-            border: 1px solid var(--hud); background: var(--hud);
-            padding: 8px 20px; border-radius: 20px; z-index: 30;
-            box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
-            letter-spacing: 1px;
+            border: 1px solid var(--hud); background: var(--hud); padding: 8px 20px; border-radius: 20px; z-index: 30;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.5); letter-spacing: 1px;
         }
 
         #db-status {
-            position: absolute; top: 65px; 
-            left: 50%; transform: translateX(-50%);
-            font-size: 0.65rem; color: #666; z-index: 5;
-            border: 1px solid #333; padding: 4px 12px; border-radius: 12px; background: #000;
-            letter-spacing: 1px;
+            position: absolute; top: 65px; left: 50%; transform: translateX(-50%);
+            font-size: 0.65rem; color: #666; z-index: 5; border: 1px solid #333; padding: 4px 12px; border-radius: 12px; background: #000; letter-spacing: 1px;
         }
         .online { color: var(--gold) !important; border-color: var(--gold) !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
 
         /* --- INPUT INTERFACE --- */
-        .interface {
-            z-index: 10; position: absolute; bottom: 80px; width: 90%; max-width: 500px; text-align: center;
-        }
-
+        .interface { z-index: 10; position: absolute; bottom: 80px; width: 90%; max-width: 500px; text-align: center; }
         .target-box {
-            border: 2px solid var(--hud);
-            background: rgba(0,0,0,0.8);
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
+            border: 2px solid var(--hud); background: rgba(0,0,0,0.8); padding: 10px;
+            display: flex; align-items: center; clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
         }
-
         input {
-            width: 100%; background: transparent; border: none; color: #fff;
-            font-family: 'Orbitron', sans-serif; font-size: 1.2rem;
+            width: 100%; background: transparent; border: none; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.2rem;
             text-transform: uppercase; outline: none; padding: 5px;
         }
-
         button {
-            background: var(--hud); color: #000; border: none; padding: 10px 20px;
-            font-weight: bold; cursor: pointer; font-family: 'Orbitron', sans-serif;
+            background: var(--hud); color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; font-family: 'Orbitron', sans-serif;
             clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%, 0 0);
         }
-
         .dict-btn {
-            margin-bottom: 10px; background: none; border: 1px solid var(--hud); color: var(--hud);
-            font-size: 0.7rem; padding: 5px 15px; border-radius: 15px; cursor: pointer;
-            letter-spacing: 2px;
+            margin-bottom: 10px; background: #000; border: 1px solid var(--hud); color: var(--hud);
+            font-size: 0.8rem; padding: 8px 20px; border-radius: 20px; cursor: pointer; letter-spacing: 2px;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
         }
         .dict-btn:hover { background: var(--hud); color: #000; }
 
-        /* --- DICTIONARY MODAL (KAMUS) --- */
+        /* --- DICTIONARY MODAL (FIXED FOR MOBILE) --- */
         .dict-modal {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 400px; max-height: 60vh;
-            background: rgba(0, 10, 5, 0.95); border: 2px solid var(--hud);
-            z-index: 50; display: none; flex-direction: column;
-            box-shadow: 0 0 50px rgba(0, 255, 204, 0.3);
-            border-radius: 10px;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 10, 5, 0.98); z-index: 50; display: none; flex-direction: column;
         }
         .dict-header {
-            padding: 15px; border-bottom: 1px solid var(--hud);
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0, 255, 204, 0.1);
+            padding: 20px; border-bottom: 2px solid var(--hud); display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0, 255, 204, 0.1); flex-shrink: 0;
         }
+        .dict-title { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; color: var(--hud); }
+        .dict-close { 
+            color: #000; background: var(--alert); font-weight: bold; border: none; 
+            padding: 8px 15px; border-radius: 5px; cursor: pointer; font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* LIST 1 KOLOM */
         .dict-body {
-            flex: 1; overflow-y: auto; padding: 10px;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 10px; /* 1 Kolom ke bawah */
         }
         .dict-item {
-            padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid #333;
-            color: #ccc; font-size: 0.8rem; cursor: pointer; text-align: left;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            padding: 15px 20px; /* Padding Gede buat Jempol */
+            background: rgba(255,255,255,0.05); border: 1px solid #333;
+            color: #fff; font-size: 1rem; cursor: pointer; text-align: left;
+            border-radius: 8px; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
         }
-        .dict-item:hover {
-            border-color: var(--hud); color: var(--hud); background: rgba(0, 255, 204, 0.1);
+        .dict-item:hover, .dict-item:active {
+            border-color: var(--hud); color: #000; background: var(--hud);
         }
-        .dict-close { color: var(--alert); cursor: pointer; font-weight: bold; border: 1px solid var(--alert); padding: 2px 8px; border-radius: 5px; }
+        .dict-item::after { content: 'SCAN >'; font-size: 0.7rem; opacity: 0.5; }
 
         /* --- RESULT CARD --- */
         .appraisal-card {
@@ -159,7 +130,6 @@
             border: 1px solid var(--hud); padding: 2px; display: none; z-index: 20;
             box-shadow: 0 0 50px rgba(0, 255, 204, 0.2); animation: popIn 0.3s forwards;
         }
-
         @keyframes popIn { to { transform: translate(-50%, -60%) scale(1); } }
 
         .card-header {
@@ -210,15 +180,15 @@
 
     <div id="dictModal" class="dict-modal">
         <div class="dict-header">
-            <span style="letter-spacing: 2px;">DATABASE LUMBUNG</span>
-            <span class="dict-close" onclick="toggleDict()">X</span>
+            <span class="dict-title">DATABASE ITEM</span>
+            <button class="dict-close" onclick="toggleDict()">TUTUP</button>
         </div>
         <div id="dictBody" class="dict-body">
             </div>
     </div>
 
     <div class="interface">
-        <button class="dict-btn" onclick="toggleDict()">📂 BUKA KAMUS ITEM</button>
+        <button class="dict-btn" onclick="toggleDict()">📂 BUKA KAMUS (101 ITEM)</button>
         <div style="font-size:0.7rem; margin-bottom:5px; color:var(--hud); letter-spacing: 2px;">OMNI-LENS v1.0 ONLINE</div>
         <div class="target-box">
             <span style="font-size:1.5rem; margin-right:10px;">⌖</span>
@@ -247,7 +217,7 @@
 
 <script>
     // =========================================================================
-    // KONFIGURASI SPREADSHEET (Database 101 Komoditas)
+    // KONFIGURASI SPREADSHEET (Link CSV Database Item)
     // =========================================================================
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQGkIRI-_XNlA7-5YP1amp9axQdYbGFLERIted9INYCDKpFa8AxtJ-qwVMf9kFLB-kLcmUoJPzCmend/pub?gid=0&single=true&output=csv"; 
     // =========================================================================
@@ -276,7 +246,7 @@
 
             statusEl.innerText = "CLOUD DATABASE: CONNECTED";
             statusEl.classList.add('online');
-            populateDict(); // Isi Kamus setelah data masuk
+            populateDict(); 
 
         } catch (err) {
             console.log("Offline Mode:", err);
@@ -293,7 +263,7 @@
         const allKeys = [...new Set([...Object.keys(cloudDB), ...Object.keys(localDB)])].sort();
         
         if (allKeys.length === 0) {
-            dictBody.innerHTML = "<div style='grid-column: span 2; text-align: center; color: #666;'>Database Kosong</div>";
+            dictBody.innerHTML = "<div style='text-align: center; color: #666; padding:20px;'>Database Kosong</div>";
             return;
         }
 
