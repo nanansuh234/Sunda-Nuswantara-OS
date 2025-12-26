@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iman Metric System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #111;
+            --border: #333;
+            --cyan: #00f3ff;
+            --gold: #c5a059;
+            --purple: #9d00ff;
+            --text: #ccc;
+            --tag-color: #ffcc00; /* Warna untuk (INTI UKURAN) */
+        }
+
+        * { box-sizing: border-box; transition: 0.3s; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            border-bottom: 2px solid var(--cyan);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle { font-size: 0.9rem; color: #666; margin-bottom: 30px; text-align: center; }
+
+        /* GRID LAYOUT */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            width: 100%; max-width: 1200px;
+        }
+
+        /* CARD STYLE */
+        .pillar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card:hover { border-color: var(--gold); box-shadow: 0 0 15px rgba(197, 160, 89, 0.1); }
+
+        .card-title {
+            font-size: 1.1rem; font-weight: bold; color: #fff;
+            border-bottom: 1px dashed #444; padding-bottom: 10px; margin-bottom: 15px;
+            display: flex; flex-direction: column; gap: 5px;
+        }
+        
+        .card-badge { font-size: 0.8rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: normal; }
+
+        /* CHECKBOX LIST */
+        .check-group { display: flex; flex-direction: column; gap: 8px; }
+        
+        .check-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            font-size: 0.95rem; cursor: pointer;
+            padding: 5px; border-radius: 4px; color: #aaa;
+            line-height: 1.4;
+        }
+        .check-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+        /* CORE TAG STYLE (YANG DALAM KURUNG) */
+        .core-tag {
+            color: var(--tag-color);
+            font-weight: bold;
+            font-size: 0.85rem;
+            margin-left: 5px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        input[type="checkbox"] {
+            appearance: none; width: 18px; height: 18px; border: 1px solid #555;
+            background: #000; cursor: pointer; position: relative; flex-shrink: 0; margin-top: 3px;
+        }
+        input[type="checkbox"]:checked { background: var(--cyan); border-color: var(--cyan); }
+        input[type="checkbox"]:checked::after {
+            content: '✔'; position: absolute; top: -3px; left: 2px; color: #000; font-size: 14px; font-weight: bold;
+        }
+
+        /* BUTTON */
+        .btn-calc {
+            margin-top: 40px; padding: 15px 40px;
+            background: var(--cyan); color: #000; border: none;
+            font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; font-weight: bold;
+            cursor: pointer; clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+        }
+        .btn-calc:hover { background: #fff; box-shadow: 0 0 20px var(--cyan); }
+
+        /* RESULT SECTION */
+        .result-panel {
+            width: 100%; max-width: 800px; margin-top: 40px;
+            background: #0a0a0a; border: 2px solid var(--gold);
+            padding: 30px; display: none;
+        }
+
+        .result-header { text-align: center; color: var(--gold); font-size: 1.5rem; margin-bottom: 20px; font-weight: bold; }
+
+        .bar-container { margin-bottom: 15px; }
+        .bar-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
+        .bar-bg { width: 100%; height: 10px; background: #222; border-radius: 5px; overflow: hidden; }
+        .bar-fill { height: 100%; width: 0%; transition: 1s ease-out; }
+
+        /* WARNA BAR */
+        .c-1 { background: #ff0055; } /* Allah */
+        .c-2 { background: #00f3ff; } /* Malaikat */
+        .c-3 { background: #00ff41; } /* Kitab */
+        .c-4 { background: #ffcc00; } /* Rasul */
+        .c-5 { background: #9d00ff; } /* Akhir */
+        .c-6 { background: #ffffff; } /* Qada Qadar */
+
+        .final-score {
+            text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed #333;
+        }
+        .score-big { font-size: 3rem; font-weight: bold; color: var(--cyan); font-family: 'Share Tech Mono', monospace; }
+
+        @media (max-width: 600px) { .grid-container { grid-template-columns: 1fr; } }
+
+    </style>
+</head>
+<body>
+
+    <h1>IMAN METRIC SYSTEM</h1>
+    <div class="subtitle">Indikator Kesadaran & Tindakan Nyata</div>
+
+    <div class="grid-container">
+
+        <div class="pillar-card" style="border-top: 3px solid #ff0055;">
+            <div class="card-title">1. IMAN KEPADA ALLAH <span class="card-badge">Kesadaran Ketuhanan</span></div>
+            <div class="check-group" id="p1">
+                <label class="check-item"><input type="checkbox"> Ketundukan tanpa pengawasan <span class="core-tag">(KETUNDUKAN)</span></label>
+                <label class="check-item"><input type="checkbox"> Kejujuran saat rugi <span class="core-tag">(INTEGRITAS)</span></label>
+                <label class="check-item"><input type="checkbox"> Tidak panik kehilangan materi <span class="core-tag">(KETERGANTUNGAN)</span></label>
+                <label class="check-item"><input type="checkbox"> Konsistensi prinsip <span class="core-tag">(ISTIQAMAH)</span></label>
+                <label class="check-item"><input type="checkbox"> Kerendahan hati <span class="core-tag">(TAWADHU)</span></label>
+                <label class="check-item"><input type="checkbox"> Kesabaran menghadapi ujian <span class="core-tag">(SABAR)</span></label>
+                <label class="check-item"><input type="checkbox"> Rasa cukup <span class="core-tag">(QANAAH)</span></label>
+                <label class="check-item"><input type="checkbox"> Tanggung jawab pribadi <span class="core-tag">(MAS'ULIYAH)</span></label>
+                <label class="check-item"><input type="checkbox"> Syukur non-verbal <span class="core-tag">(AKSI SYUKUR)</span></label>
+                <label class="check-item"><input type="checkbox"> Menahan diri saat ada peluang dosa <span class="core-tag">(IFFAH)</span></label>
+            </div>
+        </div>
+
+        <div class="pillar-card" style="border-top: 3px solid #00f3ff;">
+            <div class="card-title">2. IMAN KEPADA MALAIKAT <span class="card-badge">Kesadaran Pengawasan</span></div>
+            <div class="check-group" id="p2">
+                <label class="check-item"><input type="checkbox"> Disiplin tanpa sanksi <span class="core-tag">(DISIPLIN)</span></label>
+                <label class="check-item"><input type="checkbox"> Integritas publik & privat <span class="core-tag">(MURAQABAH)</span></label>
+                <label class="check-item"><input type="checkbox"> Etika saat emosi <span class="core-tag">(KONTROL DIRI)</span></label>
+                <label class="check-item"><input type="checkbox"> Kontrol lisan <span class="core-tag">(LISAN TERJAGA)</span></label>
+                <label class="check-item"><input type="checkbox"> Rasa bersalah saat salah <span class="core-tag">(SENSITIVITAS DOSA)</span></label>
+                <label class="check-item"><input type="checkbox"> Ketelitian tindakan <span class="core-tag">(ITQAN)</span></label>
+                <label class="check-item"><input type="checkbox"> Amanah terhadap titipan <span class="core-tag">(AMANAH)</span></label>
+                <label class="check-item"><input type="checkbox"> Konsistensi moral <span class="core-tag">(AKHLAK)</span></label>
+                <label class="check-item"><input type="checkbox"> Tanggung jawab etis <span class="core-tag">(ETIKA)</span></label>
+                <label class="check-item"><input type="checkbox"> Kesadaran konsekuensi <span class="core-tag">(WASPADA)</span></label>
+            </div>
+        </div>
+
+        <div class="pillar-card" style="border-top: 3px solid #00ff41;">
+            <div class="card-title">3. IMAN KEPADA KITAB <span class="card-badge">Kepatuhan Nilai</span></div>
+            <div class="check-group" id="p3">
+                <label class="check-item"><input type="checkbox"> Keputusan berbasis nilai <span class="core-tag">(FURQAN)</span></label>
+                <label class="check-item"><input type="checkbox"> Tidak memanipulasi aturan <span class="core-tag">(JUJUR ATURAN)</span></label>
+                <label class="check-item"><input type="checkbox"> Konsistensi moral <span class="core-tag">(ADAB)</span></label>
+                <label class="check-item"><input type="checkbox"> Tunduk pada hukum <span class="core-tag">(TAAT ASAS)</span></label>
+                <label class="check-item"><input type="checkbox"> Objektivitas nilai <span class="core-tag">(ADIL)</span></label>
+                <label class="check-item"><input type="checkbox"> Anti pembenaran diri <span class="core-tag">(OBJEKTIF)</span></label>
+                <label class="check-item"><input type="checkbox"> Mau dikoreksi kebenaran <span class="core-tag">(TERBUKA)</span></label>
+                <label class="check-item"><input type="checkbox"> Keadilan sosial <span class="core-tag">(QIST)</span></label>
+                <label class="check-item"><input type="checkbox"> Nilai jadi tindakan <span class="core-tag">(AMAL NYATA)</span></label>
+                <label class="check-item"><input type="checkbox"> Tidak menjual nilai <span class="core-tag">(HARGA DIRI)</span></label>
+            </div>
+        </div>
+
+        <div class="pillar-card" style="border-top: 3px solid #ffcc00;">
+            <div class="card-title">4. IMAN KEPADA RASUL <span class="card-badge">Keteladanan Sosial</span></div>
+            <div class="check-group" id="p4">
+                <label class="check-item"><input type="checkbox"> Kejujuran publik <span class="core-tag">(SIDDIQ)</span></label>
+                <label class="check-item"><input type="checkbox"> Kepemimpinan melayani <span class="core-tag">(KHADIM)</span></label>
+                <label class="check-item"><input type="checkbox"> Empati sosial <span class="core-tag">(UKHUWAH)</span></label>
+                <label class="check-item"><input type="checkbox"> Ketegasan moral <span class="core-tag">(TEGAS)</span></label>
+                <label class="check-item"><input type="checkbox"> Berani menegakkan benar <span class="core-tag">(SYAJA'AH)</span></label>
+                <label class="check-item"><input type="checkbox"> Amanah kepercayaan <span class="core-tag">(TERPERCAYA)</span></label>
+                <label class="check-item"><input type="checkbox"> Konsistensi ucapan & tindakan <span class="core-tag">(SATUNYA KATA)</span></label>
+                <label class="check-item"><input type="checkbox"> Tanggung jawab kolektif <span class="core-tag">(RA'IN)</span></label>
+                <label class="check-item"><input type="checkbox"> Keteladanan nyata <span class="core-tag">(USWAH)</span></label>
+                <label class="check-item"><input type="checkbox"> Anti kemunafikan <span class="core-tag">(AUTENTIK)</span></label>
+            </div>
+        </div>
+
+        <div class="pillar-card" style="border-top: 3px solid #9d00ff;">
+            <div class="card-title">5. IMAN KEPADA HARI AKHIR <span class="card-badge">Visi Jangka Panjang</span></div>
+            <div class="check-group" id="p5">
+                <label class="check-item"><input type="checkbox"> Pengendalian diri <span class="core-tag">(MUJAHADAH)</span></label>
+                <label class="check-item"><input type="checkbox"> Tidak impulsif <span class="core-tag">(TENANG)</span></label>
+                <label class="check-item"><input type="checkbox"> Kesadaran akibat <span class="core-tag">(VISIONER)</span></label>
+                <label class="check-item"><input type="checkbox"> Anti hedonisme <span class="core-tag">(ZUHUD)</span></label>
+                <label class="check-item"><input type="checkbox"> Akuntabilitas moral <span class="core-tag">(HISAB DIRI)</span></label>
+                <label class="check-item"><input type="checkbox"> Keadilan saat berkuasa <span class="core-tag">(AMANAH KUASA)</span></label>
+                <label class="check-item"><input type="checkbox"> Tidak menunda kebaikan <span class="core-tag">(SEGERA)</span></label>
+                <label class="check-item"><input type="checkbox"> Kesungguhan amal <span class="core-tag">(TOTALITAS)</span></label>
+                <label class="check-item"><input type="checkbox"> Konsistensi nilai hidup <span class="core-tag">(PRINSIP)</span></label>
+                <label class="check-item"><input type="checkbox"> Kesadaran kematian <span class="core-tag">(INGAT MATI)</span></label>
+            </div>
+        </div>
+
+        <div class="pillar-card" style="border-top: 3px solid #ffffff;">
+            <div class="card-title">6. IMAN KEPADA QADA & QADAR <span class="card-badge">Kematangan Realitas</span></div>
+            <div class="check-group" id="p6">
+                <label class="check-item"><input type="checkbox"> Ikhtiar aktif <span class="core-tag">(KASAB)</span></label>
+                <label class="check-item"><input type="checkbox"> Tidak menyalahkan takdir <span class="core-tag">(HUSNUZHAN)</span></label>
+                <label class="check-item"><input type="checkbox"> Ketahanan mental <span class="core-tag">(RESILIENSI)</span></label>
+                <label class="check-item"><input type="checkbox"> Stabilitas emosi <span class="core-tag">(STABIL)</span></label>
+                <label class="check-item"><input type="checkbox"> Penerimaan realitas <span class="core-tag">(RIDHA)</span></label>
+                <label class="check-item"><input type="checkbox"> Adaptif terhadap kondisi <span class="core-tag">(ADAPTASI)</span></label>
+                <label class="check-item"><input type="checkbox"> Tahu batas kendali <span class="core-tag">(TAWAKAL)</span></label>
+                <label class="check-item"><input type="checkbox"> Tawakal setelah usaha <span class="core-tag">(PENYERAHAN)</span></label>
+                <label class="check-item"><input type="checkbox"> Kedewasaan sikap <span class="core-tag">(DEWASA)</span></label>
+                <label class="check-item"><input type="checkbox"> Tidak playing victim <span class="core-tag">(TANGGUNG JAWAB)</span></label>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="btn-calc" onclick="calculate()">HITUNG SKOR KESADARAN</button>
+
+    <div class="result-panel" id="result">
+        <div class="result-header">HASIL DIAGNOSA SPIRITUAL</div>
+        
+        <div class="bar-container">
+            <div class="bar-label"><span>ALLAH (Kesadaran Ketuhanan)</span> <span id="s1">0%</span></div>
+            <div class="bar-bg"><div class="bar-fill c-1" id="b1"></div></div>
+        </div>
+        
+        <div class="bar-container">
+            <div class="bar-label"><span>MALAIKAT (Kesadaran Pengawasan)</span> <span id="s2">0%</span></div>
+            <div class="bar-bg"><div class="bar-fill c-2" id="b2"></div></div>
+        </div>
+
+        <div class="bar-container">
+            <div class="bar-label"><span>KITAB (Kepatuhan Nilai & Hukum)</span> <span id="s3">0%</span></div>
+            <div class="bar-bg"><div class="bar-fill c-3" id="b3"></div></div>
+        </div>
+
+        <div class="bar-container">
+            <div class="bar-label"><span>RASUL (Keteladanan Sosial)</span> <span id="s4">0%</span></div>
+            <div class="bar-bg"><div class="bar-fill c-4" id="b4"></div></div>
+        </div>
+
+        <div class="bar-container">
+            <div class="bar-label"><span>HARI AKHIR (Orientasi Jangka Panjang)</span> <span id="s5">0%</span></div>
+            <div class="bar-bg"><div class="bar-fill c-5" id="b5"></div></div>
+        </div>
+
+        <div class="bar-container">
+            <div class="bar-label"><span>QADA & QADAR (Kematangan Realitas)</span> <span id="s6">0%</span></div>
+            <div class="bar-bg"><div class="bar-fill c-6" id="b6"></div></div>
+        </div>
+
+        <div class="final-score">
+            <div>SKOR KESADARAN TOTAL:</div>
+            <div class="score-big" id="totalScore">0%</div>
+            <p id="verdict" style="color:#aaa; font-style:italic; margin-top:10px;">---</p>
+        </div>
+    </div>
+
+    <a href="index.html" style="margin-top:30px; color:#666; text-decoration:none; border:1px solid #444; padding:10px 20px; border-radius:50px;">KEMBALI KE MENU UTAMA</a>
+
+    <script>
+        function calculate() {
+            let totalPoints = 0;
+            let totalItems = 60; // 6 pillar * 10 items
+            
+            // Loop 6 Pilar
+            for(let i=1; i<=6; i++) {
+                let section = document.getElementById(`p${i}`);
+                let checkboxes = section.querySelectorAll('input[type="checkbox"]');
+                let checkedCount = 0;
+                
+                checkboxes.forEach(cb => {
+                    if(cb.checked) checkedCount++;
+                });
+
+                // Nilai per pilar (0-10) -> jadi Persen
+                let percent = checkedCount * 10;
+                
+                // Update Bar Visual
+                document.getElementById(`s${i}`).innerText = percent + "%";
+                document.getElementById(`b${i}`).style.width = percent + "%";
+
+                totalPoints += checkedCount;
+            }
+
+            // Total Score
+            let finalPercent = Math.floor((totalPoints / totalItems) * 100);
+            document.getElementById('totalScore').innerText = finalPercent + "%";
+
+            // Verdict / Kesimpulan
+            let msg = "";
+            if(finalPercent > 85) msg = "KESADARAN TINGGI. Karakter Anda kokoh di atas nilai-nilai iman.";
+            else if(finalPercent > 60) msg = "CUKUP STABIL. Namun ada beberapa aspek 'bocor' yang perlu ditambal.";
+            else if(finalPercent > 40) msg = "PERINGATAN. Sistem nilai Anda goyah. Banyak kompromi dalam sikap.";
+            else msg = "KRITIS. Anda hidup reaktif tanpa pegangan nilai yang jelas.";
+
+            document.getElementById('verdict').innerText = msg;
+
+            // Show Result
+            let resPanel = document.getElementById('result');
+            resPanel.style.display = 'block';
+            resPanel.scrollIntoView({behavior: "smooth"});
+        }
+    </script>
+
+</body>
+</html>
