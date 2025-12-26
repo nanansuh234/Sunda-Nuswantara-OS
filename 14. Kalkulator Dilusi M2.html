@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M2 Money Supply Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --border: #333;
+            --green: #00ff41;
+            --red: #ff3333;
+            --yellow: #ffd700;
+            --text: #eee;
+            --dim: #888;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 2px; color: var(--green); margin-bottom: 5px; }
+        .subtitle { font-size: 0.8rem; color: var(--dim); margin-bottom: 30px; }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            width: 100%; max-width: 900px;
+        }
+        @media (max-width: 700px) { .container { grid-template-columns: 1fr; } }
+
+        /* CARD STYLE */
+        .card {
+            background: var(--panel); border: 1px solid var(--border);
+            padding: 25px; border-radius: 8px;
+        }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.8rem; color: var(--dim); margin-bottom: 8px; }
+        
+        input {
+            width: 100%; background: #000; border: 1px solid var(--border);
+            color: var(--green); padding: 12px; font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem; text-align: right;
+        }
+        input:focus { outline: none; border-color: var(--green); }
+
+        .btn-calc {
+            width: 100%; background: var(--green); color: #000; border: none;
+            padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase;
+            font-family: 'Oswald', sans-serif; letter-spacing: 1px; margin-top: 10px;
+        }
+        .btn-calc:hover { background: #00cc33; }
+
+        /* RESULT AREA */
+        .result-box {
+            text-align: center; border-top: 1px dashed var(--border);
+            padding-top: 20px; margin-top: 20px;
+        }
+
+        .big-val { font-size: 1.8rem; font-weight: bold; margin: 10px 0; }
+        .red-text { color: var(--red); }
+        .green-text { color: var(--green); }
+
+        .inflation-bar {
+            width: 100%; height: 10px; background: #222; margin-top: 5px; border-radius: 5px; overflow: hidden;
+        }
+        .bar-fill { height: 100%; background: var(--red); width: 0%; transition: 1s; }
+
+        /* SECTOR IMPACT */
+        .sector-card {
+            grid-column: span 2; border-color: var(--yellow);
+        }
+        @media (max-width: 700px) { .sector-card { grid-column: span 1; } }
+
+        .sector-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 15px;
+        }
+        .sector-item {
+            background: rgba(255,215,0,0.05); padding: 15px; border: 1px solid #444; border-radius: 5px;
+        }
+        .sector-title { font-size: 0.8rem; color: var(--yellow); font-weight: bold; margin-bottom: 10px; display: block; }
+        .sector-input { color: var(--yellow); border-color: #555; font-size: 1rem; margin-bottom: 10px; }
+        
+        .impact-val { font-size: 0.9rem; color: var(--red); text-align: right; }
+        .impact-label { font-size: 0.7rem; color: #888; text-align: right; }
+
+        .analysis-text {
+            font-size: 0.85rem; color: var(--dim); text-align: justify; line-height: 1.5; margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>M2 MONEY PRINTER</h1>
+    <div class="subtitle">Kalkulator Dilusi & Inflasi Aset (Real-Time)</div>
+
+    <div class="container">
+        
+        <div class="card">
+            <div style="margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px; font-size:0.9rem; color:#aaa;">
+                🔗 Data Sumber: <a href="https://tradingeconomics.com/indonesia/money-supply-m2" target="_blank" style="color:var(--green);">Trading Economics (ID)</a>
+            </div>
+
+            <div class="input-group">
+                <label>M2 BULAN LALU (Triliun IDR)</label>
+                <input type="number" id="m2Prev" placeholder="8900" value="9000" oninput="calculateM2()">
+            </div>
+
+            <div class="input-group">
+                <label>M2 BULAN INI (Triliun IDR)</label>
+                <input type="number" id="m2Curr" placeholder="9000" value="9085" oninput="calculateM2()">
+            </div>
+
+            <div class="input-group">
+                <label>UANG TUNAI KAMU (IDR)</label>
+                <input type="number" id="myMoney" placeholder="100000" value="10000000" oninput="calculateM2()">
+            </div>
+
+            <button class="btn-calc" onclick="calculateM2()">HITUNG DILUSI</button>
+        </div>
+
+        <div class="card">
+            <label>UANG BARU DICETAK (SELISIH)</label>
+            <div id="resDelta" class="big-val green-text">+0 T</div>
+            
+            <label>INFLASI MONETER (GROWTH)</label>
+            <div id="resGrowth" class="big-val red-text">0.00%</div>
+            <div class="inflation-bar"><div id="barGrowth" class="bar-fill"></div></div>
+
+            <div class="result-box">
+                <label>NILAI RIIL UANGMU SEKARANG:</label>
+                <div id="resRealValue" class="big-val">Rp 10.000.000</div>
+                <div id="resLoss" style="color:var(--red); font-size:0.9rem;">(Tergerus: -Rp 0)</div>
+            </div>
+        </div>
+
+        <div class="card sector-card">
+            <label style="color:var(--yellow); font-weight:bold; font-size:1rem;">⚠️ SIMULASI: KEMANA INFLASI MENYERANG?</label>
+            <div style="font-size:0.8rem; color:#888; margin-bottom:15px;">
+                Ubah harga di bawah, hasil akan otomatis terupdate berdasarkan inflasi M2 di atas.
+            </div>
+
+            <div class="sector-grid">
+                
+                <div class="sector-item">
+                    <span class="sector-title">🏠 HARGA RUMAH</span>
+                    <input type="number" class="sector-input" id="priceHouse" value="500000000" oninput="calculateM2()">
+                    <div class="impact-label">Kenaikan Harga (Invisible Tax):</div>
+                    <div class="impact-val" id="impactHouse">+Rp 0</div>
+                    <div class="impact-label" id="newHouse">Harga Baru: Rp 500jt</div>
+                </div>
+
+                <div class="sector-item">
+                    <span class="sector-title">🌍 HARGA TANAH (Per M2)</span>
+                    <input type="number" class="sector-input" id="priceLand" value="2000000" oninput="calculateM2()">
+                    <div class="impact-label">Kenaikan Harga:</div>
+                    <div class="impact-val" id="impactLand">+Rp 0</div>
+                    <div class="impact-label" id="newLand">Harga Baru: Rp 2jt</div>
+                </div>
+
+                <div class="sector-item">
+                    <span class="sector-title">🎓 BIAYA KULIAH/SEKOLAH</span>
+                    <input type="number" class="sector-input" id="priceEdu" value="25000000" oninput="calculateM2()">
+                    <div class="impact-label">Kenaikan Biaya:</div>
+                    <div class="impact-val" id="impactEdu">+Rp 0</div>
+                    <div class="impact-label" id="newEdu">Biaya Baru: Rp 25jt</div>
+                </div>
+
+                <div class="sector-item">
+                    <span class="sector-title">🏥 BIAYA RS / ASURANSI</span>
+                    <input type="number" class="sector-input" id="priceHealth" value="5000000" oninput="calculateM2()">
+                    <div class="impact-label">Kenaikan Biaya:</div>
+                    <div class="impact-val" id="impactHealth">+Rp 0</div>
+                    <div class="impact-label" id="newHealth">Biaya Baru: Rp 5jt</div>
+                </div>
+
+            </div>
+
+            <div class="analysis-text">
+                <strong>Analisis:</strong> Angka merah di atas adalah jumlah uang yang harus kamu cari tambahannya HANYA untuk mendapatkan barang yang sama kualitasnya. Inilah cara inflasi "menyedot" kekayaan rakyat secara diam-diam.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function calculateM2() {
+            // Ambil Input Utama
+            let prev = parseFloat(document.getElementById('m2Prev').value);
+            let curr = parseFloat(document.getElementById('m2Curr').value);
+            let money = parseFloat(document.getElementById('myMoney').value);
+
+            if(!prev || !curr) return;
+
+            // 1. Hitung Pertumbuhan Uang
+            let delta = curr - prev;
+            let growth = (delta / prev); // Desimal (0.01 sekian)
+            let growthPct = growth * 100;
+
+            // 2. Hitung Dilusi Uang Tunai
+            let dilutionFactor = prev / curr;
+            let realValue = money * dilutionFactor;
+            let loss = money - realValue;
+
+            // RENDER HASIL UTAMA
+            document.getElementById('resDelta').innerText = (delta >= 0 ? "+" : "") + delta.toFixed(2) + " Triliun";
+            document.getElementById('resGrowth').innerText = (growthPct >= 0 ? "+" : "") + growthPct.toFixed(4) + "%";
+            document.getElementById('barGrowth').style.width = Math.abs(growthPct * 10) + "%";
+
+            document.getElementById('resRealValue').innerText = "Rp " + Math.floor(realValue).toLocaleString('id-ID');
+            document.getElementById('resLoss').innerText = "(Tergerus: -Rp " + Math.ceil(loss).toLocaleString('id-ID') + ")";
+
+            if(growth > 0) document.getElementById('resGrowth').className = "big-val red-text";
+            else document.getElementById('resGrowth').className = "big-val green-text";
+
+            // 3. HITUNG DAMPAK SEKTORAL
+            // Rumus: Harga Baru = Harga Lama * (1 + Growth)
+            // Asumsi: Aset menyerap inflasi moneter minimal 1:1
+            calculateSector('priceHouse', 'impactHouse', 'newHouse', growth);
+            calculateSector('priceLand', 'impactLand', 'newLand', growth);
+            calculateSector('priceEdu', 'impactEdu', 'newEdu', growth);
+            calculateSector('priceHealth', 'impactHealth', 'newHealth', growth);
+        }
+
+        function calculateSector(inputId, impactId, newId, growthRate) {
+            let price = parseFloat(document.getElementById(inputId).value) || 0;
+            let increase = price * growthRate;
+            let newPrice = price + increase;
+
+            document.getElementById(impactId).innerText = "+Rp " + Math.ceil(increase).toLocaleString('id-ID');
+            document.getElementById(newId).innerText = "Est. Baru: Rp " + Math.ceil(newPrice).toLocaleString('id-ID');
+        }
+
+        // Auto Run saat halaman dibuka
+        window.onload = calculateM2;
+    </script>
+</body>
+</html>

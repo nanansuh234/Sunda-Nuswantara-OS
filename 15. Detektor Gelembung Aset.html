@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Bubble Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0014;
+            --panel: #1a0b2e;
+            --border: #442a5e;
+            --neon-purple: #bd00ff;
+            --neon-blue: #00f3ff;
+            --danger: #ff0055;
+            --safe: #00ff41;
+            --text: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Chakra Petch', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 3px; color: var(--neon-purple); text-shadow: 0 0 10px var(--neon-purple); margin-bottom: 5px; }
+        .subtitle { font-size: 0.8rem; color: #aaa; margin-bottom: 30px; letter-spacing: 1px; }
+
+        .dashboard {
+            display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px;
+            width: 100%; max-width: 1000px;
+        }
+        @media (max-width: 768px) { .dashboard { grid-template-columns: 1fr; } }
+
+        /* INPUT CARD */
+        .card {
+            background: var(--panel); border: 1px solid var(--border);
+            padding: 25px; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.75rem; color: var(--neon-blue); margin-bottom: 8px; text-transform: uppercase; }
+        
+        input[type="number"], input[type="range"] {
+            width: 100%; background: #05020a; border: 1px solid var(--border);
+            color: #fff; padding: 12px; font-family: 'Chakra Petch', sans-serif;
+            font-size: 1.1rem; border-radius: 5px;
+        }
+        input:focus { outline: none; border-color: var(--neon-purple); }
+
+        .slider-val { float: right; color: var(--neon-purple); font-weight: bold; }
+
+        /* VISUALIZATION */
+        .viz-header {
+            text-align: center; margin-bottom: 20px; border-bottom: 1px dashed #555; padding-bottom: 10px;
+        }
+        .viz-desc { font-size: 0.85rem; color: #aaa; line-height: 1.5; margin-bottom: 20px; text-align: justify; }
+
+        .bubble-container {
+            position: relative; height: 300px; border-bottom: 2px solid #fff;
+            display: flex; align-items: flex-end; justify-content: center; gap: 60px;
+            padding-bottom: 0px; margin-top: 10px;
+            background: linear-gradient(to top, rgba(255,255,255,0.05), transparent 20%);
+        }
+
+        .bar-group {
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 80px;
+        }
+
+        .bar {
+            width: 100%; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 5px 5px 0 0; position: relative;
+            min-height: 10px; /* Biar gak ilang kalau 0 */
+        }
+
+        /* FUNDAMENTAL BAR */
+        .bar-fund { background: var(--safe); box-shadow: 0 0 15px var(--safe); opacity: 0.8; }
+        
+        /* BUBBLE BAR */
+        .bar-bubble { 
+            background: linear-gradient(to top, var(--neon-purple), var(--danger)); 
+            box-shadow: 0 0 20px var(--danger);
+            position: relative;
+        }
+        
+        /* GHOST LABEL */
+        .bar-bubble::after {
+            content: 'GORENGAN'; position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            color: var(--danger); font-size: 0.7rem; font-weight: bold; white-space: nowrap;
+        }
+
+        .price-tag {
+            margin-top: 10px; font-weight: bold; color: #fff; font-size: 0.9rem; text-align: center;
+        }
+
+        .label-axis { text-align: center; margin-top: 5px; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ANALYSIS BOX */
+        .analysis-box {
+            grid-column: span 2; border-top: 1px dashed var(--border);
+            padding-top: 20px; margin-top: 10px;
+        }
+        @media (max-width: 768px) { .analysis-box { grid-column: span 1; } }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
+        .stat-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; text-align: center; }
+        .stat-label { font-size: 0.7rem; color: #888; display: block; margin-bottom: 5px; }
+        .stat-val { font-size: 1.2rem; font-weight: bold; color: #fff; }
+
+        .warning-text { color: var(--danger); font-size: 0.9rem; margin-top: 15px; font-style: italic; border-left: 3px solid var(--danger); padding-left: 15px; }
+
+    </style>
+</head>
+<body>
+
+    <h1>BUBBLE DETECTOR</h1>
+    <div class="subtitle">Simulasi Efek Leverage & Spekulasi Kredit</div>
+
+    <div class="dashboard">
+        
+        <div class="card">
+            <h3 style="margin-top:0; border-bottom:1px solid var(--border); padding-bottom:10px; color:var(--neon-blue);">PARAMETER PASAR</h3>
+            
+            <div class="input-group">
+                <label>HARGA AWAL ASET (FUNDAMENTAL)</label>
+                <input type="number" id="basePrice" value="500000000" oninput="updateBubble()">
+                <small style="color:#666; font-size:0.7rem;">Contoh: Harga Rumah 500 Juta</small>
+            </div>
+
+            <div class="input-group">
+                <label>INFLASI UANG (M2 GROWTH) <span class="slider-val" id="valM2">5%</span></label>
+                <input type="range" id="m2Growth" min="0" max="50" value="5" oninput="updateBubble()">
+            </div>
+
+            <hr style="border-color:var(--border); margin:20px 0;">
+
+            <div class="input-group">
+                <label style="color:var(--danger);">⚠️ INTENSITAS SPEKULAN <span class="slider-val" id="valSpec">30%</span></label>
+                <input type="range" id="specVolume" min="0" max="100" value="30" oninput="updateBubble()" title="Berapa persen pembeli yang cuma mau goreng harga?">
+            </div>
+
+            <div class="input-group">
+                <label style="color:var(--danger);">⚠️ LEVERAGE KREDIT (UTANG) <span class="slider-val" id="valLev">5x</span></label>
+                <input type="range" id="leverage" min="1" max="20" value="5" oninput="updateBubble()" title="Kemudahan Utang (10x = DP cuma 10%)">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="viz-header">
+                <h3 style="margin:0; color:var(--neon-purple);">ANATOMI HARGA</h3>
+            </div>
+            
+            <div class="viz-desc">
+                Grafik ini membedakan antara kenaikan harga yang <strong>"Sehat"</strong> (akibat inflasi uang wajar) dengan kenaikan harga yang <strong>"Sakit"</strong> (akibat gorengan kredit & spekulasi).
+            </div>
+            
+            <div class="bubble-container">
+                <div class="bar-group">
+                    <div class="bar bar-fund" id="vizFund"></div>
+                    <div class="price-tag" id="tagFund">Rp 0</div>
+                    <div class="label-axis" style="color:var(--safe);">HARGA WAJAR</div>
+                </div>
+
+                <div class="bar-group">
+                    <div class="bar bar-bubble" id="vizBubble"></div>
+                    <div class="price-tag" id="tagBubble">Rp 0</div>
+                    <div class="label-axis" style="color:var(--danger);">HARGA PASAR</div>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:20px; font-size:0.9rem; background:rgba(255,0,0,0.1); padding:10px; border-radius:5px;">
+                GAP UDARA PANAS (BUBBLE): <strong style="color:var(--danger);" id="bubbleGap">Rp 0</strong>
+            </div>
+        </div>
+
+        <div class="analysis-box">
+            <div class="stat-grid">
+                <div class="stat-item">
+                    <span class="stat-label">GAJI UMR (Est.)</span>
+                    <span class="stat-val">Rp 5 Juta</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">LAMA NABUNG (WAJAR)</span>
+                    <span class="stat-val" id="yearFund" style="color:var(--safe);">0 Tahun</span>
+                </div>
+                <div class="stat-item" style="border:1px solid var(--danger);">
+                    <span class="stat-label">LAMA NABUNG (SAAT INI)</span>
+                    <span class="stat-val" id="yearBubble" style="color:var(--danger);">0 Tahun</span>
+                </div>
+            </div>
+            
+            <div class="warning-text" id="analysisText">
+                ---
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function updateBubble() {
+            // 1. GET VALUES
+            let base = parseFloat(document.getElementById('basePrice').value) || 0;
+            let m2 = parseFloat(document.getElementById('m2Growth').value);
+            let spec = parseFloat(document.getElementById('specVolume').value);
+            let lev = parseFloat(document.getElementById('leverage').value);
+
+            // Update Slider Labels
+            document.getElementById('valM2').innerText = m2 + "%";
+            document.getElementById('valSpec').innerText = spec + "%";
+            document.getElementById('valLev').innerText = lev + "x";
+
+            // 2. LOGIC PERHITUNGAN
+            
+            // Harga Wajar = Base + (Base * M2 Inflation)
+            let fairPrice = base + (base * (m2 / 100));
+
+            // Harga Bubble = Harga Wajar + Efek Gorengan
+            let bubbleEffect = (fairPrice * (spec / 100)) * (lev * 0.5); 
+            
+            let marketPrice = fairPrice + bubbleEffect;
+            let gap = marketPrice - fairPrice;
+
+            // 3. RENDER VISUAL
+            document.getElementById('tagFund').innerText = formatRp(fairPrice);
+            document.getElementById('tagBubble').innerText = formatRp(marketPrice);
+            document.getElementById('bubbleGap').innerText = "+" + formatRp(gap);
+
+            // Scaling Bar (Max height logic adjusted)
+            // Kita pakai logaritma dikit atau max cap biar gak overflow
+            // Biar barnya proporsional di container
+            
+            let maxVal = marketPrice > 0 ? marketPrice : 1; 
+            
+            // Tinggi Bar dalam Persen (relative terhadap container 300px)
+            // Kita set max height bar itu 80% container biar gak mentok atas
+            let hFund = (fairPrice / maxVal) * 80; 
+            let hBubble = (marketPrice / maxVal) * 80;
+
+            // Min height 5% biar tetep nongol
+            if(hFund < 5) hFund = 5;
+            if(hBubble < 5) hBubble = 5;
+
+            document.getElementById('vizFund').style.height = hFund + "%";
+            document.getElementById('vizBubble').style.height = hBubble + "%";
+
+            // 4. ANALISIS GAJI (Unreachability)
+            let umr = 5000000; // Asumsi UMR 5 Juta
+            let saveRate = 0.3; // Nabung 30% gaji
+            let savingPerYear = umr * 12 * saveRate;
+
+            let yearsFund = fairPrice / savingPerYear;
+            let yearsBubble = marketPrice / savingPerYear;
+
+            document.getElementById('yearFund').innerText = Math.ceil(yearsFund) + " Thn";
+            document.getElementById('yearBubble').innerText = Math.ceil(yearsBubble) + " Thn";
+
+            // Text Analysis
+            let text = "";
+            if (lev > 5 && spec > 20) {
+                text = "⚠️ <strong>ZONA BAHAYA:</strong> Harga didominasi utang! Ini adalah 'Udara Panas'. Jika suku bunga bank naik, spekulan panik jual, harga bisa crash. Pembeli asli sudah tidak mampu beli.";
+            } else if (gap > base * 0.5) {
+                text = "⚠️ <strong>OVERVALUED:</strong> Aset ini sudah 'digoreng' melebihi 50% nilai fundamentalnya. Hati-hati terjebak membeli di pucuk.";
+            } else {
+                text = "✅ <strong>PASAR STABIL:</strong> Harga masih didorong fundamental. Belum banyak 'angin surga' kredit di sini. Aman untuk User.";
+            }
+            document.getElementById('analysisText').innerHTML = text;
+        }
+
+        function formatRp(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(1) + " M";
+            if (num >= 1000000) return (num / 1000000).toFixed(0) + " Jt";
+            return num.toLocaleString('id-ID');
+        }
+
+        // Init
+        updateBubble();
+    </script>
+</body>
+</html>

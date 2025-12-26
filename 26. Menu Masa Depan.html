@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realitas & Masa Depan - Nuswantara OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: rgba(20, 20, 20, 0.9);
+            --neon-red: #ff003c;
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: 
+                linear-gradient(rgba(255, 0, 60, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* HEADER */
+        .cyber-header {
+            text-align: center; margin-bottom: 50px;
+            border: 2px solid var(--neon-blue);
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.8);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Glitch Effect Line */
+        .cyber-header::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px;
+            background: var(--neon-red); animation: scan 3s infinite linear;
+        }
+        @keyframes scan { 0% {left: -100%;} 100% {left: 100%;} }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0;
+            color: #fff; letter-spacing: 5px; text-transform: uppercase;
+            text-shadow: 2px 2px 0px var(--neon-blue), -2px -2px 0px var(--neon-red);
+        }
+        .subtitle {
+            font-size: 1rem; letter-spacing: 3px; color: var(--neon-blue); margin-top: 10px; text-transform: uppercase;
+        }
+
+        /* GRID MENU */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 100%; max-width: 1200px;
+        }
+
+        /* CARD STYLE */
+        .cyber-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            padding: 30px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-left: 5px solid #333;
+        }
+
+        .cyber-card:hover {
+            transform: translateY(-10px);
+            background: #111;
+        }
+
+        .card-icon { font-size: 3.5rem; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
+        .card-title { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: #fff; margin-bottom: 10px; font-weight: bold; }
+        .card-desc { font-size: 0.95rem; color: #999; line-height: 1.5; }
+
+        /* SPECIFIC CARD STYLES */
+        
+        /* 1. M2 (RED - DANGER) */
+        .c-m2 { border-left-color: var(--neon-red); }
+        .c-m2 .card-icon { color: var(--neon-red); }
+        .c-m2:hover { box-shadow: 0 0 30px rgba(255, 0, 60, 0.3); border-color: var(--neon-red); }
+
+        /* 2. BUBBLE (PURPLE - ILLUSION) */
+        .c-bubble { border-left-color: var(--neon-purple); }
+        .c-bubble .card-icon { color: var(--neon-purple); }
+        .c-bubble:hover { box-shadow: 0 0 30px rgba(188, 19, 254, 0.3); border-color: var(--neon-purple); }
+
+        /* 3. RAT RACE (YELLOW - WARNING) */
+        .c-rat { border-left-color: #ffe600; }
+        .c-rat .card-icon { color: #ffe600; }
+        .c-rat:hover { box-shadow: 0 0 30px rgba(255, 230, 0, 0.3); border-color: #ffe600; }
+
+        /* 4. ROBOT (BLUE - FUTURE) */
+        .c-robot { border-left-color: var(--neon-blue); }
+        .c-robot .card-icon { color: var(--neon-blue); }
+        .c-robot:hover { box-shadow: 0 0 30px rgba(0, 243, 255, 0.3); border-color: var(--neon-blue); }
+
+
+        /* FOOTER */
+        .back-btn {
+            margin-top: 60px;
+            text-decoration: none; color: #666; font-size: 0.9rem; letter-spacing: 2px;
+            border: 1px solid #444; padding: 12px 40px; clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+            background: #111; font-weight: bold;
+        }
+        .back-btn:hover { color: #fff; border-color: #fff; background: #222; }
+
+    </style>
+</head>
+<body>
+
+    <div class="cyber-header">
+        <h1>REALITAS & MASA DEPAN</h1>
+        <div class="subtitle">Membuka Mata, Menghitung Ilusi, Membangun Kedaulatan</div>
+    </div>
+
+    <div class="menu-grid">
+        
+        <a href="14. Kalkulator Dilusi M2.html" class="cyber-card c-m2">
+            <div class="card-icon">🖨️</div>
+            <div class="card-title">M2 MONEY PRINTER</div>
+            <div class="card-desc">
+                <strong>(THE INVISIBLE TAX)</strong><br>
+                Lihat bagaimana pencetakan uang mencuri daya beli tabunganmu secara diam-diam.
+                Pahami kenapa harga barang naik walau kamu diam saja.
+            </div>
+        </a>
+
+        <a href="15. Detektor Gelembung Aset.html" class="cyber-card c-bubble">
+            <div class="card-icon">🫧</div>
+            <div class="card-title">ASSET BUBBLE DETECTOR</div>
+            <div class="card-desc">
+                <strong>(HARGA WAJAR VS GORENGAN)</strong><br>
+                Bedakan harga aset yang naik karena fundamental vs harga yang digoreng oleh utang/kredit para spekulan.
+            </div>
+        </a>
+
+        <a href="16. Simulasi Rat Race.html" class="cyber-card c-rat">
+            <div class="card-icon">🏃</div>
+            <div class="card-title">THE RAT RACE</div>
+            <div class="card-desc">
+                <strong>(SAVER VS DEBTOR VS CREATOR)</strong><br>
+                Simulasi balapan hidup: Mengapa menabung uang kertas kalah lawan inflasi, dan kredit konsumtif kalah lawan bunga bank.
+            </div>
+        </a>
+
+        <a href="17. Kalkulator Kedaulatan Automasi.html" class="cyber-card c-robot">
+            <div class="card-icon">🤖</div>
+            <div class="card-title">KEDAULATAN AUTOMASI</div>
+            <div class="card-desc">
+                <strong>(THE FUTURE OF WORK)</strong><br>
+                Masa depan bukan lagi soal kerja keras fisik, tapi memiliki "Unit Produksi" (AI/Humanoid) sendiri. Jadilah Tuan atas teknologi.
+            </div>
+        </a>
+
+    </div>
+
+    <a href="index.html" class="back-btn">KEMBALI KE SYSTEM UTAMA</a>
+
+</body>
+</html>

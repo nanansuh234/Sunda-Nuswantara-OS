@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rat Race Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Black+Ops+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000;
+            --panel: #111;
+            --border: #444;
+            --neon-red: #ff003c;
+            --neon-blue: #00f3ff;
+            --neon-yellow: #ffee00;
+            --neon-purple: #b026ff;
+            --text: #ccc;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { 
+            font-family: 'Black Ops One', cursive; 
+            color: var(--neon-red); 
+            font-size: 2.5rem; 
+            text-transform: uppercase; 
+            text-shadow: 0 0 10px var(--neon-red);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .subtitle { color: #666; margin-bottom: 30px; text-align: center; max-width: 600px; }
+
+        .container {
+            width: 100%; max-width: 900px;
+            display: grid; grid-template-columns: 1fr; gap: 20px;
+        }
+
+        /* CARD */
+        .card {
+            background: var(--panel); border: 1px solid var(--border);
+            padding: 25px; border-radius: 5px; position: relative;
+        }
+        .card-header {
+            color: #fff; font-weight: bold; margin-bottom: 15px; border-bottom: 1px dashed #333; padding-bottom: 10px;
+            display: flex; justify-content: space-between;
+        }
+
+        /* INPUTS */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 10px; }
+        @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
+
+        label { display: block; color: var(--neon-blue); margin-bottom: 5px; font-size: 0.8rem; }
+        input {
+            width: 100%; background: #000; border: 1px solid #333; color: #fff;
+            padding: 10px; font-family: 'Share Tech Mono', monospace; font-size: 1.1rem;
+            text-align: right;
+        }
+        input:focus { outline: none; border-color: var(--neon-blue); }
+
+        /* THE RACE TRACK */
+        .track-container { margin-top: 20px; position: relative; }
+        
+        .racer-lane {
+            margin-bottom: 30px; position: relative;
+        }
+        
+        .lane-label { font-size: 0.8rem; color: #fff; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        
+        .progress-bar-bg {
+            width: 100%; height: 30px; background: #222; border-radius: 5px; overflow: hidden; border: 1px solid #333; position: relative;
+        }
+        
+        /* FINISH LINE (MOVING TARGET) */
+        .finish-line {
+            position: absolute; top: 0; bottom: 0; width: 4px; background: var(--neon-red);
+            z-index: 10; box-shadow: 0 0 10px var(--neon-red);
+            transition: 1s ease;
+        }
+        .finish-flag {
+            position: absolute; top: -25px; color: var(--neon-red); font-size: 0.7rem; font-weight: bold; white-space: nowrap;
+            transform: translateX(-50%); transition: 1s ease;
+        }
+
+        .runner {
+            height: 100%; width: 0%; transition: 1s ease; position: relative; display: flex; align-items: center; justify-content: flex-end; padding-right: 5px;
+        }
+        
+        .runner-worker { background: linear-gradient(90deg, #0055ff, var(--neon-blue)); }
+        
+        /* Kredit User: Red bar extends beyond normal */
+        .runner-credit-base { background: #444; height: 100%; position: absolute; left: 0; z-index: 1; }
+        .runner-credit-interest { background: linear-gradient(90deg, #550000, var(--neon-red)); height: 100%; position: absolute; z-index: 2; opacity: 0.8; }
+
+        .runner-val {
+            font-size: 0.7rem; color: #000; font-weight: bold; white-space: nowrap; z-index: 5;
+        }
+
+        /* RESULT BOX */
+        .verdict-box {
+            background: rgba(255, 0, 60, 0.1); border: 1px solid var(--neon-red);
+            padding: 20px; margin-top: 20px; text-align: justify; font-size: 0.9rem; line-height: 1.5;
+        }
+        .verdict-title { color: var(--neon-red); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; display: block; }
+
+        .solution-box {
+            background: rgba(0, 243, 255, 0.05); border: 1px solid var(--neon-blue);
+            padding: 20px; margin-top: 20px; text-align: justify; font-size: 0.9rem; line-height: 1.5;
+        }
+        .sol-title { color: var(--neon-blue); font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; display: block; }
+
+        .btn-run {
+            width: 100%; background: var(--text); color: #000; border: none; padding: 15px;
+            font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: 20px;
+            font-family: 'Black Ops One', cursive; letter-spacing: 2px;
+        }
+        .btn-run:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 20px var(--neon-red); }
+
+    </style>
+</head>
+<body>
+
+    <h1>THE RAT RACE</h1>
+    <div class="subtitle">Simulasi Matematika: Nabung vs Kredit vs Realita</div>
+
+    <div class="container">
+        
+        <div class="card">
+            <div class="card-header">PARAMETER PEMAIN</div>
+            <div class="input-grid">
+                <div>
+                    <label>GAJI BERSIH (BULANAN)</label>
+                    <input type="number" id="income" value="6000000" oninput="runSim()">
+                </div>
+                <div>
+                    <label>BIAYA HIDUP (BULANAN)</label>
+                    <input type="number" id="expenses" value="4000000" oninput="runSim()">
+                </div>
+            </div>
+            
+            <div class="input-grid">
+                <div>
+                    <label>TARGET HARGA ASET (SEKARANG)</label>
+                    <input type="number" id="targetPrice" value="500000000" oninput="runSim()">
+                </div>
+                <div>
+                    <label>INFLASI ASET PER TAHUN (%)</label>
+                    <input type="number" id="inflation" value="8" placeholder="%" oninput="runSim()">
+                </div>
+            </div>
+
+            <div style="border-top:1px dashed #333; margin: 15px 0;"></div>
+
+            <div class="input-grid">
+                <div>
+                    <label style="color:var(--neon-purple)">BUNGA KREDIT BANK (%)</label>
+                    <input type="number" id="interestRate" value="11" placeholder="%" oninput="runSim()">
+                </div>
+                <div>
+                    <label style="color:var(--neon-purple)">DURASI SIMULASI (TAHUN)</label>
+                    <input type="number" id="duration" value="15" oninput="runSim()">
+                </div>
+            </div>
+
+            <button class="btn-run" onclick="runSim()">MULAI BALAPAN</button>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span>HASIL SETELAH <span id="yearText">15</span> TAHUN</span>
+            </div>
+
+            <div class="track-container">
+                
+                <div class="racer-lane">
+                    <div class="lane-label">
+                        <span>👤 PENABUNG (Kejar Setoran)</span>
+                        <span id="valWorker">Rp 0</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="finish-line" id="lineWorker" style="left: 10%;"></div>
+                        <div class="finish-flag" id="flagWorker" style="left: 10%;">HARGA NANTI</div>
+                        <div class="runner runner-worker" id="barWorker"></div>
+                    </div>
+                    <div style="font-size:0.7rem; color:#666; margin-top:5px;">
+                        *Finish Line lari menjauh karena inflasi. Uangmu kalah cepat.
+                    </div>
+                </div>
+
+                <div class="racer-lane">
+                    <div class="lane-label">
+                        <span>🏦 BUDAK KREDIT (Beli Sekarang, Bayar Nanti)</span>
+                        <span id="valCredit" style="color:var(--neon-red);">TOTAL BAYAR: Rp 0</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="finish-line" id="lineBase" style="left: 0%; background:var(--neon-blue); height:50%; top:25%;"></div>
+                        
+                        <div class="runner runner-credit-interest" id="barCreditTotal" style="width:0%;">
+                            <span class="runner-val" style="color:#fff; padding-right:10px;">BUNGA BANK</span>
+                        </div>
+                    </div>
+                    <div style="font-size:0.7rem; color:#666; margin-top:5px;">
+                        *Kamu dapat rumahnya, tapi kamu bayar <span id="overpayText" style="color:var(--neon-red)">2x lipat</span> ke Bank.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="verdict-box" id="verdictBox">
+                ---
+            </div>
+
+            <div class="solution-box">
+                <span class="sol-title">🛡️ JALAN KELUAR: EKONOMI NILAI</span>
+                <p>
+                    <strong>1. Penabung:</strong> Kalah karena Inflasi. Uang kertas meleleh.<br>
+                    <strong>2. Pengkredit:</strong> Kalah karena Bunga. Kamu kerja buat Bank.<br>
+                </p>
+                <p>
+                    <strong>SOLUSI:</strong> Jangan main di "Arena Uang". Mainlah di "Arena Nilai".
+                    <br>👉 Beli Tanah Pinggiran (Murah) -> Tanam Pohon (Nilai Tambah).
+                    <br>👉 Konversi Gaji ke Emas/Perak (Anti Inflasi) -> Beli Aset Cash saat harga jatuh.
+                    <br>👉 Tingkatkan Skill (Income) -> Beli Aset Produktif, bukan Konsumtif.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function runSim() {
+            // INPUT
+            let income = parseFloat(document.getElementById('income').value) || 0;
+            let expense = parseFloat(document.getElementById('expenses').value) || 0;
+            let targetNow = parseFloat(document.getElementById('targetPrice').value) || 0;
+            let inflation = parseFloat(document.getElementById('inflation').value) || 0;
+            let interest = parseFloat(document.getElementById('interestRate').value) || 0;
+            let years = parseFloat(document.getElementById('duration').value) || 15;
+
+            document.getElementById('yearText').innerText = years;
+
+            // --- LOGIC 1: PENABUNG (SAVER) ---
+            let savingPerMonth = income - expense;
+            if (savingPerMonth < 0) savingPerMonth = 0;
+            let totalSaved = savingPerMonth * 12 * years;
+            
+            // Harga Aset di Masa Depan (Future Value)
+            let targetFuture = targetNow * Math.pow((1 + (inflation/100)), years);
+
+            // --- LOGIC 2: KREDIT (DEBTOR) ---
+            // Simulasi KPR Simple Flat/Annuity approximation for Total Payment
+            // Total Bayar = Pokok + (Pokok * Bunga * Tahun) -> Kasar tapi visualisasinya dapet buat "Mahal"
+            // Atau pakai rumus PMT dikali bulan biar akurat dikit
+            
+            let r = (interest / 100) / 12; // Bunga bulan
+            let n = years * 12; // Bulan
+            // Rumus Angsuran: P * (r(1+r)^n) / ((1+r)^n -1)
+            let monthlyPayment = targetNow * ( (r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1) );
+            let totalPaidToBank = monthlyPayment * n;
+
+            // --- VISUAL SCALING ---
+            // Kita cari angka terbesar untuk jadi patokan lebar 100%
+            // Antara: Harga Masa Depan ATAU Total Bayar ke Bank
+            let maxScale = Math.max(targetFuture, totalPaidToBank) * 1.1; 
+
+            // Posisi Penabung
+            let workerPct = (totalSaved / maxScale) * 100;
+            let finishPct = (targetFuture / maxScale) * 100; // Garis Finish Penabung
+
+            // Posisi Kredit
+            let creditPct = (totalPaidToBank / maxScale) * 100;
+            let basePricePct = (targetNow / maxScale) * 100; // Garis Harga Asli
+
+            // --- RENDER ---
+            
+            // 1. PENABUNG
+            document.getElementById('valWorker').innerText = "Terkumpul: " + formatRp(totalSaved);
+            document.getElementById('barWorker').style.width = workerPct + "%";
+            
+            document.getElementById('lineWorker').style.left = finishPct + "%";
+            document.getElementById('flagWorker').style.left = finishPct + "%";
+            document.getElementById('flagWorker').innerText = "HARGA NANTI: " + formatRp(targetFuture);
+
+            // 2. KREDIT
+            document.getElementById('valCredit').innerText = "TOTAL SETOR: " + formatRp(totalPaidToBank);
+            document.getElementById('barCreditTotal').style.width = creditPct + "%";
+            
+            document.getElementById('lineBase').style.left = basePricePct + "%"; // Penanda harga asli
+            
+            // Text Overpayment
+            let overpay = totalPaidToBank / targetNow;
+            document.getElementById('overpayText').innerText = overpay.toFixed(1) + "x Lipat";
+
+            // --- VERDICT ---
+            let verdict = "";
+            
+            // Cek Penabung
+            let gap = targetFuture - totalSaved;
+            
+            verdict += `<strong>1. NASIB PENABUNG:</strong><br>`;
+            if (gap > 0) {
+                verdict += `Anda lari mengejar bayangan. Selama ${years} tahun, harga rumah naik dari <strong>${formatRp(targetNow)}</strong> jadi <strong>${formatRp(targetFuture)}</strong>. Tabungan anda kurang <strong>${formatRp(gap)}</strong>. (Kalah Lawan Inflasi)<br><br>`;
+            } else {
+                verdict += `Anda berhasil mengejar inflasi! Tapi butuh disiplin super ketat selama ${years} tahun.<br><br>`;
+            }
+
+            // Cek Kredit
+            let interestPaid = totalPaidToBank - targetNow;
+            verdict += `<strong>2. NASIB KREDITOR:</strong><br>`;
+            verdict += `Anda memiliki rumahnya di awal, TAPI Anda membayar <strong>Bunga Sebesar ${formatRp(interestPaid)}</strong> ke Bank. Itu setara dengan membuang ${formatRp(interestPaid)} cuma-cuma hanya karena tidak sabar/tidak mampu beli cash.`;
+
+            document.getElementById('verdictBox').innerHTML = verdict;
+        }
+
+        function formatRp(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(1) + " M";
+            if (num >= 1000000) return (num / 1000000).toFixed(0) + " Jt";
+            return (num / 1000).toFixed(0) + "rb";
+        }
+
+        // Init
+        runSim();
+    </script>
+</body>
+</html>
