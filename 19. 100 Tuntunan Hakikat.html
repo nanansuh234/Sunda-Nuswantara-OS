@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Pedoman Hakikat (Final Layout)</title>
+    <style>
+        /* --- SETUP DASAR --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0c1014;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* --- WADAH BUKU --- */
+        .book {
+            position: relative;
+            width: 500px;
+            height: 750px;
+            perspective: 2500px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- LEMBARAN KERTAS --- */
+        .paper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-origin: left;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+
+        /* --- SISI DEPAN (ISI KONTEN) --- */
+        .front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fdfcf8;
+            
+            /* --- PERBAIKAN UTAMA: Padding Bawah 150px --- */
+            padding: 40px 35px 150px 35px;
+            
+            backface-visibility: hidden;
+            z-index: 2;
+            overflow-y: auto; /* Scroll Aktif */
+            border-right: 1px solid #ccc;
+        }
+
+        /* Scrollbar Cantik */
+        .front::-webkit-scrollbar { width: 6px; }
+        .front::-webkit-scrollbar-track { background: transparent; }
+        .front::-webkit-scrollbar-thumb { background-color: #bfaea0; border-radius: 10px; }
+
+        /* --- SISI BELAKANG (KOSONG) --- */
+        .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #e6dfd5;
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            z-index: 1;
+            border-left: 5px solid rgba(0,0,0,0.05);
+        }
+
+        /* --- URUTAN TUMPUKAN (Z-INDEX) --- */
+        #p1 { z-index: 6; }
+        #p2 { z-index: 5; }
+        #p3 { z-index: 4; }
+        #p4 { z-index: 3; }
+        #p5 { z-index: 2; }
+
+        .flipped { transform: rotateY(-180deg); }
+
+        /* --- TYPOGRAPHY --- */
+        h1 { 
+            font-size: 34px; color: #1a1a1a; text-align: center; 
+            margin-top: 150px; margin-bottom: 20px; 
+            border-bottom: 4px solid #b8860b; padding-bottom: 20px; 
+            letter-spacing: 2px; font-family: serif; 
+        }
+        
+        h2 { 
+            font-size: 15px; color: #fff; background: #2c3e50; 
+            padding: 12px 15px; margin-top: 35px; margin-bottom: 15px; 
+            text-transform: uppercase; letter-spacing: 1px; border-radius: 4px;
+            border-left: 5px solid #b8860b; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h3 { font-size: 18px; text-align: center; color: #555; font-weight: normal; margin-top: 0; }
+        
+        ul { list-style: none; padding: 0; }
+        li {
+            font-size: 13px;
+            margin-bottom: 10px; /* Jarak antar poin lebih lega */
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e0e0e0;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+        }
+        .num { min-width: 25px; font-weight: bold; color: #8e44ad; }
+        .txt { flex: 1; }
+
+        /* Nomor Halaman & Hint */
+        .page-num { 
+            position: absolute; bottom: 15px; right: 20px; 
+            color: #aaa; font-size: 12px; font-weight: bold; 
+            background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 4px;
+        }
+        
+        .hint { 
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); 
+            color: #b8860b; border: 1px solid #b8860b; background: rgba(0,0,0,0.9); 
+            padding: 10px 25px; border-radius: 30px; font-size: 14px; 
+            pointer-events: none; z-index: 100; letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .ornamen { font-size: 70px; color: #b8860b; text-align: center; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="hint">Klik halaman kanan untuk membuka / kiri untuk menutup</div>
+
+    <div class="book">
+        
+        <div class="paper" id="p1" onclick="flip(this)">
+            <div class="front" style="overflow:hidden; border: 10px double #2c3e50; display:flex; flex-direction:column; align-items:center; background: #fffdf5;">
+                <div class="ornamen">۞</div>
+                <h1 style="border:none; margin-top:50px; color:#2c3e50;">100 HAKIKAT<br>AL-QUR'AN</h1>
+                <h3 style="color:#b8860b; font-weight:bold; margin-bottom:50px; text-transform:uppercase;">Pegangan Pemahaman<br>Tuntunan Hakikat</h3>
+                <p style="text-align:center; font-size:14px; color:#555; line-height:1.8; font-style:italic;">
+                    Mencakup Aspek Ketuhanan, Kehidupan,<br>Jiwa, dan Makna Keberadaan Manusia.
+                </p>
+                <div style="margin-top:auto; margin-bottom:20px; font-size:12px; color:#999; text-transform:uppercase; letter-spacing:1px;">(Klik untuk membuka)</div>
+            </div>
+            <div class="back"></div>
+        </div>
+
+        <div class="paper" id="p2" onclick="flip(this)">
+            <div class="front">
+                <h2>A. Hakikat Ketuhanan (Ma’rifatullah)</h2>
+                <ul>
+                    <li><span class="num">1.</span><span class="txt">Allah adalah Satu, Tidak Beranak dan Tidak Diperanakkan – QS. Al-Ikhlas (112:1-4)</span></li>
+                    <li><span class="num">2.</span><span class="txt">Allah Maha Meliputi Segala Sesuatu – QS. Al-Baqarah (2:115)</span></li>
+                    <li><span class="num">3.</span><span class="txt">Tidak Ada yang Menyerupai Allah – QS. Asy-Syura (42:11)</span></li>
+                    <li><span class="num">4.</span><span class="txt">Allah Maha Mengetahui yang Gaib dan Nyata – QS. Al-An’am (6:59)</span></li>
+                    <li><span class="num">5.</span><span class="txt">Segala Sesuatu Kembali kepada Allah – QS. Ali Imran (3:109)</span></li>
+                    <li><span class="num">6.</span><span class="txt">Allah Maha Dekat Lebih Dekat dari Urat Leher – QS. Qaf (50:16)</span></li>
+                    <li><span class="num">7.</span><span class="txt">Segala Sesuatu Bergantung kepada Allah – QS. Al-Ikhlas (112:2)</span></li>
+                    <li><span class="num">8.</span><span class="txt">Kehendak Allah yang Terjadi, Bukan Kehendak Manusia – QS. Al-Insan (76:30)</span></li>
+                    <li><span class="num">9.</span><span class="txt">Allah adalah Cahaya Langit dan Bumi – QS. An-Nur (24:35)</span></li>
+                    <li><span class="num">10.</span><span class="txt">Segala Perkara di Langit dan Bumi Milik Allah – QS. Al-Baqarah (2:255)</span></li>
+                </ul>
+
+                <h2>B. Hakikat Keberadaan Manusia</h2>
+                <ul>
+                    <li><span class="num">11.</span><span class="txt">Manusia Diciptakan dari Tanah – QS. Al-Hijr (15:26)</span></li>
+                    <li><span class="num">12.</span><span class="txt">Manusia Punya Ruh dari Allah – QS. As-Sajdah (32:9)</span></li>
+                    <li><span class="num">13.</span><span class="txt">Manusia Diberi Akal untuk Berpikir – QS. Al-Mulk (67:10)</span></li>
+                    <li><span class="num">14.</span><span class="txt">Manusia Diuji dengan Kehidupan – QS. Al-Mulk (67:2)</span></li>
+                    <li><span class="num">15.</span><span class="txt">Kehidupan Dunia Sementara, Akhirat Kekal – QS. Al-Ankabut (29:64)</span></li>
+                    <li><span class="num">16.</span><span class="txt">Manusia Diberi Pilihan: Jalan Baik atau Buruk – QS. Al-Insan (76:3)</span></li>
+                    <li><span class="num">17.</span><span class="txt">Hati Manusia Bisa Menjadi Buta dari Kebenaran – QS. Al-Hajj (22:46)</span></li>
+                    <li><span class="num">18.</span><span class="txt">Manusia Akan Dimintai Pertanggungjawaban – QS. Al-Isra’ (17:36)</span></li>
+                    <li><span class="num">19.</span><span class="txt">Hanya Orang yang Bersih Hatinya yang Selamat – QS. Asy-Syu’ara (26:89)</span></li>
+                    <li><span class="num">20.</span><span class="txt">Ruh Tidak Mati, Hanya Berpindah Alam – QS. Az-Zumar (39:42)</span></li>
+                </ul>
+
+                <h2>C. Hakikat Kehidupan Dunia</h2>
+                <ul>
+                    <li><span class="num">21.</span><span class="txt">Dunia Adalah Tempat Ujian – QS. Al-Kahfi (18:7)</span></li>
+                    <li><span class="num">22.</span><span class="txt">Segala yang di Dunia Akan Binasa – QS. Ar-Rahman (55:26)</span></li>
+                    <li><span class="num">23.</span><span class="txt">Dunia Tidak Lebih dari Permainan dan Kesenangan Sementara – QS. Al-An’am (6:32)</span></li>
+                    <li><span class="num">24.</span><span class="txt">Harta dan Anak Hanyalah Ujian – QS. Al-Kahfi (18:46)</span></li>
+                    <li><span class="num">25.</span><span class="txt">Kebahagiaan Sejati di Akhirat – QS. Al-Mu’minun (23:1-11)</span></li>
+                    <li><span class="num">26.</span><span class="txt">Segala yang Baik dan Buruk Sudah Ditakdirkan – QS. Al-Hadid (57:22)</span></li>
+                    <li><span class="num">27.</span><span class="txt">Kehidupan Dunia Tidak Seharusnya Memalingkan dari Akhirat – QS. Al-Munafiqun (63:9)</span></li>
+                    <li><span class="num">28.</span><span class="txt">Segala yang Diberikan Allah untuk Kebaikan Manusia – QS. Al-Baqarah (2:216)</span></li>
+                    <li><span class="num">29.</span><span class="txt">Dunia dan Akhirat Adalah Keseimbangan – QS. Al-Qasas (28:77)</span></li>
+                    <li><span class="num">30.</span><span class="txt">Orang yang Lupa Akhirat, akan Dilupakan Allah – QS. Al-Jasiyah (45:34)</span></li>
+                </ul>
+                <div class="page-num">Hal. 1</div>
+            </div>
+            <div class="back"></div>
+        </div>
+
+        <div class="paper" id="p3" onclick="flip(this)">
+            <div class="front">
+                <h2>D. Hakikat Ruh dan Jiwa</h2>
+                <ul>
+                    <li><span class="num">31.</span><span class="txt">Ruh adalah Urusan Allah – QS. Al-Isra’ (17:85)</span></li>
+                    <li><span class="num">32.</span><span class="txt">Jiwa Bisa Tenang dengan Mengingat Allah – QS. Ar-Ra’d (13:28)</span></li>
+                    <li><span class="num">33.</span><span class="txt">Setiap Jiwa Akan Merasakan Kematian – QS. Ali Imran (3:185)</span></li>
+                    <li><span class="num">34.</span><span class="txt">Jiwa Dapat Menjadi Bersih atau Kotor – QS. Asy-Syams (91:7-10)</span></li>
+                    <li><span class="num">35.</span><span class="txt">Jiwa yang Tenang Akan Kembali kepada Allah – QS. Al-Fajr (89:27-30)</span></li>
+                </ul>
+
+                <h2>E. Hakikat Ilmu dan Hikmah</h2>
+                <ul>
+                    <li><span class="num">36.</span><span class="txt">Ilmu adalah Cahaya – QS. Az-Zumar (39:9)</span></li>
+                    <li><span class="num">37.</span><span class="txt">Orang Berilmu Diangkat Derajatnya oleh Allah – QS. Al-Mujadilah (58:11)</span></li>
+                    <li><span class="num">38.</span><span class="txt">Kebijaksanaan Adalah Karunia dari Allah – QS. Al-Baqarah (2:269)</span></li>
+                    <li><span class="num">39.</span><span class="txt">Ilmu Harus Disertai Amal – QS. As-Saff (61:2-3)</span></li>
+                    <li><span class="num">40.</span><span class="txt">Ilmu Hakiki adalah Mengenal Allah – QS. Al-Baqarah (2:282)</span></li>
+                </ul>
+
+                <h2>F. Hakikat Amal dan Takdir</h2>
+                <ul>
+                    <li><span class="num">41.</span><span class="txt">Amal Manusia Dicatat Malaikat – QS. Al-Infitar (82:10-12)</span></li>
+                    <li><span class="num">42.</span><span class="txt">Takdir Sudah Ditentukan di Lauh Mahfuz – QS. Al-Hadid (57:22)</span></li>
+                    <li><span class="num">43.</span><span class="txt">Allah Tidak Akan Mengubah Keadaan Suatu Kaum Jika Mereka Tidak Berubah – QS. Ar-Ra’d (13:11)</span></li>
+                    <li><span class="num">44.</span><span class="txt">Balasan Sesuai dengan Perbuatan – QS. Az-Zalzalah (99:7-8)</span></li>
+                    <li><span class="num">45.</span><span class="txt">Amal Kecil Sekalipun Akan Dihisab – QS. Al-Mu’minun (23:102-103)</span></li>
+                </ul>
+
+                <h2>G. Hakikat Akhirat dan Hari Kiamat</h2>
+                <ul>
+                    <li><span class="num">46.</span><span class="txt">Hari Kiamat Adalah Kebenaran Mutlak – QS. Al-Hajj (22:7)</span></li>
+                    <li><span class="num">47.</span><span class="txt">Kehidupan Akhirat Adalah Kehidupan Sejati – QS. Al-Ankabut (29:64)</span></li>
+                    <li><span class="num">48.</span><span class="txt">Setiap Perbuatan Akan Ditimbang – QS. Al-Anbiya (21:47)</span></li>
+                    <li><span class="num">49.</span><span class="txt">Orang Beriman Akan Masuk Surga – QS. Al-Baqarah (2:25)</span></li>
+                    <li><span class="num">50.</span><span class="txt">Orang yang Berdosa Akan Dibalas di Neraka – QS. Al-Baqarah (2:39)</span></li>
+                </ul>
+
+                <h2>H. Hakikat Kasih Sayang Allah</h2>
+                <ul>
+                    <li><span class="num">51.</span><span class="txt">Allah Maha Pengampun – QS. Az-Zumar (39:53)</span></li>
+                    <li><span class="num">52.</span><span class="txt">Allah Lebih Penyayang dari Ibu kepada Anaknya – QS. Al-An’am (6:54)</span></li>
+                    <li><span class="num">53.</span><span class="txt">Allah Tidak Akan Menyia-nyiakan Kebaikan Hamba-Nya – QS. Al-Kahfi (18:30)</span></li>
+                    <li><span class="num">54.</span><span class="txt">Allah Tidak Menzalimi Hamba-Nya – QS. Yunus (10:44)</span></li>
+                    <li><span class="num">55.</span><span class="txt">Kasih Sayang Allah Meliputi Segala Sesuatu – QS. Al-A’raf (7:156)</span></li>
+                </ul>
+
+                <h2>I. Hakikat Kesabaran dan Ujian Hidup</h2>
+                <ul>
+                    <li><span class="num">56.</span><span class="txt">Allah Menguji Setiap Hamba-Nya – QS. Al-Baqarah (2:155)</span></li>
+                    <li><span class="num">57.</span><span class="txt">Ujian adalah Jalan Menuju Derajat Lebih Tinggi – QS. Al-Baqarah (2:214)</span></li>
+                    <li><span class="num">58.</span><span class="txt">Kesabaran adalah Kunci Kesuksesan Akhirat – QS. Az-Zumar (39:10)</span></li>
+                    <li><span class="num">59.</span><span class="txt">Setelah Kesulitan Ada Kemudahan – QS. Al-Insyirah (94:6)</span></li>
+                    <li><span class="num">60.</span><span class="txt">Orang yang Sabar Dicintai Allah – QS. Ali Imran (3:146)</span></li>
+                </ul>
+                <div class="page-num">Hal. 2</div>
+            </div>
+            <div class="back"></div>
+        </div>
+
+        <div class="paper" id="p4" onclick="flip(this)">
+            <div class="front">
+                <h2>J. Hakikat Doa dan Tawakal</h2>
+                <ul>
+                    <li><span class="num">61.</span><span class="txt">Allah Mengabulkan Doa Hamba-Nya – QS. Al-Baqarah (2:186)</span></li>
+                    <li><span class="num">62.</span><span class="txt">Berdoa dengan Penuh Keyakinan – QS. Al-Mu’min (40:60)</span></li>
+                    <li><span class="num">63.</span><span class="txt">Tawakal Adalah Kekuatan Sejati – QS. At-Talaq (65:3)</span></li>
+                    <li><span class="num">64.</span><span class="txt">Allah Cukup Bagi Orang yang Bertawakal – QS. Al-Ahzab (33:3)</span></li>
+                    <li><span class="num">65.</span><span class="txt">Orang Beriman Tidak Mudah Putus Asa – QS. Yusuf (12:87)</span></li>
+                </ul>
+
+                <h2>K. Hakikat Keikhlasan dan Ketaqwaan</h2>
+                <ul>
+                    <li><span class="num">66.</span><span class="txt">Ikhlas adalah Pondasi Ibadah – QS. Al-Bayyinah (98:5)</span></li>
+                    <li><span class="num">67.</span><span class="txt">Takwa adalah Sebaik-baik Bekal – QS. Al-Baqarah (2:197)</span></li>
+                    <li><span class="num">68.</span><span class="txt">Orang Bertakwa Dijaga dari Kesulitan – QS. Ath-Thalaq (65:2-3)</span></li>
+                    <li><span class="num">69.</span><span class="txt">Allah Dekat dengan Orang Bertakwa – QS. Al-Baqarah (2:2)</span></li>
+                    <li><span class="num">70.</span><span class="txt">Keikhlasan Menentukan Nilai Amal – QS. Az-Zumar (39:2)</span></li>
+                </ul>
+
+                <h2>L. Hakikat Keadilan dan Kebijaksanaan</h2>
+                <ul>
+                    <li><span class="num">71.</span><span class="txt">Allah Maha Adil dan Tidak Menzalimi – QS. An-Nisa (4:40)</span></li>
+                    <li><span class="num">72.</span><span class="txt">Bersikap Adil dalam Segala Hal – QS. Al-Ma’idah (5:8)</span></li>
+                    <li><span class="num">73.</span><span class="txt">Hikmah Diberikan kepada Orang Terpilih – QS. Al-Baqarah (2:269)</span></li>
+                    <li><span class="num">74.</span><span class="txt">Menimbang Perkara dengan Adil – QS. Al-An’am (6:152)</span></li>
+                    <li><span class="num">75.</span><span class="txt">Orang yang Adil Dekat dengan Allah – QS. Al-Hujurat (49:9)</span></li>
+                </ul>
+
+                <h2>M. Hakikat Rezeki dan Kehidupan</h2>
+                <ul>
+                    <li><span class="num">76.</span><span class="txt">Rezeki Ditentukan oleh Allah – QS. Al-Isra’ (17:30)</span></li>
+                    <li><span class="num">77.</span><span class="txt">Rezeki Bisa Bertambah dengan Syukur – QS. Ibrahim (14:7)</span></li>
+                    <li><span class="num">78.</span><span class="txt">Bekerja dengan Jujur Mendatangkan Berkah – QS. Al-Jumu’ah (62:10)</span></li>
+                    <li><span class="num">79.</span><span class="txt">Setiap Makhluk Sudah Ditetapkan Rezekinya – QS. Hud (11:6)</span></li>
+                    <li><span class="num">80.</span><span class="txt">Tidak Ada yang Bisa Menghalangi Rezeki Allah – QS. Fatir (35:2)</span></li>
+                </ul>
+                <div class="page-num">Hal. 3</div>
+            </div>
+            <div class="back"></div>
+        </div>
+
+        <div class="paper" id="p5" onclick="flip(this)">
+            <div class="front">
+                <h2>N. Hakikat Kejahatan dan Godaan Setan</h2>
+                <ul>
+                    <li><span class="num">81.</span><span class="txt">Setan Adalah Musuh yang Nyata – QS. Al-Baqarah (2:168)</span></li>
+                    <li><span class="num">82.</span><span class="txt">Setan Menggoda dengan Tipu Daya – QS. An-Nisa (4:120)</span></li>
+                    <li><span class="num">83.</span><span class="txt">Orang yang Terlalu Mencintai Dunia Mudah Digoda Setan – QS. An-Nahl (16:63)</span></li>
+                    <li><span class="num">84.</span><span class="txt">Setan Membisikan Keraguan kepada Manusia – QS. An-Nas (114:4-6)</span></li>
+                    <li><span class="num">85.</span><span class="txt">Hanya Orang yang Berlindung kepada Allah yang Selamat dari Setan – QS. Al-Mu’minun (23:97-98)</span></li>
+                </ul>
+
+                <h2>O. Hakikat Cinta dan Persaudaraan</h2>
+                <ul>
+                    <li><span class="num">86.</span><span class="txt">Cinta Sejati adalah Cinta kepada Allah – QS. Al-Baqarah (2:165)</span></li>
+                    <li><span class="num">87.</span><span class="txt">Persaudaraan dalam Islam adalah Nikmat Allah – QS. Ali Imran (3:103)</span></li>
+                    <li><span class="num">88.</span><span class="txt">Jangan Memutus Silaturahmi – QS. Muhammad (47:22-23)</span></li>
+                    <li><span class="num">89.</span><span class="txt">Cinta kepada Dunia Tidak Seharusnya Melebihi Cinta kepada Allah – QS. At-Taubah (9:24)</span></li>
+                    <li><span class="num">90.</span><span class="txt">Orang yang Saling Mencintai karena Allah Akan Bertemu di Surga – QS. Az-Zukhruf (43:67)</span></li>
+                </ul>
+
+                <h2>P. Hakikat Kematian dan Kehidupan Setelahnya</h2>
+                <ul>
+                    <li><span class="num">91.</span><span class="txt">Kematian Tidak Bisa Dihindari – QS. Ali Imran (3:185)</span></li>
+                    <li><span class="num">92.</span><span class="txt">Setiap Jiwa Akan Merasakan Mati – QS. Al-Ankabut (29:57)</span></li>
+                    <li><span class="num">93.</span><span class="txt">Orang yang Mati dalam Keimanan Akan Bahagia – QS. Al-Fajr (89:27-30)</span></li>
+                    <li><span class="num">94.</span><span class="txt">Tidak Ada yang Bisa Menghindar dari Kematian – QS. An-Nisa (4:78)</span></li>
+                    <li><span class="num">95.</span><span class="txt">Kubur Adalah Awal dari Kehidupan Akhirat – QS. Al-Mu’minun (23:99-100)</span></li>
+                </ul>
+
+                <h2>Q. Hakikat Kebangkitan dan Pertemuan dengan Allah</h2>
+                <ul>
+                    <li><span class="num">96.</span><span class="txt">Setelah Kematian, Manusia Akan Dibangkitkan – QS. Yasin (36:51)</span></li>
+                    <li><span class="num">97.</span><span class="txt">Kebangkitan adalah Kebenaran Mutlak – QS. Al-Hajj (22:7)</span></li>
+                    <li><span class="num">98.</span><span class="txt">Orang Beriman Akan Melihat Allah di Akhirat – QS. Al-Qiyamah (75:22-23)</span></li>
+                    <li><span class="num">99.</span><span class="txt">Orang yang Durhaka Akan Diseret ke Neraka – QS. Maryam (19:86)</span></li>
+                    <li><span class="num">100.</span><span class="txt">Orang Bertakwa Akan Diberikan Kenikmatan Abadi – QS. Az-Zumar (39:73)</span></li>
+                </ul>
+                
+                <div style="text-align:center; margin-top:50px; font-weight:bold; color:#b8860b; letter-spacing:3px;">TAMAT</div>
+                <div class="page-num">Hal. 4</div>
+            </div>
+            <div class="back"></div>
+        </div>
+
+    </div>
+
+    <script>
+        function flip(element) {
+            if (element.classList.contains('flipped')) {
+                element.classList.remove('flipped');
+            } else {
+                element.classList.add('flipped');
+            }
+        }
+    </script>
+</body>
+</html>
