@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nusantara Auto-Anchor (POS Mode)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #121212;
+            --border: #333;
+            --gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.2);
+            --silver: #b0b0b0;
+            --text: #e0e0e0;
+            --green: #2ea043;
+            --red: #da3633;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            margin: 0 0 5px 0; letter-spacing: 2px; text-align: center;
+        }
+
+        .subtitle { font-size: 0.8rem; color: #666; margin-bottom: 25px; text-align: center; }
+        .container { width: 100%; max-width: 850px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* --- 1. DYNAMIC PIVOT DASHBOARD --- */
+        .pivot-dash {
+            background: linear-gradient(160deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 1px solid var(--gold);
+            border-radius: 8px; padding: 20px;
+            box-shadow: 0 0 20px var(--gold-glow);
+            display: grid; grid-template-columns: 1fr auto 1fr; gap: 15px; align-items: center;
+        }
+
+        .p-side { text-align: center; color: #666; font-size: 0.8rem; }
+        .p-val-sm { font-family: monospace; font-size: 1rem; margin-top: 5px; color: #888; }
+        
+        .p-center { 
+            text-align: center; border-left: 1px solid #333; border-right: 1px solid #333; padding: 0 20px; 
+        }
+        .p-title { font-size: 0.7rem; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
+        .p-main { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: bold; color: #fff; margin: 5px 0; }
+        .p-sub { font-size: 0.7rem; color: #aaa; }
+
+        .live-status {
+            grid-column: 1 / -1;
+            text-align: center; font-size: 0.75rem; margin-top: 10px;
+            padding-top: 10px; border-top: 1px dashed #333;
+            color: #555;
+        }
+        .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+
+        /* --- 2. INPUT FORM (UPDATED WITH QTY) --- */
+        .input-card {
+            background: #161616; padding: 20px; border-radius: 8px; border: 1px solid var(--border);
+            display: grid; grid-template-columns: 2fr 0.5fr 1fr 1fr auto; gap: 10px; align-items: end;
+        }
+        .input-group label { display: block; font-size: 0.7rem; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input {
+            width: 100%; padding: 10px; background: #000; border: 1px solid #444; color: #fff; border-radius: 4px; font-size: 1rem;
+        }
+        .btn-add {
+            padding: 0 25px; height: 42px; background: var(--gold); color: #000;
+            border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-family: 'Cinzel', serif;
+        }
+        .btn-add:hover { background: #b8962e; }
+
+        /* --- 3. TABLE & SUM --- */
+        .table-wrap { background: #0d1117; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px 15px; background: #21262d; color: #888; font-size: 0.75rem; text-transform: uppercase; }
+        td { padding: 12px 15px; border-bottom: 1px solid #222; vertical-align: middle; }
+        
+        .row-item { font-weight: bold; color: #fff; }
+        .row-qty { font-family: monospace; color: var(--green); text-align: center; }
+        .row-gold { color: var(--gold); font-weight: bold; font-family: 'Cinzel', serif; }
+        .row-silver { color: var(--silver); font-family: 'Cinzel', serif; font-size: 0.9rem; }
+        .del-btn { background: none; border: none; color: #da3633; font-weight: bold; cursor: pointer; }
+
+        .sum-bar {
+            background: #1a1a1a; padding: 15px 20px; border-top: 1px dashed #333;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .sum-label { font-size: 0.9rem; font-weight: bold; color: #888; }
+        .sum-val-dn { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--gold); font-weight: bold; }
+        .sum-val-dr { font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--silver); }
+
+        /* --- 4. PRINT BUTTON --- */
+        .btn-print { 
+            width: 100%; padding: 15px; background: #222; color: #fff; border: 1px solid #444; 
+            cursor: pointer; margin-top: 10px; font-family: 'Courier Prime', monospace;
+        }
+        .btn-print:hover { border-color: var(--gold); }
+
+        /* --- PRINT LAYOUT (THERMAL STYLE 58mm) --- */
+        #receipt { display: none; }
+        
+        @media print {
+            @page { margin: 0; size: auto; }
+            body * { visibility: hidden; }
+            body { background-color: #fff; margin: 0; padding: 0; }
+            
+            #receipt, #receipt * { visibility: visible; }
+            #receipt {
+                display: block; position: absolute; left: 0; top: 0; 
+                width: 58mm; /* Ukuran Thermal Kecil */
+                padding: 5mm; 
+                font-family: 'Courier New', Courier, monospace; 
+                font-size: 10px; 
+                color: #000;
+                line-height: 1.2;
+            }
+            
+            .rec-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px; }
+            .rec-title { font-weight: bold; font-size: 12px; margin-bottom: 3px; }
+            
+            .rec-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+            .rec-item-name { font-weight: bold; }
+            .rec-qty-tag { font-size: 9px; color: #444; margin-right: 5px; }
+            
+            .rec-divider { border-bottom: 1px dashed #000; margin: 5px 0; }
+            
+            .rec-total-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 11px; margin-top: 2px; }
+            
+            .rec-footer { text-align: center; margin-top: 10px; font-size: 8px; font-style: italic; }
+        }
+
+        @media (max-width: 700px) {
+            .pivot-dash { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .p-center { grid-column: 1 / -1; grid-row: 1; border: none; border-bottom: 1px dashed #333; padding-bottom: 15px; margin-bottom: 10px; }
+            .input-card { grid-template-columns: 1fr; }
+            .btn-add { width: 100%; margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>NUSANTARA AUTO-PIVOT</h1>
+    <div class="subtitle">Sistem Jangkar Emas Tahunan (POS Mode)</div>
+
+    <div class="container">
+
+        <div class="pivot-dash">
+            <div class="p-side">
+                <div>YTD LOW</div>
+                <div class="p-val-sm" id="ytdLow">$...</div>
+            </div>
+
+            <div class="p-center">
+                <div class="p-title">ANCHOR PRICE (TENGAH)</div>
+                <div class="p-main" id="pivotDisplay">$...</div>
+                <div class="p-sub">
+                    1 Dinar ≈ <span id="dinarIDR" style="color:#fff">Loading...</span>
+                </div>
+            </div>
+
+            <div class="p-side">
+                <div>YTD HIGH</div>
+                <div class="p-val-sm" id="ytdHigh">$...</div>
+            </div>
+
+            <div class="live-status">
+                <span id="dot" class="status-dot" style="background:#555;"></span>
+                LIVE SPOT: <span id="liveSpot" style="color:#fff; font-weight:bold;">connecting...</span> | 
+                <span id="marketMsg">Menunggu Data Pasar...</span>
+            </div>
+        </div>
+
+        <div class="input-card">
+            <div class="input-group">
+                <label>Nama Barang</label>
+                <input type="text" id="inName" placeholder="Contoh: Kambing Qurban">
+            </div>
+            <div class="input-group">
+                <label>Qty</label>
+                <input type="number" id="inQty" value="1" min="1" placeholder="1">
+            </div>
+            <div class="input-group">
+                <label>Harga Tertinggi (Rp)</label>
+                <input type="number" id="inHigh" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label>Harga Terendah (Rp)</label>
+                <input type="number" id="inLow" placeholder="0">
+            </div>
+            <button class="btn-add" onclick="addItem()">HITUNG</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="30%">ITEM</th>
+                        <th width="10%" style="text-align:center;">QTY</th>
+                        <th width="20%">HARGA (SATUAN)</th>
+                        <th width="20%">SUBTOTAL (Au)</th>
+                        <th width="15%">SUBTOTAL (Ag)</th>
+                        <th width="5%"></th>
+                    </tr>
+                </thead>
+                <tbody id="listBody">
+                    <tr><td colspan="6" style="text-align:center; padding:20px; color:#555">Belum ada item.</td></tr>
+                </tbody>
+            </table>
+            
+            <div class="sum-bar">
+                <span class="sum-label">GRAND TOTAL</span>
+                <div style="text-align:right;">
+                    <div class="sum-val-dn" id="totalDinar">0.0000 Dn</div>
+                    <div class="sum-val-dr" id="totalDirham">0.00 Dr</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-print" onclick="window.print()">🖨️ CETAK STRUK (THERMAL)</button>
+
+    </div>
+
+    <div id="receipt">
+        <div class="rec-header">
+            <div class="rec-title">NUSANTARA EXCHANGE</div>
+            <span id="recDate">-</span><br>
+            Metode: Auto-Pivot Anchor
+        </div>
+        
+        <div class="rec-divider"></div>
+        
+        <div id="recItems">
+            </div>
+
+        <div class="rec-divider"></div>
+
+        <div class="rec-total-row">
+            <span>TOTAL DINAR:</span>
+            <span id="recTotalDn">0.00 Dn</span>
+        </div>
+        <div class="rec-total-row">
+            <span>TOTAL DIRHAM:</span>
+            <span id="recTotalDr">0.00 Dr</span>
+        </div>
+
+        <div class="rec-footer">
+            Anchor Gold: <span id="recAnchor">-</span><br>
+            Kurs IDR: <span id="recKurs">-</span><br>
+            Terima Kasih
+        </div>
+    </div>
+
+    <script>
+        // --- KONFIGURASI ---
+        const OZ_GRAM = 31.1035;
+        const DINAR_W = 4.25; const DINAR_P = 0.917; 
+        const RATIO_AG = 12; // Ratio Dirham
+
+        // --- STATE AWAL ---
+        let range = { high: 2900, low: 2400 };
+        let pivotUSD = 0;
+        let pivotDinarIDR = 0;
+        let liveKurs = 15500;
+        let items = [];
+
+        // --- CORE LOGIC ---
+        async function updateMarket() {
+            const dot = document.getElementById('dot');
+            const msg = document.getElementById('marketMsg');
+
+            try {
+                const goldReq = await fetch('https://api.gold-api.com/price/XAU');
+                const kursReq = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+                
+                const goldData = await goldReq.json();
+                const kursData = await kursReq.json();
+
+                if(!goldData.price || !kursData.rates.IDR) throw new Error("API Data Error");
+
+                const currentPrice = goldData.price;
+                liveKurs = kursData.rates.IDR;
+
+                // Breakout Logic
+                let status = "Stabil (Inside Range)";
+                let color = "#2ea043";
+
+                if (currentPrice > range.high) {
+                    range.high = currentPrice; 
+                    status = "NEW HIGH! (Pivot Naik)";
+                    color = "#da3633"; 
+                } else if (currentPrice < range.low) {
+                    range.low = currentPrice;
+                    status = "NEW LOW! (Pivot Turun)";
+                    color = "#da3633";
+                }
+
+                // Hitung Pivot & Dinar IDR
+                pivotUSD = (range.high + range.low) / 2;
+                pivotDinarIDR = (pivotUSD / OZ_GRAM) * liveKurs * DINAR_W * DINAR_P;
+
+                // Update UI
+                document.getElementById('liveSpot').innerText = "$" + currentPrice.toLocaleString();
+                document.getElementById('ytdHigh').innerText = "$" + range.high.toLocaleString();
+                document.getElementById('ytdLow').innerText = "$" + range.low.toLocaleString();
+                document.getElementById('pivotDisplay').innerText = "$" + pivotUSD.toLocaleString();
+                document.getElementById('dinarIDR').innerText = "Rp " + pivotDinarIDR.toLocaleString('id-ID', {maximumFractionDigits:0});
+                
+                dot.style.background = "#00ff00";
+                msg.innerText = status;
+                msg.style.color = color;
+
+                // Update Print Metadata
+                document.getElementById('recAnchor').innerText = "$" + pivotUSD;
+                document.getElementById('recKurs').innerText = "Rp " + liveKurs;
+                document.getElementById('recDate').innerText = new Date().toLocaleString('id-ID');
+
+                renderTable();
+
+            } catch (e) {
+                console.log(e);
+                dot.style.background = "red";
+                msg.innerText = "Offline / Connection Lost";
+            }
+        }
+
+        // --- ITEM LOGIC ---
+        function addItem() {
+            if(pivotDinarIDR === 0) { alert("Sedang mengambil data pasar..."); return; }
+
+            const name = document.getElementById('inName').value;
+            const qty = parseFloat(document.getElementById('inQty').value) || 1;
+            const h = parseFloat(document.getElementById('inHigh').value) || 0;
+            const l = parseFloat(document.getElementById('inLow').value) || 0;
+
+            if(!name || h===0) return;
+
+            items.push({
+                id: Date.now(),
+                name: name,
+                qty: qty,
+                midRp: (h+l)/2
+            });
+
+            // Reset inputs (keep Qty at 1)
+            document.getElementById('inName').value = '';
+            document.getElementById('inQty').value = '1';
+            document.getElementById('inHigh').value = '';
+            document.getElementById('inLow').value = '';
+            document.getElementById('inName').focus();
+
+            renderTable();
+        }
+
+        function removeItem(id) {
+            items = items.filter(i => i.id !== id);
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('listBody');
+            const recBody = document.getElementById('recItems');
+            
+            let html = "";
+            let recHtml = "";
+            let sumDn = 0;
+
+            if(items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#555">Belum ada item.</td></tr>';
+                document.getElementById('totalDinar').innerText = "0.0000 Dn";
+                document.getElementById('totalDirham').innerText = "0.00 Dr";
+                return;
+            }
+
+            items.forEach(item => {
+                // Calculation: (Unit Price / Dinar Rate) * Qty
+                const unitDn = item.midRp / pivotDinarIDR;
+                const totalDn = unitDn * item.qty;
+                const totalDr = totalDn * RATIO_AG;
+                
+                sumDn += totalDn;
+
+                // Main Table Row
+                html += `
+                    <tr>
+                        <td class="row-item">${item.name}</td>
+                        <td class="row-qty">${item.qty}</td>
+                        <td style="color:#666">Rp ${item.midRp.toLocaleString('id-ID')}</td>
+                        <td class="row-gold">${totalDn.toFixed(4)} Dn</td>
+                        <td class="row-silver">${totalDr.toFixed(2)} Dr</td>
+                        <td style="text-align:center"><button class="del-btn" onclick="removeItem(${item.id})">×</button></td>
+                    </tr>`;
+
+                // Receipt Row (Format: "Item (x2) ... Price")
+                recHtml += `
+                    <div class="rec-row">
+                        <div>
+                            <span class="rec-item-name">${item.name}</span>
+                            <span class="rec-qty-tag">(x${item.qty})</span>
+                        </div>
+                        <span>${totalDn.toFixed(4)} Dn</span>
+                    </div>`;
+            });
+
+            tbody.innerHTML = html;
+            recBody.innerHTML = recHtml;
+
+            // Update Sum
+            const totalDnStr = sumDn.toFixed(4);
+            const totalDrStr = (sumDn * RATIO_AG).toFixed(2);
+
+            document.getElementById('totalDinar').innerText = totalDnStr + " Dn";
+            document.getElementById('totalDirham').innerText = totalDrStr + " Dr";
+
+            document.getElementById('recTotalDn').innerText = totalDnStr + " Dn";
+            document.getElementById('recTotalDr').innerText = totalDrStr + " Dr";
+        }
+
+        // Init
+        window.onload = updateMarket;
+        setInterval(updateMarket, 60000); 
+
+    </script>
+</body>
+</html>
