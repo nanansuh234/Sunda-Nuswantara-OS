@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Civilization Architect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #101010;
+            --border: #333;
+            --gold: #c5a059;
+            --cyan: #00f3ff;
+            --green: #2ea043;
+            --red: #da3633;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(to right, var(--gold), #fff);
+            -webkit-background-clip: text; color: transparent;
+            text-transform: uppercase; letter-spacing: 3px;
+            text-align: center; margin-bottom: 5px; font-size: 1.8rem;
+        }
+
+        .subtitle { 
+            color: #888; font-size: 0.9rem; margin-bottom: 40px; 
+            text-align: center; max-width: 700px; line-height: 1.5; font-style: italic;
+        }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            width: 100%; max-width: 1200px;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: var(--panel); border: 1px solid var(--border);
+            padding: 25px; border-radius: 8px; position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .card:hover { border-color: var(--gold); }
+
+        .card-header {
+            font-family: 'Cinzel', serif; color: var(--gold); border-bottom: 1px solid #333;
+            padding-bottom: 10px; margin-bottom: 20px; font-size: 1.2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* INPUT GROUPS */
+        .input-group { margin-bottom: 25px; }
+        .input-label { display: block; color: var(--cyan); margin-bottom: 8px; font-weight: bold; font-size: 0.95rem; }
+        
+        select, input[type="number"] {
+            width: 100%; background: #000; border: 1px solid #444; color: #fff;
+            padding: 12px; font-family: 'Rajdhani', sans-serif; font-size: 1rem;
+            border-radius: 4px;
+        }
+        select:focus, input:focus { border-color: var(--cyan); outline: none; }
+
+        /* TACTICAL HINT BOX (New Feature) */
+        .hint-box {
+            margin-top: 10px; padding: 15px; border-left: 3px solid #555;
+            background: rgba(255,255,255,0.03); font-size: 0.85rem; color: #aaa;
+            line-height: 1.5; border-radius: 0 4px 4px 0;
+        }
+        .hint-title { font-weight: bold; color: #fff; display: block; margin-bottom: 5px; text-transform: uppercase; }
+        .hint-detail { display: block; margin-bottom: 5px; }
+        .hint-result { color: var(--gold); font-style: italic; }
+
+        /* OUTPUT VISUALS */
+        .impact-box {
+            background: #0a0a0a; border: 1px dashed var(--gold);
+            padding: 20px; text-align: center; margin-top: 20px; border-radius: 8px;
+        }
+        .impact-val { font-family: 'Cinzel', serif; font-size: 2.5rem; color: #fff; margin: 10px 0; }
+        .impact-label { text-transform: uppercase; color: #888; font-size: 0.8rem; letter-spacing: 1px; }
+
+        .tree-container {
+            display: flex; justify-content: center; margin-top: 20px; opacity: 0.5; filter: grayscale(100%); transition: 1s; flex-wrap: wrap; gap: 5px;
+        }
+        .tree-active { opacity: 1; filter: grayscale(0%); }
+        .node {
+            width: 30px; height: 30px; border-radius: 50%; background: var(--gold);
+            box-shadow: 0 0 10px var(--gold); position: relative;
+        }
+        
+        .philosophy-box {
+            margin-top: 30px; padding: 15px; border-left: 3px solid var(--red);
+            background: rgba(218, 54, 51, 0.05); color: #ccc; font-size: 0.9rem; line-height: 1.6;
+        }
+
+        .btn-calc {
+            width: 100%; padding: 15px; background: linear-gradient(90deg, var(--gold), #8a6d1f);
+            color: #000; border: none; font-weight: bold; font-size: 1.1rem; cursor: pointer;
+            margin-top: 10px; font-family: 'Cinzel', serif; letter-spacing: 2px;
+        }
+        .btn-calc:hover { filter: brightness(1.2); box-shadow: 0 0 20px var(--gold); }
+
+        @media (max-width: 800px) { .container { grid-template-columns: 1fr; } }
+
+    </style>
+</head>
+<body>
+
+    <h1>FAMILY ARCHITECT</h1>
+    <div class="subtitle">
+        "Keluarga bukan sekadar tempat pulang, tapi Markas Besar Peradaban. Rancang strategi kaderisasi dari sekarang."
+    </div>
+
+    <div class="container">
+        
+        <div class="card">
+            <div class="card-header">1. BLUEPRINT STRATEGI</div>
+
+            <div class="input-group">
+                <span class="input-label">🏛️ MODEL PERNIKAHAN (Alliance Type)</span>
+                <select id="marriageType" onchange="updateUI()">
+                    <option value="1">Level 1: Konvensional (Biologis/Sah)</option>
+                    <option value="3">Level 2: Partner Bertumbuh (Karir Support)</option>
+                    <option value="5">Level 3: Mitra Ideologis (Visi Misi Sama)</option>
+                    <option value="10">Level 4: Dinasti Peradaban (Legacy Builder)</option>
+                </select>
+                <div id="hintMarriage" class="hint-box"></div>
+            </div>
+
+            <div class="input-group">
+                <span class="input-label">👶 JUMLAH KADER (Children)</span>
+                <input type="number" id="childCount" value="3" min="0" max="20" oninput="updateUI()">
+                
+                <span class="input-label" style="margin-top:15px;">🎓 KURIKULUM DIDIKAN (Education)</span>
+                <select id="eduFocus" onchange="updateUI()">
+                    <option value="1">Akademis Standar (Cetak Pekerja)</option>
+                    <option value="5">Skill & Profesi (Cetak Ahli)</option>
+                    <option value="10">Leadership & Aqil Baligh (Cetak Pemimpin)</option>
+                </select>
+                <div id="hintEdu" class="hint-box"></div>
+            </div>
+
+            <div class="input-group">
+                <span class="input-label">🕸️ SKALA JEJARING (Influence)</span>
+                <select id="netScope" onchange="updateUI()">
+                    <option value="1">Individualis (Keluarga Nuklir)</option>
+                    <option value="3">Komunal (Aktif Bertetangga)</option>
+                    <option value="7">Sektoral (Tokoh Bisnis/Masyarakat)</option>
+                    <option value="15">Sistemik (Institusi/Bani Kuat)</option>
+                </select>
+                <div id="hintNet" class="hint-box"></div>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <div class="card-header">2. SIMULASI DAMPAK (100 TAHUN)</div>
+
+            <div class="impact-box">
+                <div class="impact-label">CIVILIZATION IMPACT SCORE:</div>
+                <div class="impact-val" id="impactScore">0</div>
+                <div id="impactText" style="color:var(--cyan); font-weight:bold; font-size:1.2rem;">--</div>
+            </div>
+
+            <div style="text-align:center; margin-top:10px; font-size:0.8rem; color:#666;">VISUALISASI GENERASI PENERUS:</div>
+            <div class="tree-container" id="visualTree"></div>
+
+            <div class="philosophy-box" id="philosophyText">
+                --
+            </div>
+
+            <button class="btn-calc" onclick="updateUI()">UPDATE ANALISA</button>
+        </div>
+
+    </div>
+
+    <a href="index.html" style="margin-top:40px; color:#666; text-decoration:none; border:1px solid #444; padding:10px 30px; border-radius:50px; font-size:0.8rem;">KEMBALI KE MENU UTAMA</a>
+
+    <script>
+        // DATABASE HINTS (The "Red Pill" Knowledge Base)
+        const hints = {
+            marriage: {
+                1: { title: "SURVIVAL MODE", detail: "• Usia Ideal: Saat mapan finansial (27-35th).<br>• Fokus: Bertahan hidup & membesarkan anak.<br>• Risiko: Rapuh jika ekonomi guncang. Sering terjebak rutinitas.", result: "Output: Keturunan Biologis semata." },
+                3: { title: "GROWTH PARTNER", detail: "• Usia Ideal: 23-28th (Saling support karir dari nol).<br>• Fokus: Stabilitas ekonomi & kenyamanan.<br>• Dinamika: Suami-Istri adalah 'Tim Kerja' yang solid.", result: "Output: Keluarga Sejahtera (Middle-Up Class)." },
+                5: { title: "IDEOLOGICAL ALLIANCE", detail: "• Usia Ideal: Kapanpun mental matang.<br>• Fokus: Kontribusi sosial & dakwah.<br>• Dinamika: Disatukan oleh gagasan besar, bukan cuma perasaan.", result: "Output: Keluarga Tokoh / Penggerak." },
+                10: { title: "DYNASTY BUILDER", detail: "• Usia Ideal: Muda (20-25th) dengan mentor kuat.<br>• Fokus: Membangun aset peradaban (Yayasan/Bisnis Keluarga).<br>• Dinamika: Pernikahan adalah merger kekuatan antar-klan.", result: "Output: Warisan Sejarah (Legacy) > 100 Tahun." }
+            },
+            edu: {
+                1: { title: "MENCETAK PEKERJA", detail: "• Target Mandiri: Usia 22-25th (Lulus Kuliah).<br>• Mindset: 'Sekolah yang pinter biar dapat gaji besar'.<br>• Risiko: Rentan digantikan AI/Robot.", result: "Nilai: Karyawan / Buruh Berdasi." },
+                5: { title: "MENCETAK AHLI (EXPERT)", detail: "• Target Mandiri: Usia 18-20th (Punya High-Skill).<br>• Mindset: 'Jadilah yang terbaik di bidangmu'.<br>• Fokus: Spesialisasi & Portofolio.", result: "Nilai: Profesional Independen." },
+                10: { title: "MENCETAK PEMIMPIN (AQIL BALIGH)", detail: "• Target Mandiri: Usia 15th (Baligh = Dewasa).<br>• Mindset: 'Ciptakan solusi, jangan cari kerja'.<br>• Kurikulum: Adab, Dagang, Survival, Agama.", result: "Nilai: Founder / Khalifah Fil Ardh." }
+            },
+            net: {
+                1: { title: "ISOLATED UNIT", detail: "• Kondisi: Hidup lo-lo gue-gue. Pagar rumah tinggi.<br>• Risiko: Hancur saat ada krisis besar (sakit/PHK).", result: "Power: Sangat Lemah." },
+                3: { title: "COMMUNITY MEMBER", detail: "• Kondisi: Aktif arisan/RT. Dikenal tetangga.<br>• Benefit: Ada jaring pengaman sosial dasar.", result: "Power: Cukup Aman." },
+                7: { title: "KEY PLAYER", detail: "• Kondisi: Punya jabatan/posisi di organisasi.<br>• Benefit: Punya akses informasi & peluang eksklusif.", result: "Power: Berpengaruh." },
+                15: { title: "SYSTEM OWNER", detail: "• Kondisi: Keluarga Anda adalah pusat gravitasi (Bani).<br>• Benefit: Menentukan arah kebijakan lingkungan/pasar.", result: "Power: Berdaulat Penuh (Sovereign)." }
+            }
+        };
+
+        function updateUI() {
+            // 1. Get Values
+            let mVal = parseInt(document.getElementById('marriageType').value);
+            let cCount = parseInt(document.getElementById('childCount').value);
+            let eVal = parseInt(document.getElementById('eduFocus').value);
+            let nVal = parseInt(document.getElementById('netScope').value);
+
+            // 2. Update Hints
+            renderHint('hintMarriage', hints.marriage[mVal]);
+            renderHint('hintEdu', hints.edu[eVal]);
+            renderHint('hintNet', hints.net[nVal]);
+
+            // 3. Calculate Score
+            // Formula: (Anak x Kualitas) * (Visi Nikah + Network)
+            // Kalau anak 0, power diri sendiri (1) dikali kualitas setengahnya
+            let basePower = (cCount === 0) ? (1 * eVal * 0.5) : (cCount * eVal);
+            let leverage = mVal + nVal;
+            let totalScore = Math.floor(basePower * leverage);
+            
+            // Cap score visualization
+            if(totalScore > 5000) totalScore = 5000;
+
+            // 4. Determine Level & Philosophy
+            let levelTitle = "";
+            let levelDesc = "";
+            let color = "#555";
+
+            if (totalScore < 50) {
+                levelTitle = "CONSUMER UNIT (BEBAN)";
+                levelDesc = "Keluarga ini hanyalah target pasar korporasi. Rentan punah secara sejarah dalam 1-2 generasi karena tidak mewariskan nilai kuat.";
+                color = "var(--red)";
+            } else if (totalScore < 300) {
+                levelTitle = "SURVIVOR UNIT (BERTAHAN)";
+                levelDesc = "Keluarga standar. Mampu mandiri secara ekonomi, tapi belum memberi dampak signifikan bagi lingkungan luas.";
+                color = "#ccc";
+            } else if (totalScore < 800) {
+                levelTitle = "CONTRIBUTOR CLAN (BERMANFAAT)";
+                levelDesc = "Keluarga yang diperhitungkan. Anak-anak menjadi aset bangsa. Memiliki daya tawar dan ketahanan krisis yang baik.";
+                color = "var(--gold)";
+            } else {
+                levelTitle = "CIVILIZATION ARCHITECT (PERADABAN)";
+                levelDesc = "Ini bukan sekadar keluarga, ini adalah INSTITUSI. Mencetak pemimpin, mewariskan sistem, dan menjadi solusi bagi permasalahan umat.";
+                color = "var(--cyan)";
+            }
+
+            document.getElementById('impactScore').innerText = totalScore;
+            document.getElementById('impactScore').style.color = color;
+            document.getElementById('impactText').innerText = levelTitle;
+            document.getElementById('impactText').style.color = color;
+            
+            document.getElementById('philosophyText').innerHTML = `
+                <strong style="color:${color}; font-size:1.1rem;">${levelTitle}</strong><br><br>
+                ${levelDesc}<br><br>
+                <em>"Kualitas peradaban 50 tahun ke depan ditentukan oleh apa yang Anda tanamkan di meja makan keluarga hari ini."</em>
+            `;
+
+            // 5. Visual Tree
+            generateTree(cCount, eVal);
+        }
+
+        function renderHint(elmId, data) {
+            const elm = document.getElementById(elmId);
+            elm.innerHTML = `
+                <span class="hint-title" style="color:${getColor(data.title)}">${data.title}</span>
+                <span class="hint-detail">${data.detail}</span>
+                <span class="hint-result">➔ ${data.result}</span>
+            `;
+            // Dynamic border color
+            elm.style.borderLeftColor = getColor(data.title);
+        }
+
+        function getColor(title) {
+            if(title.includes("SURVIVAL") || title.includes("PEKERJA") || title.includes("ISOLATED")) return "var(--red)";
+            if(title.includes("GROWTH") || title.includes("AHLI") || title.includes("COMMUNITY")) return "#ccc";
+            if(title.includes("ALLIANCE") || title.includes("KEY") || title.includes("CONTRIBUTOR")) return "var(--gold)";
+            return "var(--cyan)";
+        }
+
+        function generateTree(count, quality) {
+            const container = document.getElementById('visualTree');
+            container.innerHTML = '';
+            let visualCount = count > 15 ? 15 : count; // Cap visual
+            if(visualCount === 0) visualCount = 1; // Self
+
+            for(let i=0; i<visualCount; i++) {
+                let node = document.createElement('div');
+                node.className = 'node';
+                if(quality == 1) node.style.background = '#555';
+                if(quality == 5) node.style.background = 'var(--gold)';
+                if(quality == 10) {
+                    node.style.background = 'var(--cyan)';
+                    node.style.boxShadow = '0 0 10px var(--cyan)';
+                }
+                container.appendChild(node);
+            }
+            container.classList.add('tree-active');
+        }
+
+        // Init
+        updateUI();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bani Network Mapper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --border: #333;
+            --gold: #c5a059;
+            --blue: #00f3ff;
+            --green: #00ff41;
+            --red: #da3633;
+            --purple: #bc13fe;
+            --text: #ccc;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        /* SCREEN ELEMENTS */
+        .screen-only { display: block; width: 100%; max-width: 1200px; }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            text-transform: uppercase; letter-spacing: 2px;
+            text-align: center; margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .subtitle { color: #666; font-size: 0.9rem; text-align: center; margin-bottom: 30px; }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            width: 100%;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--border);
+            padding: 20px; border-radius: 8px; position: relative;
+        }
+
+        .card-header {
+            font-family: 'Cinzel', serif; color: #fff; border-bottom: 1px solid #333;
+            padding-bottom: 10px; margin-bottom: 15px; font-size: 1.1rem;
+        }
+
+        /* INPUT FORM */
+        .input-group { margin-bottom: 15px; }
+        label { display: block; color: var(--blue); margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; }
+        
+        input, select {
+            width: 100%; background: #000; border: 1px solid #444; color: #fff;
+            padding: 10px; font-family: 'Rajdhani', sans-serif; font-size: 1rem;
+            border-radius: 4px;
+        }
+        input:focus, select:focus { border-color: var(--gold); outline: none; }
+
+        .btn-add {
+            width: 100%; padding: 12px; background: var(--green); color: #000;
+            border: none; font-weight: bold; cursor: pointer; font-size: 1rem;
+            margin-top: 10px; clip-path: polygon(3% 0, 100% 0, 100% 70%, 97% 100%, 0 100%, 0 30%);
+        }
+        .btn-print {
+            width: 100%; padding: 12px; background: var(--gold); color: #000;
+            border: none; font-weight: bold; cursor: pointer; font-size: 1rem;
+            margin-top: 10px;
+        }
+        .btn-add:hover, .btn-print:hover { filter: brightness(1.2); }
+
+        /* MEMBER LIST GRID */
+        .member-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px; margin-top: 20px; max-height: 500px; overflow-y: auto;
+        }
+
+        .member-card {
+            background: #0d1117; border: 1px solid #333; padding: 15px;
+            border-radius: 6px; position: relative;
+        }
+        .member-role {
+            font-size: 0.7rem; text-transform: uppercase; padding: 2px 6px;
+            border-radius: 4px; display: inline-block; margin-bottom: 5px; font-weight: bold;
+        }
+        .member-name { font-weight: bold; color: #fff; font-size: 1.1rem; margin-bottom: 2px; }
+        .member-contact { font-size: 0.9rem; color: var(--gold); margin-bottom: 5px; font-family: monospace; display: block;}
+        .member-status { font-size: 0.8rem; font-style: italic; color: #777; }
+        
+        .btn-del {
+            position: absolute; top: 10px; right: 10px; color: #555; cursor: pointer; font-weight: bold;
+        }
+        .btn-del:hover { color: var(--red); }
+
+        /* ANALYTICS */
+        .stat-box {
+            background: #0a0a0a; border: 1px dashed var(--gold);
+            padding: 20px; margin-top: 20px; text-align: center; border-radius: 8px;
+        }
+        .stat-val { font-family: 'Cinzel', serif; font-size: 2.5rem; color: #fff; margin: 10px 0; }
+        .stat-desc { font-size: 0.9rem; color: #aaa; line-height: 1.5; }
+
+        .tag-law { color: var(--red); border: 1px solid var(--red); }
+        .tag-health { color: var(--green); border: 1px solid var(--green); }
+        .tag-agri { color: #ff9900; border: 1px solid #ff9900; }
+        .tag-tech { color: var(--blue); border: 1px solid var(--blue); }
+        .tag-edu { color: var(--purple); border: 1px solid var(--purple); }
+        .tag-biz { color: var(--gold); border: 1px solid var(--gold); }
+
+        /* PRINT SECTION (HIDDEN ON SCREEN) */
+        #printArea { display: none; background: #fff; color: #000; padding: 40px; font-family: 'Times New Roman', serif; }
+        
+        .flow-diagram {
+            margin-top: 30px; border: 2px solid #000; padding: 20px; border-radius: 10px;
+        }
+        .flow-row { display: flex; justify-content: space-between; margin-bottom: 20px; gap: 20px; }
+        .flow-box { 
+            flex: 1; border: 1px solid #000; padding: 15px; text-align: center; border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .flow-title { font-weight: bold; text-transform: uppercase; font-size: 14px; margin-bottom: 5px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        .flow-desc { font-size: 12px; font-style: italic; color: #555; }
+        .arrow-down { text-align: center; font-size: 20px; font-weight: bold; margin: -10px 0 10px 0; }
+
+        @media print {
+            body { background: #fff; padding: 0; margin: 0; }
+            .screen-only { display: none !important; }
+            #printArea { display: block !important; width: 100%; height: 100%; }
+            .member-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; max-height: none; }
+            .member-card { border: 1px solid #000; background: #fff; color: #000; page-break-inside: avoid; }
+            .member-name { color: #000; }
+            .member-contact { color: #000; font-weight: bold; }
+            .btn-del { display: none; }
+        }
+
+        @media (max-width: 800px) { .container { grid-template-columns: 1fr; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="screen-only">
+        <h1>BANI NETWORK MAPPER</h1>
+        <div class="subtitle">Peta Kekuatan & Jaring Pengaman Sosial Keluarga (Anti-Hikomori)</div>
+
+        <div class="container">
+            
+            <div class="card">
+                <div class="card-header">TAMBAH DATABASE KLAN</div>
+                
+                <div class="input-group">
+                    <label>NAMA ANGGOTA KELUARGA</label>
+                    <input type="text" id="mName" placeholder="Contoh: Paman Budi...">
+                </div>
+
+                <div class="input-group">
+                    <label>KONTAK DARURAT (WA/HP)</label>
+                    <input type="text" id="mContact" placeholder="0812-xxxx-xxxx">
+                </div>
+
+                <div class="input-group">
+                    <label>SEKTOR KEAHLIAN (ASET)</label>
+                    <select id="mSkill">
+                        <option value="agri">1. PANGAN & TANI (Logistik Dasar)</option>
+                        <option value="health">2. MEDIS & KESEHATAN (Survival)</option>
+                        <option value="law">3. HUKUM & POLITIK (Proteksi)</option>
+                        <option value="biz">4. EKONOMI & DANA (Funding)</option>
+                        <option value="edu">5. PENDIDIKAN (Kaderisasi)</option>
+                        <option value="tech">6. INDUSTRI & TEKNIK (Produksi)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>TINGKAT SOLIDARITAS</label>
+                    <select id="mLevel">
+                        <option value="1">Simpatisan (Pasif)</option>
+                        <option value="5">Pendukung (Hadir Jika Diminta)</option>
+                        <option value="10">PENGGERAK (Solid / Garda Depan)</option>
+                    </select>
+                </div>
+
+                <button class="btn-add" onclick="addMember()">+ SIMPAN DATA</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span>PETA KEKUATAN</span>
+                    <button style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:1.2rem;" onclick="window.print()" title="Cetak PDF">🖨️</button>
+                </div>
+                
+                <div class="stat-box">
+                    <div style="font-size:0.8rem; color:#888;">RESILIENCE SCORE (KETAHANAN):</div>
+                    <div class="stat-val" id="scoreVal">0%</div>
+                    <div class="stat-desc" id="scoreText">Belum ada data keluarga.</div>
+                </div>
+
+                <div class="member-grid" id="gridArea"></div>
+
+                <button class="btn-print" onclick="window.print()">🖨️ CETAK BLUEPRINT KELUARGA (PDF)</button>
+                <button style="width:100%; margin-top:10px; background:none; border:1px solid #444; color:#666; padding:8px; cursor:pointer;" onclick="resetData()">RESET DATA</button>
+            </div>
+
+        </div>
+        <a href="index.html" style="display:block; text-align:center; margin-top:30px; color:#666; text-decoration:none;">KEMBALI KE MENU UTAMA</a>
+    </div>
+
+    <div id="printArea">
+        <div style="text-align:center; border-bottom:3px double #000; padding-bottom:20px; margin-bottom:20px;">
+            <h1 style="color:#000; margin:0;">BLUEPRINT KEKUATAN BANI</h1>
+            <div style="font-style:italic;">Peta Aset Sumber Daya Manusia & Jaring Pengaman Keluarga</div>
+        </div>
+
+        <h3 style="border-bottom:1px solid #000; padding-bottom:5px;">I. DAFTAR ANGGOTA & KONTAK STRATEGIS</h3>
+        <div class="member-grid" id="printGrid">
+            </div>
+
+        <h3 style="border-bottom:1px solid #000; padding-bottom:5px; margin-top:40px;">II. FLOW STRATEGI BANI (THE IDEAL ECOSYSTEM)</h3>
+        <div class="flow-diagram">
+            
+            <div style="text-align:center; font-weight:bold; margin-bottom:5px;">LAYER 1: SURVIVAL & FONDASI</div>
+            <div class="flow-row">
+                <div class="flow-box">
+                    <div class="flow-title">🌽 SEKTOR PANGAN (Agri)</div>
+                    <div class="flow-desc">Logistik. Memastikan tidak ada keluarga yang kelaparan saat krisis.</div>
+                </div>
+                <div class="flow-box">
+                    <div class="flow-title">🏥 SEKTOR MEDIS (Health)</div>
+                    <div class="flow-desc">Kesehatan. Menjaga fisik agar tetap produktif & penanganan darurat.</div>
+                </div>
+            </div>
+
+            <div class="arrow-down">⬇ MENOPANG ⬇</div>
+
+            <div style="text-align:center; font-weight:bold; margin-bottom:5px;">LAYER 2: PROTEKSI & DAYA DUKUNG</div>
+            <div class="flow-row">
+                <div class="flow-box">
+                    <div class="flow-title">⚖️ SEKTOR HUKUM (Law)</div>
+                    <div class="flow-desc">Perlindungan. Menjaga aset keluarga dari sengketa & kezaliman sistem.</div>
+                </div>
+                <div class="flow-box">
+                    <div class="flow-title">💰 SEKTOR EKONOMI (Biz)</div>
+                    <div class="flow-desc">Funding. Mengalirkan dana untuk modal usaha & pendidikan anak.</div>
+                </div>
+            </div>
+
+            <div class="arrow-down">⬇ MELAHIRKAN ⬇</div>
+
+            <div style="text-align:center; font-weight:bold; margin-bottom:5px;">LAYER 3: MASA DEPAN & PERADABAN</div>
+            <div class="flow-row">
+                <div class="flow-box">
+                    <div class="flow-title">🎓 SEKTOR PENDIDIKAN (Edu)</div>
+                    <div class="flow-desc">Kaderisasi. Mencetak pemimpin baru dengan nilai luhur keluarga.</div>
+                </div>
+                <div class="flow-box">
+                    <div class="flow-title">🛠️ SEKTOR INDUSTRI (Tech)</div>
+                    <div class="flow-desc">Produksi. Menciptakan alat/sistem yang memudahkan hidup orang banyak.</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="margin-top:30px; font-size:12px; text-align:center;">
+            Dicetak pada: <span id="printDate"></span>
+        </div>
+    </div>
+
+    <script>
+        let members = [];
+
+        window.onload = function() {
+            if(localStorage.getItem('baniNetwork')) {
+                members = JSON.parse(localStorage.getItem('baniNetwork'));
+                renderGrid();
+                calculateStats();
+            }
+            const d = new Date();
+            document.getElementById('printDate').innerText = d.toLocaleDateString();
+        };
+
+        function addMember() {
+            const name = document.getElementById('mName').value;
+            const contact = document.getElementById('mContact').value;
+            const skill = document.getElementById('mSkill').value;
+            const level = parseInt(document.getElementById('mLevel').value);
+
+            if(!name) return alert("Isi nama anggota keluarga!");
+
+            members.push({ name, contact, skill, level });
+            saveData();
+            renderGrid();
+            calculateStats();
+            
+            document.getElementById('mName').value = ""; 
+            document.getElementById('mContact').value = "";
+        }
+
+        function removeMember(index) {
+            if(confirm("Hapus anggota ini?")) {
+                members.splice(index, 1);
+                saveData();
+                renderGrid();
+                calculateStats();
+            }
+        }
+
+        function resetData() {
+            if(confirm("Reset semua data keluarga?")) {
+                members = [];
+                saveData();
+                renderGrid();
+                calculateStats();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('baniNetwork', JSON.stringify(members));
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('gridArea');
+            const printGrid = document.getElementById('printGrid');
+            grid.innerHTML = "";
+            printGrid.innerHTML = "";
+
+            members.forEach((m, index) => {
+                let skillLabel = "";
+                let skillClass = "";
+
+                switch(m.skill) {
+                    case 'law': skillLabel = "HUKUM & POLITIK"; skillClass = "tag-law"; break;
+                    case 'health': skillLabel = "MEDIS & KESEHATAN"; skillClass = "tag-health"; break;
+                    case 'agri': skillLabel = "PANGAN & TANI"; skillClass = "tag-agri"; break;
+                    case 'tech': skillLabel = "INDUSTRI & TEKNIK"; skillClass = "tag-tech"; break;
+                    case 'edu': skillLabel = "PENDIDIKAN"; skillClass = "tag-edu"; break;
+                    case 'biz': skillLabel = "BISNIS & DANA"; skillClass = "tag-biz"; break;
+                }
+
+                let statusLabel = m.level == 10 ? "🔥 PENGGERAK (Inti)" : (m.level == 5 ? "🤝 PENDUKUNG" : "👤 SIMPATISAN");
+
+                // Screen Card
+                const card = document.createElement('div');
+                card.className = "member-card";
+                card.innerHTML = `
+                    <div class="btn-del" onclick="removeMember(${index})">×</div>
+                    <span class="member-role ${skillClass}">${skillLabel}</span>
+                    <div class="member-name">${m.name}</div>
+                    <div class="member-contact">📞 ${m.contact || '-'}</div>
+                    <div class="member-status" style="color:${m.level == 10 ? 'var(--gold)' : '#666'}">${statusLabel}</div>
+                `;
+                grid.appendChild(card);
+
+                // Print Card (Clone for print area)
+                const pCard = card.cloneNode(true);
+                printGrid.appendChild(pCard);
+            });
+        }
+
+        function calculateStats() {
+            if(members.length === 0) {
+                document.getElementById('scoreVal').innerText = "0%";
+                document.getElementById('scoreText').innerText = "Data Kosong.";
+                return;
+            }
+
+            const types = new Set(members.map(m => m.skill));
+            const ecosystemScore = (types.size / 6) * 100;
+
+            let totalPower = 0;
+            members.forEach(m => totalPower += m.level);
+            let solidarityScore = (totalPower / (members.length * 10)) * 100;
+
+            let finalScore = Math.floor((ecosystemScore * 0.6) + (solidarityScore * 0.4));
+
+            let analysis = "";
+            let color = "";
+
+            if(finalScore < 30) {
+                analysis = "RAPUH. Kekurangan pilar strategis. Risiko isolasi tinggi.";
+                color = "var(--red)";
+            } else if (finalScore < 70) {
+                analysis = "BERKEMBANG. Punya potensi, perlu pererat komunikasi.";
+                color = "var(--gold)";
+            } else {
+                analysis = "BANI KUAT. Ekosistem lengkap & solid. Negara Kecil yang mandiri.";
+                color = "var(--green)";
+            }
+
+            document.getElementById('scoreVal').innerText = finalScore + "%";
+            document.getElementById('scoreVal').style.color = color;
+            document.getElementById('scoreText').innerText = analysis;
+            document.getElementById('scoreText').style.color = color;
+        }
+    </script>
+
+</body>
+</html>

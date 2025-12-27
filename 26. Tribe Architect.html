@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Tribe Architect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --border: #333;
+            --gold: #c5a059;
+            --cyan: #00f3ff;
+            --green: #2ea043;
+            --purple: #bc13fe;
+            --red: #da3633;
+            --text: #ccc;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        /* SCREEN ELEMENTS */
+        .screen-only { display: block; width: 100%; max-width: 1200px; }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--cyan);
+            text-transform: uppercase; letter-spacing: 3px;
+            text-align: center; margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .subtitle { color: #666; font-size: 0.9rem; text-align: center; margin-bottom: 30px; }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            width: 100%;
+        }
+
+        /* INPUT CARD */
+        .card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--border);
+            padding: 25px; border-radius: 8px; position: relative;
+        }
+        .card-header {
+            font-family: 'Cinzel', serif; color: #fff; border-bottom: 1px solid #333;
+            padding-bottom: 10px; margin-bottom: 15px; font-size: 1.1rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; color: var(--cyan); margin-bottom: 5px; font-size: 0.85rem; font-weight: bold; }
+        
+        input, select {
+            width: 100%; background: #000; border: 1px solid #444; color: #fff;
+            padding: 10px; font-family: 'Rajdhani', sans-serif; font-size: 1rem;
+            border-radius: 4px;
+        }
+        input:focus { border-color: var(--cyan); outline: none; }
+
+        .btn-gen {
+            width: 100%; padding: 12px; background: var(--cyan); color: #000;
+            border: none; font-weight: bold; cursor: pointer; font-size: 1rem;
+            margin-top: 10px; clip-path: polygon(3% 0, 100% 0, 100% 70%, 97% 100%, 0 100%, 0 30%);
+        }
+        .btn-gen:hover { background: #fff; box-shadow: 0 0 15px var(--cyan); }
+
+        .btn-print {
+            width: 100%; padding: 12px; background: var(--purple); color: #fff;
+            border: 1px solid var(--purple); font-weight: bold; cursor: pointer; font-size: 1rem;
+            margin-top: 10px; 
+        }
+        .btn-print:hover { background: #fff; color: #000; }
+
+
+        /* PYRAMID VISUALIZATION */
+        .pyramid-container {
+            display: flex; flex-direction: column; gap: 5px; margin-top: 20px;
+        }
+        .layer {
+            padding: 10px; text-align: center; border: 1px solid #333; border-radius: 4px;
+            font-weight: bold; position: relative;
+        }
+        .layer-count { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; }
+        
+        .l-sage { background: rgba(188, 19, 254, 0.2); border-color: var(--purple); color: var(--purple); width: 40%; margin: 0 auto; }
+        .l-thinker { background: rgba(197, 160, 89, 0.2); border-color: var(--gold); color: var(--gold); width: 55%; margin: 0 auto; }
+        .l-active { background: rgba(0, 243, 255, 0.2); border-color: var(--cyan); color: var(--cyan); width: 70%; margin: 0 auto; }
+        .l-prod { background: rgba(46, 160, 67, 0.2); border-color: var(--green); color: var(--green); width: 85%; margin: 0 auto; }
+        .l-supp { background: rgba(255, 255, 255, 0.1); border-color: #666; color: #ccc; width: 100%; margin: 0 auto; }
+
+        /* DIAGNOSIS BOX */
+        .diag-box {
+            margin-top: 20px; padding: 20px; border: 1px dashed #444; background: #0a0a0a; font-size: 0.9rem; line-height: 1.6;
+        }
+        .diag-title { font-weight: bold; color: #fff; margin-bottom: 10px; display: block; border-bottom: 1px solid #333; padding-bottom: 5px;}
+        
+        .diag-item { margin-bottom: 15px; padding-left: 10px; border-left: 3px solid #555; }
+        .d-head { font-weight: bold; display: block; margin-bottom: 3px; }
+        .d-body { display: block; color: #aaa; font-size: 0.85rem; }
+        
+        .d-crit { border-left-color: var(--red); }
+        .d-crit .d-head { color: var(--red); }
+        
+        .d-warn { border-left-color: var(--gold); }
+        .d-warn .d-head { color: var(--gold); }
+        
+        .d-ok { border-left-color: var(--green); }
+        .d-ok .d-head { color: var(--green); }
+
+        /* MEMBER LIST */
+        .list-container { max-height: 200px; overflow-y: auto; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
+        .list-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #222; }
+        .list-role { font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+        .btn-del { color: #555; cursor: pointer; margin-left: 10px; }
+        .btn-del:hover { color: var(--red); }
+
+        /* PRINT SECTION (HIDDEN ON SCREEN) */
+        #printArea { display: none; background: #fff; color: #000; padding: 40px; font-family: 'Times New Roman', serif; }
+        
+        table.print-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        table.print-table th, table.print-table td { border: 1px solid #000; padding: 8px; text-align: left; }
+        table.print-table th { background-color: #f0f0f0; }
+        
+        .print-box { border: 2px solid #000; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .print-h2 { border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 10px; font-size: 16px; font-weight: bold; text-transform: uppercase; }
+        .print-diag-item { margin-bottom: 10px; page-break-inside: avoid; }
+
+        @media print {
+            body { background: #fff; padding: 0; margin: 0; }
+            .screen-only { display: none !important; }
+            #printArea { display: block !important; width: 100%; height: 100%; }
+        }
+
+        @media (max-width: 800px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="screen-only">
+        <h1>SOCIAL TRIBE ARCHITECT</h1>
+        <div class="subtitle">Desain Struktur Sosial & Keluarga Ideologis (Non-Biologis)</div>
+
+        <div class="container">
+            
+            <div class="card">
+                <div class="card-header">1. INPUT DATA KONEKSI</div>
+                
+                <div class="input-group">
+                    <label>NAMA REKAN / MENTOR / JUNIOR</label>
+                    <input type="text" id="mName" placeholder="Nama Panggilan...">
+                </div>
+
+                <div class="input-group">
+                    <label>USIA SAAT INI</label>
+                    <input type="number" id="mAge" placeholder="Contoh: 28">
+                </div>
+
+                <div class="input-group">
+                    <label>KEAHLIAN UTAMA (Aset Tribe)</label>
+                    <input type="text" id="mSkill" placeholder="Contoh: IT, Hukum, Dagang, Motivator...">
+                </div>
+
+                <button class="btn-gen" onclick="addMember()">+ TAMBAHKAN KE SUKU</button>
+                <button style="width:100%; margin-top:10px; background:transparent; border:1px solid #333; color:#666; padding:8px; cursor:pointer;" onclick="resetData()" class="btn-reset">RESET SEMUA DATA</button>
+                
+                <div class="list-container" id="memberList"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span>2. STRUKTUR & DIAGNOSA</span>
+                    <button onclick="window.print()" style="background:none; border:none; color:var(--purple); cursor:pointer; font-size:1.5rem;" title="Cetak Laporan">🖨️</button>
+                </div>
+                
+                <div class="pyramid-container">
+                    <div class="layer l-sage">
+                        PETUAH BIJAK (50+) <span class="layer-count" id="cSage">0</span>
+                    </div>
+                    <div class="layer l-thinker">
+                        PEMIKIR (40-49) <span class="layer-count" id="cThink">0</span>
+                    </div>
+                    <div class="layer l-active">
+                        AKTIF (30-39) <span class="layer-count" id="cActive">0</span>
+                    </div>
+                    <div class="layer l-prod">
+                        PRODUKTIF (24-29) <span class="layer-count" id="cProd">0</span>
+                    </div>
+                    <div class="layer l-supp">
+                        SUPPORTIF (17-23) <span class="layer-count" id="cSupp">0</span>
+                    </div>
+                </div>
+
+                <div class="diag-box">
+                    <span class="diag-title">🔍 DIAGNOSA STRATEGIS:</span>
+                    <div id="analysisList">
+                        <span style="color:#666; font-style:italic;">Menunggu data... Silakan input minimal 3 orang.</span>
+                    </div>
+                </div>
+
+                <div class="diag-box" style="border-color:var(--gold); margin-top:10px;">
+                    <span class="diag-title" style="color:var(--gold)">⚡ STATUS KEKUATAN:</span>
+                    <div id="powerText" style="font-size:0.9rem; color:#fff; font-weight:bold;">--</div>
+                </div>
+                
+                <button class="btn-print" onclick="window.print()">🖨️ CETAK LAPORAN TRIBE (PDF)</button>
+            </div>
+
+        </div>
+        <a href="index.html" style="margin-top:40px; color:#666; text-decoration:none; display:block; text-align:center;">KEMBALI KE MENU UTAMA</a>
+    </div>
+
+
+    <div id="printArea">
+        <div style="text-align:center; border-bottom:3px double #000; padding-bottom:20px; margin-bottom:20px;">
+            <h1 style="color:#000; margin:0; letter-spacing:2px;">TRIBE STRATEGY REPORT</h1>
+            <div style="font-style:italic;">Analisa Struktur Sosial & Kebutuhan Koneksi</div>
+        </div>
+
+        <div class="print-box">
+            <div class="print-h2">I. ASET SUMBER DAYA MANUSIA</div>
+            <table class="print-table" style="width:100%; border:none;">
+                <tr>
+                    <td style="width:30%"><b>🧙‍♂️ PETUAH BIJAK (50+)</b></td>
+                    <td style="width:10%"><b id="pSage">0</b></td>
+                    <td><i>Moral Compass. Penjaga nilai agar tidak salah arah.</i></td>
+                </tr>
+                <tr>
+                    <td><b>🧠 PEMIKIR (40-49)</b></td>
+                    <td><b id="pThink">0</b></td>
+                    <td><i>Strategist. Membuka pintu peluang level tinggi.</i></td>
+                </tr>
+                <tr>
+                    <td><b>⚡ AKTIF (30-39)</b></td>
+                    <td><b id="pActive">0</b></td>
+                    <td><i>Managerial. Menjaga stabilitas operasional.</i></td>
+                </tr>
+                <tr>
+                    <td><b>🛠️ PRODUKTIF (24-29)</b></td>
+                    <td><b id="pProd">0</b></td>
+                    <td><i>Executor. Mesin utama karya dan hasil nyata.</i></td>
+                </tr>
+                <tr>
+                    <td><b>🌱 SUPPORTIF (17-23)</b></td>
+                    <td><b id="pSupp">0</b></td>
+                    <td><i>Energy. Regenerasi dan bantuan teknis lapangan.</i></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="print-box">
+            <div class="print-h2">II. DIAGNOSA & REKOMENDASI TAKTIS</div>
+            <div id="printDiagnosis" style="font-size:14px; line-height:1.6;">
+                </div>
+            <div style="margin-top:20px; border-top:1px dashed #000; padding-top:10px;">
+                <b>KESIMPULAN:</b> <span id="printPower">--</span>
+            </div>
+        </div>
+
+        <div class="print-box" style="border:none;">
+            <div class="print-h2">III. DAFTAR ANGGOTA (ROSTER)</div>
+            <table class="print-table">
+                <thead>
+                    <tr>
+                        <th width="5%">NO</th>
+                        <th width="30%">NAMA</th>
+                        <th width="10%">USIA</th>
+                        <th width="20%">PERAN</th>
+                        <th width="35%">KEAHLIAN</th>
+                    </tr>
+                </thead>
+                <tbody id="printRosterBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top:40px; font-size:12px; text-align:center;">
+            Dicetak pada: <span id="printDate"></span> | Dokumen Pribadi Pengembangan Diri
+        </div>
+    </div>
+
+    <script>
+        let tribe = [];
+
+        window.onload = function() {
+            if(localStorage.getItem('socialTribe')) {
+                tribe = JSON.parse(localStorage.getItem('socialTribe'));
+                updateUI();
+            }
+            const d = new Date();
+            document.getElementById('printDate').innerText = d.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+        };
+
+        function addMember() {
+            const name = document.getElementById('mName').value;
+            const age = parseInt(document.getElementById('mAge').value);
+            const skill = document.getElementById('mSkill').value;
+
+            if(!name || !age) return alert("Isi nama dan usia!");
+
+            let role = "", code = "";
+            if(age >= 50) { role = "Petuah Bijak"; code = "sage"; }
+            else if(age >= 40) { role = "Pemikir Pasif"; code = "thinker"; }
+            else if(age >= 30) { role = "Aktif (Leader)"; code = "active"; }
+            else if(age >= 24) { role = "Produktif"; code = "prod"; }
+            else if(age >= 17) { role = "Supportif"; code = "supp"; }
+            else { role = "Anak-anak"; code = "kids"; }
+
+            tribe.push({ name, age, skill, role, code });
+            saveData();
+            updateUI();
+            
+            document.getElementById('mName').value = "";
+            document.getElementById('mAge').value = "";
+            document.getElementById('mSkill').value = "";
+        }
+
+        function removeMember(index) {
+            tribe.splice(index, 1);
+            saveData();
+            updateUI();
+        }
+
+        function resetData() {
+            if(confirm("Hapus semua data tribe?")) {
+                tribe = [];
+                saveData();
+                updateUI();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('socialTribe', JSON.stringify(tribe));
+        }
+
+        function updateUI() {
+            let counts = { sage:0, thinker:0, active:0, prod:0, supp:0 };
+            
+            const list = document.getElementById('memberList');
+            const printRoster = document.getElementById('printRosterBody');
+            list.innerHTML = "";
+            printRoster.innerHTML = "";
+
+            tribe.forEach((m, i) => {
+                if(counts[m.code] !== undefined) counts[m.code]++;
+                
+                // Screen List
+                let div = document.createElement('div');
+                div.className = "list-item";
+                div.innerHTML = `
+                    <span>${m.name} (${m.age}) - ${m.skill}</span>
+                    <span>
+                        <span class="list-role" style="color:${getColor(m.code)}">${m.role}</span>
+                        <span class="btn-del" onclick="removeMember(${i})">×</span>
+                    </span>
+                `;
+                list.appendChild(div);
+
+                // Print Table Row
+                let row = `
+                    <tr>
+                        <td style="text-align:center">${i+1}</td>
+                        <td>${m.name}</td>
+                        <td style="text-align:center">${m.age}</td>
+                        <td style="font-weight:bold;">${m.role}</td>
+                        <td>${m.skill}</td>
+                    </tr>
+                `;
+                printRoster.innerHTML += row;
+            });
+
+            // Update Counts
+            document.getElementById('cSage').innerText = counts.sage; document.getElementById('pSage').innerText = counts.sage;
+            document.getElementById('cThink').innerText = counts.thinker; document.getElementById('pThink').innerText = counts.thinker;
+            document.getElementById('cActive').innerText = counts.active; document.getElementById('pActive').innerText = counts.active;
+            document.getElementById('cProd').innerText = counts.prod; document.getElementById('pProd').innerText = counts.prod;
+            document.getElementById('cSupp').innerText = counts.supp; document.getElementById('pSupp').innerText = counts.supp;
+
+            // --- DETAILED DIAGNOSIS LOGIC ---
+            let analysisHTML = "";
+            let printAnalysisHTML = "";
+
+            // 1. Cek Elder (50+)
+            if(counts.sage === 0) {
+                let msg = {
+                    head: "KRITIS: KEKOSONGAN 'ELDER' (USIA 50+)",
+                    body: "<b>Risiko:</b> Anda berlari tanpa peta. Rentan mengulang kesalahan sejarah. Tidak ada pelindung moral saat krisis besar.<br><b>Saran:</b> Cari Mentor, Dosen Senior, atau Tokoh Agama. Jalin hubungan bukan untuk uang, tapi untuk hikmah."
+                };
+                analysisHTML += renderDiagItem(msg, 'crit');
+                printAnalysisHTML += renderPrintDiag(msg);
+            } else {
+                let msg = { head: "OK: KOMPAS MORAL AKTIF", body: "Anda memiliki tempat bertanya yang bijak." };
+                analysisHTML += renderDiagItem(msg, 'ok');
+            }
+
+            // 2. Cek Leader (30-49)
+            if(counts.thinker === 0 && counts.active === 0) {
+                let msg = {
+                    head: "BAHAYA: PIMPINAN VAKUM (USIA 30-49)",
+                    body: "<b>Risiko:</b> Tribe ini seperti anak ayam kehilangan induk. Tidak ada stabilitas finansial dan manajerial.<br><b>Saran:</b> Rekrut rekan sebaya yang sudah mapan atau senior di tempat kerja."
+                };
+                analysisHTML += renderDiagItem(msg, 'crit');
+                printAnalysisHTML += renderPrintDiag(msg);
+            }
+
+            // 3. Cek Executor (24-29)
+            if(counts.prod === 0) {
+                let msg = {
+                    head: "LUMPUH: TIDAK ADA EKSEKUTOR (USIA 24-29)",
+                    body: "<b>Risiko:</b> Banyak ide, nol aksi. Tribe ini hanya akan jadi forum diskusi tanpa hasil nyata.<br><b>Saran:</b> Cari pemuda yang sedang lapar berkarya. Berikan mereka visi."
+                };
+                analysisHTML += renderDiagItem(msg, 'warn');
+                printAnalysisHTML += renderPrintDiag(msg);
+            }
+
+            // 4. Cek Regenerasi (17-23)
+            if(counts.supp === 0) {
+                let msg = {
+                    head: "STAGNAN: MATI GENERASI (USIA 17-23)",
+                    body: "<b>Risiko:</b> Anda akan kelelahan mengurus hal teknis seumur hidup. Tidak ada penerus semangat.<br><b>Saran:</b> Buka diri untuk magang atau mentoring mahasiswa."
+                };
+                analysisHTML += renderDiagItem(msg, 'warn');
+                printAnalysisHTML += renderPrintDiag(msg);
+            }
+
+            if(tribe.length === 0) {
+                analysisHTML = "<span style='color:#666'>Silakan input minimal 3 koneksi untuk diagnosa.</span>";
+                printAnalysisHTML = "Belum ada data.";
+            }
+
+            document.getElementById('analysisList').innerHTML = analysisHTML;
+            document.getElementById('printDiagnosis').innerHTML = printAnalysisHTML;
+
+            // Calculate Power
+            let verdict = "MENUNGGU DATA...";
+            if(tribe.length > 0) {
+                let total = tribe.length;
+                if(total < 5) verdict = "LONE WOLF (Sangat Lemah). Butuh minimal 5-10 orang inti.";
+                else if(counts.prod > (counts.sage + counts.thinker) * 3) verdict = "WORKHORSE (Kuat Kerja, Kurang Arah Strategis).";
+                else if((counts.sage + counts.thinker) > counts.prod * 2) verdict = "COUNCIL (Banyak Teori, Minim Eksekusi).";
+                else verdict = "BALANCED TRIBE (Suku Seimbang & Tangguh).";
+            }
+
+            document.getElementById('powerText').innerText = verdict;
+            document.getElementById('printPower').innerText = verdict;
+        }
+
+        function renderDiagItem(msg, type) {
+            let cls = 'd-ok';
+            if(type === 'crit') cls = 'd-crit';
+            if(type === 'warn') cls = 'd-warn';
+            return `<div class="diag-item ${cls}"><span class="d-head">${msg.head}</span><span class="d-body">${msg.body}</span></div>`;
+        }
+
+        function renderPrintDiag(msg) {
+            return `<div class="print-diag-item"><b>${msg.head}</b><br>${msg.body}</div>`;
+        }
+
+        function getColor(code) {
+            if(code === 'sage') return 'var(--purple)';
+            if(code === 'thinker') return 'var(--gold)';
+            if(code === 'active') return 'var(--cyan)';
+            if(code === 'prod') return 'var(--green)';
+            return '#ccc';
+        }
+
+    </script>
+
+</body>
+</html>

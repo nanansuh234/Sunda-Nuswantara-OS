@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Civilization Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --border: #333;
+            --gold: #c5a059;
+            --cyan: #00f3ff;
+            --purple: #bc13fe;
+            --text: #ccc;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            text-transform: uppercase; letter-spacing: 3px;
+            text-align: center; margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .subtitle { 
+            color: #888; font-size: 0.9rem; margin-bottom: 40px; 
+            text-align: center; max-width: 600px; line-height: 1.5;
+        }
+
+        .container {
+            display: grid; grid-template-columns: 1fr; gap: 25px;
+            width: 100%; max-width: 800px;
+        }
+
+        /* CARD MENU */
+        .menu-card {
+            background: #0d1117;
+            border: 1px solid var(--border);
+            border-left: 5px solid #555;
+            padding: 25px; border-radius: 8px;
+            text-decoration: none;
+            display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
+        }
+
+        .menu-card:hover {
+            transform: translateX(10px);
+            background: #161b22;
+            border-color: var(--gold);
+        }
+
+        /* Specific Styles */
+        .card-family { border-left-color: var(--gold); }
+        .card-bani { border-left-color: var(--purple); }
+        .card-tribe { border-left-color: var(--cyan); }
+
+        .card-title {
+            font-family: 'Cinzel', serif; font-size: 1.2rem; font-weight: bold;
+            color: #fff; margin-bottom: 5px; display: flex; align-items: center; gap: 10px;
+        }
+        
+        .card-desc { font-size: 0.95rem; color: #aaa; line-height: 1.4; }
+        
+        .icon-box { font-size: 1.5rem; width: 40px; text-align: center; }
+
+        .tag {
+            position: absolute; top: 15px; right: 15px;
+            font-size: 0.7rem; padding: 3px 8px; border-radius: 4px;
+            text-transform: uppercase; letter-spacing: 1px; font-weight: bold;
+            border: 1px solid #333;
+        }
+
+        @media (min-width: 768px) {
+            .menu-card { flex-direction: row; align-items: center; }
+            .card-content { flex: 1; }
+            .icon-box { font-size: 2.5rem; margin-right: 20px; width: 60px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>CIVILIZATION HUB</h1>
+    <div class="subtitle">
+        "Membangun tatanan sosial yang kokoh mulai dari unit terkecil (Keluarga) hingga jejaring luas (Tribe). Melawan isolasi dengan koneksi bermakna."
+    </div>
+
+    <div class="container">
+        
+        <a href="24. Family Architect.html" class="menu-card card-family">
+            <div class="icon-box">🏰</div>
+            <div class="card-content">
+                <div class="card-title" style="color:var(--gold)">FAMILY ARCHITECT</div>
+                <div class="card-desc">
+                    Strategi Inti. Merancang pernikahan visioner dan kaderisasi anak sebagai pemimpin masa depan. Mengubah keluarga dari beban menjadi aset peradaban.
+                </div>
+            </div>
+            <div class="tag" style="color:var(--gold)">Micro Unit</div>
+        </a>
+
+        <a href="25. Bani Network.html" class="menu-card card-bani">
+            <div class="icon-box">🕸️</div>
+            <div class="card-content">
+                <div class="card-title" style="color:var(--purple)">BANI NETWORK MAPPER</div>
+                <div class="card-desc">
+                    Strategi Klan. Memetakan potensi saudara/kerabat (Hukum, Medis, Ekonomi) sebagai jaring pengaman sosial anti-krisis.
+                </div>
+            </div>
+            <div class="tag" style="color:var(--purple)">Meso Unit</div>
+        </a>
+
+        <a href="26. Tribe Architect.html" class="menu-card card-tribe">
+            <div class="icon-box">🔥</div>
+            <div class="card-content">
+                <div class="card-title" style="color:var(--cyan)">SOCIAL TRIBE ARCHITECT</div>
+                <div class="card-desc">
+                    Strategi Jejaring. Membangun "Suku Buatan" bagi yang mandiri/perantau. Menyeimbangkan mentor (Wisdom) dan eksekutor (Energy).
+                </div>
+            </div>
+            <div class="tag" style="color:var(--cyan)">Macro Unit</div>
+        </a>
+
+    </div>
+
+    <a href="index.html" style="margin-top:40px; color:#666; text-decoration:none; border:1px solid #444; padding:10px 30px; border-radius:50px; font-size:0.8rem;">KEMBALI KE MENU UTAMA</a>
+
+</body>
+</html>
