@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* DARK MODE (DEFAULT) */
             --bg: #050505;
             --card-bg: #111;
             --gold: #d4af37;
@@ -16,13 +17,33 @@
             --purple: #9b59b6;
             --cyan: #00ffcc;
             --text: #e0e0e0;
+            --border: #333;
+            --shadow: rgba(0,0,0,0.5);
         }
 
-        * { box-sizing: border-box; }
+        /* LIGHT MODE VARIABLES */
+        body.light-mode {
+            --bg: #e0e0e0;
+            --card-bg: #ffffff;
+            --gold: #b8860b; /* Emas lebih gelap biar kontras */
+            --green: #2ecc71;
+            --blue: #3498db;
+            --red: #e74c3c;
+            --purple: #9b59b6;
+            --cyan: #008b8b;
+            --text: #333333;
+            --border: #ccc;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
         
         body {
             margin: 0;
             background: var(--bg);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text);
             font-family: 'Segoe UI', sans-serif;
             height: 100vh;
@@ -33,19 +54,63 @@
 
         /* --- STATUS BAR --- */
         .status-bar {
-            height: 40px;
+            height: 45px;
             background: rgba(20, 20, 20, 0.95);
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 25px;
+            padding: 0 20px;
             font-family: 'Orbitron', sans-serif;
             font-size: 0.8rem;
-            z-index: 10;
+            z-index: 100;
         }
+        
+        /* Light mode status bar fix */
+        body.light-mode .status-bar { background: rgba(240, 240, 240, 0.95); }
+
         .status-left { color: var(--gold); letter-spacing: 2px; }
-        .status-right { color: #666; }
+        
+        .status-right-group {
+            display: flex; align-items: center; gap: 15px;
+        }
+        
+        .clock-display { color: #888; }
+
+        /* SETTINGS MENU */
+        .settings-btn {
+            background: none; border: none; color: var(--gold);
+            font-size: 1.2rem; cursor: pointer; padding: 5px;
+            transition: transform 0.5s;
+        }
+        .settings-btn:hover { transform: rotate(90deg); color: var(--cyan); }
+
+        .settings-dropdown {
+            display: none;
+            position: absolute;
+            top: 45px; right: 10px;
+            width: 220px;
+            background: var(--card-bg);
+            border: 1px solid var(--gold);
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px var(--shadow);
+            padding: 15px;
+            z-index: 101;
+        }
+        
+        .settings-dropdown.active { display: block; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from {opacity:0; transform:translateY(-10px);} to {opacity:1; transform:translateY(0);} }
+
+        .setting-item { margin-bottom: 15px; }
+        .setting-label { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: bold; }
+        
+        .btn-theme, .btn-wall {
+            width: 100%; padding: 8px; margin-bottom: 5px;
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text); cursor: pointer; font-size: 0.85rem;
+            text-align: left; border-radius: 4px;
+        }
+        .btn-theme:hover, .btn-wall:hover { background: rgba(212, 175, 55, 0.2); border-color: var(--gold); }
 
         /* --- HERO WIDGET --- */
         .hero-section {
@@ -53,7 +118,7 @@
         }
 
         .widget-card {
-            background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+            background: linear-gradient(145deg, rgba(26,26,26,0.9), rgba(13,13,13,0.9));
             border: 1px solid var(--gold);
             border-radius: 20px;
             padding: 25px;
@@ -63,6 +128,11 @@
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(5px); /* Efek kaca */
+        }
+        
+        body.light-mode .widget-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(240,240,240,0.9));
         }
 
         .widget-card::before {
@@ -78,9 +148,9 @@
             font-family: 'Orbitron', sans-serif;
             font-size: 3.5rem;
             font-weight: bold;
-            color: #fff;
+            color: var(--text);
             line-height: 1;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            text-shadow: 0 0 10px rgba(128,128,128,0.2);
         }
         .nus-phase {
             font-size: 0.9rem;
@@ -101,7 +171,7 @@
         }
         .nus-full-date {
             font-size: 0.9rem;
-            color: #aaa;
+            color: #888;
             margin-top: 5px;
         }
         .nus-pasaran {
@@ -130,7 +200,7 @@
         a.app-card {
             text-decoration: none;
             background: var(--card-bg);
-            border: 1px solid #222;
+            border: 1px solid var(--border);
             border-radius: 18px;
             display: flex;
             flex-direction: column;
@@ -138,50 +208,82 @@
             justify-content: center;
             transition: 0.3s;
             position: relative;
+            box-shadow: 0 4px 6px var(--shadow);
         }
 
         a.app-card:hover {
             transform: translateY(-5px);
             border-color: var(--gold);
-            background: #151515;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 15px var(--shadow);
         }
 
         .app-icon { font-size: 2.8rem; margin-bottom: 10px; }
         .app-label { 
-            font-size: 0.75rem; font-weight: bold; color: #bbb; 
+            font-size: 0.75rem; font-weight: bold; color: var(--text); opacity: 0.8;
             text-align: center; letter-spacing: 1px; text-transform: uppercase;
         }
 
         /* Category Colors */
         .cat-time .app-icon { color: var(--gold); }
         .cat-nature .app-icon { color: var(--green); }
-        .cat-culture .app-icon { color: #fff; }
+        .cat-culture .app-icon { color: var(--text); } /* Adaptive text color */
         .cat-sys .app-icon { color: var(--red); }
         .cat-blue .app-icon { color: var(--blue); }
         .cat-lingo .app-icon { color: var(--purple); }
         .cat-tech .app-icon { color: var(--cyan); }
+        .cat-edu .app-icon { color: #ff9900; }
+        .cat-human .app-icon { color: #ff00ff; }
+        .cat-fin .app-icon { color: #ffd700; }
+        .cat-future .app-icon { color: #00ced1; }
+        .cat-tools .app-icon { color: #aaa; }
+        .cat-doc .app-icon { color: #fff; }
+
+        /* Light mode specific adjustment for white icon */
+        body.light-mode .cat-doc .app-icon { color: #333; }
+        body.light-mode .cat-culture .app-icon { color: #333; }
 
         /* --- FOOTER --- */
         .dock {
             text-align: center;
             padding: 8px;
             font-size: 0.65rem;
-            color: #444;
-            border-top: 1px solid #111;
-            background: #000;
+            color: #666;
+            border-top: 1px solid var(--border);
+            background: var(--card-bg);
         }
 
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
     </style>
 </head>
 <body>
 
     <div class="status-bar">
         <div class="status-left">NUSWANTARA OS</div>
-        <div class="status-right" id="masehi-clock">Loading...</div>
+        
+        <div class="status-right-group">
+            <div class="clock-display" id="masehi-clock">Loading...</div>
+            
+            <div style="position:relative;">
+                <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+                
+                <div class="settings-dropdown" id="settingsMenu">
+                    <div class="setting-item">
+                        <span class="setting-label">TEMA TAMPILAN</span>
+                        <button class="btn-theme" onclick="setTheme('dark')">🌑 Dark Mode</button>
+                        <button class="btn-theme" onclick="setTheme('light')">☀️ Light Mode</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <span class="setting-label">WALLPAPER</span>
+                        <button class="btn-wall" onclick="setWall('default')">⬛ Default (Black)</button>
+                        <button class="btn-wall" onclick="setWall('wall1')">🏔️ Alam (Wall 1)</button>
+                        <button class="btn-wall" onclick="setWall('wall2')">🗿 Tekstur (Wall 2)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="hero-section">
@@ -289,41 +391,33 @@
         </a>
 
         <a href="24. Estafet Kemanusiaan.html" class="app-card cat-human">
-    <div class="app-icon">👤</div><div class="app-label">Codex Manusia</div>
+            <div class="app-icon">👤</div><div class="app-label">Codex Manusia</div>
+        </a>
 
-            <a href="25. Menu Ekonomi.html" class="app-card cat-fin">
-    <div class="app-icon">💰</div><div class="app-label">Ekonomi Nilai</div>
-</a>
-            <a href="26. Menu Masa Depan.html" class="app-card cat-future">
-    <div class="app-icon">💊</div>
-    <div class="app-label">Realitas & Masa Depan</div>
-</a>
-            <a href="27. Menu Hukum Syariat dan Hakikat.html" class="app-card cat-edu">
-    <div class="app-icon">⚖️</div>
-    <div class="app-label">Syariat & Hakikat</div>
-</a>
-            <a href="28. Indikator Iman.html" class="app-card cat-tools">
-    <div class="app-icon">📶</div>
-    <div class="app-label">Iman Metric</div>
-</a>
-            <a href="29. Pustaka Ajaran Tauhid.html" class="app-card cat-doc">
-    <div class="app-icon">📄</div>
-    <div class="app-label">Pustaka Ajaran Tauhid</div>
-</a>
-            <a href="30. Quantum Vitality.html" class="app-card cat-future">
-    <div class="app-icon">⚛️</div>
-    <div class="app-label">Quantum Vitality</div>
-</a>
-            <a href="31. Holistic Calibration.html" class="app-card cat-edu">
-    <div class="app-icon">📡</div>
-    <div class="app-label">Holistic Radar</div>
-</a>
-            <a href="32. Legacy Hub.html" class="app-card cat-fin">
-    <div class="app-icon">🌳</div>
-    <div class="app-label">Warisan Generasi</div>
-</a>
-            
-</a>
+        <a href="25. Menu Ekonomi.html" class="app-card cat-fin">
+            <div class="app-icon">💰</div><div class="app-label">Ekonomi Nilai</div>
+        </a>
+        <a href="26. Menu Masa Depan.html" class="app-card cat-future">
+            <div class="app-icon">💊</div><div class="app-label">Realitas & Masa Depan</div>
+        </a>
+        <a href="27. Menu Hukum Syariat dan Hakikat.html" class="app-card cat-edu">
+            <div class="app-icon">⚖️</div><div class="app-label">Syariat & Hakikat</div>
+        </a>
+        <a href="28. Indikator Iman.html" class="app-card cat-tools">
+            <div class="app-icon">📶</div><div class="app-label">Iman Metric</div>
+        </a>
+        <a href="29. Pustaka Ajaran Tauhid.html" class="app-card cat-doc">
+            <div class="app-icon">📄</div><div class="app-label">Pustaka Ajaran Tauhid</div>
+        </a>
+        <a href="30. Quantum Vitality.html" class="app-card cat-future">
+            <div class="app-icon">⚛️</div><div class="app-label">Quantum Vitality</div>
+        </a>
+        <a href="31. Holistic Calibration.html" class="app-card cat-edu">
+            <div class="app-icon">📡</div><div class="app-label">Holistic Radar</div>
+        </a>
+        <a href="32. Legacy Hub.html" class="app-card cat-fin">
+            <div class="app-icon">🌳</div><div class="app-label">Warisan Generasi</div>
+        </a>
 
     </div>
 
@@ -394,26 +488,51 @@
 
         setInterval(updateWidget, 1000);
         updateWidget();
+
+        // === SETTINGS LOGIC ===
+        function toggleSettings() {
+            document.getElementById('settingsMenu').classList.toggle('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const btn = document.querySelector('.settings-btn');
+            const menu = document.getElementById('settingsMenu');
+            if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        function setWall(type) {
+            const body = document.body;
+            if (type === 'default') {
+                body.style.backgroundImage = 'none';
+            } else if (type === 'wall1') {
+                body.style.backgroundImage = "url('https://nanansuh234.github.io/Sunda-Nuswantara-OS/wall1.jpg')";
+            } else if (type === 'wall2') {
+                body.style.backgroundImage = "url('https://nanansuh234.github.io/Sunda-Nuswantara-OS/wall2.jpg')";
+            }
+            localStorage.setItem('nus_wall', type);
+        }
+
+        function setTheme(mode) {
+            if (mode === 'light') {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }
+            localStorage.setItem('nus_theme', mode);
+        }
+
+        // Load saved preferences
+        window.onload = function() {
+            const savedWall = localStorage.getItem('nus_wall');
+            if (savedWall) setWall(savedWall);
+
+            const savedTheme = localStorage.getItem('nus_theme');
+            if (savedTheme) setTheme(savedTheme);
+        };
+
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
