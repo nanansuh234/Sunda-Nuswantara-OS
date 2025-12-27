@@ -33,7 +33,7 @@
         /* LOGO HEADER */
         .main-logo {
             width: 80px; height: auto; margin-bottom: 10px;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3)); /* Efek glow dikit */
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
         }
 
         h1 {
@@ -113,6 +113,21 @@
         }
         .btn-print:hover { border-color: var(--gold); }
 
+        /* --- 5. NOTE / PHILOSOPHY --- */
+        .info-note {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid #333;
+            border-left: 4px solid var(--gold);
+            padding: 20px;
+            margin-top: 30px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #aaa;
+            text-align: justify;
+            border-radius: 4px;
+        }
+        .info-note strong { color: var(--gold); }
+
         /* --- PRINT LAYOUT (THERMAL STYLE 58mm) --- */
         #receipt { display: none; }
         
@@ -124,7 +139,7 @@
             #receipt, #receipt * { visibility: visible; }
             #receipt {
                 display: block; position: absolute; left: 0; top: 0; 
-                width: 58mm; /* Lebar Thermal 58mm */
+                width: 58mm; /* Ukuran Thermal Kecil */
                 padding: 4mm; 
                 font-family: 'Courier New', Courier, monospace; 
                 font-size: 10px; 
@@ -238,6 +253,19 @@
 
         <button class="btn-print" onclick="window.print()">🖨️ CETAK STRUK (THERMAL)</button>
 
+        <div class="info-note">
+            <div style="font-family:'Cinzel', serif; color:var(--gold); margin-bottom:10px; font-weight:bold;">MENGAPA MENGGUNAKAN AUTO-ANCHOR?</div>
+            <p style="margin-top:0;">
+                Penggunaan standar <strong>Nusantara Auto Anchor</strong> menjadi mutlak diperlukan untuk menciptakan benteng stabilitas ekonomi yang melindungi harta kita dari kegilaan spekulasi pasar global yang bergerak liar setiap detiknya. Dalam sistem konvensional, nilai uang berubah terlalu cepat layaknya <em>ticker</em> saham, membuat pedagang cemas akan inflasi harian.
+            </p>
+            <p>
+                Dengan mengunci nilai Emas (Dinar) pada <strong>Pivot Tahunan</strong>, kita mengubah fungsi emas dari komoditas spekulatif menjadi alat ukur murni yang kokoh bak mistar baja; ibarat menancapkan jangkar kuat di dasar laut. Hal ini memberikan kepastian mutlak di mana nilai tukar menjadi "beku" dan stabil selama setahun penuh.
+            </p>
+            <p style="margin-bottom:0;">
+                Mekanisme pengambilan <strong>Harga Tengah Komoditas</strong> menyempurnakan sistem ini dengan membuang elemen keserakahan (harga pucuk) dan kerugian ekstrem (harga dasar). Barang dagangan memiliki valuasi jujur dan moderat, bukan harga gorengan. Ini adalah cara mengembalikan rasa aman dan keadilan dalam berniaga ("Muamalah") yang fokus pada nilai riil, bukan permainan angka fiat.
+            </p>
+        </div>
+
     </div>
 
     <div id="receipt">
@@ -278,12 +306,23 @@
         const DINAR_W = 4.25; const DINAR_P = 0.917; 
         const RATIO_AG = 12; // Ratio Dirham
 
-        // --- STATE AWAL ---
-        let range = { high: 2900, low: 2400 };
+        // --- LOCAL STORAGE INIT ---
+        // Cek apakah ada data tersimpan, jika tidak pakai default
+        let storedRange = localStorage.getItem('pos_range');
+        let range = storedRange ? JSON.parse(storedRange) : { high: 2900, low: 2400 };
+
+        let storedItems = localStorage.getItem('pos_items');
+        let items = storedItems ? JSON.parse(storedItems) : [];
+
         let pivotUSD = 0;
         let pivotDinarIDR = 0;
         let liveKurs = 15500;
-        let items = [];
+
+        // --- SAVE FUNCTION ---
+        function saveLocal() {
+            localStorage.setItem('pos_range', JSON.stringify(range));
+            localStorage.setItem('pos_items', JSON.stringify(items));
+        }
 
         // --- CORE LOGIC ---
         async function updateMarket() {
@@ -305,16 +344,22 @@
                 // Breakout Logic (Auto-Pivot)
                 let status = "Stabil (Inside Range)";
                 let color = "#2ea043";
+                let rangeChanged = false;
 
                 if (currentPrice > range.high) {
                     range.high = currentPrice; 
                     status = "NEW HIGH! (Pivot Naik)";
                     color = "#da3633"; 
+                    rangeChanged = true;
                 } else if (currentPrice < range.low) {
                     range.low = currentPrice;
                     status = "NEW LOW! (Pivot Turun)";
                     color = "#da3633";
+                    rangeChanged = true;
                 }
+
+                // Save if range changed
+                if(rangeChanged) saveLocal();
 
                 // Hitung Pivot & Dinar IDR
                 pivotUSD = (range.high + range.low) / 2;
@@ -342,6 +387,9 @@
                 console.log(e);
                 dot.style.background = "red";
                 msg.innerText = "Offline / Connection Lost";
+                
+                // Fallback rendering if offline but data exists
+                if(items.length > 0) renderTable();
             }
         }
 
@@ -363,6 +411,8 @@
                 midRp: (h+l)/2
             });
 
+            saveLocal(); // Save to storage
+
             // Reset inputs (Qty tetap 1)
             document.getElementById('inName').value = '';
             document.getElementById('inQty').value = '1';
@@ -375,6 +425,7 @@
 
         function removeItem(id) {
             items = items.filter(i => i.id !== id);
+            saveLocal(); // Save update
             renderTable();
         }
 
@@ -395,7 +446,10 @@
 
             items.forEach(item => {
                 // Calc Subtotal
-                const unitDn = item.midRp / pivotDinarIDR;
+                // Note: Jika pivotDinarIDR belum ready (offline start), hindari NaN
+                const pvt = pivotDinarIDR > 0 ? pivotDinarIDR : 1; 
+                
+                const unitDn = item.midRp / pvt;
                 const totalDn = unitDn * item.qty;
                 const totalDr = totalDn * RATIO_AG;
                 
@@ -438,7 +492,10 @@
         }
 
         // Init
-        window.onload = updateMarket;
+        window.onload = function() {
+            renderTable(); // Render stored items immediately
+            updateMarket(); // Then fetch new rates
+        };
         setInterval(updateMarket, 60000); 
 
     </script>
