@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nusantara Auto-Anchor (POS Mode)</title>
+    <title>Nusantara Auto-Anchor (POS)</title>
+    <link rel="icon" type="image/png" href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -26,6 +28,12 @@
             font-family: 'Rajdhani', sans-serif;
             margin: 0; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* LOGO HEADER */
+        .main-logo {
+            width: 80px; height: auto; margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3)); /* Efek glow dikit */
         }
 
         h1 {
@@ -63,7 +71,7 @@
         }
         .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
 
-        /* --- 2. INPUT FORM (UPDATED WITH QTY) --- */
+        /* --- 2. INPUT FORM (Qty Support) --- */
         .input-card {
             background: #161616; padding: 20px; border-radius: 8px; border: 1px solid var(--border);
             display: grid; grid-template-columns: 2fr 0.5fr 1fr 1fr auto; gap: 10px; align-items: end;
@@ -116,20 +124,21 @@
             #receipt, #receipt * { visibility: visible; }
             #receipt {
                 display: block; position: absolute; left: 0; top: 0; 
-                width: 58mm; /* Ukuran Thermal Kecil */
-                padding: 5mm; 
+                width: 58mm; /* Lebar Thermal 58mm */
+                padding: 4mm; 
                 font-family: 'Courier New', Courier, monospace; 
                 font-size: 10px; 
                 color: #000;
                 line-height: 1.2;
             }
             
+            .rec-logo { width: 40px; height: auto; display: block; margin: 0 auto 5px auto; filter: grayscale(100%); }
             .rec-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 5px; margin-bottom: 5px; }
-            .rec-title { font-weight: bold; font-size: 12px; margin-bottom: 3px; }
+            .rec-title { font-weight: bold; font-size: 11px; margin-bottom: 2px; }
             
             .rec-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
             .rec-item-name { font-weight: bold; }
-            .rec-qty-tag { font-size: 9px; color: #444; margin-right: 5px; }
+            .rec-qty-tag { font-size: 9px; margin-right: 5px; }
             
             .rec-divider { border-bottom: 1px dashed #000; margin: 5px 0; }
             
@@ -147,6 +156,8 @@
     </style>
 </head>
 <body>
+
+    <img src="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png" alt="Logo" class="main-logo">
 
     <h1>NUSANTARA AUTO-PIVOT</h1>
     <div class="subtitle">Sistem Jangkar Emas Tahunan (POS Mode)</div>
@@ -230,6 +241,8 @@
     </div>
 
     <div id="receipt">
+        <img src="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png" class="rec-logo">
+        
         <div class="rec-header">
             <div class="rec-title">NUSANTARA EXCHANGE</div>
             <span id="recDate">-</span><br>
@@ -289,7 +302,7 @@
                 const currentPrice = goldData.price;
                 liveKurs = kursData.rates.IDR;
 
-                // Breakout Logic
+                // Breakout Logic (Auto-Pivot)
                 let status = "Stabil (Inside Range)";
                 let color = "#2ea043";
 
@@ -350,7 +363,7 @@
                 midRp: (h+l)/2
             });
 
-            // Reset inputs (keep Qty at 1)
+            // Reset inputs (Qty tetap 1)
             document.getElementById('inName').value = '';
             document.getElementById('inQty').value = '1';
             document.getElementById('inHigh').value = '';
@@ -381,7 +394,7 @@
             }
 
             items.forEach(item => {
-                // Calculation: (Unit Price / Dinar Rate) * Qty
+                // Calc Subtotal
                 const unitDn = item.midRp / pivotDinarIDR;
                 const totalDn = unitDn * item.qty;
                 const totalDr = totalDn * RATIO_AG;
@@ -399,7 +412,7 @@
                         <td style="text-align:center"><button class="del-btn" onclick="removeItem(${item.id})">×</button></td>
                     </tr>`;
 
-                // Receipt Row (Format: "Item (x2) ... Price")
+                // Receipt Row
                 recHtml += `
                     <div class="rec-row">
                         <div>
