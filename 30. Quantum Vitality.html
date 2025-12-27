@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Vitality - Daya Hidup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000;
+            --panel: #0a0a0a;
+            --border: #333;
+            --cyan: #00f3ff;
+            --purple: #bc13fe;
+            --green: #00ff41;
+            --red: #ff003c;
+            --yellow: #ffd700;
+            --text: #ccc;
+        }
+
+        * { box-sizing: border-box; transition: 0.4s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(to right, var(--cyan), var(--purple));
+            -webkit-background-clip: text; color: transparent;
+            text-transform: uppercase; letter-spacing: 4px;
+            text-align: center; margin-bottom: 5px; font-size: 2rem;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        .subtitle { 
+            color: #888; font-size: 0.95rem; margin-bottom: 30px; 
+            max-width: 800px; text-align: center; line-height: 1.5;
+        }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            width: 100%; max-width: 1100px;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid var(--border);
+            padding: 25px; border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .card-header {
+            color: var(--cyan); font-family: 'Orbitron', sans-serif;
+            border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;
+            font-size: 1.1rem; letter-spacing: 1px; text-transform: uppercase;
+        }
+
+        /* VISUALISASI ENERGY CORE */
+        .core-container {
+            display: flex; justify-content: center; align-items: center;
+            height: 220px; position: relative; margin-bottom: 20px;
+        }
+
+        .energy-core {
+            width: 140px; height: 140px; border-radius: 50%;
+            background: radial-gradient(circle, #fff, var(--cyan), transparent);
+            box-shadow: 0 0 50px var(--cyan), 0 0 100px var(--purple);
+            position: relative; z-index: 2;
+            animation: pulse 3s infinite ease-in-out;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .core-text {
+            font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900;
+            color: #000; z-index: 3;
+        }
+
+        .orbit {
+            position: absolute; border: 2px solid rgba(255,255,255,0.1); border-radius: 50%;
+            animation: spin 10s linear infinite;
+        }
+        .o1 { width: 180px; height: 180px; border-top-color: var(--cyan); animation-duration: 5s; }
+        .o2 { width: 220px; height: 220px; border-bottom-color: var(--purple); animation-duration: 8s; animation-direction: reverse; }
+        .o3 { width: 260px; height: 260px; border-left-color: var(--green); animation-duration: 12s; }
+
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* INPUT SLIDERS */
+        .input-group { margin-bottom: 25px; }
+        .label-flex { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; align-items: center; }
+        
+        .val-disp { 
+            color: var(--cyan); font-weight: bold; font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem; background: rgba(0, 243, 255, 0.1); padding: 2px 8px; border-radius: 4px;
+        }
+
+        /* STATUS TEXT DINAMIS */
+        .status-level {
+            display: block; font-size: 0.8rem; color: #888; margin-top: -5px; margin-bottom: 5px; font-style: italic;
+            text-align: right; min-height: 1.2em; transition: color 0.3s;
+        }
+
+        input[type="range"] {
+            width: 100%; -webkit-appearance: none; height: 8px; background: #222; border-radius: 4px; outline: none; border: 1px solid #444;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 20px; height: 20px; background: var(--cyan); border-radius: 50%; cursor: pointer;
+            box-shadow: 0 0 15px var(--cyan); transition: 0.2s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        /* UMUR INPUT */
+        .age-input-box {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+            background: #111; padding: 10px; border-radius: 8px; border: 1px solid #333;
+        }
+        .age-input-box input {
+            background: transparent; border: none; color: #fff; font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem; width: 60px; text-align: center; border-bottom: 2px solid var(--cyan);
+        }
+        .age-input-box label { color: #aaa; font-size: 0.9rem; flex: 1; }
+
+        /* BIO-HACKING METRICS */
+        .bio-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        
+        .toggle-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #111; padding: 10px 15px; border: 1px solid #333; border-radius: 5px; cursor: pointer;
+        }
+        .toggle-btn.active { border-color: var(--green); background: rgba(0, 255, 65, 0.1); }
+        .toggle-btn.active .status { color: var(--green); }
+        .status { font-family: 'Orbitron', sans-serif; color: #555; font-size: 0.8rem; }
+
+        /* SIMULATION BOX */
+        .sim-box {
+            background: #111; border: 1px dashed #444; padding: 20px; border-radius: 10px; margin-top: 10px;
+        }
+        .sim-title { text-align: center; font-size: 0.9rem; color: #888; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .age-compare { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .ac-box { text-align: center; width: 45%; }
+        .ac-val { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: bold; }
+        .ac-label { font-size: 0.8rem; color: #666; }
+        .vs-icon { font-weight: bold; color: #444; font-size: 1.2rem; }
+
+        .verdict-bar {
+            height: 6px; width: 100%; background: #222; border-radius: 3px; overflow: hidden; margin-top: 10px; position: relative;
+        }
+        .vb-fill { height: 100%; width: 50%; transition: 1s ease; position: absolute; }
+        
+        .verdict-text { text-align: center; margin-top: 10px; font-weight: bold; font-size: 1rem; }
+
+        .btn-update {
+            width: 100%; padding: 15px; background: linear-gradient(90deg, var(--purple), var(--cyan));
+            border: none; color: #fff; font-family: 'Orbitron', sans-serif; font-weight: bold; letter-spacing: 2px;
+            font-size: 1.1rem; cursor: pointer; margin-top: 20px; clip-path: polygon(5% 0, 100% 0, 100% 70%, 95% 100%, 0 100%, 0 30%);
+        }
+        .btn-update:hover { box-shadow: 0 0 30px rgba(188, 19, 254, 0.5); filter: brightness(1.2); }
+
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+
+    </style>
+</head>
+<body>
+
+    <h1>QUANTUM VITALITY</h1>
+    <div class="subtitle">
+        Waktu linear hanyalah ilusi kronologis yang menjebak manusia dalam hitungan mundur usia biologis, 
+        sementara waktu non-linear adalah realitas sejati yang berfokus pada intensitas daya hidup dan kualitas kesadaran.
+    </div>
+
+    <div class="container">
+        
+        <div class="card">
+            <div class="card-header">1. KALIBRASI KESADARAN</div>
+            
+            <div class="age-input-box">
+                <label>USIA KRONOLOGIS ANDA (KTP):</label>
+                <input type="number" id="chronAge" value="30" oninput="updateCore()">
+            </div>
+
+            <div class="input-group">
+                <div class="label-flex">
+                    <span>🧘 Ketenangan (Inner Peace)</span>
+                    <span class="val-disp" id="vPeace">50%</span>
+                </div>
+                <input type="range" id="peace" min="0" max="100" value="50" oninput="updateCore()">
+                <small id="txtPeace" class="status-level">NETRAL</small>
+            </div>
+
+            <div class="input-group">
+                <div class="label-flex">
+                    <span>💡 Kejernihan Pikiran (Clarity)</span>
+                    <span class="val-disp" id="vClarity">50%</span>
+                </div>
+                <input type="range" id="clarity" min="0" max="100" value="50" oninput="updateCore()">
+                <small id="txtClarity" class="status-level">SADAR</small>
+            </div>
+
+            <div class="input-group">
+                <div class="label-flex">
+                    <span>❤️ Rasa Syukur (Gratitude)</span>
+                    <span class="val-disp" id="vGratitude">50%</span>
+                </div>
+                <input type="range" id="gratitude" min="0" max="100" value="50" oninput="updateCore()">
+                <small id="txtGratitude" class="status-level">CUKUP</small>
+            </div>
+
+            <div class="card-header" style="margin-top:30px; border-color:#333;">2. BIO-HACKING (Rutinitas)</div>
+            <div class="bio-grid">
+                <div class="toggle-btn" onclick="toggleBio(this, 10)">
+                    <span>💧 Puasa / Intermittent Fasting</span>
+                    <span class="status">OFF</span>
+                </div>
+                <div class="toggle-btn" onclick="toggleBio(this, 8)">
+                    <span>🌬️ Breathwork / Meditasi Rutin</span>
+                    <span class="status">OFF</span>
+                </div>
+                <div class="toggle-btn" onclick="toggleBio(this, 8)">
+                    <span>🏋️ Olahraga Intensitas Tinggi</span>
+                    <span class="status">OFF</span>
+                </div>
+                <div class="toggle-btn" onclick="toggleBio(this, 6)">
+                    <span>🥗 Real Food (No Sugar/Process)</span>
+                    <span class="status">OFF</span>
+                </div>
+                <div class="toggle-btn" onclick="toggleBio(this, 8)">
+                    <span>🧠 Deep Work / Learning (Fokus)</span>
+                    <span class="status">OFF</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card" style="display:flex; flex-direction:column;">
+            
+            <div class="card-header" style="text-align:center;">ENERGI & DAYA HIDUP</div>
+
+            <div class="core-container">
+                <div class="orbit o1"></div>
+                <div class="orbit o2"></div>
+                <div class="orbit o3"></div>
+                <div class="energy-core" id="coreVisual">
+                    <span class="core-text" id="coreScore">0</span>
+                </div>
+            </div>
+
+            <div class="sim-box">
+                <div class="sim-title">SIMULASI RELATIVITAS WAKTU</div>
+                
+                <div class="age-compare">
+                    <div class="ac-box">
+                        <div class="ac-val" id="dispChronAge" style="color:#aaa;">30</div>
+                        <div class="ac-label">USIA KRONOLOGIS<br>(Linear / KTP)</div>
+                    </div>
+                    <div class="vs-icon">VS</div>
+                    <div class="ac-box">
+                        <div class="ac-val" id="dispBioAge">--</div>
+                        <div class="ac-label">USIA BIOLOGIS<br>(Sel & Vitalitas)</div>
+                    </div>
+                </div>
+
+                <div class="verdict-bar">
+                    <div class="vb-fill" id="ageBar"></div>
+                </div>
+                <div class="verdict-text" id="ageVerdict">--</div>
+            </div>
+
+            <button class="btn-update" onclick="updateCore()">UPDATE ANALISA</button>
+
+        </div>
+
+    </div>
+
+    <a href="index.html" style="margin-top:40px; color:#666; text-decoration:none; border:1px solid #444; padding:10px 30px; border-radius:50px; font-family:'Orbitron', sans-serif; font-size:0.8rem;">KEMBALI KE MENU UTAMA</a>
+
+    <script>
+        let bioScore = 0;
+
+        // DATA LEVEL STATUS (Per 10 Poin)
+        // 0-9, 10-19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90-100
+        const peaceLevels = [
+            "CHAOS / PANIK", "TAKUT / PARANOID", "CEMAS / KHAWATIR", "GELISAH / BURU-BURU", 
+            "NETRAL / BIASA", "SANTAI / RILEKS", "NYAMAN / STABIL", "TENANG / HENING", 
+            "DAMAI / SEJUK", "ZEN / KOSONG", "ZEN / KOSONG"
+        ];
+
+        const clarityLevels = [
+            "GELAP / BUNTU", "KABUT / KUSUT", "BINGUNG / HILANG", "RAGU / DISTRAKSI", 
+            "SADAR / BANGUN", "FOKUS / TERARAH", "TAJAM / KRITIS", "JERNIH / BRIGHT", 
+            "WASKITA / VISIONER", "OMNISCIENT / ILAHI", "OMNISCIENT / ILAHI"
+        ];
+
+        const gratitudeLevels = [
+            "KUFUR / MENOLAK", "DENDAM / BENCI", "IRI / DENGKI", "MENGELUH / KURANG", 
+            "APATIS / DATAR", "MENERIMA / CUKUP", "SENANG / HAPPY", "BERTERIMA KASIH", 
+            "BERLIMPAH / TAKJUB", "UNCONDITIONAL LOVE", "UNCONDITIONAL LOVE"
+        ];
+
+        function toggleBio(el, points) {
+            if (el.classList.contains('active')) {
+                el.classList.remove('active');
+                el.querySelector('.status').innerText = "OFF";
+                bioScore -= points;
+            } else {
+                el.classList.add('active');
+                el.querySelector('.status').innerText = "ON";
+                bioScore += points;
+            }
+            updateCore();
+        }
+
+        function updateCore() {
+            // 1. INPUT DATA
+            let chronAge = parseInt(document.getElementById('chronAge').value) || 30;
+            let p = parseInt(document.getElementById('peace').value);
+            let c = parseInt(document.getElementById('clarity').value);
+            let g = parseInt(document.getElementById('gratitude').value);
+
+            // 2. UPDATE TEXT LABEL (Dynamic Levels)
+            updateLabel('vPeace', 'txtPeace', p, peaceLevels);
+            updateLabel('vClarity', 'txtClarity', c, clarityLevels);
+            updateLabel('vGratitude', 'txtGratitude', g, gratitudeLevels);
+
+            // 3. HITUNG SKOR VITALITAS
+            let consciousAvg = (p + c + g) / 3;
+            let totalVitality = Math.floor(consciousAvg + bioScore);
+            let visualScore = Math.min(100, totalVitality);
+
+            // 4. VISUALISASI CORE
+            let core = document.getElementById('coreVisual');
+            let scale = 0.8 + (visualScore / 200); 
+            let color = "#555"; 
+            if(totalVitality > 20) color = "#ff003c"; // Survival
+            if(totalVitality > 50) color = "#ffd700"; // Netral
+            if(totalVitality > 75) color = "#00ff41"; // Sehat
+            if(totalVitality > 90) color = "#00f3ff"; // Flow
+            if(totalVitality > 110) color = "#bc13fe"; // Enlightenment
+
+            core.style.background = `radial-gradient(circle, #fff, ${color}, transparent)`;
+            core.style.boxShadow = `0 0 ${visualScore}px ${color}, 0 0 ${visualScore*1.5}px ${color}`;
+            core.style.transform = `scale(${scale})`;
+            document.getElementById('coreScore').innerText = totalVitality;
+
+            // 5. HITUNG USIA BIOLOGIS
+            // Faktor: 50 (Netral) = 1.0 (Sama). 100 (Top) = 0.75 (Muda). 0 (Low) = 1.25 (Tua).
+            let agingFactor = 1 + ((50 - totalVitality) / 200); 
+            // Batas minimal factor 0.6 (sangat muda) supaya ga minus
+            if(agingFactor < 0.6) agingFactor = 0.6;
+
+            let bioAge = Math.floor(chronAge * agingFactor);
+
+            // Update UI Umur
+            document.getElementById('dispChronAge').innerText = chronAge;
+            document.getElementById('dispBioAge').innerText = bioAge;
+
+            // Update Bar & Text Verdict
+            let diff = chronAge - bioAge;
+            let barEl = document.getElementById('ageBar');
+            let verdictEl = document.getElementById('ageVerdict');
+
+            if(diff > 0) {
+                // LEBIH MUDA (REVERSE AGING)
+                barEl.style.width = "100%";
+                barEl.style.left = "0";
+                barEl.style.background = `linear-gradient(90deg, ${color}, transparent)`;
+                document.getElementById('dispBioAge').style.color = color;
+                verdictEl.innerHTML = `REVERSE AGING: Sel tubuh Anda <span style="color:${color}">LEBIH MUDA ${diff} TAHUN</span> dari usia asli.`;
+            } else if (diff < 0) {
+                // LEBIH TUA (ACCELERATED AGING)
+                barEl.style.width = "100%";
+                barEl.style.left = "0";
+                barEl.style.background = `linear-gradient(90deg, #ff003c, transparent)`;
+                document.getElementById('dispBioAge').style.color = "#ff003c";
+                verdictEl.innerHTML = `ACCELERATED AGING: Waspada! Tubuh Anda <span style="color:#ff003c">MENUA ${Math.abs(diff)} TAHUN</span> lebih cepat.`;
+            } else {
+                // SETARA
+                barEl.style.width = "0%";
+                document.getElementById('dispBioAge').style.color = "#ccc";
+                verdictEl.innerHTML = "NORMAL AGING: Kondisi tubuh setara dengan usia kronologis.";
+            }
+        }
+
+        function updateLabel(valId, txtId, val, levelArray) {
+            document.getElementById(valId).innerText = val + "%";
+            
+            // Map 0-100 to 0-10 Index
+            let index = Math.floor(val / 10);
+            if(index > 10) index = 10;
+            
+            let textEl = document.getElementById(txtId);
+            textEl.innerText = levelArray[index];
+            
+            // Warnai teks sesuai level
+            if(val < 30) textEl.style.color = "#ff003c"; // Merah
+            else if(val < 60) textEl.style.color = "#ccc"; // Abu
+            else if(val < 85) textEl.style.color = "#00ff41"; // Hijau
+            else textEl.style.color = "#00f3ff"; // Cyan
+        }
+
+        // Init saat load
+        window.onload = updateCore;
+    </script>
+
+</body>
+</html>
