@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holistic Life Calibration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --border: #333;
+            --cyan: #00f3ff;
+            --gold: #c5a059;
+            --green: #00ff41;
+            --red: #ff003c;
+            --purple: #bc13fe;
+            --orange: #ff9900;
+            --text: #ccc;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(to right, var(--green), var(--cyan));
+            -webkit-background-clip: text; color: transparent;
+            text-transform: uppercase; letter-spacing: 3px;
+            text-align: center; margin-bottom: 5px; font-size: 1.8rem;
+        }
+
+        .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            width: 100%; max-width: 1100px;
+        }
+
+        /* CARD */
+        .card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--border);
+            padding: 25px; border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .section-title {
+            color: #fff; font-family: 'Orbitron', sans-serif;
+            border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;
+            font-size: 1rem; letter-spacing: 1px;
+        }
+
+        /* SLIDERS */
+        .slider-row { margin-bottom: 25px; }
+        
+        .slider-header { 
+            display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; 
+            font-family: 'Orbitron', sans-serif; font-size: 0.9rem;
+        }
+        
+        .status-text {
+            font-size: 0.85rem; font-style: italic; color: #888; display: block;
+            text-align: right; margin-top: 5px; font-weight: bold; transition: color 0.3s;
+        }
+
+        input[type="range"] {
+            width: 100%; -webkit-appearance: none; height: 8px; background: #222; border-radius: 4px; outline: none;
+            border: 1px solid #444;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5); border: 2px solid #fff;
+        }
+
+        /* Colors per Aspect */
+        #rBio::-webkit-slider-thumb { background: var(--red); box-shadow: 0 0 10px var(--red); }
+        #rMind::-webkit-slider-thumb { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+        #rSoul::-webkit-slider-thumb { background: var(--purple); box-shadow: 0 0 10px var(--purple); }
+        #rFin::-webkit-slider-thumb { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+        #rSoc::-webkit-slider-thumb { background: var(--orange); box-shadow: 0 0 10px var(--orange); }
+        #rImp::-webkit-slider-thumb { background: var(--green); box-shadow: 0 0 10px var(--green); }
+
+        /* RADAR CHART CONTAINER */
+        .chart-container {
+            display: flex; justify-content: center; align-items: center;
+            height: 350px; position: relative;
+        }
+        canvas { max-width: 100%; }
+
+        /* ANALYSIS BOX */
+        .analysis-box {
+            margin-top: 20px; padding: 20px; border: 1px dashed var(--border);
+            border-radius: 8px; background: rgba(0,0,0,0.3); text-align: center;
+        }
+        .score-big { font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: bold; color: #fff; line-height: 1; margin: 10px 0; }
+        .score-label { color: #888; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; }
+        
+        .status-badge {
+            display: inline-block; padding: 5px 15px; background: #222; border: 1px solid #444;
+            border-radius: 20px; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: #fff; margin-bottom: 10px;
+        }
+
+        .impact-text { color: #ccc; font-size: 0.95rem; margin-bottom: 15px; line-height: 1.5; font-style: italic; }
+        
+        .weak-box {
+            background: rgba(255, 0, 60, 0.1); border: 1px solid var(--red);
+            padding: 10px; border-radius: 6px; margin-top: 15px; text-align: left;
+        }
+        .weak-title { color: var(--red); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; }
+        .weak-advice { color: #ddd; font-size: 0.9rem; }
+
+        /* RESET BUTTON */
+        .btn-reset {
+            margin-top: 20px; background: transparent; border: 1px solid #444; color: #666;
+            padding: 8px 20px; font-size: 0.8rem; cursor: pointer; border-radius: 20px;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .btn-reset:hover { border-color: var(--red); color: var(--red); }
+
+        @media (max-width: 800px) { .container { grid-template-columns: 1fr; } }
+
+    </style>
+</head>
+<body>
+
+    <h1>HOLISTIC CALIBRATION</h1>
+    <div class="subtitle">Memetakan Keseimbangan Ekosistem Diri</div>
+
+    <div class="container">
+        
+        <div class="card">
+            <div class="section-title">PARAMETER EKOSISTEM (Auto-Save)</div>
+
+            <div class="slider-row">
+                <div class="slider-header">
+                    <span style="color:var(--red)">🩸 JASMANI (Fisik)</span>
+                    <span id="vBio">5</span>
+                </div>
+                <input type="range" id="rBio" min="1" max="10" value="5" oninput="updateRadar()">
+                <div id="txtBio" class="status-text">--</div>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-header">
+                    <span style="color:var(--cyan)">🧠 AKAL (Intelektual)</span>
+                    <span id="vMind">5</span>
+                </div>
+                <input type="range" id="rMind" min="1" max="10" value="5" oninput="updateRadar()">
+                <div id="txtMind" class="status-text">--</div>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-header">
+                    <span style="color:var(--purple)">👁️ ROHANI (Spiritual)</span>
+                    <span id="vSoul">5</span>
+                </div>
+                <input type="range" id="rSoul" min="1" max="10" value="5" oninput="updateRadar()">
+                <div id="txtSoul" class="status-text">--</div>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-header">
+                    <span style="color:var(--gold)">💰 EKONOMI (Resource)</span>
+                    <span id="vFin">5</span>
+                </div>
+                <input type="range" id="rFin" min="1" max="10" value="5" oninput="updateRadar()">
+                <div id="txtFin" class="status-text">--</div>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-header">
+                    <span style="color:var(--orange)">❤️ EMOSI & SOSIAL</span>
+                    <span id="vSoc">5</span>
+                </div>
+                <input type="range" id="rSoc" min="1" max="10" value="5" oninput="updateRadar()">
+                <div id="txtSoc" class="status-text">--</div>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-header">
+                    <span style="color:var(--green)">🌱 KARYA (Dampak)</span>
+                    <span id="vImp">5</span>
+                </div>
+                <input type="range" id="rImp" min="1" max="10" value="5" oninput="updateRadar()">
+                <div id="txtImp" class="status-text">--</div>
+            </div>
+
+        </div>
+
+        <div class="card" style="display:flex; flex-direction:column; align-items:center;">
+            <div class="section-title" style="width:100%; text-align:center;">RADAR KESEIMBANGAN</div>
+            
+            <div class="chart-container">
+                <canvas id="radarCanvas" width="350" height="350"></canvas>
+            </div>
+
+            <div class="analysis-box" style="width:100%;">
+                <div class="score-label">KUALITAS HIDUP OVERALL:</div>
+                <div class="score-big" id="totalScore">0%</div>
+                
+                <div id="statusBadge" class="status-badge">CALIBRATING...</div>
+                <div id="impactText" class="impact-text">--</div>
+
+                <div class="weak-box">
+                    <div class="weak-title">⚠️ FOKUS PERBAIKAN UTAMA: <span id="weakPoint">NONE</span></div>
+                    <div class="weak-advice" id="adviceText">--</div>
+                </div>
+                
+                <button class="btn-reset" onclick="resetData()">RESET DATA</button>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="index.html" style="margin-top:40px; color:#666; text-decoration:none; border:1px solid #444; padding:10px 30px; border-radius:50px; font-family:'Orbitron', sans-serif; font-size:0.8rem;">KEMBALI KE MENU UTAMA</a>
+
+    <script>
+        const canvas = document.getElementById('radarCanvas');
+        const ctx = canvas.getContext('2d');
+        const labels = ["JASMANI", "AKAL", "ROHANI", "EKONOMI", "SOSIAL", "KARYA"];
+        const colors = ["#ff003c", "#00f3ff", "#bc13fe", "#c5a059", "#ff9900", "#00ff41"];
+        
+        // --- DATA LEVEL LENGKAP (THE "RED PILL" VERSION) ---
+        const descLevels = {
+            bio: [
+                "KRITIS: Sakit / Bedrest / Rusak",
+                "BURUK: Sering Sakit / Obesitas Parah",
+                "LEMAH: Gampang Lelah / Insomnia",
+                "KURANG: Jarang Gerak / Makan Sembarang",
+                "STANDAR: Sehat tapi Tidak Bugar",
+                "CUKUP: Mulai Rutin Olahraga",
+                "BAIK: Jarang Sakit / Tidur Teratur",
+                "BUGAR: Stamina Kuat / Otot Terlatih",
+                "PRIMA: Energy Overflow / Metabolisme Cepat",
+                "ATLETIS: Peak Performance / Bio-Hacked"
+            ],
+            mind: [
+                "BEKU: Malas Mikir / Brain Fog",
+                "TUMPUL: Sulit Paham Hal Baru",
+                "TERDISTRAKSI: Susah Fokus / Scroll Addiction",
+                "PASIF: Cuma Konsumsi Konten Sampah",
+                "RATA-RATA: Paham Basic Skill",
+                "AKTIF: Suka Membaca / Belajar",
+                "TAJAM: Critical Thinking Jalan",
+                "CERDAS: Problem Solver Handal",
+                "INOVATIF: Punya Ide Original",
+                "VISIONER: Jenius / Master of Craft"
+            ],
+            soul: [
+                "MATI: Tidak Percaya Tuhan / Atheist",
+                "GELISAH: Penuh Dosa / Hati Keras",
+                "HAMPA: Bingung Tujuan Hidup",
+                "KERING: Ibadah Bolong-Bolong",
+                "RITUALIS: Ibadah Cuma Gugur Kewajiban",
+                "SADAR: Mulai Merasakan Koneksi",
+                "TENANG: Ibadah jadi Kebutuhan",
+                "KHUSYUK: Hati Bersih / Damai",
+                "CINTA: Mabuk Cinta Ilahi",
+                "IHSAN: Manunggal / Kesadaran Tinggi"
+            ],
+            fin: [
+                "BANGKRUT: Utang Menumpuk / Dikejar Kolektor",
+                "MINUS: Besar Pasak daripada Tiang",
+                "KRITIS: Gaji Cuma Numpang Lewat",
+                "SURVIVAL: Pas-pasan / Tidak Ada Tabungan",
+                "AMAN: Cukup untuk Kebutuhan Dasar",
+                "NYAMAN: Ada Tabungan Darurat",
+                "BERTUMBUH: Mulai Investasi",
+                "MAPAN: Aset Produktif Jalan",
+                "KAYA: Passive Income > Pengeluaran",
+                "FREEDOM: Uang Bekerja untuk Anda"
+            ],
+            soc: [
+                "TOXIC: Membenci & Dibenci",
+                "TERISOLASI: Tidak Punya Teman",
+                "KONFLIK: Hubungan Keluarga Retak",
+                "DRAMA: Sering Bertengkar / Baperan",
+                "NETRAL: Punya Teman Sekadarnya",
+                "BAIK: Hubungan Harmonis",
+                "SUPPORTIF: Punya Circle Positif",
+                "EMPATI: Pendengar yang Baik",
+                "MAGNETIS: Disukai Banyak Orang",
+                "PEMIMPIN: Menggerakkan Orang Lain"
+            ],
+            imp: [
+                "PARASIT: Menjadi Beban Orang Lain",
+                "PERUSAK: Merugikan Lingkungan",
+                "PASIF: Tidak Peduli Sekitar",
+                "KONSUMTIF: Cuma Bisa Memakai",
+                "PEKERJA: Bermanfaat untuk Diri Sendiri",
+                "KONTRIBUTOR: Mulai Membantu Sesama",
+                "PENGGERAK: Punya Peran di Masyarakat",
+                "BERMANFAAT: Memberi Nilai Tambah",
+                "BERDAMPAK: Mengubah Hidup Orang",
+                "LEGACY: Meninggalkan Warisan Abadi"
+            ]
+        };
+
+        const overallTiers = [
+            { name: "COLLAPSE (KEHANCURAN TOTAL)", desc: "Sistem hidup Anda macet total. Anda mungkin sedang depresi berat, sakit parah, atau bangkrut total. SARAN: Lupakan impian besar dulu. Cari bantuan profesional atau orang terdekat segera. Fokus hanya untuk BERTAHAN HIDUP hari ini." },
+            { name: "CRITICAL (KRITIS)", desc: "Hidup penuh penderitaan dan tekanan. Tiap hari adalah perjuangan berat. Pikiran kacau, fisik lemah. SARAN: Stop semua aktivitas non-esensial. Identifikasi satu 'kebocoran' terbesar dan tambal segera." },
+            { name: "BROKEN (RUSAK)", desc: "Fungsi hidup terganggu parah. Sering stres, mudah marah, atau sakit-sakitan. Produktivitas hampir nol. SARAN: Anda butuh 'Reboot'. Mulai dari tidur cukup dan makan benar. Jangan mikir karya dulu." },
+            { name: "SURVIVAL (BERTAHAN)", desc: "Hidup segan mati tak mau. Mengalir tanpa arah (Zombie Mode). Cuma kerja-pulang-tidur tanpa makna. SARAN: Bangun kesadaran. Cari satu hal kecil yang bikin Anda semangat lagi." },
+            { name: "UNSTABLE (GOYAH)", desc: "Terlihat oke di luar, tapi rapuh di dalam. Satu masalah kecil bisa bikin Anda ambruk. SARAN: Perkuat pondasi (Ekonomi & Jasmani). Bangun rutinitas yang lebih disiplin." },
+            { name: "FUNCTIONAL (BERFUNGSI)", desc: "Standar rata-rata manusia. Hidup berjalan 'oke' tapi datar. Tidak ada gairah besar, tapi juga tidak hancur. SARAN: Jangan nyaman di zona ini. Mulai set target yang menantang (Growth)." },
+            { name: "STABLE (STABIL)", desc: "Pondasi hidup sudah cukup kuat. Anda punya kendali atas waktu dan energi. SARAN: Ini saatnya akselerasi. Mulai fokus ke aspek 'Karya' dan 'Rohani' untuk lonjakan makna." },
+            { name: "GROWTH (BERTUMBUH)", desc: "Hidup terasa progresif dan menyenangkan. Masalah tetap ada tapi Anda bisa mengatasinya dengan elegan. SARAN: Jaga momentum. Mulai delegasikan hal kecil, fokus ke 'Big Moves'." },
+            { name: "OPTIMAL (PRIMA)", desc: "Flow state sering terjadi. Fisik bugar, dompet aman, hati tenang. Anda jadi magnet kebaikan. SARAN: Fokus pada 'Giving Back' dan memperluas dampak. Jadilah mentor." },
+            { name: "HOLISTIC (PARIPURNA)", desc: "Level Insan Kamil. Keseimbangan dewa antara dunia dan akhirat. Hidup Anda adalah seni. SARAN: Pertahankan keikhlasan. Ujian di level ini adalah kehalusan ego." }
+        ];
+
+        // --- LOAD DATA SAAT AWAL ---
+        window.onload = function() {
+            loadData();
+        };
+
+        function loadData() {
+            if(localStorage.getItem('holisticData')) {
+                const saved = JSON.parse(localStorage.getItem('holisticData'));
+                document.getElementById('rBio').value = saved[0];
+                document.getElementById('rMind').value = saved[1];
+                document.getElementById('rSoul').value = saved[2];
+                document.getElementById('rFin').value = saved[3];
+                document.getElementById('rSoc').value = saved[4];
+                document.getElementById('rImp').value = saved[5];
+            }
+            updateRadar();
+        }
+
+        function saveData(vals) {
+            localStorage.setItem('holisticData', JSON.stringify(vals));
+        }
+
+        function resetData() {
+            if(confirm("Yakin ingin reset semua data ke awal?")) {
+                localStorage.removeItem('holisticData');
+                document.getElementById('rBio').value = 5;
+                document.getElementById('rMind').value = 5;
+                document.getElementById('rSoul').value = 5;
+                document.getElementById('rFin').value = 5;
+                document.getElementById('rSoc').value = 5;
+                document.getElementById('rImp').value = 5;
+                updateRadar();
+            }
+        }
+
+        function updateRadar() {
+            // 1. GET VALUES
+            const vals = [
+                parseInt(document.getElementById('rBio').value),
+                parseInt(document.getElementById('rMind').value),
+                parseInt(document.getElementById('rSoul').value),
+                parseInt(document.getElementById('rFin').value),
+                parseInt(document.getElementById('rSoc').value),
+                parseInt(document.getElementById('rImp').value)
+            ];
+
+            // 2. SAVE AUTO
+            saveData(vals);
+
+            // 3. UPDATE TEXT & CHART
+            updateStatus('vBio', 'txtBio', vals[0], descLevels.bio, "var(--red)");
+            updateStatus('vMind', 'txtMind', vals[1], descLevels.mind, "var(--cyan)");
+            updateStatus('vSoul', 'txtSoul', vals[2], descLevels.soul, "var(--purple)");
+            updateStatus('vFin', 'txtFin', vals[3], descLevels.fin, "var(--gold)");
+            updateStatus('vSoc', 'txtSoc', vals[4], descLevels.soc, "var(--orange)");
+            updateStatus('vImp', 'txtImp', vals[5], descLevels.imp, "var(--green)");
+
+            drawRadar(vals);
+            calculateStats(vals);
+        }
+
+        function updateStatus(numId, txtId, val, arr, color) {
+            document.getElementById(numId).innerText = val;
+            let textEl = document.getElementById(txtId);
+            textEl.innerText = arr[val - 1]; 
+            if (val <= 3) textEl.style.color = "var(--red)";
+            else if (val <= 7) textEl.style.color = "#aaa";
+            else textEl.style.color = color;
+        }
+
+        function drawRadar(data) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const cx = canvas.width / 2; const cy = canvas.height / 2;
+            const radius = 120; const sides = 6; const angleStep = (Math.PI * 2) / sides;
+
+            // Grid & Axes
+            ctx.strokeStyle = "#222"; ctx.lineWidth = 1;
+            for (let r = 1; r <= 5; r++) {
+                ctx.beginPath();
+                for (let i = 0; i < sides; i++) {
+                    const val = (r * 2); const dist = (val / 10) * radius;
+                    const x = cx + Math.cos(i * angleStep - Math.PI/2) * dist;
+                    const y = cy + Math.sin(i * angleStep - Math.PI/2) * dist;
+                    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                }
+                ctx.closePath(); ctx.stroke();
+            }
+
+            for (let i = 0; i < sides; i++) {
+                const x = cx + Math.cos(i * angleStep - Math.PI/2) * radius;
+                const y = cy + Math.sin(i * angleStep - Math.PI/2) * radius;
+                ctx.beginPath(); ctx.strokeStyle = "#444"; ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke();
+                
+                const lx = cx + Math.cos(i * angleStep - Math.PI/2) * (radius + 30);
+                const ly = cy + Math.sin(i * angleStep - Math.PI/2) * (radius + 30);
+                ctx.fillStyle = colors[i]; ctx.font = "bold 11px Orbitron"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+                ctx.fillText(labels[i], lx, ly);
+            }
+
+            // Data Shape
+            ctx.beginPath();
+            for (let i = 0; i < sides; i++) {
+                const dist = (data[i] / 10) * radius;
+                const x = cx + Math.cos(i * angleStep - Math.PI/2) * dist;
+                const y = cy + Math.sin(i * angleStep - Math.PI/2) * dist;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fillStyle = "rgba(0, 243, 255, 0.2)"; ctx.fill();
+            ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+
+            // Points
+            for (let i = 0; i < sides; i++) {
+                const dist = (data[i] / 10) * radius;
+                const x = cx + Math.cos(i * angleStep - Math.PI/2) * dist;
+                const y = cy + Math.sin(i * angleStep - Math.PI/2) * dist;
+                ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fillStyle = colors[i]; ctx.fill();
+            }
+        }
+
+        function calculateStats(vals) {
+            let sum = vals.reduce((a, b) => a + b, 0);
+            let avg = Math.floor((sum / 60) * 100);
+            
+            let scoreEl = document.getElementById('totalScore');
+            let badgeEl = document.getElementById('statusBadge');
+            
+            scoreEl.innerText = avg + "%";
+            if(avg < 40) scoreEl.style.color = "var(--red)";
+            else if(avg < 70) scoreEl.style.color = "var(--gold)";
+            else scoreEl.style.color = "var(--green)";
+
+            let tierIndex = Math.floor((avg - 1) / 10); 
+            if (avg === 0) tierIndex = 0; if (avg === 100) tierIndex = 9; if (tierIndex < 0) tierIndex = 0;
+            const tier = overallTiers[tierIndex];
+            
+            badgeEl.innerText = tier.name;
+            document.getElementById('impactText').innerText = tier.desc;
+            
+            if(tierIndex <= 3) { badgeEl.style.borderColor = "var(--red)"; badgeEl.style.color = "var(--red)"; }
+            else if(tierIndex <= 6) { badgeEl.style.borderColor = "var(--gold)"; badgeEl.style.color = "var(--gold)"; }
+            else { badgeEl.style.borderColor = "var(--green)"; badgeEl.style.color = "var(--green)"; }
+
+            let minVal = Math.min(...vals);
+            let minIndex = vals.indexOf(minVal);
+            let weakLabel = labels[minIndex];
+            let weakPointEl = document.getElementById('weakPoint');
+            weakPointEl.innerText = weakLabel + " (Level " + minVal + ")";
+            weakPointEl.style.color = colors[minIndex];
+
+            const advices = [
+                "Perbaiki mesin biologis! Tanpa tubuh fit, visi besar cuma mimpi.", 
+                "Upgrade OS otak! Dunia berubah cepat, jangan biarkan pikiran tumpul.", 
+                "Jiwa dehidrasi. Konek kembali ke Tuhan sebelum hampa total.", 
+                "Stop pendarahan cashflow! Cari income tambahan atau tekan gaya hidup.", 
+                "Jangan jadi lone wolf. Turunkan ego, perbaiki hubungan.", 
+                "Jangan cuma jadi penonton. Mulailah berkarya sekecil apapun."
+            ];
+
+            if(minVal > 8) document.getElementById('adviceText').innerText = "Top Performance! Pertahankan keseimbangan ini.";
+            else document.getElementById('adviceText').innerText = advices[minIndex];
+        }
+    </script>
+</body>
+</html>
