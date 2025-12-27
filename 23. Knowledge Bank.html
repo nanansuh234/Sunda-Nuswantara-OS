@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Asset Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0c10;
+            --panel: #161b22;
+            --border: #30363d;
+            --gold: #d4af37;
+            --gold-dim: #8a6d1f;
+            --text: #c9d1d9;
+            --green: #2ea043;
+            --red: #da3633;
+            --blue: #2f81f7;
+            --purple: #bc13fe;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .subtitle { color: #8b949e; font-size: 0.9rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            width: 100%; max-width: 1200px;
+        }
+
+        /* CARD STYLE */
+        .vault-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--gold-dim);
+            padding: 20px; border-radius: 6px;
+            position: relative;
+        }
+
+        .section-header {
+            font-family: 'Cinzel', serif; color: #fff; border-bottom: 1px solid var(--border);
+            padding-bottom: 10px; margin-bottom: 15px; font-size: 1.1rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* CHECKLIST */
+        .skill-list { display: grid; gap: 10px; }
+        
+        .skill-item {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #0d1117; padding: 10px 15px; border: 1px solid #21262d;
+            border-radius: 4px; cursor: pointer;
+        }
+        .skill-item:hover { border-color: var(--gold); }
+        .skill-item.active { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
+        
+        .skill-name { font-weight: bold; color: #e6edf3; }
+        .skill-desc { font-size: 0.8rem; color: #8b949e; margin-top: 2px; }
+        .skill-check { 
+            width: 20px; height: 20px; border: 2px solid #444; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .skill-item.active .skill-check { background: var(--gold); border-color: var(--gold); color: #000; font-weight: bold; }
+        .skill-item.active .skill-check::after { content: '✔'; font-size: 12px; }
+
+        /* SUMMARY PANEL */
+        .summary-panel {
+            background: #0d1117; border: 1px solid var(--gold);
+            padding: 25px; border-radius: 8px; text-align: center;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+            position: sticky; top: 20px;
+        }
+
+        .net-worth-label { font-family: 'Cinzel', serif; color: #8b949e; font-size: 0.9rem; margin-bottom: 10px; }
+        .net-worth-val { 
+            font-family: 'Cinzel', serif; font-size: 3.5rem; color: var(--gold); 
+            font-weight: bold; text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            line-height: 1; margin-bottom: 5px;
+        }
+        
+        .level-badge {
+            display: inline-block; padding: 5px 15px; border: 1px solid #444;
+            border-radius: 20px; font-size: 0.85rem; color: #fff; margin-bottom: 20px;
+            background: #161b22; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .stat-bar {
+            height: 6px; background: #21262d; border-radius: 3px; margin: 15px 0 5px 0; overflow: hidden;
+        }
+        .stat-fill { height: 100%; width: 0%; transition: 1s ease; }
+        .stat-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: #8b949e; }
+
+        .btn-save {
+            width: 100%; padding: 12px; margin-top: 20px;
+            background: var(--gold); color: #000; border: none; font-weight: bold;
+            font-family: 'Rajdhani', sans-serif; font-size: 1rem; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; clip-path: polygon(5% 0, 100% 0, 100% 70%, 95% 100%, 0 100%, 0 30%);
+        }
+        .btn-save:hover { background: #fff; box-shadow: 0 0 20px var(--gold); }
+
+        /* DOMINO TABLE */
+        .domino-section {
+            grid-column: span 2; margin-top: 30px;
+            background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 20px;
+        }
+        .domino-header {
+            text-align: center; color: var(--text); font-family: 'Cinzel', serif; 
+            border-bottom: 1px solid #30363d; padding-bottom: 15px; margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        table { width: 100%; border-collapse: collapse; color: #ccc; font-size: 0.9rem; }
+        th { text-align: left; padding: 10px; border-bottom: 1px solid #444; color: var(--gold); text-transform: uppercase; font-size: 0.8rem; }
+        td { padding: 12px 10px; border-bottom: 1px solid #222; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        
+        .col-plus { color: var(--green); }
+        .col-minus { color: var(--red); }
+        .col-impact { color: var(--blue); font-style: italic; }
+
+        @media (max-width: 900px) { 
+            .container { grid-template-columns: 1fr; } 
+            .domino-section { grid-column: span 1; overflow-x: auto; }
+            table { min-width: 600px; } /* Biar bisa di-scroll di HP */
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>KNOWLEDGE VAULT</h1>
+    <div class="subtitle">Tabungan Aset Ilmu, Nilai (Value), & Kualitas Spiritual</div>
+
+    <div class="container">
+        
+        <div style="display:flex; flex-direction:column; gap:20px;">
+            
+            <div class="vault-card">
+                <div class="section-header">
+                    <span>🛡️ SURVIVAL ASSETS</span>
+                    <small style="color:#8b949e">Fisik & Pertahanan</small>
+                </div>
+                <div class="skill-list" id="listSurvival"></div>
+            </div>
+
+            <div class="vault-card">
+                <div class="section-header">
+                    <span>🧠 INTELLECTUAL ASSETS</span>
+                    <small style="color:#8b949e">Logika & Pola Pikir</small>
+                </div>
+                <div class="skill-list" id="listIntellect"></div>
+            </div>
+
+            <div class="vault-card">
+                <div class="section-header">
+                    <span>💎 VALUE CREATION ASSETS</span>
+                    <small style="color:#8b949e">Karya & Solusi</small>
+                </div>
+                <div class="skill-list" id="listValue"></div>
+            </div>
+
+            <div class="vault-card">
+                <div class="section-header">
+                    <span>🕌 SPIRITUAL ASSETS</span>
+                    <small style="color:#8b949e">Jiwa & Kesadaran</small>
+                </div>
+                <div class="skill-list" id="listSpiritual"></div>
+            </div>
+
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:20px;">
+            <div class="summary-panel">
+                <div class="net-worth-label">SKOR KEDAULATAN DIRI</div>
+                <div class="net-worth-val" id="totalScore">0</div>
+                <div class="level-badge" id="levelName">DEPENDENT (KETERGANTUNGAN)</div>
+
+                <div class="stat-bar"><div class="stat-fill" id="barSurv" style="background:var(--red);"></div></div>
+                <div class="stat-label"><span>SURVIVAL</span><span id="txtSurv">0%</span></div>
+
+                <div class="stat-bar"><div class="stat-fill" id="barInt" style="background:var(--green);"></div></div>
+                <div class="stat-label"><span>INTELLECT</span><span id="txtInt">0%</span></div>
+
+                <div class="stat-bar"><div class="stat-fill" id="barVal" style="background:var(--blue);"></div></div>
+                <div class="stat-label"><span>VALUE CREATION</span><span id="txtVal">0%</span></div>
+
+                <div class="stat-bar"><div class="stat-fill" id="barSpi" style="background:var(--purple);"></div></div>
+                <div class="stat-label"><span>SPIRITUAL</span><span id="txtSpi">0%</span></div>
+
+                <hr style="border:0; border-top:1px dashed #333; margin:20px 0;">
+                
+                <div style="font-size:0.9rem; color:#ccc; line-height:1.6; font-style:italic;" id="verdictText">
+                    --
+                </div>
+
+                <button class="btn-save" onclick="resetVault()">RESET BRANKAS</button>
+            </div>
+        </div>
+
+        <div class="domino-section">
+            <div class="domino-header">🕸️ MATRIX EFEK DOMINO (ANALISA SISTEMIK)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th width="15%">FAKTOR</th>
+                        <th width="25%">JIKA NAIK (+20%)</th>
+                        <th width="30%">DAMPAK KE PILAR LAIN (DOMINO +)</th>
+                        <th width="30%">JIKA RENDAH / HILANG (DOMINO -)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color:var(--red); font-weight:bold;">🛡️ SURVIVAL<br><small>(Fisik)</small></td>
+                        <td class="col-plus">Ketenangan insting (Survival Mode OFF). Berani ambil risiko terukur.</td>
+                        <td class="col-impact">
+                            ➔ 🧠 <b>Intellect:</b> Bisa mikir jangka panjang (bukan cuma besok makan apa).<br>
+                            ➔ 🕌 <b>Spiritual:</b> Ibadah lebih khusyuk (gak was-was rezeki).
+                        </td>
+                        <td class="col-minus">
+                            Kecemasan tinggi (Anxiety). Otak reptil aktif terus.<br>
+                            ⚠️ <b>Bahaya:</b> Menghalalkan segala cara demi perut (Value korup).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--green); font-weight:bold;">🧠 INTELLECT<br><small>(Pikir)</small></td>
+                        <td class="col-plus">Efisiensi kerja naik. Mampu melihat pola & peluang tersembunyi.</td>
+                        <td class="col-impact">
+                            ➔ 💎 <b>Value:</b> Karya jadi lebih strategis & high-impact (Smart Work).<br>
+                            ➔ 🛡️ <b>Survival:</b> Bertahan hidup dengan cara cerdas (Hemat Energi).
+                        </td>
+                        <td class="col-minus">
+                            Mudah ditipu & dimanipulasi sistem.<br>
+                            ⚠️ <b>Bahaya:</b> Kerja keras bagai kuda tapi hasil minim (Rat Race abadi).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--blue); font-weight:bold;">💎 VALUE<br><small>(Karya)</small></td>
+                        <td class="col-plus">Akses ke sumber daya (Resource) melimpah. Punya daya tawar.</td>
+                        <td class="col-impact">
+                            ➔ 🛡️ <b>Survival:</b> Kebutuhan fisik terjamin otomatis.<br>
+                            ➔ 🕌 <b>Spiritual:</b> Punya waktu & harta untuk sedekah/wakaf (Impact Luas).
+                        </td>
+                        <td class="col-minus">
+                            Tergantung pada belas kasihan orang lain.<br>
+                            ⚠️ <b>Bahaya:</b> Menjadi beban (parasit) yang melemahkan mental diri sendiri.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--purple); font-weight:bold;">🕌 SPIRITUAL<br><small>(Jiwa)</small></td>
+                        <td class="col-plus">Ketahanan mental baja (Resiliensi). Hidup punya arah & makna (Purpose).</td>
+                        <td class="col-impact">
+                            ➔ 💎 <b>Value:</b> Karya jadi jujur, berkah, & dipercaya orang (Trust).<br>
+                            ➔ 🛡️ <b>Survival:</b> Tenang meski krisis (Stoic/Ridha).
+                        </td>
+                        <td class="col-minus">
+                            Hampa, rapuh, & serakah.<br>
+                            ⚠️ <b>Bahaya:</b> Value Creation jadi alat penindasan/tipu daya. Intellect jadi licik.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <a href="index.html" style="margin-top:40px; color:#666; text-decoration:none; border:1px solid #444; padding:10px 30px; border-radius:50px; font-size:0.8rem;">KEMBALI KE MENU UTAMA</a>
+
+    <script>
+        // --- DATABASE SKILL ---
+        const skills = {
+            survival: [
+                { name: "Food Production", desc: "Menanam pangan / beternak / sumber mandiri" },
+                { name: "Culinary & Nutrition", desc: "Mengolah bahan mentah & paham nutrisi" },
+                { name: "Technical/Repair", desc: "Pertukangan, listrik dasar, perbaikan aset" },
+                { name: "First Aid/Medical", desc: "P3K, herbal dasar, & penanganan darurat" },
+                { name: "Self Defense/Safety", desc: "Bela diri & mitigasi bencana alam" }
+            ],
+            intellect: [
+                { name: "Critical Thinking", desc: "Logika tajam, anti-hoax, & analisa fakta" },
+                { name: "Value Exchange Logic", desc: "Paham hukum pertukaran nilai (bukan sekadar uang)" },
+                { name: "System Thinking", desc: "Memahami pola makro & ekosistem dunia" },
+                { name: "Communication", desc: "Menyampaikan kebenaran & negosiasi nilai" },
+                { name: "Research/Tabayyun", desc: "Validasi informasi & mencari kebenaran" }
+            ],
+            value: [ 
+                { name: "High-Impact Solution", desc: "Skill yang menyelesaikan masalah besar orang lain" },
+                { name: "Digital Leverage", desc: "Menggunakan teknologi untuk meluaskan manfaat" },
+                { name: "Leadership/Umat", desc: "Mengorganisir & menggerakkan orang dalam kebaikan" },
+                { name: "Teaching/Transfer", desc: "Mengajarkan ilmu (Amal Jariyah)" },
+                { name: "Innovation/Karya", desc: "Menciptakan produk/jasa yang bernilai guna" }
+            ],
+            spiritual: [ 
+                { name: "Tazkiyatun Nafs", desc: "Manajemen hati, ego, & hawa nafsu" },
+                { name: "Adab & Akhlak", desc: "Etika tinggi & perilaku mulia (Character)" },
+                { name: "Mindfulness/Khusyuk", desc: "Ketenangan batin & kesadaran penuh saat ini" },
+                { name: "Makrifatullah", desc: "Mengenal Tuhan & hakikat penciptaan diri" },
+                { name: "Spiritual Resilience", desc: "Sabar, Syukur, & Ridha dalam segala kondisi" }
+            ]
+        };
+
+        // --- STATE ---
+        let userSkills = {
+            survival: [], intellect: [], value: [], spiritual: []
+        };
+
+        // --- RENDER FUNCTION ---
+        function renderSection(id, key, items) {
+            const container = document.getElementById(id);
+            container.innerHTML = "";
+            items.forEach((item, index) => {
+                const div = document.createElement("div");
+                div.className = `skill-item ${userSkills[key].includes(index) ? 'active' : ''}`;
+                div.onclick = () => toggleSkill(key, index);
+                div.innerHTML = `
+                    <div>
+                        <div class="skill-name">${item.name}</div>
+                        <div class="skill-desc">${item.desc}</div>
+                    </div>
+                    <div class="skill-check"></div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- TOGGLE LOGIC ---
+        function toggleSkill(category, index) {
+            const arr = userSkills[category];
+            const pos = arr.indexOf(index);
+            if (pos === -1) arr.push(index);
+            else arr.splice(pos, 1);
+            
+            saveData();
+            renderAll();
+            calculate();
+        }
+
+        function renderAll() {
+            renderSection('listSurvival', 'survival', skills.survival);
+            renderSection('listIntellect', 'intellect', skills.intellect);
+            renderSection('listValue', 'value', skills.value);
+            renderSection('listSpiritual', 'spiritual', skills.spiritual);
+        }
+
+        // --- CALCULATION ---
+        function calculate() {
+            const cSurv = userSkills.survival.length;
+            const cInt = userSkills.intellect.length;
+            const cVal = userSkills.value.length;
+            const cSpi = userSkills.spiritual.length;
+
+            document.getElementById('barSurv').style.width = (cSurv * 20) + "%";
+            document.getElementById('txtSurv').innerText = (cSurv * 20) + "%";
+            
+            document.getElementById('barInt').style.width = (cInt * 20) + "%";
+            document.getElementById('txtInt').innerText = (cInt * 20) + "%";
+            
+            document.getElementById('barVal').style.width = (cVal * 20) + "%";
+            document.getElementById('txtVal').innerText = (cVal * 20) + "%";
+            
+            document.getElementById('barSpi').style.width = (cSpi * 20) + "%";
+            document.getElementById('txtSpi').innerText = (cSpi * 20) + "%";
+
+            // Total Score (Max 1000 Poin)
+            const totalPoints = (cSurv * 30) + (cInt * 30) + (cVal * 50) + (cSpi * 90);
+            
+            document.getElementById('totalScore').innerText = totalPoints;
+
+            let level = "DEPENDENT (KETERGANTUNGAN)";
+            let color = "#555";
+            let msg = "KONDISI: Anda adalah penumpang dalam kendaraan orang lain. Jika sopir (sistem/bos) belok jurang, Anda ikut jatuh.<br><br>SARAN: Darurat! Jangan mikir gaya hidup. Fokus 100% belajar skill teknis (Survival/Intellect) agar punya daya tawar dasar.";
+
+            if (totalPoints > 200) { 
+                level = "SURVIVOR (BERTAHAN)"; 
+                color = "#da3633"; 
+                msg = "KONDISI: Kepala sudah di atas air, tapi kaki masih menendang panik. Anda bekerja keras hanya untuk diam di tempat (Rat Race).<br><br>SARAN: Mulai bangun 'Aset Leher ke Atas'. Pelajari cara kerja uang dan sistem (Intellect) agar tidak diperbudak rutinitas."; 
+            }
+            if (totalPoints > 400) { 
+                level = "CONTRIBUTOR (BERMANFAAT)"; 
+                color = "#d4af37"; 
+                msg = "KONDISI: Anda punya nilai dan dihargai pasar. Tapi hati-hati, Anda bisa terjebak menjadi 'Mesin Pencetak Uang' tanpa jiwa.<br><br>SARAN: Geser fokus dari 'Apa yang saya dapat?' ke 'Apa solusi yang saya berikan?' (Value Creation). Luruskan niat."; 
+            }
+            if (totalPoints > 700) { 
+                level = "SOVEREIGN (BERDAULAT)"; 
+                color = "#2ea043"; 
+                msg = "KONDISI: Berdaulat. Anda punya opsi untuk berkata 'TIDAK' pada hal yang tidak sesuai nilai diri. Rezeki mengejar Anda.<br><br>SARAN: Perkuat pertahanan spiritual. Ujian di level ini adalah arogansi intelektual. Tetap membumi dan melayani."; 
+            }
+            if (totalPoints > 900) { 
+                level = "INSAN KAMIL (PARIPURNA)"; 
+                color = "#bc13fe"; 
+                msg = "KONDISI: Paripurna. Ilmu, Harta, dan Jiwa menyatu menjadi Rahmatan Lil Alamin. Keberadaan Anda adalah solusi bagi peradaban.<br><br>SARAN: Fokus pada kaderisasi dan warisan (Legacy). Cetak pemimpin baru. Siapkan bekal pulang terbaik."; 
+            }
+
+            const badge = document.getElementById('levelName');
+            badge.innerText = level;
+            badge.style.color = color;
+            badge.style.borderColor = color;
+            document.getElementById('totalScore').style.color = color;
+            document.getElementById('verdictText').innerHTML = msg; // Pakai innerHTML biar <br> kebaca
+        }
+
+        // --- STORAGE ---
+        function saveData() {
+            localStorage.setItem('knowledgeVaultV3', JSON.stringify(userSkills));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('knowledgeVaultV3');
+            if (saved) {
+                userSkills = JSON.parse(saved);
+                if(!userSkills.value) userSkills.value = [];
+                if(!userSkills.spiritual) userSkills.spiritual = [];
+                renderAll();
+                calculate();
+            } else {
+                renderAll();
+            }
+        }
+
+        function resetVault() {
+            if(confirm("Reset semua data skill?")) {
+                userSkills = { survival: [], intellect: [], value: [], spiritual: [] };
+                saveData();
+                renderAll();
+                calculate();
+            }
+        }
+
+        // Init
+        loadData();
+
+    </script>
+
+</body>
+</html>

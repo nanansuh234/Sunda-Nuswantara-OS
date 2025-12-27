@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Soul Legacy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0c0c0c;
+            --paper: #1a1a1a;
+            --gold: #c5a059;
+            --text: #ddd;
+            --border: #333;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        /* SCREEN MODE */
+        .screen-only { display: block; width: 100%; max-width: 900px; }
+        
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold); text-align: center;
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 5px;
+        }
+
+        .subtitle { color: #666; font-size: 0.9rem; text-align: center; margin-bottom: 30px; }
+
+        .card {
+            background: var(--paper); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+            padding: 25px; margin-bottom: 20px; border-radius: 8px;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif; color: #fff; font-size: 1.2rem;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+        }
+
+        .prompt-text {
+            font-size: 0.85rem; color: #888; font-style: italic; margin-bottom: 15px;
+            background: rgba(197, 160, 89, 0.1); padding: 10px; border-radius: 4px; line-height: 1.4;
+        }
+
+        textarea {
+            width: 100%; height: 150px; background: #000; border: 1px solid #444; color: #fff;
+            padding: 15px; font-family: 'Rajdhani', sans-serif; font-size: 1rem; line-height: 1.6;
+            border-radius: 4px; resize: vertical;
+        }
+        textarea:focus { border-color: var(--gold); outline: none; }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
+        
+        .btn {
+            padding: 12px 25px; border: none; font-weight: bold; cursor: pointer;
+            font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px;
+            border-radius: 4px;
+        }
+        .btn-save { background: var(--gold); color: #000; }
+        .btn-load { background: #2f81f7; color: #fff; }
+        .btn-print { background: #333; color: #fff; border: 1px solid #555; }
+        .btn:hover { filter: brightness(1.2); }
+
+        /* PRINT MODE (HIDDEN BY DEFAULT) */
+        #printArea { display: none; color: #000; background: #fff; padding: 50px; font-family: 'Times New Roman', serif; }
+        
+        @media print {
+            body { background: #fff; color: #000; padding: 0; }
+            .screen-only { display: none; }
+            #printArea { display: block; width: 100%; height: 100%; }
+            
+            .print-header { text-align: center; border-bottom: 3px double #000; padding-bottom: 20px; margin-bottom: 30px; }
+            .print-title { font-size: 28px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 2px; }
+            .print-sub { font-style: italic; font-size: 14px; }
+            
+            .print-section { margin-bottom: 40px; page-break-inside: avoid; }
+            .print-sec-title { font-weight: bold; font-size: 18px; text-transform: uppercase; border-bottom: 1px solid #000; margin-bottom: 15px; padding-bottom: 5px; }
+            .print-content { font-size: 16px; line-height: 1.8; white-space: pre-wrap; text-align: justify; }
+            
+            .print-footer { margin-top: 80px; display: flex; justify-content: space-between; page-break-inside: avoid; }
+            .sign-box { width: 250px; text-align: center; border-top: 1px solid #000; padding-top: 10px; font-weight: bold; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="screen-only">
+        <h1>THE SOUL LEGACY</h1>
+        <div class="subtitle">Wasiat Jiwa: Pendidikan, Nilai, Karakter & Silaturahmi</div>
+
+        <div style="text-align:center; margin-bottom:20px;">
+            <button class="btn btn-load" onclick="loadExample80s()">📥 MUAT CONTOH (TEMPLATE ERA 80-AN)</button>
+        </div>
+
+        <div class="card">
+            <div class="section-title">🎓 WARISAN PENDIDIKAN (Ilmu & Keahlian)</div>
+            <div class="prompt-text">
+                Fokus: Skill teknis apa yang wajib dikuasai agar mandiri? Bukan sekadar gelar, tapi 'Ilmu Kehidupan' (Dagang, Bertani, Agama).
+            </div>
+            <textarea id="inpEdu" placeholder="Tuliskan pesan pendidikanmu di sini..."></textarea>
+        </div>
+
+        <div class="card">
+            <div class="section-title">⚖️ WARISAN NILAI (Prinsip Hidup)</div>
+            <div class="prompt-text">
+                Fokus: Apa harga diri keluarga ini? Bagaimana memandang hutang, janji, dan kehormatan? Apa yang pantang dilakukan?
+            </div>
+            <textarea id="inpValue" placeholder="Tuliskan prinsip nilai keluarga di sini..."></textarea>
+        </div>
+
+        <div class="card">
+            <div class="section-title">🛡️ WARISAN KARAKTER (Adab & Mental)</div>
+            <div class="prompt-text">
+                Fokus: Bagaimana sikap saat susah dan saat senang? Bagaimana memperlakukan orang kecil dan orang tua? Mentalitas baja apa yang harus dimiliki?
+            </div>
+            <textarea id="inpChar" placeholder="Tuliskan standar karakter di sini..."></textarea>
+        </div>
+
+        <div class="card">
+            <div class="section-title">🤝 WARISAN JEJARING (Peta Kekerabatan)</div>
+            <div class="prompt-text">
+                Fokus: Siapa kawan sejati Ayah/Ibu? Siapa tempat bertanya? Siapa kerabat yang harus diwaspadai? (Sebut Nama Jelas).
+            </div>
+            <textarea id="inpSoc" placeholder="Tuliskan peta kekerabatan di sini..."></textarea>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-save" onclick="saveData()">💾 SIMPAN DRAFT</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ CETAK WASIAT (PDF)</button>
+        </div>
+
+        <a href="index.html" style="display:block; text-align:center; margin-top:30px; color:#666; text-decoration:none;">KEMBALI KE MENU</a>
+    </div>
+
+    <div id="printArea">
+        <div class="print-header">
+            <div class="print-title">SURAT WASIAT JIWA & PERADABAN</div>
+            <div class="print-sub">Pesan Tertulis dari Orang Tua kepada Generasi Penerus</div>
+        </div>
+
+        <div class="print-section">
+            <div class="print-sec-title">I. PANDUAN PENDIDIKAN & KEILMUAN</div>
+            <div class="print-content" id="outEdu">--</div>
+        </div>
+
+        <div class="print-section">
+            <div class="print-sec-title">II. PRINSIP NILAI & KEHORMATAN</div>
+            <div class="print-content" id="outValue">--</div>
+        </div>
+
+        <div class="print-section">
+            <div class="print-sec-title">III. STANDAR KARAKTER & ADAB</div>
+            <div class="print-content" id="outChar">--</div>
+        </div>
+
+        <div class="print-section">
+            <div class="print-sec-title">IV. PETA KEKERABATAN & AMANAH SOSIAL</div>
+            <div class="print-content" id="outSoc">--</div>
+        </div>
+
+        <div class="print-footer">
+            <div style="text-align:left;">
+                <p>Tertanda di: .......................................</p>
+                <p>Pada Tanggal: <span id="datePrint"></span></p>
+            </div>
+            <div class="sign-box">
+                ( ORANG TUA / PEWARIS )
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load Data on Start
+        window.onload = function() {
+            if(localStorage.getItem('soulLegacy')) {
+                const data = JSON.parse(localStorage.getItem('soulLegacy'));
+                document.getElementById('inpEdu').value = data.edu;
+                document.getElementById('inpValue').value = data.val;
+                document.getElementById('inpChar').value = data.char;
+                document.getElementById('inpSoc').value = data.soc;
+                updatePrintView();
+            }
+            const d = new Date();
+            document.getElementById('datePrint').innerText = d.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+        };
+
+        function loadExample80s() {
+            if(confirm("Isi formulir dengan Template Era 80-an? (Data lama akan tertimpa)")) {
+                
+                document.getElementById('inpEdu').value = 
+`"Nak, ijazah itu cuma tanda kamu pernah sekolah, bukan tanda kamu bisa berpikir. Ayah menyekolahkanmu tinggi bukan biar kamu jadi kuli berdasi, tapi biar kamu merdeka."
+    1. Agama Adalah Kompas: Sepintar apapun kamu, tanpa agama kamu hanya akan jadi penipu yang licik. Sholat/Ibadah adalah tiang, sisanya hanya dinding.
+    2. Skill Tangan (Survival): Jangan cuma otak. Belajarlah berdagang, bertani, atau membetulkan mesin. Saat ekonomi runtuh, orang pintar bisa mati lapar, tapi tukang dan pedagang akan tetap hidup.
+    3. Bahasa Asing: Kuasai minimal satu bahasa dunia (Inggris/Arab/Mandarin). Jangan sampai kamu jadi katak dalam tempurung yang mudah dibodohi orang asing.
+    4. Literasi Keuangan: Sekolah tidak mengajarkan cari uang. Pelajari bedanya Aset dan Liabilitas. Jangan kerja untuk uang seumur hidup, bikin uang kerja buat kamu.
+    5. Sejarah: Jangan buta sejarah. Orang yang lupa masa lalu akan jatuh di lubang yang sama. Pelajari asal-usul kakek buyutmu.
+    6. Berenang & Bela Diri: Ini wajib. Kamu harus bisa menyelamatkan dirimu sendiri dan orang lain dalam keadaan darurat fisik.
+    7. Public Speaking (Bicara): Orang yang tidak bisa menyampaikan isinya pikirannya akan selalu dikalahkan oleh orang yang pandai bicara, walau isinya kosong. Belajarlah retorika.
+    8. Adaptasi Teknologi: Jangan anti perubahan. Ayah dulu belajar ketik manual, sekarang komputer. Kamu harus lebih cepat adaptasi dari Ayah.
+    9. Ilmu Kesehatan Dasar: Pelajari obat-obatan herbal dan P3K. Jangan sikit-sikit lari ke Dokter dan bergantung pada farmasi.
+    10. Adab Menuntut Ilmu: Hormati gurumu. Ilmu yang berkah itu datang dari ridho guru, bukan dari mahalnya bayaran sekolah.`;
+
+                document.getElementById('inpValue').value = 
+`"Harta Ayah mungkin habis kamu makan, tapi Nama Baik keluarga ini jangan pernah kamu rusak. Sekali arang tercoreng di kening, seumur hidup orang tidak percaya."
+    1. Haram Memakan Hak Orang: Sekecil apapun, jangan ambil yang bukan hakmu. Lebih baik kita makan nasi garam hasil keringat sendiri daripada makan daging hasil nipu/korupsi.
+    2. Janji Adalah Hutang: Kalau mulutmu sudah bilang "Ya", kerjakan walau kamu rugi bandar. Laki-laki/Wanita terhormat dipegang omongannya.
+    3. Anti Hutang Konsumtif: Malu itu bukan karena miskin, malu itu karena pura-pura kaya pakai uang orang lain. Jangan berhutang demi gaya.
+    4. Tanah Adalah Jati Diri: Tanah pusaka jangan dijual kecuali nyawa taruhannya. Itu pijakan anak cucumu nanti.
+    5. Loyalitas: Jangan jadi pengkhianat. Kalau kawan sedang susah, jangan lari. Kalau atasan/guru sedang diuji, jangan menusuk dari belakang.
+    6. Keadilan: Belalah orang lemah, walau kamu harus berdiri sendirian. Jangan jadi penindas mentang-mentang kamu kuat.
+    7. Tanggung Jawab: Berani berbuat, berani bertanggung jawab. Jangan lempar batu sembunyi tangan. Itu sifat pengecut.
+    8. Ilmu Padi: Semakin berisi, semakin merunduk. Orang sombong temannya setan. Tetaplah membumi walau kamu sudah terbang tinggi.
+    9. Kemandirian: Pantang meminta-minta. Tangan di atas lebih mulia daripada tangan di bawah. Selama masih punya tenaga, haram jadi pengemis belas kasihan.
+    10. Syukur: Jangan lihat ke atas terus, nanti lehermu sakit. Lihat ke bawah biar hatimu tenang. Apa yang kamu punya sekarang adalah mimpi orang lain.`;
+
+                document.getElementById('inpChar').value = 
+`"Dunia ini keras, Nak. Kalau kamu lembek, kamu digilas. Ayah mendidikmu keras supaya dunia tidak bisa menyakitimu."
+    1. Hormat Orang Tua: Keramat hidupmu ada di Ibu/Bapak. Jangan bentak mereka. Suksesmu macet kalau hatimu durhaka.
+    2. Tahan Banting (Stoic): Jangan cengeng. Kalau jatuh, bangun lagi. Jangan mengeluh di sosmed/depan umum. Simpan air matamu di atas sajadah.
+    3. Disiplin Subuh: Rezeki dipatok ayam kalau kamu bangun siang. Kemenangan hari dimulai dari menaklukkan selimut di waktu subuh.
+    4. Kebersihan: Jaga badan dan rumahmu. Orang yang jorok rezekinya seret dan pikirannya kusut.
+    5. Keberanian: Berani mengakui salah itu jantan. Berani minta maaf itu ksatria. Jangan gengsi minta maaf kalau memang salah.
+    6. Sabar: Sabar itu bukan diam diinjak, tapi tenang saat bertindak. Jangan grusa-grusu (gegabah) saat ambil keputusan.
+    7. Dermawan: Jangan pelit. Rezeki itu seperti air di sumur, kalau gak ditimba (disedekahkan) dia jadi keruh/busuk.
+    8. Istiqomah (Konsisten): Pintar itu kalah sama tekun. Batu keras bisa lubang sama tetesan air yang terus menerus.
+    9. Empati: Hormati orang kecil (tukang sapu, satpam, pembantu). Derajat manusia dilihat dari caranya memperlakukan orang yang tidak bisa membalas budinya.
+    10. Jaga Kehormatan (Iffah): Untuk anak perempuan, mahkotamu adalah rasa malumu. Untuk anak laki-laki, kehormatanmu adalah kemampuanmu menundukkan pandangan dan menjaga wanita.`;
+
+                document.getElementById('inpSoc').value = 
+`"Kamu tidak bisa hidup sendiri di hutan belantara dunia ini. Ini peta jalan yang Ayah/Ibu buat supaya kamu tidak salah pilih kawan."
+    1. Wali Terpercaya: Jika Ayah tiada, orang pertama yang kamu temui adalah Paman [SEBUT NAMA]. Dia saksi perjuangan Ayah, dia amanah.
+    2. Guru Spiritual: Kalau bingung urusan agama, tanyalah pada Ustadz/Kyai [SEBUT NAMA]. Jangan cari guru sembarangan di internet.
+    3. Daftar Hitam (Blacklist): Hati-hati berbisnis dengan keluarga [SEBUT NAMA JIKA ADA]. Sejarah membuktikan mereka sering ingkar janji. Cukup kenal, jangan terlalu dekat.
+    4. Tetangga Dekat: Merekalah saudara terdekatmu saat ada musibah. Jangan bangun pagar terlalu tinggi. Kirim makanan kalau kamu masak lebih.
+    5. Kawan Sejati vs Benalu: Teman minum kopi banyak, teman menangis sedikit. Cari kawan yang berani menegurmu saat salah, bukan yang selalu memujimu.
+    6. Jaga Silaturahmi: Jangan putus hubungan darah hanya karena warisan atau beda pilihan politik. Darah lebih kental daripada air.
+    7. Mitra Bisnis: Carilah mitra yang jujur, bukan yang cuma modal kaya. Kejujuran adalah modal bisnis paling mahal.
+    8. Orang Dalam: Ayah punya kenalan baik di bidang [SEBUT BIDANG]. Temuilah Pak [NAMA], bilang kamu anak Ayah. Dia orang baik.
+    9. Bersedekah pada Kerabat: Kalau mau sedekah, utamakan kerabat dekat yang miskin dulu sebelum orang jauh. Itu pahalanya dobel.
+    10. Netralitas: Jangan fanatik buta pada politik atau golongan. Berdirilah di atas kebenaran, bukan di atas bendera partai.`;
+
+                updatePrintView();
+                alert("Template Era 80-an berhasil dimuat!");
+            }
+        }
+
+        function saveData() {
+            const data = {
+                edu: document.getElementById('inpEdu').value,
+                val: document.getElementById('inpValue').value,
+                char: document.getElementById('inpChar').value,
+                soc: document.getElementById('inpSoc').value
+            };
+            localStorage.setItem('soulLegacy', JSON.stringify(data));
+            updatePrintView();
+            alert("Draft Wasiat Jiwa berhasil disimpan!");
+        }
+
+        function updatePrintView() {
+            document.getElementById('outEdu').innerText = document.getElementById('inpEdu').value || "..........................................................................................";
+            document.getElementById('outValue').innerText = document.getElementById('inpValue').value || "..........................................................................................";
+            document.getElementById('outChar').innerText = document.getElementById('inpChar').value || "..........................................................................................";
+            document.getElementById('outSoc').innerText = document.getElementById('inpSoc').value || "..........................................................................................";
+        }
+
+        document.querySelectorAll('textarea').forEach(item => {
+            item.addEventListener('input', updatePrintView);
+        });
+    </script>
+
+</body>
+</html>
