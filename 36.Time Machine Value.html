@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nusantara Time Machine</title>
+    <link rel="icon" type="image/png" href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1a1a1a;
+            --panel: #222;
+            --gold: #d4af37;
+            --red: #c0392b;
+            --green: #27ae60;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(#333 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .main-logo { width: 70px; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)); }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            margin: 0 0 5px 0; letter-spacing: 3px; text-align: center;
+            font-size: 2rem;
+        }
+        .subtitle { font-family: 'Special Elite', cursive; color: #888; margin-bottom: 30px; letter-spacing: 1px; }
+
+        .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
+
+        /* --- CONTROLLER --- */
+        .control-box {
+            background: #000; border: 2px solid var(--gold); border-radius: 10px;
+            padding: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .input-group label { display: block; color: var(--gold); font-size: 0.8rem; margin-bottom: 8px; text-transform: uppercase; font-weight: bold; }
+        .input-group select, .input-group input {
+            width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #444; 
+            color: #fff; border-radius: 4px; font-family: 'Special Elite', cursive; font-size: 1.1rem;
+        }
+
+        .btn-calc {
+            grid-column: 1 / -1;
+            padding: 15px; background: var(--gold); color: #000; font-weight: bold;
+            border: none; cursor: pointer; font-family: 'Cinzel', serif; font-size: 1.1rem;
+            transition: 0.3s; margin-top: 10px;
+        }
+        .btn-calc:hover { background: #b8962e; letter-spacing: 2px; }
+
+        /* --- DISPLAY RESULT --- */
+        .timeline-view {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            margin-top: 20px;
+        }
+
+        .era-card {
+            background: #222; border: 1px dashed #555; padding: 20px;
+            position: relative; border-radius: 8px; display: flex; flex-direction: column;
+        }
+        
+        .era-label {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            background: #000; border: 1px solid #555; padding: 5px 15px;
+            font-family: 'Special Elite', cursive; font-size: 1.2rem; color: #fff; width: 80%; text-align: center;
+        }
+
+        .money-display {
+            text-align: center; margin-top: 20px; padding-bottom: 15px; border-bottom: 1px solid #333;
+        }
+        .money-val { font-size: 1.5rem; font-weight: bold; font-family: 'Cinzel', serif; }
+        .money-sub { font-size: 0.8rem; color: #888; }
+
+        /* LIST ITEM COMPARISON */
+        .comparison-list { margin-top: 15px; flex: 1; }
+        .comp-item {
+            display: flex; align-items: center; margin-bottom: 15px;
+            background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px;
+        }
+        .comp-icon { font-size: 1.8rem; margin-right: 15px; width: 40px; text-align: center; }
+        .comp-text { font-size: 0.85rem; color: #ccc; width: 100%; }
+        .comp-status { font-weight: bold; display: block; margin-top: 3px; font-size: 0.95rem; }
+
+        .loss { color: var(--red); }
+        .gain { color: var(--green); }
+        .neutral { color: #888; }
+
+        /* VS BADGE */
+        .vs-badge {
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            background: var(--gold); color: #000; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-family: 'Cinzel', serif; z-index: 10;
+            border: 4px solid #000; font-size: 1.2rem;
+        }
+
+        @media (max-width: 700px) {
+            .timeline-view { grid-template-columns: 1fr; gap: 40px; }
+            .control-box { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png" alt="Logo" class="main-logo">
+    <h1>THE TIME MACHINE</h1>
+    <div class="subtitle">"Lihat Kejamnya Inflasi vs Abadinya Emas"</div>
+
+    <div class="container">
+
+        <div class="control-box">
+            <div class="input-group">
+                <label>Pilih Tahun Masa Lalu</label>
+                <select id="startYear">
+                    <option value="1997">Tahun 1997 (Sebelum Krismon)</option>
+                    <option value="2000">Tahun 2000 (Era Millenium)</option>
+                    <option value="2005">Tahun 2005 (Era SBY Awal)</option>
+                    <option value="2010">Tahun 2010 (Era Stabil)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Nominal Tabungan (Rupiah)</label>
+                <input type="number" id="startAmount" value="50000000" placeholder="Contoh: 50 Juta">
+            </div>
+            <button class="btn-calc" onclick="calculateTimeTravel()">MULAI SIMULASI WAKTU ⏳</button>
+        </div>
+
+        <div class="timeline-view" id="resultArea" style="display:none;">
+            
+            <div class="vs-badge">VS</div>
+
+            <div class="era-card" style="border-color: var(--red);">
+                <div class="era-label" style="background:var(--red); color:#000;">SIMPAN DI BRANKAS (RP)</div>
+                
+                <div class="money-display">
+                    <div class="money-sub">Uang Anda Hari Ini (2025):</div>
+                    <div class="money-val" style="color:var(--red);">Rp <span id="resFiat">50.000.000</span></div>
+                    <div class="money-sub">Nominal Utuh, Daya Beli Hancur</div>
+                </div>
+
+                <div class="comparison-list">
+                    <div class="comp-item">
+                        <div class="comp-icon">🏡</div>
+                        <div class="comp-text">
+                            <div>Dulu: <span class="past-fiat-house">Dapat Rumah Mewah</span></div>
+                            <span class="comp-status loss">Sekarang: <span id="nowFiatHouse">Cuma Dapat Pagar</span></span>
+                        </div>
+                    </div>
+                    <div class="comp-item">
+                        <div class="comp-icon">🎓</div>
+                        <div class="comp-text">
+                            <div>Dulu: <span class="past-fiat-edu">Kuliah Sampai S3</span></div>
+                            <span class="comp-status loss">Sekarang: <span id="nowFiatEdu">Cuma Masuk TK</span></span>
+                        </div>
+                    </div>
+                    <div class="comp-item">
+                        <div class="comp-icon">🏥</div>
+                        <div class="comp-text">
+                            <div>Dulu: <span class="past-fiat-health">Operasi Jantung VIP</span></div>
+                            <span class="comp-status loss">Sekarang: <span id="nowFiatHealth">Cuma Cukup Tambal Gigi</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="era-card" style="border-color: var(--gold); background: #1a1500;">
+                <div class="era-label" style="background:var(--gold); color:#000;">SIMPAN DI EMAS (Au)</div>
+                
+                <div class="money-display">
+                    <div class="money-sub">Nilai Aset Hari Ini (2025):</div>
+                    <div class="money-val" style="color:var(--gold);">Rp <span id="resGold">...</span></div>
+                    <div class="money-sub">Total: <span id="resDinarQty">...</span> Dinar</div>
+                </div>
+
+                <div class="comparison-list">
+                    <div class="comp-item">
+                        <div class="comp-icon">🏡</div>
+                        <div class="comp-text">
+                            <div>Dulu: <span class="past-gold-house">Dapat Rumah Mewah</span></div>
+                            <span class="comp-status gain">Sekarang: <span id="nowGoldHouse">Tetap Dapat Rumah Mewah</span></span>
+                        </div>
+                    </div>
+                    <div class="comp-item">
+                        <div class="comp-icon">🎓</div>
+                        <div class="comp-text">
+                            <div>Dulu: <span class="past-gold-edu">Kuliah Sampai S3</span></div>
+                            <span class="comp-status gain">Sekarang: <span id="nowGoldEdu">Bisa Kuliahkan Cucu</span></span>
+                        </div>
+                    </div>
+                    <div class="comp-item">
+                        <div class="comp-icon">🏥</div>
+                        <div class="comp-text">
+                            <div>Dulu: <span class="past-gold-health">Operasi Jantung VIP</span></div>
+                            <span class="comp-status gain">Sekarang: <span id="nowGoldHealth">Cover Full VIP</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // DATA HISTORIS & HARGA BARANG (Estimasi Kasar untuk Efek Shock)
+        // Harga Dinar: 
+        // 1997: ~200.000 (Sebelum Krismon)
+        // 2000: ~350.000 
+        // 2005: ~650.000 
+        // 2010: ~1.500.000
+        // 2025: ~6.200.000
+
+        // Harga Rumah Type 36 (Pinggiran Kota Besar):
+        // 1997: ~15 Juta
+        // 2000: ~30 Juta
+        // 2005: ~50 Juta
+        // 2010: ~90 Juta
+        // 2025: ~350 Juta
+
+        const history = {
+            1997: { dinar: 200000, house: 15000000, edu: 2000000, health: 500000 },
+            2000: { dinar: 350000, house: 30000000, edu: 3000000, health: 1000000 },
+            2005: { dinar: 650000, house: 50000000, edu: 5000000, health: 2000000 },
+            2010: { dinar: 1500000, house: 90000000, edu: 10000000, health: 5000000 },
+            2025: { dinar: 6200000, house: 350000000, edu: 25000000, health: 15000000 } // Current Baseline
+        };
+
+        function calculateTimeTravel() {
+            const year = document.getElementById('startYear').value;
+            const amount = parseFloat(document.getElementById('startAmount').value) || 0;
+            
+            if(amount === 0) return;
+
+            const dataPast = history[year];
+            const dataNow = history[2025];
+
+            // 1. HITUNG ASET EMAS
+            // Dulu uang itu dibelikan Dinar
+            const dinarQty = amount / dataPast.dinar;
+            const goldValueNow = dinarQty * dataNow.dinar;
+
+            // 2. ANALISA DAYA BELI FIAT (Rupiah Disimpan)
+            // Rumah
+            const housePast = amount / dataPast.house;
+            const houseNowFiat = amount / dataNow.house;
+            // Edu (Biaya Masuk Kuliah)
+            const eduPast = amount / dataPast.edu;
+            const eduNowFiat = amount / dataNow.edu;
+            // Health (Biaya Operasi/Rawat)
+            const healthPast = amount / dataPast.health;
+            const healthNowFiat = amount / dataNow.health;
+
+            // 3. ANALISA DAYA BELI EMAS (Dinar Disimpan)
+            // Pakai value aset emas sekarang untuk beli harga barang sekarang
+            const houseNowGold = goldValueNow / dataNow.house;
+            const eduNowGold = goldValueNow / dataNow.edu;
+            const healthNowGold = goldValueNow / dataNow.health;
+
+
+            // --- RENDER TEXT GENERATOR (The "Najong" Factor) ---
+            
+            // Helper Text Generator
+            function getHouseText(ratio) {
+                if (ratio >= 5) return "Dapat Cluster Mewah";
+                if (ratio >= 2) return "Dapat Rumah Besar";
+                if (ratio >= 1) return "Dapat 1 Unit Rumah";
+                if (ratio >= 0.5) return "Cuma Dapat DP 50%";
+                if (ratio >= 0.1) return "Cuma Dapat Pagar/WC";
+                return "Gak Cukup Buat DP";
+            }
+
+            function getEduText(ratio) {
+                if (ratio >= 5) return "Kuliah S1 - S3 Lunas";
+                if (ratio >= 1) return "Lunas Biaya Masuk";
+                if (ratio >= 0.5) return "Cuma Cukup 1 Semester";
+                return "Cuma Cukup Beli Buku";
+            }
+
+            function getHealthText(ratio) {
+                if (ratio >= 5) return "Cover Operasi Besar VIP";
+                if (ratio >= 1) return "Cover Rawat Inap";
+                if (ratio >= 0.1) return "Cuma Cukup Obat Jalan";
+                return "Cuma Cukup Pendaftaran";
+            }
+
+            // Update DOM
+            document.getElementById('resultArea').style.display = "grid";
+
+            // Fiat Section
+            document.getElementById('resFiat').innerText = amount.toLocaleString();
+            
+            // Past Labels
+            const elsHouse = document.querySelectorAll('.past-fiat-house, .past-gold-house');
+            elsHouse.forEach(el => el.innerText = getHouseText(housePast));
+            
+            const elsEdu = document.querySelectorAll('.past-fiat-edu, .past-gold-edu');
+            elsEdu.forEach(el => el.innerText = getEduText(eduPast));
+
+            const elsHealth = document.querySelectorAll('.past-fiat-health, .past-gold-health');
+            elsHealth.forEach(el => el.innerText = getHealthText(healthPast));
+
+            // Fiat Result (SHOCKING)
+            document.getElementById('nowFiatHouse').innerText = getHouseText(houseNowFiat);
+            document.getElementById('nowFiatEdu').innerText = getEduText(eduNowFiat);
+            document.getElementById('nowFiatHealth').innerText = getHealthText(healthNowFiat);
+
+            // Gold Section
+            document.getElementById('resGold').innerText = goldValueNow.toLocaleString('id-ID');
+            document.getElementById('resDinarQty').innerText = dinarQty.toFixed(2);
+
+            // Gold Result (SAVIOR)
+            document.getElementById('nowGoldHouse').innerText = getHouseText(houseNowGold);
+            document.getElementById('nowGoldEdu').innerText = getEduText(eduNowGold);
+            document.getElementById('nowGoldHealth').innerText = getHealthText(healthNowGold);
+        }
+    </script>
+
+</body>
+</html>

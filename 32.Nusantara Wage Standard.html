@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standar Upah Nusantara</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-color: #fcfdf5; /* Kertas agak kehijauan dikit (Ledger) */
+            --line-color: #a4b0be;
+            --ink-color: #2f3640;
+            --header-bg: #2f3542;
+            --gold-acc: #d4af37;
+        }
+
+        body {
+            background-color: #57606f; /* Meja kerja gelap */
+            font-family: 'Patrick Hand', cursive;
+            color: var(--ink-color);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .paper {
+            background-color: var(--paper-color);
+            width: 100%;
+            max-width: 950px;
+            padding: 40px 50px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            /* Garis buku kas */
+            background-image: linear-gradient(var(--line-color) 1px, transparent 1px);
+            background-size: 100% 35px;
+            border-radius: 4px;
+            transform: rotate(0.5deg);
+        }
+
+        /* Lubang jilid buku */
+        .paper::before {
+            content: ''; position: absolute; top: 0; bottom: 0; left: 20px;
+            width: 40px; 
+            background-image: radial-gradient(circle, #57606f 20%, transparent 25%);
+            background-size: 100% 40px;
+            background-position: -10px 20px;
+            border-right: 2px solid #aaa;
+        }
+
+        h1 {
+            font-family: 'Courier Prime', monospace;
+            font-size: 2.2rem; text-align: center; margin-bottom: 5px;
+            text-transform: uppercase; letter-spacing: 3px; font-weight: bold;
+            border-bottom: 3px double var(--ink-color); display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .subtitle { font-size: 1.1rem; color: #555; margin-top: 10px; font-style: italic; }
+
+        .rate-box {
+            background: #fff; border: 2px solid var(--ink-color);
+            padding: 10px 20px; display: inline-block; margin-bottom: 20px;
+            font-family: 'Courier Prime', monospace; font-weight: bold;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.1); transform: rotate(-1deg);
+        }
+
+        table {
+            width: 100%; border-collapse: collapse; margin-top: 10px;
+            font-size: 1.1rem; background: rgba(255,255,255,0.9);
+        }
+
+        th, td {
+            padding: 12px 15px; text-align: left;
+            border-bottom: 1px solid var(--ink-color);
+            border-right: 1px solid #ddd;
+        }
+        th:last-child, td:last-child { border-right: none; }
+
+        th {
+            font-family: 'Courier Prime', monospace; font-size: 1.1rem;
+            background-color: var(--header-bg); color: #fff;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .level-row {
+            background-color: #dfe4ea; font-weight: bold; 
+            text-transform: uppercase; color: #2f3542;
+            font-family: 'Courier Prime', monospace; letter-spacing: 1px;
+        }
+
+        /* Kolom Gaji */
+        .col-money { font-family: 'Courier Prime', monospace; font-weight: bold; }
+        .val-dh { color: #2980b9; }
+        .val-dn { color: #d35400; }
+
+        .stamp {
+            position: absolute; bottom: 50px; right: 50px;
+            border: 4px solid #27ae60; color: #27ae60; padding: 10px 20px;
+            font-family: 'Courier Prime', monospace; font-weight: bold;
+            font-size: 1.5rem; text-transform: uppercase;
+            transform: rotate(-15deg); opacity: 0.6; border-radius: 10px;
+            mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC');
+        }
+
+        @media (max-width: 600px) {
+            .paper { padding: 20px; width: 100%; transform: rotate(0deg); }
+            th, td { font-size: 0.9rem; padding: 8px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="paper">
+        <div class="header-section">
+            <h1>Sistem Pengupahan Nusantara</h1><br>
+            <div class="subtitle">"Bayarlah upah pekerja sebelum keringatnya menetes."</div>
+            <br>
+            <div class="rate-box">
+                BASIS: 1 DIRHAM (Ag) ≈ Rp 75.000 | 1 DINAR (Au) ≈ Rp 6.200.000
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:35%">Profesi / Jabatan</th>
+                    <th style="width:20%">Est. Rupiah</th>
+                    <th style="width:25%">Upah Harian</th>
+                    <th style="width:20%">Gaji Bulanan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="level-row"><td colspan="4">🔨 Level 1: Pekerja Umum (General Worker)</td></tr>
+                <tr>
+                    <td>Asisten Rumah Tangga (ART)</td>
+                    <td>Rp 2.5 Jt /bln</td>
+                    <td class="col-money val-dh">-</td>
+                    <td class="col-money val-dn">0.40 Dn</td>
+                </tr>
+                <tr>
+                    <td>Buruh Harian / Tukang Batu</td>
+                    <td>Rp 150rb /hari</td>
+                    <td class="col-money val-dh">2.00 Dh</td>
+                    <td class="col-money val-dn">1.85 Dn</td>
+                </tr>
+                <tr>
+                    <td>Pelayan Toko / Waiters</td>
+                    <td>Rp 3.0 Jt /bln</td>
+                    <td class="col-money val-dh">1.60 Dh</td>
+                    <td class="col-money val-dn">0.48 Dn</td>
+                </tr>
+                <tr>
+                    <td>Driver / Kurir Logistik</td>
+                    <td>Rp 4.0 Jt /bln</td>
+                    <td class="col-money val-dh">2.15 Dh</td>
+                    <td class="col-money val-dn">0.65 Dn</td>
+                </tr>
+
+                <tr class="level-row"><td colspan="4">⚙️ Level 2: Tenaga Terampil (Skilled)</td></tr>
+                <tr>
+                    <td>Staff Admin / Kasir</td>
+                    <td>Rp 5.0 Jt /bln</td>
+                    <td class="col-money val-dh">2.70 Dh</td>
+                    <td class="col-money val-dn">0.80 Dn</td>
+                </tr>
+                <tr>
+                    <td>Teknisi Listrik / Mesin</td>
+                    <td>Rp 6.5 Jt /bln</td>
+                    <td class="col-money val-dh">3.50 Dh</td>
+                    <td class="col-money val-dn">1.05 Dn</td>
+                </tr>
+                <tr>
+                    <td>Guru Sekolah (Standar)</td>
+                    <td>Rp 7.0 Jt /bln</td>
+                    <td class="col-money val-dh">3.75 Dh</td>
+                    <td class="col-money val-dn">1.13 Dn</td>
+                </tr>
+                <tr>
+                    <td>Content Creator Pemula</td>
+                    <td>Rp 6.0 Jt /bln</td>
+                    <td class="col-money val-dh">3.20 Dh</td>
+                    <td class="col-money val-dn">0.97 Dn</td>
+                </tr>
+
+                <tr class="level-row"><td colspan="4">🎓 Level 3: Profesional & Ahli</td></tr>
+                <tr>
+                    <td>Programmer / IT Staff</td>
+                    <td>Rp 12.0 Jt /bln</td>
+                    <td class="col-money val-dh">6.40 Dh</td>
+                    <td class="col-money val-dn">1.94 Dn</td>
+                </tr>
+                <tr>
+                    <td>Arsitek / Sipil Engineer</td>
+                    <td>Rp 15.0 Jt /bln</td>
+                    <td class="col-money val-dh">8.00 Dh</td>
+                    <td class="col-money val-dn">2.42 Dn</td>
+                </tr>
+                <tr>
+                    <td>Dokter Umum</td>
+                    <td>Rp 18.0 Jt /bln</td>
+                    <td class="col-money val-dh">9.60 Dh</td>
+                    <td class="col-money val-dn">2.90 Dn</td>
+                </tr>
+                <tr>
+                    <td>Manajer Operasional</td>
+                    <td>Rp 20.0 Jt /bln</td>
+                    <td class="col-money val-dh">10.7 Dh</td>
+                    <td class="col-money val-dn">3.23 Dn</td>
+                </tr>
+
+                <tr class="level-row"><td colspan="4">👑 Level 4: High Expert & Eksekutif</td></tr>
+                <tr>
+                    <td>Dokter Spesialis</td>
+                    <td>Rp 45.0 Jt /bln</td>
+                    <td class="col-money val-dh">24.0 Dh</td>
+                    <td class="col-money val-dn">7.26 Dn</td>
+                </tr>
+                <tr>
+                    <td>Senior Software Engineer</td>
+                    <td>Rp 35.0 Jt /bln</td>
+                    <td class="col-money val-dh">18.7 Dh</td>
+                    <td class="col-money val-dn">5.65 Dn</td>
+                </tr>
+                <tr>
+                    <td>Direktur / GM</td>
+                    <td>Rp 60.0 Jt /bln</td>
+                    <td class="col-money val-dh">32.0 Dh</td>
+                    <td class="col-money val-dn">9.68 Dn</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="stamp">FAIR<br>WAGE</div>
+
+        <div style="margin-top:30px; border-top:2px dashed #aaa; padding-top:15px; font-size:0.95rem; text-align:justify;">
+            <strong>Catatan Filosofis:</strong><br>
+            Sistem ini menggunakan <strong>Dinar & Dirham</strong> bukan hanya sebagai alat tukar, tapi sebagai <em>penyimpan nilai tenaga kerja</em>. 
+            Seorang Tukang Batu yang dibayar <strong>2 Dirham</strong> hari ini, nilainya akan tetap setara dengan "2 ekor ayam besar" bahkan 10 tahun lagi. 
+            Berbeda dengan uang kertas di mana gaji Rp 150.000 hari ini mungkin hanya cukup buat beli bakso di masa depan.
+        </div>
+    </div>
+
+</body>
+</html>

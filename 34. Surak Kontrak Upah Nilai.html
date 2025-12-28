@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nusantara Adoption Kit</title>
+    <link rel="icon" type="image/png" href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Bebas+Neue&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #121212;
+            --gold: #d4af37;
+            --silver: #bdc3c7;
+            --dark: #000000;
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--white);
+            font-family: 'Roboto', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            text-align: center; margin-bottom: 30px; letter-spacing: 2px;
+        }
+
+        .container {
+            display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; width: 100%; max-width: 1000px;
+        }
+
+        /* --- CONTROL PANEL --- */
+        .panel {
+            background: #1e1e1e; border: 1px solid #333; padding: 20px;
+            border-radius: 10px; width: 100%; max-width: 400px;
+        }
+        
+        .panel h3 { margin-top: 0; color: var(--gold); border-bottom: 1px solid #444; padding-bottom: 10px; }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%; padding: 10px; background: #000; border: 1px solid #444; color: #fff;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%; padding: 12px; background: var(--gold); border: none; font-weight: bold;
+            cursor: pointer; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 1px;
+            transition: 0.3s; color: #000;
+        }
+        button:hover { background: #f1c40f; }
+
+        /* --- PREVIEW AREA --- */
+        .preview-area {
+            background: #333; padding: 20px; border-radius: 10px;
+            display: flex; justify-content: center; align-items: center;
+            width: 100%; max-width: 500px; min-height: 400px;
+            overflow: auto;
+        }
+
+        /* --- TEMPLATE 1: TOKO SIGN (POSTER) --- */
+        .poster {
+            width: 300px; height: 450px; background: #000;
+            border: 5px double var(--gold); padding: 20px;
+            text-align: center; color: var(--gold);
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .poster-header { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: bold; border-bottom: 1px solid var(--gold); padding-bottom: 10px; }
+        .poster-big { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; line-height: 1; margin: 20px 0; color: var(--white); text-shadow: 2px 2px 0 var(--gold); }
+        .poster-sub { font-size: 1rem; color: #ccc; margin-bottom: 20px; }
+        .poster-badge { 
+            background: var(--gold); color: #000; padding: 5px 10px; 
+            font-weight: bold; font-size: 0.8rem; display: inline-block; transform: rotate(-2deg); 
+        }
+        .poster-footer { font-size: 0.7rem; color: #666; margin-top: 10px; }
+
+        /* --- TEMPLATE 2: SURAT GAJI (PAPER) --- */
+        .letter {
+            width: 350px; background: #fff; color: #000; padding: 30px;
+            font-family: 'Times New Roman', serif; font-size: 0.9rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); line-height: 1.4;
+            display: none; /* Hidden by default */
+        }
+        .letter-head { text-align: center; font-weight: bold; text-decoration: underline; margin-bottom: 20px; font-size: 1.1rem; }
+        .letter-body p { margin-bottom: 10px; text-align: justify; }
+        .letter-sign { margin-top: 30px; text-align: right; }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .panel, h1 { display: none; }
+            .preview-area { background: none; box-shadow: none; width: 100%; max-width: 100%; }
+            .poster, .letter { margin: 0 auto; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>NUSANTARA ADOPTION KIT</h1>
+
+    <div class="container">
+        
+        <div class="panel">
+            <h3>🖨️ Generator Alat Kampanye</h3>
+            
+            <div class="input-group">
+                <label>Pilih Template</label>
+                <select id="templateType" onchange="switchTemplate()">
+                    <option value="shop">Poster Toko (Terima Dinar)</option>
+                    <option value="salary">Surat Nego Gaji (Pegging)</option>
+                </select>
+            </div>
+
+            <div id="shopInputs">
+                <div class="input-group">
+                    <label>Nama Toko / Usaha</label>
+                    <input type="text" id="shopName" placeholder="Warung Barokah" oninput="updatePoster()">
+                </div>
+                <div class="input-group">
+                    <label>Diskon Khusus Dinar/Dirham (%)</label>
+                    <input type="number" id="shopDisc" placeholder="10" value="10" oninput="updatePoster()">
+                </div>
+                <div class="input-group">
+                    <label>Slogan Singkat</label>
+                    <input type="text" id="shopSlogan" value="Selamatkan Hartamu!" oninput="updatePoster()">
+                </div>
+            </div>
+
+            <div id="salaryInputs" style="display:none;">
+                <div class="input-group">
+                    <label>Nama Karyawan</label>
+                    <input type="text" id="empName" placeholder="Nama Anda" oninput="updateLetter()">
+                </div>
+                <div class="input-group">
+                    <label>Posisi / Jabatan</label>
+                    <input type="text" id="empRole" placeholder="Staff IT" oninput="updateLetter()">
+                </div>
+                <div class="input-group">
+                    <label>Request Gaji (Dirham)</label>
+                    <input type="number" id="reqDirham" placeholder="80" oninput="updateLetter()">
+                </div>
+            </div>
+
+            <button onclick="window.print()">CETAK SEKARANG</button>
+            <p style="font-size:0.7rem; color:#666; text-align:center; margin-top:10px;">*Gunakan kertas A4/F4 untuk hasil terbaik.</p>
+        </div>
+
+        <div class="preview-area">
+            
+            <div class="poster" id="posterTemplate">
+                <div>
+                    <div class="poster-header" id="dispShopName">WARUNG BAROKAH</div>
+                    <p style="font-size:0.8rem; margin-top:5px;">OFFICIAL MERCHANT</p>
+                </div>
+                
+                <div>
+                    <div style="font-size:1.2rem; letter-spacing:2px;">KAMI MENERIMA</div>
+                    <div class="poster-big">DINAR<br>&<br>DIRHAM</div>
+                    <div class="poster-badge">DISKON <span id="dispDisc">10</span>%</div>
+                </div>
+
+                <div>
+                    <div class="poster-sub" id="dispSlogan">"Selamatkan Hartamu!"</div>
+                    <div class="poster-footer">Nusantara Gold Standard<br>Anti-Inflasi & Riba Free</div>
+                </div>
+            </div>
+
+            <div class="letter" id="letterTemplate">
+                <div class="letter-head">USULAN PENYESUAIAN SKEMA PENGUPAHAN<br>BERBASIS NILAI TETAP (VALUE PEGGING)</div>
+                
+                <div class="letter-body">
+                    <p>Kepada Yth. Pimpinan / HRD,<br>Di Tempat</p>
+                    
+                    <p>Dengan hormat,</p>
+                    
+                    <p>Saya yang bertanda tangan di bawah ini:</p>
+                    <table style="width:100%; margin-bottom:10px;">
+                        <tr><td width="30%">Nama</td><td>: <span id="dispEmpName">...</span></td></tr>
+                        <tr><td>Jabatan</td><td>: <span id="dispRole">...</span></td></tr>
+                    </table>
+
+                    <p>Mengajukan permohonan untuk perubahan skema dasar penetapan gaji saya. Demi menjaga daya beli dari inflasi jangka panjang dan stabilitas kinerja, saya mengusulkan agar nilai gaji saya <strong>di-pegging (diikat)</strong> dengan standar perak murni.</p>
+
+                    <p>Adapun nominal yang diajukan adalah setara dengan:</p>
+                    <h3 style="text-align:center; text-decoration:underline;"><span id="dispReq">...</span> DIRHAM PERAK / Bulan</h3>
+                    
+                    <p><strong>Mekanisme Pembayaran:</strong><br>
+                    Perusahaan <u>TIDAK PERLU</u> membayar dengan fisik koin perak. Pembayaran tetap dilakukan via Transfer Rupiah, namun nominalnya disesuaikan dengan kurs beli Dirham fisik (Antam/Nusantara) pada tanggal penggajian.</p>
+
+                    <p>Skema ini menjamin keadilan nilai upah (Fair Wage) tanpa memberatkan arus kas perusahaan secara aset fisik. Demikian usulan ini saya sampaikan.</p>
+                </div>
+
+                <div class="letter-sign">
+                    Hormat Saya,<br><br><br><br>
+                    <span id="dispEmpSign">...</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function switchTemplate() {
+            const type = document.getElementById('templateType').value;
+            const shopInputs = document.getElementById('shopInputs');
+            const salaryInputs = document.getElementById('salaryInputs');
+            const poster = document.getElementById('posterTemplate');
+            const letter = document.getElementById('letterTemplate');
+
+            if (type === 'shop') {
+                shopInputs.style.display = 'block';
+                salaryInputs.style.display = 'none';
+                poster.style.display = 'flex';
+                letter.style.display = 'none';
+            } else {
+                shopInputs.style.display = 'none';
+                salaryInputs.style.display = 'block';
+                poster.style.display = 'none';
+                letter.style.display = 'block';
+            }
+        }
+
+        function updatePoster() {
+            document.getElementById('dispShopName').innerText = document.getElementById('shopName').value.toUpperCase() || "NAMA TOKO";
+            document.getElementById('dispDisc').innerText = document.getElementById('shopDisc').value || "0";
+            document.getElementById('dispSlogan').innerText = '"' + (document.getElementById('shopSlogan').value || "Slogan Toko") + '"';
+        }
+
+        function updateLetter() {
+            const name = document.getElementById('empName').value || "Nama Karyawan";
+            document.getElementById('dispEmpName').innerText = name;
+            document.getElementById('dispEmpSign').innerText = name;
+            document.getElementById('dispRole').innerText = document.getElementById('empRole').value || "Posisi";
+            document.getElementById('dispReq').innerText = document.getElementById('reqDirham').value || "0";
+        }
+    </script>
+
+</body>
+</html>

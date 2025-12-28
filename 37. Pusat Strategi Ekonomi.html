@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusat Strategi Ekonomi</title>
+    <link rel="icon" type="image/png" href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #111;
+            --border: #333;
+            --gold: #d4af37;
+            --text: #e0e0e0;
+            --hover-glow: rgba(212, 175, 55, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 40px 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            font-size: 2.5rem; margin: 0 0 10px 0; letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1rem; color: #888; margin-bottom: 50px; text-align: center;
+            max-width: 600px; line-height: 1.5;
+        }
+
+        /* GRID SYSTEM */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%; max-width: 1000px;
+        }
+
+        /* CARD STYLE */
+        a.card {
+            text-decoration: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        a.card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px var(--hover-glow);
+            background: #161616;
+        }
+
+        .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--gold); }
+        .card-title {
+            font-family: 'Cinzel', serif; font-size: 1.1rem; 
+            font-weight: bold; color: #fff; margin-bottom: 10px;
+            border-bottom: 1px solid #333; padding-bottom: 10px;
+        }
+        .card-desc { font-size: 0.9rem; color: #aaa; line-height: 1.6; }
+
+        /* Color Variants per Card Border */
+        .border-red { border-left: 4px solid #c0392b; }
+        .border-green { border-left: 4px solid #27ae60; }
+        .border-blue { border-left: 4px solid #2980b9; }
+        .border-gold { border-left: 4px solid #d4af37; }
+        .border-purple { border-left: 4px solid #8e44ad; }
+
+        /* BACK BUTTON */
+        .btn-back {
+            margin-top: 50px; padding: 12px 30px;
+            background: transparent; border: 1px solid #444; color: #666;
+            border-radius: 30px; cursor: pointer; text-decoration: none;
+            font-weight: bold; transition: 0.3s;
+        }
+        .btn-back:hover { border-color: var(--gold); color: var(--gold); }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .grid-menu { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>PUSAT STRATEGI EKONOMI</h1>
+    <div class="subtitle">
+        Kumpulan alat taktis (Tactical Tools) untuk menghadapi inflasi, mengamankan aset, dan membangun kedaulatan ekonomi berbasis nilai riil (Emas & Perak).
+    </div>
+
+    <div class="grid-menu">
+
+        <a href="36.Time Machine Value.html" class="card border-red">
+            <div class="card-icon">⏳</div>
+            <div class="card-title">MESIN WAKTU NILAI</div>
+            <div class="card-desc">
+                Simulasi "Horor Finansial" yang membuktikan kehancuran daya beli Rupiah vs Keabadian Emas. Bandingkan harga Rumah, RS, dan Kuliah dari tahun 1997 hingga sekarang.
+            </div>
+        </a>
+
+        <a href="35.Bewara Legal.html" class="card border-green">
+            <div class="card-icon">⚖️</div>
+            <div class="card-title">MAKLUMAT HUKUM (LEGAL)</div>
+            <div class="card-desc">
+                Perisai hukum untuk berniaga. Penjelasan tentang hak perdata rakyat untuk melakukan <strong>Barter Aset</strong> tanpa melanggar UU Mata Uang. Wajib dipasang di toko.
+            </div>
+        </a>
+
+        <a href="32.Nusantara Wage Standard.html" class="card border-blue">
+            <div class="card-icon">⚒️</div>
+            <div class="card-title">STANDAR UPAH ADIL</div>
+            <div class="card-desc">
+                Panduan penggajian berbasis Dirham & Dinar. Memastikan buruh kasar hingga direktur mendapatkan upah yang nilainya tidak tergerus waktu.
+            </div>
+        </a>
+
+        <a href="34. Surak Kontrak Upah Nilai.html" class="card border-purple">
+            <div class="card-icon">📢</div>
+            <div class="card-title">ALAT KAMPANYE (KIT)</div>
+            <div class="card-desc">
+                Generator otomatis untuk mencetak <strong>Poster Toko</strong> (Menerima Dinar) dan <strong>Surat Nego Gaji</strong> untuk karyawan yang ingin gajinya di-pegging emas.
+            </div>
+        </a>
+
+        <a href="33.Akad Muamalah.html" class="card border-gold">
+            <div class="card-icon">📜</div>
+            <div class="card-title">GENERATOR AKAD</div>
+            <div class="card-desc">
+                Buat surat perjanjian Hutang-Piutang (Qardh) atau Kerjasama (Syirkah) yang nilainya dikunci Dinar. Solusi anti-rugi bagi pemberi pinjaman.
+            </div>
+        </a>
+
+    </div>
+
+    <a href="index.html" class="btn-back">⬅ KEMBALI KE MAIN OS</a>
+
+</body>
+</html>

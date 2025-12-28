@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nusantara Akad Generator</title>
+    <link rel="icon" type="image/png" href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Tangerine:wght@700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #2c3e50;
+            --paper: #f4e1d2; /* Kertas Kuning Tua / Perkamen */
+            --ink: #2d3436;
+            --gold: #d4af37;
+            --seal-red: #c0392b;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Courier Prime', monospace;
+            padding: 40px; display: flex; gap: 40px;
+            justify-content: center; align-items: flex-start;
+            flex-wrap: wrap; min-height: 100vh;
+        }
+
+        /* --- LEFT: INPUT FORM --- */
+        .input-panel {
+            background: #fff; padding: 30px; border-radius: 8px; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 5px solid var(--gold);
+        }
+
+        h2 { font-family: 'Cinzel', serif; margin: 0 0 20px 0; color: var(--bg); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.8rem; font-weight: bold; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        input, select, textarea {
+            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;
+            font-family: 'Courier Prime', monospace; font-size: 1rem;
+        }
+        input:focus { border-color: var(--gold); outline: none; }
+
+        .btn-gen {
+            width: 100%; padding: 15px; background: var(--bg); color: #fff; border: none;
+            font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 1rem;
+            transition: 0.3s;
+        }
+        .btn-gen:hover { background: var(--gold); color: #000; }
+
+        .btn-print {
+            width: 100%; padding: 10px; background: transparent; border: 2px solid var(--bg);
+            color: var(--bg); font-weight: bold; cursor: pointer; margin-top: 10px;
+        }
+        .btn-print:hover { background: #eee; }
+
+        /* --- RIGHT: SURAT PERJANJIAN (PAPER) --- */
+        .letter-paper {
+            background-color: var(--paper);
+            width: 100%; max-width: 700px;
+            padding: 60px; position: relative;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            color: var(--ink);
+        }
+
+        /* Border Hiasan Klasik */
+        .letter-paper::before {
+            content: ''; position: absolute; top: 15px; bottom: 15px; left: 15px; right: 15px;
+            border: 2px solid var(--ink); border-radius: 2px; pointer-events: none;
+        }
+        .letter-paper::after {
+            content: ''; position: absolute; top: 20px; bottom: 20px; left: 20px; right: 20px;
+            border: 1px solid var(--ink); pointer-events: none;
+        }
+
+        .bismillah {
+            text-align: center; font-family: 'Tangerine', cursive; font-size: 2.5rem; margin-bottom: 10px;
+        }
+        .title-akad {
+            text-align: center; font-family: 'Cinzel', serif; font-size: 1.8rem; 
+            text-decoration: underline; margin-bottom: 30px; font-weight: bold;
+        }
+
+        .content-akad { line-height: 1.8; text-align: justify; font-size: 1.05rem; }
+        .highlight { font-weight: bold; background: rgba(212, 175, 55, 0.2); padding: 0 5px; }
+
+        .signature-box {
+            margin-top: 50px; display: flex; justify-content: space-between; text-align: center;
+        }
+        .sig-place { margin-bottom: 80px; }
+
+        /* STEMPEL */
+        .seal {
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%) rotate(-10deg);
+            width: 120px; height: 120px; border: 4px double var(--seal-red); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            color: var(--seal-red); font-weight: bold; font-family: 'Courier Prime', monospace;
+            font-size: 0.9rem; opacity: 0.7; mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC');
+        }
+
+        /* PRINT MODE */
+        @media print {
+            body { background: #fff; padding: 0; align-items: flex-start; }
+            .input-panel { display: none; }
+            .letter-paper { box-shadow: none; margin: 0; width: 100%; max-width: 100%; }
+        }
+
+        @media (max-width: 800px) {
+            body { flex-direction: column; }
+            .input-panel, .letter-paper { max-width: 100%; padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="input-panel">
+        <h2>Buat Akad</h2>
+        
+        <div class="form-group">
+            <label>Jenis Akad</label>
+            <select id="akadType" onchange="generateAkad()">
+                <option value="QARDH">Qardh (Hutang Piutang)</option>
+                <option value="JUAL_BELI">Jual Beli (Tangguh/Cicil)</option>
+                <option value="KERJASAMA">Syirkah (Kerjasama Modal)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Pihak Pertama (Pemberi)</label>
+            <input type="text" id="p1" placeholder="Nama Pemberi Hutang/Modal" oninput="generateAkad()">
+        </div>
+
+        <div class="form-group">
+            <label>Pihak Kedua (Penerima)</label>
+            <input type="text" id="p2" placeholder="Nama Peminjam" oninput="generateAkad()">
+        </div>
+
+        <div class="form-group">
+            <label>Nilai Rupiah Saat Ini</label>
+            <input type="number" id="idrVal" placeholder="Contoh: 10000000" oninput="calcGold()">
+        </div>
+
+        <div class="form-group" style="background:#f9f9f9; padding:10px; border-radius:4px;">
+            <label>Konversi Dinar (Est. Rp 6.2jt/Dn)</label>
+            <input type="text" id="dinarVal" readonly style="font-weight:bold; color:var(--gold); background:#333;">
+        </div>
+
+        <div class="form-group">
+            <label>Tanggal Jatuh Tempo</label>
+            <input type="date" id="dueDate" oninput="generateAkad()">
+        </div>
+
+        <button class="btn-gen" onclick="generateAkad()">🔄 UPDATE SURAT</button>
+        <button class="btn-print" onclick="window.print()">🖨️ CETAK AKAD</button>
+    </div>
+
+    <div class="letter-paper">
+        <div class="bismillah">Bismillahirrahmanirrahim</div>
+        <div class="title-akad" id="suratTitle">SURAT PERJANJIAN QARDH</div>
+
+        <div class="content-akad">
+            <p>Pada hari ini, <span id="txtDate" class="highlight">-</span>, kami yang bertanda tangan di bawah ini:</p>
+            
+            <p>
+                1. <strong><span id="txtP1">...</span></strong>, selanjutnya disebut sebagai <strong>PIHAK PERTAMA</strong>.<br>
+                2. <strong><span id="txtP2">...</span></strong>, selanjutnya disebut sebagai <strong>PIHAK KEDUA</strong>.
+            </p>
+
+            <p id="txtBody">
+                Menyepakati akad <strong>QARDH (Pinjaman Kebajikan)</strong> dimana PIHAK PERTAMA meminjamkan dana tunai kepada PIHAK KEDUA.
+            </p>
+
+            <p style="border: 1px solid #000; padding:15px; margin: 20px 0;">
+                Demi menjaga nilai harta dari inflasi dan fluktuasi nilai tukar, kedua belah pihak sepakat mengikat nilai hutang ini setara dengan Emas/Dinar:
+                <br><br>
+                Nilai Pokok: <strong style="font-size:1.2rem"><span id="txtDinar">0.00</span> DINAR</strong> (Au 22k 4.25g)
+                <br>
+                <span style="font-size:0.8rem; font-style:italic;">*Setara dengan Rp <span id="txtIdr">0</span> pada saat akad ini dibuat.</span>
+            </p>
+
+            <p>
+                PIHAK KEDUA berkewajiban mengembalikan pinjaman tersebut kepada PIHAK PERTAMA dalam bentuk Dinar Emas fisik atau uang tunai yang setara dengan nilai beli <span id="txtDinar2">0.00</span> Dinar pada saat pembayaran dilakukan, selambat-lambatnya pada tanggal <strong><span id="txtDue">...</span></strong>.
+            </p>
+
+            <p>Demikian akad ini dibuat dengan kesadaran penuh tanpa paksaan, semoga Allah memberkahi muamalah ini.</p>
+        </div>
+
+        <div class="signature-box">
+            <div>
+                <div class="sig-place">Pihak Pertama</div>
+                (<span id="sigP1">...</span>)
+            </div>
+            <div>
+                <div class="sig-place">Saksi</div>
+                (.......................)
+            </div>
+            <div>
+                <div class="sig-place">Pihak Kedua</div>
+                (<span id="sigP2">...</span>)
+            </div>
+        </div>
+
+        <div class="seal">
+            AKAD<br>MUAMALAH<br>SAH
+        </div>
+    </div>
+
+    <script>
+        // Kurs Manual (Bisa diupdate real time kalo mau canggih, tapi manual/fixed lebih aman buat akad)
+        const RATE_DINAR = 6200000; 
+
+        function calcGold() {
+            const idr = parseFloat(document.getElementById('idrVal').value) || 0;
+            const dinar = idr / RATE_DINAR;
+            document.getElementById('dinarVal').value = dinar.toFixed(3) + " Dn";
+            generateAkad();
+        }
+
+        function generateAkad() {
+            // Get Values
+            const type = document.getElementById('akadType').value;
+            const p1 = document.getElementById('p1').value || "................";
+            const p2 = document.getElementById('p2').value || "................";
+            const dinar = document.getElementById('dinarVal').value || "0.00 Dn";
+            const idr = parseFloat(document.getElementById('idrVal').value) || 0;
+            const due = document.getElementById('dueDate').value;
+
+            // Date Formatter
+            const today = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const dueDateStr = due ? new Date(due).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : "................";
+
+            // Update DOM
+            document.getElementById('txtDate').innerText = today;
+            document.getElementById('txtP1').innerText = p1.toUpperCase();
+            document.getElementById('txtP2').innerText = p2.toUpperCase();
+            document.getElementById('sigP1').innerText = p1.toUpperCase();
+            document.getElementById('sigP2').innerText = p2.toUpperCase();
+            
+            document.getElementById('txtDinar').innerText = dinar.replace(" Dn", "");
+            document.getElementById('txtDinar2').innerText = dinar.replace(" Dn", "");
+            document.getElementById('txtIdr').innerText = idr.toLocaleString('id-ID');
+            document.getElementById('txtDue').innerText = dueDateStr;
+
+            // Logic Text Body based on Type
+            const titleEl = document.getElementById('suratTitle');
+            const bodyEl = document.getElementById('txtBody');
+
+            if(type === 'QARDH') {
+                titleEl.innerText = "SURAT PERJANJIAN QARDH";
+                bodyEl.innerHTML = "Menyepakati akad <strong>QARDH (Pinjaman Kebajikan)</strong> dimana PIHAK PERTAMA meminjamkan dana kepada PIHAK KEDUA untuk kebutuhan mendesak/produktif.";
+            } else if(type === 'JUAL_BELI') {
+                titleEl.innerText = "AKAD JUAL BELI TANGGUH";
+                bodyEl.innerHTML = "Menyepakati akad <strong>BAI' BITSAMAN AJIL</strong> (Jual Beli Tangguh), dimana PIHAK PERTAMA menjual barang/aset kepada PIHAK KEDUA dengan pembayaran yang ditangguhkan.";
+            } else if(type === 'KERJASAMA') {
+                titleEl.innerText = "PERJANJIAN SYIRKAH";
+                bodyEl.innerHTML = "Menyepakati akad <strong>SYIRKAH (Kerjasama)</strong>, dimana PIHAK PERTAMA menyertakan modal kepada PIHAK KEDUA untuk dikelola dalam usaha, dengan nilai modal awal dikunci sebagai berikut:";
+            }
+        }
+
+        // Init date
+        generateAkad();
+    </script>
+
+</body>
+</html>
