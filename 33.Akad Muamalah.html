@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg: #2c3e50;
-            --paper: #f4e1d2; /* Kertas Kuning Tua / Perkamen */
+            --paper: #f4e1d2;
             --ink: #2d3436;
             --gold: #d4af37;
             --seal-red: #c0392b;
@@ -62,7 +62,6 @@
             color: var(--ink);
         }
 
-        /* Border Hiasan Klasik */
         .letter-paper::before {
             content: ''; position: absolute; top: 15px; bottom: 15px; left: 15px; right: 15px;
             border: 2px solid var(--ink); border-radius: 2px; pointer-events: none;
@@ -88,7 +87,6 @@
         }
         .sig-place { margin-bottom: 80px; }
 
-        /* STEMPEL */
         .seal {
             position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%) rotate(-10deg);
             width: 120px; height: 120px; border: 4px double var(--seal-red); border-radius: 50%;
@@ -97,7 +95,6 @@
             font-size: 0.9rem; opacity: 0.7; mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC');
         }
 
-        /* PRINT MODE */
         @media print {
             body { background: #fff; padding: 0; align-items: flex-start; }
             .input-panel { display: none; }
@@ -116,6 +113,14 @@
         <h2>Buat Akad</h2>
         
         <div class="form-group">
+            <label>Format Tanggal</label>
+            <select id="calType" onchange="generateAkad()">
+                <option value="SUNDA">Sunda Nusantara (Siklus Alam)</option>
+                <option value="MASEHI">Masehi (Nasional)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label>Jenis Akad</label>
             <select id="akadType" onchange="generateAkad()">
                 <option value="QARDH">Qardh (Hutang Piutang)</option>
@@ -126,7 +131,7 @@
 
         <div class="form-group">
             <label>Pihak Pertama (Pemberi)</label>
-            <input type="text" id="p1" placeholder="Nama Pemberi Hutang/Modal" oninput="generateAkad()">
+            <input type="text" id="p1" placeholder="Nama Pemberi" oninput="generateAkad()">
         </div>
 
         <div class="form-group">
@@ -205,8 +210,13 @@
     </div>
 
     <script>
-        // Kurs Manual (Bisa diupdate real time kalo mau canggih, tapi manual/fixed lebih aman buat akad)
+        // CONFIG
         const RATE_DINAR = 6200000; 
+
+        // DATA KALENDER NUSANTARA (Referensi: Page 02)
+        const daysNus = ["Radite", "Soma", "Anggara", "Budha", "Respati", "Sukra", "Tumpak"];
+        const monthsNus = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+        const pasaran = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
 
         function calcGold() {
             const idr = parseFloat(document.getElementById('idrVal').value) || 0;
@@ -215,21 +225,90 @@
             generateAkad();
         }
 
+        // Logic Konversi ke Tanggal Sunda Nuswantara (Sesuai Referensi)
+        function convertToSunda(dateObj) {
+            // Anchor: 21 Maret 2025 = 1 Wiwitan Tahun 1 (Sukra, Pon)
+            // Kita pakai anchor tanggalan Masehi untuk menghitung selisih hari
+            
+            // 1. Tentukan Awal Tahun (21 Maret)
+            let anchorYear = dateObj.getFullYear();
+            let anchorDate = new Date(anchorYear, 2, 21); // 21 Maret tahun tersebut
+            
+            // Jika tanggal input sebelum 21 Maret, maka dia masuk siklus tahun sebelumnya
+            if (dateObj < anchorDate) {
+                anchorYear -= 1;
+                anchorDate = new Date(anchorYear, 2, 21);
+            }
+
+            // Hitung selisih hari (Day of Year versi Sunda)
+            const oneDay = 24 * 60 * 60 * 1000;
+            const diffTime = dateObj - anchorDate;
+            const diffDays = Math.floor(diffTime / oneDay);
+
+            // 2. Tentukan Bulan & Tanggal Sunda
+            // Setiap bulan 28 hari.
+            let monthIdx = Math.floor(diffDays / 28);
+            let dayNum = (diffDays % 28) + 1;
+
+            // Handle Bulan ke-13 (Suwung) dan seterusnya jika ada sisa
+            if (monthIdx >= 13) {
+                // Seharusnya dalam sistem 365 hari, max index adalah 12 (Suwung)
+                // Jika lebih, berarti logic looping tahun perlu disesuaikan, tapi untuk rentang dekat ini aman.
+                monthIdx = 12; 
+            }
+            
+            // 3. Tentukan Nama Bulan
+            const nusMonthName = monthsNus[monthIdx];
+
+            // 4. Tentukan Tahun Nusantara
+            // 2025 = Tahun 1.
+            const nusYear = anchorYear - 2024;
+            const yearLabel = nusYear > 0 ? `Tahun ${nusYear} (Air)` : `Pra-Era`; // Label tahun sederhana
+
+            // 5. Tentukan Pasaran (Pancawara)
+            // Anchor 21 Maret 2025 adalah PON (Index 2)
+            // Hitung selisih hari dari 21 Maret 2025
+            const masterAnchor = new Date(2025, 2, 21);
+            const diffFromMaster = Math.floor((dateObj - masterAnchor) / oneDay);
+            
+            // Formula Pasaran
+            let pasaranIdx = (2 + (diffFromMaster % 5)) % 5;
+            if (pasaranIdx < 0) pasaranIdx += 5;
+            
+            const pasaranName = pasaran[pasaranIdx];
+
+            // 6. Tentukan Hari (Saptawara)
+            const dayName = daysNus[dateObj.getDay()];
+
+            return `${dayName} ${pasaranName}, ${dayNum} ${nusMonthName} ${nusYear > 0 ? nusYear : anchorYear}`;
+        }
+
+        function formatDate(dateInput) {
+            const calType = document.getElementById('calType').value;
+            const dateObj = dateInput ? new Date(dateInput) : new Date();
+            
+            if (isNaN(dateObj.getTime())) return "................";
+
+            if (calType === 'MASEHI') {
+                return dateObj.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            } else {
+                return convertToSunda(dateObj);
+            }
+        }
+
         function generateAkad() {
-            // Get Values
             const type = document.getElementById('akadType').value;
             const p1 = document.getElementById('p1').value || "................";
             const p2 = document.getElementById('p2').value || "................";
             const dinar = document.getElementById('dinarVal').value || "0.00 Dn";
             const idr = parseFloat(document.getElementById('idrVal').value) || 0;
-            const due = document.getElementById('dueDate').value;
+            const dueInput = document.getElementById('dueDate').value;
 
-            // Date Formatter
-            const today = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            const dueDateStr = due ? new Date(due).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : "................";
+            // Generate Date Strings
+            const todayStr = formatDate(null); // Today
+            const dueStr = formatDate(dueInput); // Due Date
 
-            // Update DOM
-            document.getElementById('txtDate').innerText = today;
+            document.getElementById('txtDate').innerText = todayStr;
             document.getElementById('txtP1').innerText = p1.toUpperCase();
             document.getElementById('txtP2').innerText = p2.toUpperCase();
             document.getElementById('sigP1').innerText = p1.toUpperCase();
@@ -238,9 +317,8 @@
             document.getElementById('txtDinar').innerText = dinar.replace(" Dn", "");
             document.getElementById('txtDinar2').innerText = dinar.replace(" Dn", "");
             document.getElementById('txtIdr').innerText = idr.toLocaleString('id-ID');
-            document.getElementById('txtDue').innerText = dueDateStr;
+            document.getElementById('txtDue').innerText = dueStr;
 
-            // Logic Text Body based on Type
             const titleEl = document.getElementById('suratTitle');
             const bodyEl = document.getElementById('txtBody');
 
@@ -256,7 +334,6 @@
             }
         }
 
-        // Init date
         generateAkad();
     </script>
 
