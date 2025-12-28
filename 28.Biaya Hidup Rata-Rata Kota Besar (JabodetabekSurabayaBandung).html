@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Biaya Hidup Indonesia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-color: #fdfbf7;
+            --line-color: #a2a2a2;
+            --ink-color: #2c3e50;
+            --red-line: #ff9999;
+        }
+
+        body {
+            background-color: #8b5e3c; /* Meja kayu lebih gelap */
+            font-family: 'Patrick Hand', cursive;
+            color: var(--ink-color);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .paper {
+            background-color: var(--paper-color);
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 50px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            background-image: linear-gradient(var(--line-color) 1px, transparent 1px);
+            background-size: 100% 30px;
+            border-radius: 2px;
+            transform: rotate(1deg);
+        }
+
+        .paper::before {
+            content: ''; position: absolute; top: 0; bottom: 0; left: 40px;
+            width: 2px; background-color: var(--red-line);
+        }
+
+        h1 {
+            font-family: 'Indie Flower', cursive;
+            font-size: 2.5rem; text-align: center; margin-bottom: 20px;
+            text-decoration: underline; text-decoration-style: wavy;
+            color: #d35400; /* Judul agak oranye dikit kayak stabilo */
+        }
+
+        .note {
+            font-size: 1.1rem; margin-bottom: 20px;
+            background: rgba(255, 235, 59, 0.3);
+            display: inline-block; padding: 5px 15px;
+            border-radius: 20px; transform: rotate(-1deg);
+            border: 1px dashed #aaa;
+        }
+
+        table {
+            width: 100%; border-collapse: collapse; margin-top: 10px;
+            font-size: 1.2rem; background: rgba(255,255,255,0.7);
+        }
+
+        th, td {
+            padding: 8px 15px; text-align: left;
+            border-bottom: 2px solid var(--ink-color);
+            border-right: 1px dashed #aaa;
+        }
+        th:last-child, td:last-child { border-right: none; }
+
+        th {
+            font-family: 'Indie Flower', cursive; font-size: 1.4rem;
+            border-bottom: 3px solid var(--ink-color);
+        }
+
+        .category-header {
+            font-weight: bold; font-size: 1.3rem;
+            background-color: rgba(0,0,0,0.05);
+            text-transform: uppercase; letter-spacing: 2px;
+            color: #27ae60; /* Hijau buat header kategori */
+        }
+
+        .total-box {
+            margin-top: 30px; border: 3px solid var(--ink-color);
+            padding: 20px; border-radius: 10px 20px 5px 15px;
+            transform: rotate(-1deg); background: #fff;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+        }
+
+        .total-title {
+            font-weight: bold; font-size: 1.5rem; text-align: center;
+            margin-bottom: 10px; text-decoration: underline;
+        }
+
+        .stamp {
+            position: absolute; top: 20px; right: 20px;
+            border: 3px solid #c0392b; color: #c0392b; padding: 10px;
+            font-family: 'Courier New', monospace; font-weight: bold;
+            font-size: 1rem; text-transform: uppercase;
+            transform: rotate(15deg); opacity: 0.8; border-radius: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .paper { padding: 20px; width: 100%; transform: rotate(0deg); }
+            th, td { font-size: 0.9rem; padding: 5px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="paper">
+        <div class="stamp">NUSANTARA<br>STANDARD</div>
+        
+        <h1>Biaya Hidup Indonesia (Basis Emas)</h1>
+        
+        <div style="text-align: center;">
+            <span class="note">Basis: 1 Dinar = Rp 6.2 Juta | 1 Dirham = Rp 75 Ribu</span>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:40%">Kebutuhan</th>
+                    <th style="width:25%">Rupiah (IDR)</th>
+                    <th style="width:15%">Dinar</th>
+                    <th style="width:20%">Dirham</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="category-header"><td colspan="4">🏠 Tempat Tinggal</td></tr>
+                <tr><td>Kost Standar (AC/Wifi)</td><td>Rp 2.000.000</td><td>0.32 Dn</td><td>26.6 Dh</td></tr>
+                <tr><td>Kontrakan 3 Petak</td><td>Rp 1.500.000</td><td>0.24 Dn</td><td>20.0 Dh</td></tr>
+                <tr><td>Sewa Rumah (Cluster)</td><td>Rp 5.000.000</td><td>0.80 Dn</td><td>66.6 Dh</td></tr>
+                <tr><td>Token Listrik & Air</td><td>Rp 500.000</td><td>0.08 Dn</td><td>6.6 Dh</td></tr>
+
+                <tr class="category-header"><td colspan="4">🍚 Pangan & Sembako</td></tr>
+                <tr><td>Belanja Masak (Bulan)</td><td>Rp 1.500.000</td><td>0.24 Dn</td><td>20.0 Dh</td></tr>
+                <tr><td>Beras Premium (5kg)</td><td>Rp 85.000</td><td>0.01 Dn</td><td>1.1 Dh</td></tr>
+                <tr><td>Telur (1 kg)</td><td>Rp 28.000</td><td>0.004 Dn</td><td>0.4 Dh</td></tr>
+                <tr><td>Galon Air (Isi Ulang)</td><td>Rp 20.000</td><td>0.003 Dn</td><td>0.3 Dh</td></tr>
+                <tr><td>Makan Warteg (1x)</td><td>Rp 20.000</td><td>0.003 Dn</td><td>0.3 Dh</td></tr>
+
+                <tr class="category-header"><td colspan="4">🛵 Transport & Data</td></tr>
+                <tr><td>Bensin (Pertalite 1L)</td><td>Rp 10.000</td><td>0.001 Dn</td><td>0.13 Dh</td></tr>
+                <tr><td>Ojol (Sekali Jalan)</td><td>Rp 15.000</td><td>0.002 Dn</td><td>0.2 Dh</td></tr>
+                <tr><td>Kuota Internet (Bulan)</td><td>Rp 100.000</td><td>0.016 Dn</td><td>1.3 Dh</td></tr>
+                
+                <tr class="category-header"><td colspan="4">☕ Gaya Hidup</td></tr>
+                <tr><td>Ngopi (Coffee Shop)</td><td>Rp 25.000</td><td>0.004 Dn</td><td>0.33 Dh</td></tr>
+                <tr><td>Nonton Bioskop (Wknd)</td><td>Rp 50.000</td><td>0.008 Dn</td><td>0.66 Dh</td></tr>
+                <tr><td>Gym Member (Kampung)</td><td>Rp 150.000</td><td>0.024 Dn</td><td>2.0 Dh</td></tr>
+            </tbody>
+        </table>
+
+        <div class="total-box">
+            <div class="total-title">📝 TOTAL ESTIMASI BULANAN</div>
+            <table style="background:transparent; font-weight:bold; border:none;">
+                <tr>
+                    <td>Versi Hemat (Anak Kost)</td>
+                    <td style="color:#c0392b;">Rp 3.5 Juta</td>
+                    <td style="color:#d35400;">0.56 Dn</td>
+                    <td style="color:#2980b9;">46 Dh</td>
+                </tr>
+                <tr>
+                    <td>Versi Menengah (Standar)</td>
+                    <td style="color:#c0392b;">Rp 6.2 Juta</td>
+                    <td style="color:#d35400;">1.00 Dn</td>
+                    <td style="color:#2980b9;">82 Dh</td>
+                </tr>
+                <tr>
+                    <td>Versi Keluarga (Nyaman)</td>
+                    <td style="color:#c0392b;">Rp 12.5 Juta</td>
+                    <td style="color:#d35400;">2.01 Dn</td>
+                    <td style="color:#2980b9;">166 Dh</td>
+                </tr>
+            </table>
+            <div style="text-align:center; margin-top:15px; font-size:1.1rem; font-style:italic; color:#555;">
+                "Di Indonesia, <b>1 Dinar</b> cukup untuk hidup layak sebulan bagi lajang."
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

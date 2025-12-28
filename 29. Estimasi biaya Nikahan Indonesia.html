@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Biaya Nikah (Dinar/Dirham)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-color: #fffdf0;
+            --line-color: #a2a2a2;
+            --ink-color: #2c3e50;
+            --pink-line: #ffb7b2;
+        }
+
+        body {
+            background-color: #d4a5a5; /* Background agak pinkish */
+            font-family: 'Patrick Hand', cursive;
+            color: var(--ink-color);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .paper {
+            background-color: var(--paper-color);
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 50px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            background-image: linear-gradient(var(--line-color) 1px, transparent 1px);
+            background-size: 100% 30px;
+            border-radius: 5px;
+            transform: rotate(-1deg);
+        }
+
+        /* Garis tepi pink (Book of Love) */
+        .paper::before {
+            content: ''; position: absolute; top: 0; bottom: 0; left: 40px;
+            width: 2px; background-color: var(--pink-line);
+            box-shadow: 2px 0 0 var(--pink-line); /* Double line */
+        }
+
+        h1 {
+            font-family: 'Indie Flower', cursive;
+            font-size: 2.5rem; text-align: center; margin-bottom: 10px;
+            color: #c0392b; /* Merah hati */
+        }
+
+        .sub-heading {
+            text-align: center; font-size: 1.2rem; margin-bottom: 25px;
+            font-style: italic; color: #555;
+        }
+
+        .note {
+            font-size: 1rem; margin-bottom: 20px;
+            background: rgba(255, 192, 203, 0.3);
+            display: inline-block; padding: 5px 15px;
+            border-radius: 10px; transform: rotate(1deg);
+            border: 1px dashed #d980fa;
+        }
+
+        table {
+            width: 100%; border-collapse: collapse; margin-top: 10px;
+            font-size: 1.15rem; background: rgba(255,255,255,0.6);
+        }
+
+        th, td {
+            padding: 8px 15px; text-align: left;
+            border-bottom: 2px solid var(--ink-color);
+            border-right: 1px dashed #aaa;
+        }
+        th:last-child, td:last-child { border-right: none; }
+
+        th {
+            font-family: 'Indie Flower', cursive; font-size: 1.3rem;
+            border-bottom: 3px solid var(--ink-color); color: #8e44ad;
+        }
+
+        .category-header {
+            font-weight: bold; font-size: 1.2rem;
+            background-color: rgba(255, 182, 193, 0.2);
+            text-transform: uppercase; letter-spacing: 1px;
+            color: #c0392b;
+        }
+
+        .total-box {
+            margin-top: 30px; border: 3px dashed var(--ink-color);
+            padding: 20px; border-radius: 20px 5px 20px 5px;
+            transform: rotate(1deg); background: #fff;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+        }
+
+        .total-title {
+            font-weight: bold; font-size: 1.5rem; text-align: center;
+            margin-bottom: 15px; text-decoration: underline; color: #2c3e50;
+        }
+
+        .stamp {
+            position: absolute; top: 30px; right: 30px;
+            border: 4px double #27ae60; color: #27ae60; padding: 5px 15px;
+            font-family: 'Courier New', monospace; font-weight: bold;
+            font-size: 1.2rem; text-transform: uppercase;
+            transform: rotate(-10deg); opacity: 0.8; border-radius: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .paper { padding: 20px; width: 100%; transform: rotate(0deg); }
+            th, td { font-size: 0.9rem; padding: 5px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="paper">
+        <div class="stamp">SIAP<br>HALAL</div>
+        
+        <h1>Rencana Biaya Nikah 💍</h1>
+        <div class="sub-heading">"Mahar itu Harta, Resepsi itu Kenangan"</div>
+        
+        <div style="text-align: center;">
+            <span class="note">Kurs: 1 Dn ≈ 6.2jt | 1 Dh ≈ 75rb</span>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:40%">Item</th>
+                    <th style="width:25%">Rupiah (Est.)</th>
+                    <th style="width:15%">Dinar</th>
+                    <th style="width:20%">Dirham</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="category-header"><td colspan="4">📜 Administrasi & Mahar (Wajib)</td></tr>
+                <tr><td>Daftar KUA (Weekend)</td><td>Rp 600.000</td><td>0.10 Dn</td><td>8 Dh</td></tr>
+                <tr><td>Cincin Emas (Sepasang 6gr)</td><td>Rp 7.500.000</td><td>1.21 Dn</td><td>100 Dh</td></tr>
+                <tr><td>Mahar Uang / Dinar</td><td>Rp 6.200.000</td><td>1.00 Dn</td><td>82 Dh</td></tr>
+                <tr><td>Seserahan (Simpel)</td><td>Rp 3.000.000</td><td>0.48 Dn</td><td>40 Dh</td></tr>
+
+                <tr class="category-header"><td colspan="4">💅 Penampilan (Akad Only)</td></tr>
+                <tr><td>Sewa Baju & MUA (Couple)</td><td>Rp 2.500.000</td><td>0.40 Dn</td><td>33 Dh</td></tr>
+                <tr><td>Henna & Kuku</td><td>Rp 500.000</td><td>0.08 Dn</td><td>6 Dh</td></tr>
+                <tr><td>Dokumentasi (Foto)</td><td>Rp 1.500.000</td><td>0.24 Dn</td><td>20 Dh</td></tr>
+
+                <tr class="category-header"><td colspan="4">🎉 Resepsi Sederhana (200 Pax)</td></tr>
+                <tr><td>Catering (40rb x 200)</td><td>Rp 8.000.000</td><td>1.29 Dn</td><td>106 Dh</td></tr>
+                <tr><td>Sewa Gedung/Aula/Tenda</td><td>Rp 5.000.000</td><td>0.80 Dn</td><td>66 Dh</td></tr>
+                <tr><td>Dekorasi Pelaminan</td><td>Rp 4.000.000</td><td>0.64 Dn</td><td>53 Dh</td></tr>
+                <tr><td>Souvenir & Undangan</td><td>Rp 1.000.000</td><td>0.16 Dn</td><td>13 Dh</td></tr>
+            </tbody>
+        </table>
+
+        <div class="total-box">
+            <div class="total-title">💕 PILIHAN PAKET NIKAH</div>
+            <table style="background:transparent; font-weight:bold; border:none;">
+                <tr>
+                    <td>Nikah KUA Aja (Sah & Halal)</td>
+                    <td style="color:#27ae60;">Rp 2 Juta</td>
+                    <td style="color:#d35400;">0.32 Dn</td>
+                    <td style="color:#2980b9;">26 Dh</td>
+                </tr>
+                <tr>
+                    <td>Akad + Makan Keluarga (Rumah)</td>
+                    <td style="color:#27ae60;">Rp 15 Juta</td>
+                    <td style="color:#d35400;">2.42 Dn</td>
+                    <td style="color:#2980b9;">200 Dh</td>
+                </tr>
+                <tr>
+                    <td>Resepsi Gedung (Standar)</td>
+                    <td style="color:#c0392b;">Rp 40 Juta</td>
+                    <td style="color:#d35400;">6.45 Dn</td>
+                    <td style="color:#2980b9;">533 Dh</td>
+                </tr>
+            </table>
+            <div style="text-align:center; margin-top:20px; font-size:1.1rem; font-style:italic; color:#555;">
+                "Modal <b>3 Dinar</b> (Rp 18jt) udah bisa nikah layak banget, bro!"
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

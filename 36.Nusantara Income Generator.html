@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sub-Menu: Simulasi Finansial</title>
+    <link rel="icon" type="image/png" href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --card-bg: rgba(20, 20, 20, 0.95);
+            --border: rgba(255, 255, 255, 0.1);
+            --gold: #d4af37;
+            --green: #2ea043;
+            --blue: #2980b9;
+            --red: #c0392b;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0; padding: 20px;
+            background-color: var(--bg-dark);
+            /* Background pattern halus */
+            background-image: radial-gradient(#222 1px, transparent 1px);
+            background-size: 20px 20px;
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            font-size: 2rem; margin-bottom: 5px; letter-spacing: 2px; text-align: center;
+        }
+        .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 40px; }
+
+        /* GRID CONTAINER */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            width: 100%; max-width: 800px;
+        }
+
+        /* CARD STYLE */
+        a.app-card {
+            text-decoration: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            height: 160px; /* Kotak */
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: 0.3s;
+            position: relative; overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        a.app-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .app-icon { font-size: 3rem; margin-bottom: 10px; }
+        .app-label { 
+            font-size: 0.8rem; font-weight: bold; color: var(--text); opacity: 0.9;
+            text-align: center; letter-spacing: 1px; text-transform: uppercase; padding: 0 10px;
+        }
+
+        /* BACK BUTTON */
+        .btn-back {
+            margin-top: 40px; padding: 10px 30px;
+            background: transparent; border: 1px solid #444; color: #888;
+            border-radius: 30px; cursor: pointer; text-decoration: none;
+            font-weight: bold; transition: 0.3s;
+        }
+        .btn-back:hover { border-color: var(--gold); color: var(--gold); }
+
+    </style>
+</head>
+<body>
+
+    <h1>SIMULASI FINANSIAL</h1>
+    <div class="subtitle">Analisa Aset, Biaya Hidup & Produktivitas</div>
+
+    <div class="grid-container">
+
+        <a href="31. Nusantara Income Generator.html" class="app-card" style="border-bottom: 3px solid var(--green);">
+            <div class="app-icon">🔨</div>
+            <div class="app-label">Income Generator</div>
+        </a>
+
+        <a href="28.Biaya Hidup Rata-Rata Kota Besar (JabodetabekSurabayaBandung).html" class="app-card" style="border-bottom: 3px solid var(--red);">
+            <div class="app-icon">🇮🇩</div>
+            <div class="app-label">Living Cost Indo</div>
+        </a>
+
+        <a href="27. Newyork Expense on Gold Dinar.html" class="app-card" style="border-bottom: 3px solid var(--blue);">
+            <div class="app-icon">🇺🇸</div>
+            <div class="app-label">Living Cost NY</div>
+        </a>
+
+        <a href="29. Estimasi biaya Nikahan Indonesia.html" class="app-card" style="border-bottom: 3px solid #ff69b4;">
+            <div class="app-icon">💍</div>
+            <div class="app-label">Estimasi Nikah</div>
+        </a>
+
+        <a href="30. Estimasi Biaya Bangun Rumah.html" class="app-card" style="border-bottom: 3px solid #e67e22;">
+            <div class="app-icon">🏡</div>
+            <div class="app-label">Estimasi Rumah</div>
+        </a>
+
+        <a href="35.Nusantara Savings Simulator.html" class="app-card" style="border-bottom: 3px solid var(--gold);">
+            <div class="app-icon">💰</div>
+            <div class="app-label">Simulasi Tabungan</div>
+        </a>
+
+    </div>
+
+    <a href="index.html" class="btn-back">⬅ KEMBALI KE MENU UTAMA</a>
+
+</body>
+</html>

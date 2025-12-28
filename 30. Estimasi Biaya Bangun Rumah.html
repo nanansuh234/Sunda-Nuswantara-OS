@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimasi Bangun Rumah (Dinar/Dirham)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-color: #f0f8ff; /* Kertas agak biru muda (Blueprint style) */
+            --line-color: #a2a2a2;
+            --ink-color: #2c3e50;
+            --blue-line: #5dade2;
+        }
+
+        body {
+            background-color: #5d6d7e; /* Meja kerja arsitek (abu-abu) */
+            font-family: 'Patrick Hand', cursive;
+            color: var(--ink-color);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .paper {
+            background-color: var(--paper-color);
+            width: 100%;
+            max-width: 950px;
+            padding: 40px 50px;
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            /* Pattern Grid ala Buku Teknik */
+            background-image: 
+                linear-gradient(var(--line-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line-color) 1px, transparent 1px);
+            background-size: 25px 25px;
+            border-radius: 4px;
+            transform: rotate(0.5deg);
+        }
+
+        /* Garis tepi biru */
+        .paper::before {
+            content: ''; position: absolute; top: 20px; bottom: 20px; left: 40px;
+            width: 3px; background-color: var(--blue-line);
+        }
+
+        h1 {
+            font-family: 'Indie Flower', cursive;
+            font-size: 2.5rem; text-align: center; margin-bottom: 10px;
+            color: #1a5276; text-transform: uppercase; letter-spacing: 2px;
+            text-decoration: underline;
+        }
+
+        .sub-heading {
+            text-align: center; font-size: 1.1rem; margin-bottom: 25px;
+            color: #555; background: rgba(255,255,255,0.8);
+            display: inline-block; padding: 5px 20px; border-radius: 15px;
+        }
+
+        table {
+            width: 100%; border-collapse: collapse; margin-top: 10px;
+            font-size: 1.15rem; background: rgba(255,255,255,0.85);
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 10px 15px; text-align: left;
+            border: 2px solid var(--ink-color);
+        }
+
+        th {
+            font-family: 'Indie Flower', cursive; font-size: 1.3rem;
+            background-color: #d6eaf8; color: #154360;
+        }
+
+        .category-header {
+            font-weight: bold; font-size: 1.2rem;
+            background-color: #2c3e50; color: #fff;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .total-box {
+            margin-top: 30px; border: 4px double #2c3e50;
+            padding: 20px; border-radius: 5px;
+            background: #fff; transform: rotate(-1deg);
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.2);
+        }
+
+        .total-title {
+            font-weight: bold; font-size: 1.5rem; text-align: center;
+            margin-bottom: 15px; color: #c0392b;
+        }
+
+        .stamp {
+            position: absolute; top: 30px; right: 30px;
+            border: 4px solid #c0392b; color: #c0392b; padding: 5px 15px;
+            font-family: 'Courier New', monospace; font-weight: bold;
+            font-size: 1.5rem; text-transform: uppercase;
+            transform: rotate(-15deg); opacity: 0.7; border-radius: 10px;
+            mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC'); /* Noise effect */
+        }
+
+        .highlight { color: #d35400; font-weight: bold; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .paper { padding: 20px; width: 100%; transform: rotate(0deg); }
+            th, td { font-size: 0.85rem; padding: 5px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="paper">
+        <div class="stamp">ASET<br>PRODUKTIF</div>
+        
+        <h1>Rencana Rumah & Tanah 🏡</h1>
+        <div style="text-align:center;">
+            <div class="sub-heading">
+                "Bangunan boleh tua, Tanah makin mahal.<br>
+                Simpan di Emas, Biaya Bangun jadi Terasa Murah."
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-bottom:15px; font-weight:bold;">
+            Kurs Acuan: 1 Dinar ≈ Rp 6.200.000 | 1 Dirham ≈ Rp 75.000
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:40%">Komponen Biaya</th>
+                    <th style="width:25%">Rupiah (Est.)</th>
+                    <th style="width:15%">Dinar (Au)</th>
+                    <th style="width:20%">Dirham (Ag)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="category-header"><td colspan="4">🗺️ Pembelian Tanah (Lahan)</td></tr>
+                <tr><td>Kavling Pinggiran (60m²)</td><td>Rp 90.000.000</td><td>14.5 Dn</td><td>1,200 Dh</td></tr>
+                <tr><td>Kavling Standar (90m²)</td><td>Rp 180.000.000</td><td>29.0 Dn</td><td>2,400 Dh</td></tr>
+                <tr><td>Kavling Kota/Cluster (100m²)</td><td>Rp 350.000.000</td><td>56.4 Dn</td><td>4,666 Dh</td></tr>
+                <tr><td>Biaya Notaris & Pajak</td><td>Rp 15.000.000</td><td>2.4 Dn</td><td>200 Dh</td></tr>
+
+                <tr class="category-header"><td colspan="4">🏗️ Konstruksi Bangunan (Borongan)</td></tr>
+                <tr><td>Rumah Tumbuh (Type 36)</td><td>Rp 126.000.000</td><td>20.3 Dn</td><td>1,680 Dh</td></tr>
+                <tr><td>Rumah Keluarga (Type 60)</td><td>Rp 240.000.000</td><td>38.7 Dn</td><td>3,200 Dh</td></tr>
+                <tr><td>Rumah 2 Lantai (Type 100)</td><td>Rp 450.000.000</td><td>72.5 Dn</td><td>6,000 Dh</td></tr>
+                <tr><td>Tukang & Kernet (Harian)</td><td>Rp 250.000</td><td>0.04 Dn</td><td>3.3 Dh</td></tr>
+
+                <tr class="category-header"><td colspan="4">🛋️ Utilitas & Isi Dasar</td></tr>
+                <tr><td>Sumur Bor & Listrik</td><td>Rp 7.000.000</td><td>1.1 Dn</td><td>93 Dh</td></tr>
+                <tr><td>Kanopi & Pagar</td><td>Rp 10.000.000</td><td>1.6 Dn</td><td>133 Dh</td></tr>
+                <tr><td>Dapur (Kitchen Set Bawah)</td><td>Rp 5.000.000</td><td>0.8 Dn</td><td>66 Dh</td></tr>
+                <tr><td>Kasur & Lemari Utama</td><td>Rp 8.000.000</td><td>1.3 Dn</td><td>106 Dh</td></tr>
+            </tbody>
+        </table>
+
+        <div class="total-box">
+            <div class="total-title">📌 TOTAL PAKET HUNIAN</div>
+            <table style="border:none; box-shadow:none; background:transparent;">
+                <tr>
+                    <td style="border:none; font-weight:bold;">1. Paket "Start-Up" (Pinggiran)</td>
+                    <td style="border:none; color:#c0392b;">Rp 238 Juta</td>
+                    <td style="border:none;" class="highlight">38 Dinar</td>
+                </tr>
+                <tr>
+                    <td style="border:none; font-style:italic; font-size:0.9rem;" colspan="3">
+                        (Tanah 60m² + Rumah Type 36 + Legalitas + Utilitas)
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td style="border:none; font-weight:bold; padding-top:15px;">2. Paket "Mapan" (Komplek)</td>
+                    <td style="border:none; color:#c0392b; padding-top:15px;">Rp 450 Juta</td>
+                    <td style="border:none; padding-top:15px;" class="highlight">72 Dinar</td>
+                </tr>
+                <tr>
+                    <td style="border:none; font-style:italic; font-size:0.9rem;" colspan="3">
+                        (Tanah 90m² + Rumah Type 60 + Pagar + Interior Dasar)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="border:none; font-weight:bold; padding-top:15px;">3. Paket "Sultan" (2 Lantai)</td>
+                    <td style="border:none; color:#c0392b; padding-top:15px;">Rp 850 Juta</td>
+                    <td style="border:none; padding-top:15px;" class="highlight">137 Dinar</td>
+                </tr>
+            </table>
+            
+            <div style="margin-top:20px; background:#f9e79f; padding:10px; border-radius:5px; text-align:center; border:1px dashed #f39c12;">
+                <strong>💡 Note Penting:</strong><br>
+                Jika kamu menabung dalam Rupiah selama 5 tahun, harga bahan bangunan & tanah akan naik (inflasi). <br>
+                Jika menabung <strong>Dinar</strong>, daya belimu terkunci. 
+                38 Dinar hari ini = Rumah Type 36.<br>
+                38 Dinar di 5 tahun lagi = Tetap dapet Rumah Type 36 (Mungkin lebih).
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nusantara Income Simulator</title>
+    <link rel="icon" type="image/png" href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #121212;
+            --border: #333;
+            --gold: #d4af37;
+            --silver: #b0b0b0;
+            --text: #e0e0e0;
+            --green: #2ea043;
+            --blue: #2980b9;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* HEADER */
+        .main-logo {
+            width: 80px; height: auto; margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            margin: 0 0 5px 0; letter-spacing: 2px; text-align: center;
+        }
+        .subtitle { font-size: 0.8rem; color: #666; margin-bottom: 30px; text-align: center; }
+        
+        .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
+
+        /* --- CARDS --- */
+        .card-income {
+            background: #161616; border: 1px solid var(--border); border-radius: 12px;
+            padding: 25px; position: relative; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
+        .card-title {
+            font-family: 'Cinzel', serif; color: var(--text); 
+            border-bottom: 1px dashed #444; padding-bottom: 10px; margin-bottom: 15px;
+            font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;
+        }
+        .icon { font-size: 1.5rem; margin-right: 10px; }
+
+        /* --- INPUT GROUPS --- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .input-group label { display: block; color: #888; font-size: 0.75rem; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group select, .input-group input {
+            width: 100%; padding: 10px; background: #000; border: 1px solid #444; 
+            color: #fff; border-radius: 6px; font-family: inherit; font-size: 1rem;
+        }
+        .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--gold); }
+
+        /* --- RESULT BOX --- */
+        .result-strip {
+            background: #111; padding: 15px; border-radius: 8px; margin-top: 20px;
+            border-left: 4px solid var(--gold); display: flex; justify-content: space-between; align-items: center;
+        }
+        .res-val { font-size: 1.3rem; font-weight: bold; color: var(--gold); font-family: 'Cinzel', serif; }
+        .res-desc { font-size: 0.8rem; color: #aaa; }
+
+        /* --- INFO NOTE --- */
+        .info-note {
+            background: rgba(46, 160, 67, 0.1); border: 1px solid var(--green);
+            padding: 15px; border-radius: 8px; font-size: 0.85rem; color: #ccc;
+            line-height: 1.5; margin-top: 20px;
+        }
+        .highlight { color: var(--green); font-weight: bold; }
+
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <img src="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png" alt="Logo" class="main-logo">
+
+    <h1>INCOME GENERATOR</h1>
+    <div class="subtitle">Peta Jalan Menghasilkan Nilai (Dinar/Dirham)</div>
+
+    <div class="container">
+
+        <div class="card-income">
+            <div class="card-title">
+                <span><span class="icon">🔨</span>UPAH KERJA & JASA</span>
+                <span style="font-size:0.8rem; color:var(--silver);">Basis: Dirham</span>
+            </div>
+            
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Jenis Pekerjaan</label>
+                    <select id="jobType" onchange="calcWages()">
+                        <option value="2">Buruh Harian / Tukang (2 Dh/hari)</option>
+                        <option value="3">Staff Admin / Kasir (3 Dh/hari)</option>
+                        <option value="5">Guru / Pengajar (5 Dh/hari)</option>
+                        <option value="10">Ahli IT / Engineering (10 Dh/hari)</option>
+                        <option value="25">Dokter Spesialis / Konsultan (25 Dh/hari)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Durasi Kerja</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="number" id="workDuration" value="25" oninput="calcWages()">
+                        <select id="workUnit" onchange="calcWages()">
+                            <option value="1">Hari</option>
+                            <option value="30">Bulan</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-strip">
+                <div>
+                    <div class="res-desc">Potensi Penghasilan:</div>
+                    <div class="res-val" id="wageResult">0 Dirham</div>
+                </div>
+                <div style="text-align:right;">
+                    <div class="res-desc">Setara Emas:</div>
+                    <div class="res-val" style="font-size:1rem; color:var(--text);" id="wageGold">0 Dn</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-income" style="border-top: 3px solid var(--green);">
+            <div class="card-title">
+                <span><span class="icon">🌾</span>HASIL BUMI & TERNAK</span>
+                <span style="font-size:0.8rem; color:var(--gold);">Basis: Dinar</span>
+            </div>
+
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Komoditas yg Dijual</label>
+                    <select id="commType" onchange="calcTrade()">
+                        <option value="0.005">Ayam Kampung (0.005 Dn / ekor)</option>
+                        <option value="0.01">Beras 5kg (0.01 Dn / pack)</option>
+                        <option value="0.7">Kambing Standar (0.7 Dn / ekor)</option>
+                        <option value="1.2">Kambing Super (1.2 Dn / ekor)</option>
+                        <option value="7.0">Sapi Qurban (7.0 Dn / ekor)</option>
+                        <option value="40.0">Panen Sawit 1 Ha (40 Dn / tahun)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Target Penjualan (Qty)</label>
+                    <input type="number" id="commQty" value="10" oninput="calcTrade()">
+                </div>
+            </div>
+
+            <div class="result-strip" style="border-left-color: var(--green);">
+                <div>
+                    <div class="res-desc">Omzet Penjualan:</div>
+                    <div class="res-val" style="color:var(--green);" id="tradeResult">0.00 Dinar</div>
+                </div>
+                <div style="text-align:right;">
+                    <div class="res-desc">Setara Perak:</div>
+                    <div class="res-val" style="font-size:1rem; color:var(--text);" id="tradeSilver">0 Dr</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-note">
+            <div style="text-transform:uppercase; font-weight:bold; margin-bottom:5px; color:var(--green);">💡 Reality Check:</div>
+            Untuk mendapatkan <strong>1 Dinar (Emas 4.25g)</strong>, Anda harus:<br>
+            • Bekerja sebagai Buruh Kasar selama <span class="highlight">14 Hari</span> (2 Dh/hari).<br>
+            • Menjual <span class="highlight">2 Ekor Kambing</span> kecil.<br>
+            • Menjual <span class="highlight">100 Pack Beras</span> (5kg).<br><br>
+            <em>"Dinar itu berat nilainya. Maka kejarlah dengan produktivitas tinggi, bukan sekadar menukar Rupiah."</em>
+        </div>
+
+    </div>
+
+    <script>
+        // CONFIG RATIO NUSANTARA
+        const RATIO = 27; 
+
+        function calcWages() {
+            const rate = parseFloat(document.getElementById('jobType').value);
+            const duration = parseFloat(document.getElementById('workDuration').value);
+            
+            const totalDirham = rate * duration;
+            const totalDinar = totalDirham / RATIO;
+
+            document.getElementById('wageResult').innerText = totalDirham.toLocaleString() + " Dirham";
+            document.getElementById('wageGold').innerText = totalDinar.toFixed(2) + " Dn";
+        }
+
+        function calcTrade() {
+            const price = parseFloat(document.getElementById('commType').value);
+            const qty = parseFloat(document.getElementById('commQty').value);
+
+            const totalDinar = price * qty;
+            const totalDirham = totalDinar * RATIO;
+
+            // --- FIX DISPLAY: 7.00 Dinar (Bukan 7.000) ---
+            // Menggunakan toFixed(2) secara paksa untuk Dinar agar tidak ambigu
+            
+            let displayDinar;
+            if (totalDinar >= 1) {
+                // Untuk angka besar (misal 7 Dinar), paksa 2 desimal: "7.00"
+                displayDinar = totalDinar.toFixed(2);
+            } else {
+                // Untuk angka receh (misal 0.05 Dinar), boleh 3 desimal biar presisi
+                displayDinar = totalDinar.toFixed(3);
+            }
+
+            document.getElementById('tradeResult').innerText = displayDinar + " Dinar";
+            document.getElementById('tradeSilver').innerText = totalDirham.toLocaleString() + " Dr";
+        }
+
+        // Init
+        calcWages();
+        calcTrade();
+    </script>
+
+</body>
+</html>

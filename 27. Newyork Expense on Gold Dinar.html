@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Biaya Hidup NY (Dinar/Dirham)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-color: #fdfbf7;
+            --line-color: #a2a2a2;
+            --ink-color: #2c3e50; /* Warna Tinta Biru Tua Gelap */
+            --red-line: #ff9999;
+        }
+
+        body {
+            background-color: #e0d8c3; /* Meja kayu/alas */
+            font-family: 'Patrick Hand', cursive; /* Font tulisan tangan */
+            color: var(--ink-color);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .paper {
+            background-color: var(--paper-color);
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 50px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            /* Efek kertas bergaris */
+            background-image: 
+                linear-gradient(var(--line-color) 1px, transparent 1px);
+            background-size: 100% 30px; /* Jarak antar baris */
+            border-radius: 2px;
+            transform: rotate(-1deg); /* Miring dikit biar natural */
+        }
+
+        /* Garis tepi merah ala buku tulis */
+        .paper::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 40px;
+            width: 2px;
+            background-color: var(--red-line);
+        }
+
+        h1 {
+            font-family: 'Indie Flower', cursive;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-decoration: underline;
+            text-decoration-style: wavy; /* Garis bawah gelombang */
+            transform: rotate(-2deg);
+        }
+
+        .note {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            background: rgba(255,255,0,0.2); /* Stabilo kuning tipis */
+            display: inline-block;
+            padding: 2px 10px;
+            transform: rotate(1deg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.6); /* Sedikit putih biar teks jelas */
+        }
+
+        th, td {
+            padding: 8px 15px;
+            text-align: left;
+            border-bottom: 2px solid var(--ink-color); /* Garis bawah tabel tebal kyk spidol */
+            border-right: 1px dashed var(--ink-color);
+        }
+
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+
+        th {
+            font-family: 'Indie Flower', cursive;
+            font-size: 1.4rem;
+            border-bottom: 3px solid var(--ink-color);
+        }
+
+        /* Highlight baris ganjil biar gampang baca */
+        tr:nth-child(even) {
+            background-color: rgba(0,0,0,0.02);
+        }
+
+        .category-header {
+            font-weight: bold;
+            font-size: 1.3rem;
+            background-color: rgba(0,0,0,0.05);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .total-box {
+            margin-top: 30px;
+            border: 3px solid var(--ink-color);
+            padding: 20px;
+            border-radius: 10px 20px 5px 15px; /* Radius acak */
+            transform: rotate(1deg);
+            background: #fff;
+        }
+
+        .total-title {
+            font-weight: bold;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+            text-decoration: underline;
+        }
+
+        .stamp {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 3px solid #c0392b;
+            color: #c0392b;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            transform: rotate(15deg);
+            opacity: 0.7;
+            border-radius: 5px;
+        }
+
+        /* Responsif buat HP */
+        @media (max-width: 600px) {
+            .paper { padding: 20px; width: 100%; transform: rotate(0deg); }
+            th, td { font-size: 1rem; padding: 5px; }
+            h1 { font-size: 1.8rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="paper">
+        <div class="stamp">Verified: Gold Std</div>
+        
+        <h1>Biaya Hidup New York (Dinar/Dirham)</h1>
+        
+        <div style="text-align: center;">
+            <span class="note">Kurs: 1 Dinar ≈ $621.69 | 1 Dirham ≈ $7.62</span>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:40%">Kebutuhan</th>
+                    <th style="width:20%">USD ($)</th>
+                    <th style="width:20%">Dinar (Au)</th>
+                    <th style="width:20%">Dirham (Ag)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="category-header"><td colspan="4">🏠 Hunian & Utilitas</td></tr>
+                <tr><td>Sewa 1BR (Pinggiran)</td><td>$2,600</td><td>4.18 Dn</td><td>341 Dh</td></tr>
+                <tr><td>Sewa 3BR (Pinggiran)</td><td>$5,200</td><td>8.36 Dn</td><td>682 Dh</td></tr>
+                <tr><td>Listrik/Air/Gas</td><td>$137</td><td>0.22 Dn</td><td>18 Dh</td></tr>
+                <tr><td>Internet & HP</td><td>$110</td><td>0.17 Dn</td><td>14 Dh</td></tr>
+
+                <tr class="category-header"><td colspan="4">🍎 Pangan (Bulanan)</td></tr>
+                <tr><td>Belanja Groceries</td><td>$550</td><td>0.88 Dn</td><td>72 Dh</td></tr>
+                <tr><td>Beras (1kg)</td><td>$6.71</td><td>0.01 Dn</td><td>0.9 Dh</td></tr>
+                <tr><td>Dada Ayam (1kg)</td><td>$15.90</td><td>0.03 Dn</td><td>2.1 Dh</td></tr>
+                <tr><td>Telur (12 butir)</td><td>$7.75</td><td>0.01 Dn</td><td>1.0 Dh</td></tr>
+                <tr><td>Air Botol (1L)</td><td>$1.66</td><td>0.003 Dn</td><td>0.2 Dh</td></tr>
+
+                <tr class="category-header"><td colspan="4">🚕 Transportasi</td></tr>
+                <tr><td>Public Transport (Bulan)</td><td>$127</td><td>0.20 Dn</td><td>17 Dh</td></tr>
+                <tr><td>Taksi (per km)</td><td>$2.20</td><td>0.004 Dn</td><td>0.3 Dh</td></tr>
+                <tr><td>Bensin (1 Liter)</td><td>$0.90</td><td>0.001 Dn</td><td>0.1 Dh</td></tr>
+                
+                <tr class="category-header"><td colspan="4">💪 Gaya Hidup & Jasa</td></tr>
+                <tr><td>Gym (Bulanan)</td><td>$128</td><td>0.21 Dn</td><td>17 Dh</td></tr>
+                <tr><td>Dokter (1x Visit)</td><td>$157</td><td>0.25 Dn</td><td>21 Dh</td></tr>
+                <tr><td>Makan Resto (Menengah)</td><td>$150</td><td>0.24 Dn</td><td>20 Dh</td></tr>
+                <tr><td>Potong Rambut</td><td>$37</td><td>0.06 Dn</td><td>5 Dh</td></tr>
+            </tbody>
+        </table>
+
+        <div class="total-box">
+            <div class="total-title">📝 TOTAL BIAYA BULANAN</div>
+            <table style="background:transparent; font-weight:bold;">
+                <tr>
+                    <td>Hemat (Manusiawi)</td>
+                    <td style="color:#c0392b;">$4,800</td>
+                    <td style="color:#d35400;">7.72 Dn</td>
+                    <td style="color:#2980b9;">630 Dh</td>
+                </tr>
+                <tr>
+                    <td>Normal (Realistis)</td>
+                    <td style="color:#c0392b;">$5,500</td>
+                    <td style="color:#d35400;">8.85 Dn</td>
+                    <td style="color:#2980b9;">722 Dh</td>
+                </tr>
+                <tr>
+                    <td>Nyaman (Tanpa Foya)</td>
+                    <td style="color:#c0392b;">$6,200</td>
+                    <td style="color:#d35400;">9.97 Dn</td>
+                    <td style="color:#2980b9;">814 Dh</td>
+                </tr>
+            </table>
+            <div style="text-align:center; margin-top:15px; font-size:1rem; font-style:italic;">
+                "Hidup di kota besar butuh ±9 Dinar per bulan untuk standar layak."
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
