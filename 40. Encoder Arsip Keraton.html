@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encoder Arsip Keraton (Full Dictionary)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --paper: #e8dcc5;
+            --ink: #1a1a1a;
+            --stamp: #8b0000;
+            --gold: #b8860b;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Special Elite', monospace;
+            padding: 20px;
+        }
+
+        .archive-paper {
+            background-color: var(--paper);
+            width: 100%;
+            max-width: 900px;
+            padding: 50px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            position: relative;
+            border-left: 5px solid #d4c5a9;
+        }
+
+        .archive-paper::before {
+            content: ""; position: absolute; top:0; left:0; right:0; bottom:0;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            opacity: 0.6; pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; text-align: center; color: var(--ink);
+            border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-top: 0;
+            text-transform: uppercase; letter-spacing: 3px;
+        }
+
+        .stamp-mark {
+            position: absolute; top: 30px; right: 30px;
+            border: 4px double var(--stamp); color: var(--stamp);
+            padding: 5px 15px; font-weight: bold; transform: rotate(-12deg);
+            opacity: 0.7; font-size: 0.9rem; text-transform: uppercase;
+        }
+
+        .input-section, .output-section { margin-top: 30px; position: relative; z-index: 2; }
+
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #4a4a4a; font-family: 'Cinzel', serif; }
+
+        textarea {
+            width: 100%; background: rgba(255, 255, 255, 0.4);
+            border: 1px solid #8b7355; padding: 15px;
+            font-family: 'Special Elite', monospace; font-size: 1.1rem;
+            color: var(--ink); box-sizing: border-box; resize: vertical; min-height: 120px;
+        }
+
+        button {
+            width: 100%; margin-top: 20px; padding: 15px;
+            background-color: var(--ink); color: var(--paper);
+            border: 2px solid var(--gold); font-family: 'Cinzel', serif;
+            font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+        button:hover { background-color: var(--gold); color: var(--ink); }
+
+        .output-div {
+            background: rgba(0,0,0,0.05); padding: 20px;
+            border: 1px solid #aaa; min-height: 150px;
+            white-space: pre-wrap; line-height: 1.6;
+        }
+
+        .highlight { color: #8b0000; font-weight: bold; }
+        
+        .footer-note { font-size: 0.8rem; color: #555; margin-top: 20px; font-style: italic; border-top: 1px dashed #888; padding-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="archive-paper">
+    <div class="stamp-mark">Volledig<br>Archief</div>
+    <h1>Encoder Arsip Keraton</h1>
+    
+    <div class="input-section">
+        <label>Input (Bahasa Indonesia):</label>
+        <textarea id="inputText" placeholder="Contoh: Saya berpendapat bahwa bupati menyembunyikan laporan pencurian itu karena takut dipecat."></textarea>
+    </div>
+
+    <button onclick="encodeText()">Encode ke Bahasa Kolonial (1880)</button>
+
+    <div class="output-section">
+        <label>Output (Gaya Administratif Klasik):</label>
+        <div id="outputText" class="output-div"></div>
+    </div>
+    
+    <div class="footer-note">
+        *Mencakup kosa kata: Administrasi, Diskusi Harian, dan Istilah Khusus.
+    </div>
+</div>
+
+<script>
+    // === KAMUS GABUNGAN LENGKAP ===
+    const lexicon = {
+        // A. KATA GANTI & ORANG (Personen)
+        "saya": "Ik", "kami": "Wij", "kita": "Wij",
+        "kamu": "Jij", "anda": "U", "engkau": "Gij",
+        "dia": "Hij", "mereka": "Zij",
+        "tuan": "Mijnheer", "nyonya": "Mevrouw",
+        "bapak": "Vader", "ibu": "Moeder",
+        "saudara": "Broeder", "sahabat": "Vriend",
+        "penduduk": "Inlander", "rakyat": "Volk",
+        "orang": "Men", // Contoh: Men zegt (Orang berkata)
+        "keluarga": "Familieleden", "kroni": "Gunstelingen",
+
+        // B. JABATAN & ADMINISTRASI (Ambtenaren)
+        "pemerintah": "Gouvernement", "residen": "Resident",
+        "bupati": "Regent", "patih": "Patih",
+        "wedana": "Wedana", "demang": "Demang",
+        "mantri": "Mantri", "jaksa": "Djaksa",
+        "polisi": "Politie", "hakim": "Rechter",
+        "sekretaris": "Secretaris", "kantor": "Kantoor",
+        "kepala desa": "Dessa-hoofden",
+
+        // C. SURAT & DOKUMEN (Documenten)
+        "surat": "Brief", "laporan": "Rapport",
+        "catatan": "Nota", "arsip": "Archief",
+        "lampiran": "Bijlage", "perihal": "Betreffende",
+        "tentang": "Omtrent", "keputusan": "Besluit",
+        "perintah": "Bevel", "nomor": "Nummer",
+        "tanda tangan": "Handteekening",
+        "hormat kami": "Hoogachtend",
+        "berita": "Bericht", "kabar": "Nieuws",
+
+        // D. KATA KERJA DISKUSI & AKTIVITAS (Werkwoorden)
+        "berbicara": "Spreken", "mengatakan": "Zeggen", "berkata": "Zeggen",
+        "berpendapat": "Meenen", "berpikir": "Denken",
+        "bertanya": "Vragen", "menjawab": "Antwoorden",
+        "menjelaskan": "Verklaren", "berdiskusi": "Bespreken",
+        "berdebat": "Debatteeren", "membantah": "Bestrijden",
+        "setuju": "Akkoord", "menyetujui": "Goedkeuren",
+        "menolak": "Weigeren", "mengusulkan": "Voorstellen",
+        "memutuskan": "Besluiten", "berharap": "Wenschen",
+        "mencoba": "Probeeren", "mencari": "Zoeken",
+        "menemukan": "Vinden", "mengerti": "Begrijpen",
+        "mengetahui": "Weten", "mengingat": "Herinneren",
+        "membantu": "Helpen", "bekerja": "Werken",
+        "berjalan": "Loopen", "duduk": "Zitten",
+        "berdiri": "Staan", "melihat": "Zien",
+        "mendengar": "Hooren", "merasa": "Voelen",
+        "menulis": "Schrijven", "membaca": "Lezen",
+        "mengirim": "Zenden", "menerima": "Ontvangen",
+        "meminta": "Verzoeken", "memberi": "Geven",
+        "membuat": "Maken", "periksa": "Onderzoek",
+        "bertemu": "Ontmoeten", "berangkat": "Vertrekken",
+        "datang": "Komen", "tinggal": "Wonen",
+        "membayar": "Betalen", "hutang": "Schuld",
+        "pinjam": "Leenen",
+
+        // E. ISTILAH KHUSUS CIREBON 1882 (Speciale Termen)
+        "menyembunyikan": "Verzwijgen", "disembunyikan": "Verzweeg",
+        "pencurian": "Diefstallen", "maling": "Dief",
+        "pelaku": "Daders", "bukti": "Bewijs",
+        "fakta": "Feiten", "masalah": "Kwestie",
+        "takut": "Vrees", "dipecat": "Ontslag",
+        "ancaman": "Bedreigingen", "keluhan": "Klachten",
+        "kehebohan": "Opzien", "terungkap": "Ontrooken",
+        "terjadi": "Plaatsgehad", "jumlah": "Aantal",
+        "angka": "Cijfers", "keyakinan": "Overtuiging",
+        "membandingkan": "Vergelijkt",
+
+        // F. KATA SIFAT & KETERANGAN (Adjectieven)
+        "baik": "Goed", "buruk": "Slecht",
+        "besar": "Groot", "kecil": "Klein",
+        "baru": "Nieuw", "tua": "Oud", "lama": "Oud",
+        "penting": "Belangrijk", "rahasia": "Geheim",
+        "aman": "Veilig", "bahaya": "Gevaar",
+        "banyak": "Veel", "sedikit": "Weinig",
+        "benar": "Waar", "salah": "Fout",
+        "hari ini": "Heden", "kemarin": "Gisteren",
+        "besok": "Morgen", "sekarang": "Thans",
+        "dulu": "Vroeger", "sudah": "Reeds",
+        "belum": "Nog niet", "terus menerus": "Bij voortduring",
+        "sangat": "Zeer", "tentu saja": "Natuurlijk",
+        "mungkin": "Mogelijk", "di mana": "Alwaar",
+
+        // G. KATA SAMBUNG (Voegwoorden)
+        "bahwa": "Dat", "karena": "Omdat",
+        "jika": "Indien", "kalau": "Indien",
+        "tetapi": "Doch", "namun": "Echter",
+        "walaupun": "Hoewel", "jadi": "Dus",
+        "maka": "Dan", "untuk": "Voor",
+        "dengan": "Met", "tanpa": "Zonder",
+        "oleh": "Door", "dari": "Van",
+        "ke": "Naar", "di": "Te",
+        "seperti": "Zooals", "atau": "Of",
+        "dan": "En", "apa": "Wat",
+        "siapa": "Wie", "kapan": "Wanneer",
+        "dimana": "Waar", "kenapa": "Waarom",
+        "bagaimana": "Hoe", "ini": "Dit",
+        "itu": "Dat", "semua": "Alle",
+        "lain": "Andere"
+    };
+
+    function encodeText() {
+        let text = document.getElementById("inputText").value;
+        // Regex split yang aman tanda baca (tetap menjaga spasi/titik/koma)
+        let words = text.split(/([\s.,;?!]+)/); 
+        let encodedResult = "";
+
+        for (let i = 0; i < words.length; i++) {
+            let wordRaw = words[i];
+            let wordClean = wordRaw.trim().toLowerCase();
+            
+            if (lexicon[wordClean]) {
+                let translated = lexicon[wordClean];
+                
+                // Jaga Huruf Kapital (Biar rapi)
+                if (wordRaw.length > 0 && wordRaw[0] === wordRaw[0].toUpperCase()) {
+                    translated = translated.charAt(0).toUpperCase() + translated.slice(1);
+                }
+
+                // Ganti kata & kasih warna merah (highlight)
+                encodedResult += `<span class="highlight">${translated}</span>`;
+            } else {
+                // Kalau gak ada di kamus, biarin apa adanya
+                encodedResult += wordRaw;
+            }
+        }
+        
+        document.getElementById("outputText").innerHTML = encodedResult;
+    }
+</script>
+
+</body>
+</html>
