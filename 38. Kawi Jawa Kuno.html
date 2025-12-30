@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konverter Latin - Kawi (FIXED)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kawi&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --stone-color: #2b2b2b;
+            --gold-color: #d4af37;
+            --text-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--stone-color);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid #444;
+        }
+
+        h1 {
+            color: var(--gold-color);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            background-color: #121212;
+            border: 1px solid #555;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+
+        .output-area {
+            background-color: #3d3d3d;
+            border: 2px solid var(--gold-color);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 100px;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        #kawiOutput {
+            font-family: 'Noto Sans Kawi', sans-serif; /* Pastikan nama font sesuai */
+            font-size: 3rem;
+            line-height: 1.6;
+            color: var(--gold-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>LATIN - KAWI </h1>
+    <label>Ketik di sini:</label>
+    <textarea id="inputText" rows="3" placeholder="nusantara"></textarea>
+    <div class="output-area">
+        <div id="kawiOutput"></div>
+    </div>
+</div>
+
+<script>
+    const input = document.getElementById('inputText');
+    const output = document.getElementById('kawiOutput');
+
+    // MAPPING YANG SUDAH DIPERBAIKI (Pakai format \u{xxxxx})
+    const kawiMap = {
+        // Vokal
+        'a': '\u{11F04}', 'i': '\u{11F05}', 'u': '\u{11F07}', 'e': '\u{11F09}', 'o': '\u{11F0B}',
+        
+        // Konsonan
+        'k': '\u{11F10}', 'g': '\u{11F12}', 'ng': '\u{11F14}',
+        'c': '\u{11F15}', 'j': '\u{11F17}', 'ny': '\u{11F19}',
+        't': '\u{11F1A}', 'd': '\u{11F1C}', 'n': '\u{11F1E}',
+        'p': '\u{11F1F}', 'b': '\u{11F21}', 'm': '\u{11F22}',
+        'y': '\u{11F23}', 'r': '\u{11F24}', 'l': '\u{11F25}',
+        'w': '\u{11F26}', 's': '\u{11F28}', 'h': '\u{11F2A}',
+        
+        // Tanda Vokal (Sandhangan)
+        '_i': '\u{11F36}', 
+        '_u': '\u{11F38}', 
+        '_e': '\u{11F3A}', 
+        '_o': '\u{11F3C}', 
+        '_pangkon': '\u{11F42}' // Virama
+    };
+
+    input.oninput = function() {
+        let str = input.value.toLowerCase();
+        let out = "";
+        let i = 0;
+
+        while (i < str.length) {
+            let c = str[i];
+            let cn = str[i+1] || "";
+            let double = c + cn; // cek 2 huruf (ng, ny)
+
+            let charCode = null;
+            let step = 0;
+
+            // Cek Ng/Ny dulu
+            if (kawiMap[double] && !['a','i','u','e','o'].includes(c)) {
+                charCode = kawiMap[double];
+                step = 2;
+            } 
+            // Cek Konsonan tunggal
+            else if (kawiMap[c] && !['a','i','u','e','o'].includes(c)) {
+                charCode = kawiMap[c];
+                step = 1;
+            }
+
+            if (charCode) {
+                // Ada konsonan, cek huruf depannya vokal atau mati?
+                let nextChar = str[i + step];
+                
+                if (nextChar === 'a') {
+                    out += charCode; // a bawaan
+                    i += step + 1;
+                } else if (nextChar === 'i') {
+                    out += charCode + kawiMap['_i'];
+                    i += step + 1;
+                } else if (nextChar === 'u') {
+                    out += charCode + kawiMap['_u'];
+                    i += step + 1;
+                } else if (nextChar === 'e') {
+                    out += charCode + kawiMap['_e'];
+                    i += step + 1;
+                } else if (nextChar === 'o') {
+                    out += charCode + kawiMap['_o'];
+                    i += step + 1;
+                } else {
+                    // Huruf mati (tambah pangkon)
+                    out += charCode + kawiMap['_pangkon'];
+                    i += step;
+                }
+            } 
+            // Kalau dia Vokal di awal kata (A, I, U mandiri)
+            else if (kawiMap[c]) {
+                out += kawiMap[c];
+                i++;
+            } 
+            // Spasi atau huruf tak dikenal
+            else {
+                out += c;
+                i++;
+            }
+        }
+        output.textContent = out;
+    }
+</script>
+
+</body>
+</html>

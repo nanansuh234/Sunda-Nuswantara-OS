@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesin Ketik Pegon (Jawa Islam)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --paper-color: #f0e6d2; /* Warna kertas kuno */
+            --ink-color: #2b1d0e;   /* Warna tinta hitam kecoklatan */
+            --gold-accent: #8b5a2b;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #1a1a1a;
+            color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--paper-color);
+            padding: 2.5rem;
+            border-radius: 5px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.7);
+            width: 100%;
+            max-width: 800px;
+            border: 10px solid #463220; /* Bingkai Kayu */
+            position: relative;
+        }
+
+        /* Efek noda kertas */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        h1 {
+            color: var(--ink-color);
+            text-align: center;
+            font-family: 'Amiri', serif;
+            font-weight: 700;
+            margin-top: 0;
+            font-size: 2.5rem;
+            border-bottom: 2px solid var(--gold-accent);
+            padding-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #5c4033;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #8b7355;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            font-family: monospace;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .output-area {
+            background-color: rgba(255,255,255,0.3);
+            border: 2px solid var(--ink-color);
+            padding: 20px;
+            min-height: 150px;
+            position: relative;
+        }
+
+        /* Styling Khusus Pegon */
+        #pegonOutput {
+            font-family: 'Amiri', serif;
+            font-size: 3.5rem; /* Ukuran besar biar jelas */
+            line-height: 2;
+            color: var(--ink-color);
+            direction: rtl; /* Wajib: Kanan ke Kiri */
+            text-align: right;
+            font-weight: 700; /* Bold/Tebal sesuai request */
+            white-space: pre-wrap;
+        }
+
+        .guide {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #664;
+            background: rgba(0,0,0,0.05);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .key {
+            font-weight: bold;
+            color: #a00;
+            background: #fff;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AKSARA PEGON MATARAM</h1>
+    
+    <label>Ketik Latin (Otomatis konversi ke Arab Pegon):</label>
+    <textarea id="inputText" rows="3" placeholder="Contoh: ngabdulrahman ing nagari kartasura"></textarea>
+
+    <div class="output-area">
+        <div id="pegonOutput"></div>
+    </div>
+
+    <div class="guide">
+        <strong>Panduan Ketik:</strong><br>
+        <span class="key">ng</span> = ڠ (Ain titik 3) &nbsp;|&nbsp; 
+        <span class="key">ny</span> = ڽ (Ya titik 3) &nbsp;|&nbsp; 
+        <span class="key">c</span> = چ (Jim titik 3) &nbsp;|&nbsp; 
+        <span class="key">p</span> = ڤ (Fa titik 3) &nbsp;|&nbsp; 
+        <span class="key">g</span> = گ (Gaf) <br>
+        <small>*Font otomatis menyambung huruf (Cursive). Ketik spasi untuk memisah kata.</small>
+    </div>
+</div>
+
+<script>
+    const input = document.getElementById('inputText');
+    const output = document.getElementById('pegonOutput');
+
+    // Mapping Pegon Jawa (Mataram Style)
+    const map = {
+        // Vokal (Dianggap Alif/Wau/Ya atau harakat implisit)
+        'a': '\u0627', // Alif
+        'i': '\u064A', // Ya
+        'u': '\u0648', // Wau
+        'e': '\u064A', // Ya (Taling)
+        'o': '\u0648', // Wau
+        
+        // Konsonan Standar
+        'b': '\u0628', // Ba
+        't': '\u062A', // Ta
+        'j': '\u062C', // Jim
+        'd': '\u062F', // Dal
+        'r': '\u0631', // Ra
+        'z': '\u0632', // Zai
+        's': '\u0633', // Sin
+        'f': '\u0641', // Fa
+        'k': '\u0643', // Kaf
+        'l': '\u0644', // Lam
+        'm': '\u0645', // Mim
+        'n': '\u0646', // Nun
+        'w': '\u0648', // Wau
+        'h': '\u0647', // Ha
+        'y': '\u064A', // Ya
+        'q': '\u0642', // Qaf
+        'v': '\u0641', // Fa (sering dipakai buat V)
+
+        // Konsonan Khusus Pegon (Extended Arabic)
+        'c': '\u0686', // Che (Jim titik 3)
+        'p': '\u06A4', // Veh (Fa titik 3 di atas - Khas Jawa)
+        'g': '\u06AF', // Gaf (Kaf ada coret)
+        'ng': '\u06A0', // Ain titik 3 di atas (Nga)
+        'ny': '\u06BD', // Nya (Ya titik 3) - atau bisa pakai \u067E (Pe) tergantung mazhab
+        
+        // Tanda Baca
+        ',': '\u060C', // Koma Arab
+        '?': '\u061F', // Tanya Arab
+        ';': '\u061B'  // Titik koma Arab
+    };
+
+    input.oninput = function() {
+        let str = input.value.toLowerCase();
+        let out = "";
+        let i = 0;
+
+        while (i < str.length) {
+            let c = str[i];
+            let next = str[i+1] || "";
+            let double = c + next;
+
+            // Cek Digraf (2 huruf: ng, ny, kh, sy, dll)
+            // Prioritas NG dan NY buat Pegon
+            if (double === 'ng') {
+                out += map['ng'];
+                i += 2;
+            } else if (double === 'ny') {
+                out += map['ny'];
+                i += 2;
+            } else if (double === 'kh') {
+                out += '\u062E'; // Kha
+                i += 2;
+            } else if (double === 'sy') {
+                out += '\u0634'; // Syin
+                i += 2;
+            } else if (double === 'sh') {
+                out += '\u0635'; // Shad
+                i += 2;
+            } else if (double === 'dh') {
+                out += '\u0636'; // Dhad (atau Dal tebal)
+                i += 2;
+            } 
+            // Cek Huruf Tunggal
+            else if (map[c]) {
+                out += map[c];
+                i++;
+            } 
+            // Angka / Spasi / Lainnya
+            else {
+                out += c;
+                i++;
+            }
+        }
+        output.textContent = out;
+    }
+</script>
+
+</body>
+</html>
