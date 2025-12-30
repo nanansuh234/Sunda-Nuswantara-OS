@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro-Mercury Vortex Core</title>
+    <style>
+        body {
+            background: #0a0a0a; color: #00ffcc; font-family: 'Consolas', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        h1 { margin: 0; text-transform: uppercase; color: #fff; text-shadow: 0 0 10px #00ffcc; letter-spacing: 2px; }
+        
+        .container {
+            display: flex; gap: 20px; align-items: center; margin-top: 20px;
+        }
+
+        /* TABUNG REAKTOR */
+        .reactor-case {
+            position: relative; width: 400px; height: 500px;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), rgba(0,0,0,0.8));
+            border: 2px solid #444; border-radius: 100px 100px 40px 40px; /* Bentuk Kendi/Tabung */
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.1), inset 0 0 50px #000;
+            overflow: hidden;
+        }
+
+        canvas { position: absolute; top: 0; left: 0; }
+
+        /* ELEKTRODA TENGAH (LINGGA) */
+        .electrode {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 350px;
+            background: linear-gradient(90deg, #b87333, #ffcc99, #b87333); /* Tembaga */
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 0 20px rgba(255, 100, 0, 0.2);
+            z-index: 10;
+        }
+
+        /* DASHBOARD KANAN */
+        .panel {
+            width: 300px; height: 500px;
+            background: #111; border: 2px solid #333; padding: 20px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            border-radius: 10px;
+        }
+
+        .stat-box {
+            background: #000; border: 1px solid #222; padding: 10px; margin-bottom: 10px;
+            text-align: right;
+        }
+        .stat-label { font-size: 0.7rem; color: #888; float: left; }
+        .stat-val { font-size: 1.5rem; font-weight: bold; }
+        .unit { font-size: 0.8rem; color: #555; }
+
+        input[type=range] { width: 100%; accent-color: #00ffcc; cursor: pointer; margin-top: 10px; }
+        
+        .plasma-glow {
+            position: absolute; top: 200px; left: 50%; transform: translateX(-50%);
+            width: 50px; height: 150px; background: #00ffcc;
+            filter: blur(30px); opacity: 0; pointer-events: none; z-index: 5;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>MICRO-MERCURY CORE</h1>
+    <div style="font-size:0.8rem; color:#aaa;">Yoni-Lingga Vortex Reactor Prototype</div>
+
+    <div class="container">
+        <div class="reactor-case">
+            <canvas id="vortexCanvas" width="400" height="500"></canvas>
+            <div class="electrode"></div>
+            <div class="plasma-glow" id="plasmaLight"></div>
+            
+            <div style="position:absolute; width:100%; height:100%; background:linear-gradient(110deg, rgba(255,255,255,0.1) 0%, transparent 30%); pointer-events:none;"></div>
+        </div>
+
+        <div class="panel">
+            <div>
+                <div class="stat-box">
+                    <span class="stat-label">OUTPUT VOLTAGE</span>
+                    <span class="stat-val" id="voltVal" style="color:#00ffcc">0</span> <span class="unit">kV</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">CORE TEMP</span>
+                    <span class="stat-val" id="tempVal" style="color:#ffaa00">28.0</span> <span class="unit">°C</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">ETHER FLOW</span>
+                    <span class="stat-val" id="etherVal">STABLE</span>
+                </div>
+            </div>
+
+            <div>
+                <label style="font-size:0.8rem; color:#aaa;">MAGNETIC STIRRER (RPM)</label>
+                <input type="range" id="rpmSlider" min="0" max="100" value="0" oninput="updateCore(this.value)">
+                
+                <div style="font-size:0.7rem; color:#666; margin-top:20px; border-top:1px solid #333; padding-top:10px;">
+                    STATUS: <span id="statusTxt">IDLE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('vortexCanvas');
+        const ctx = canvas.getContext('2d');
+        const cx = 200;
+        const cy = 350; // Pusat pusaran di bawah
+
+        // STATE
+        let rpm = 0;
+        let particles = [];
+        let temperature = 28.0;
+        let voltage = 0;
+        let time = 0;
+
+        // Init Mercury Particles
+        const numParticles = 800;
+        for(let i=0; i<numParticles; i++) {
+            particles.push({
+                angle: Math.random() * Math.PI * 2,
+                radius: Math.random() * 180,
+                yOffset: Math.random() * 50,
+                speed: Math.random() * 0.05 + 0.01,
+                size: Math.random() * 3 + 1
+            });
+        }
+
+        function updateCore(val) {
+            rpm = parseInt(val);
+            
+            // Update Status Text
+            const st = document.getElementById('statusTxt');
+            const plasma = document.getElementById('plasmaLight');
+            
+            if (rpm > 80) {
+                st.innerText = "CRITICAL: ETHERIC BREACH"; st.style.color = "#fff";
+                plasma.style.opacity = (rpm-80)/20;
+            } else if (rpm > 40) {
+                st.innerText = "ACTIVE: PLASMA FORMING"; st.style.color = "#00ffcc";
+                plasma.style.opacity = 0.2;
+            } else {
+                st.innerText = "IDLE / LIQUID STATE"; st.style.color = "#888";
+                plasma.style.opacity = 0;
+            }
+        }
+
+        function drawVortex() {
+            ctx.clearRect(0, 0, 400, 500);
+
+            // Warna Merkuri (Silver -> Biru -> Putih)
+            let r, g, b;
+            if (rpm < 50) { // Fase Cair (Perak)
+                r=192; g=192; b=192; 
+            } else { // Fase Plasma (Biru Elektrik)
+                r=0; g=255; b=204;
+            }
+
+            // Update Physics
+            voltage = (rpm * rpm) / 500; // Voltase naik eksponensial
+            
+            // Hukum Termodinamika Terbalik (Schauberger): 
+            // Vortex Implosion = Mendinginkan. Explosion = Memanaskan.
+            // Semakin cepat putaran, semakin dingin intinya.
+            let targetTemp = 28.0 - (rpm * 0.4); 
+            temperature += (targetTemp - temperature) * 0.05;
+
+            document.getElementById('voltVal').innerText = voltage.toFixed(1);
+            document.getElementById('tempVal').innerText = temperature.toFixed(1);
+
+            // Draw Particles
+            ctx.globalCompositeOperation = "lighter"; // Efek Glowing
+            
+            particles.forEach(p => {
+                // Kecepatan putar berdasarkan RPM & Jarak dari pusat (Hukum Kekekalan Momentum Sudut)
+                // Makin ke tengah, makin ngebut
+                let velocity = (rpm * 0.005) + (50 / (p.radius + 1)) * (rpm * 0.0005);
+                p.angle += velocity;
+
+                // Gaya Sentripetal (Tarik ke dalam)
+                if (rpm > 0) {
+                    p.radius -= 0.5; // Sedot ke tengah
+                    if (p.radius < 5) { // Kalau udah di tengah (Singularity)
+                        p.radius = 180; // Respawn di pinggir
+                        p.yOffset = Math.random() * 100; // Reset tinggi
+                    }
+                }
+
+                // Posisi 3D Pseudo
+                // Y makin ke bawah (corong) saat radius mengecil
+                let funnelDepth = (180 - p.radius) * 1.5;
+                
+                let px = cx + Math.cos(p.angle) * p.radius;
+                let py = cy - funnelDepth * 0.5 + p.yOffset;
+
+                // Gambar
+                let alpha = (p.radius / 180); // Makin tengah makin terang/padat
+                
+                // Kalau RPM tinggi, partikel jadi "Arc" (garis) bukan titik
+                if (rpm > 60) {
+                    ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(px, py);
+                    // Buntut
+                    let tailX = cx + Math.cos(p.angle - 0.2) * p.radius;
+                    let tailY = cy - funnelDepth * 0.5 + p.yOffset;
+                    ctx.lineTo(tailX, tailY);
+                    ctx.stroke();
+                } else {
+                    ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+                    ctx.beginPath(); ctx.arc(px, py, p.size, 0, Math.PI*2); ctx.fill();
+                }
+            });
+
+            // GANTI WARNA HUD SUHU JIKA DINGIN (Cold Electricity)
+            const tempEl = document.getElementById('tempVal');
+            if (temperature < 0) {
+                tempEl.style.color = "#00ffff"; // Icy Blue
+                document.getElementById('etherVal').innerText = "SUPERCONDUCTIVE";
+                document.getElementById('etherVal').style.color = "#00ffff";
+            } else {
+                tempEl.style.color = "#ffaa00";
+                document.getElementById('etherVal').innerText = "STABLE";
+                document.getElementById('etherVal').style.color = "#888";
+            }
+        }
+
+        function animate() {
+            time += 0.1;
+            drawVortex();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>

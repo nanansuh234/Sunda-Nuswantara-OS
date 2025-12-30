@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Majapahit Ether Pendopo</title>
+    <style>
+        body {
+            background: #1a0b00; color: #ffcc00; font-family: 'Garamond', serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        h1 { margin: 0; text-transform: uppercase; letter-spacing: 3px; color: #ffcc00; text-shadow: 0 0 10px #ff3300; }
+        
+        .viewport {
+            position: relative; width: 800px; height: 500px;
+            background: linear-gradient(#050510, #2b1d0e);
+            border: 4px solid #8b4513; border-radius: 10px;
+            overflow: hidden; margin-top: 10px;
+            box-shadow: 0 0 50px rgba(255, 69, 0, 0.2);
+        }
+
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+
+        /* HUD */
+        .hud {
+            position: absolute; top: 10px; left: 10px; z-index: 10;
+            background: rgba(0,0,0,0.6); padding: 15px; border: 1px solid #ffcc00;
+            border-radius: 5px; color: #ffcc00;
+        }
+        
+        .energy-val { font-size: 2rem; font-weight: bold; display: block; }
+        .unit { font-size: 0.8rem; color: #aaa; }
+
+        /* CONTROLS */
+        .controls {
+            width: 800px; background: #2e1a0a; border: 2px solid #8b4513; border-top: none;
+            padding: 20px; display: flex; justify-content: space-around;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .slider-group { text-align: center; width: 40%; }
+        .label { color: #d2b48c; font-size: 0.9rem; margin-bottom: 5px; font-weight: bold; }
+        input[type=range] { width: 100%; accent-color: #ffcc00; cursor: pointer; }
+
+        .mercury-core {
+            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+            width: 40px; height: 40px; border-radius: 50%;
+            background: radial-gradient(circle, #fff, #c0c0c0, #808080);
+            box-shadow: 0 0 20px #fff; z-index: 5; opacity: 0; transition: opacity 0.5s;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>MAJAPAHIT ETHER PENDOPO</h1>
+    <div style="font-size:0.8rem; color:#d2b48c;">Tumpang Sari Resonance & Micro-Mercury Storage</div>
+
+    <div class="viewport">
+        <div class="hud">
+            <div>ETHER ACCUMULATED:</div>
+            <span class="energy-val" id="energyDisplay">0</span>
+            <span class="unit">Prana Units</span>
+        </div>
+        
+        <div class="mercury-core" id="core"></div>
+
+        <canvas id="simCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <div class="controls">
+        <div class="slider-group">
+            <div class="label">TUMPANG SARI LAYERS (Resonator)</div>
+            <input type="range" id="layerSlider" min="1" max="9" value="3" oninput="updateSys()">
+        </div>
+        <div class="slider-group">
+            <div class="label">MERCURY VORTEX SPEED (Storage)</div>
+            <input type="range" id="vortexSlider" min="0" max="100" value="0" oninput="updateSys()">
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const w = 800;
+        const h = 500;
+        const coreEl = document.getElementById('core');
+
+        // STATE
+        let layers = 3; 
+        let vortexSpeed = 0;
+        let energy = 0;
+        let time = 0;
+
+        // Ether Particles
+        let particles = [];
+        for(let i=0; i<200; i++) {
+            particles.push({
+                x: Math.random()*w, 
+                y: -Math.random()*200, 
+                vx: 0, vy: 0,
+                captured: false
+            });
+        }
+
+        function updateSys() {
+            layers = parseInt(document.getElementById('layerSlider').value);
+            vortexSpeed = parseInt(document.getElementById('vortexSlider').value);
+            
+            // Visual Mercury Core Active
+            if(vortexSpeed > 10) {
+                coreEl.style.opacity = vortexSpeed / 100;
+                coreEl.style.boxShadow = `0 0 ${vortexSpeed/2}px #00ffcc`; // Ether Glow
+            } else {
+                coreEl.style.opacity = 0;
+            }
+        }
+
+        function drawJoglo() {
+            let cx = w/2;
+            let roofTop = 100;
+            let roofBaseY = 250;
+            let pillarBaseY = 400;
+
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = "#8b4513"; // Kayu Jati
+            ctx.fillStyle = "rgba(50, 30, 10, 0.8)"; // Interior Gelap
+
+            // 1. ATAP JOGLO (Brunjung)
+            ctx.beginPath();
+            ctx.moveTo(cx, roofTop); // Molo (Puncak)
+            ctx.lineTo(cx + 150, roofBaseY);
+            ctx.lineTo(cx - 150, roofBaseY);
+            ctx.closePath();
+            ctx.fill(); ctx.stroke();
+
+            // 2. ATAP PENANGGUNG (Sayap)
+            ctx.beginPath();
+            ctx.moveTo(cx + 150, roofBaseY); ctx.lineTo(cx + 300, 320);
+            ctx.moveTo(cx - 150, roofBaseY); ctx.lineTo(cx - 300, 320);
+            ctx.stroke();
+
+            // 3. SOKO GURU (4 Tiang Utama)
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            // Tiang Kiri
+            ctx.moveTo(cx - 50, roofBaseY); ctx.lineTo(cx - 50, pillarBaseY);
+            // Tiang Kanan
+            ctx.moveTo(cx + 50, roofBaseY); ctx.lineTo(cx + 50, pillarBaseY);
+            ctx.stroke();
+
+            // 4. TUMPANG SARI (The Coil)
+            // Ini adalah "Trafo" bertingkat terbalik
+            ctx.strokeStyle = "#d2b48c"; // Kayu Muda
+            ctx.lineWidth = 2;
+            for(let i=0; i<layers; i++) {
+                let y = roofBaseY - (i * 15);
+                let wid = 100 - (i * 8); // Makin ke atas makin sempit (Fractal)
+                ctx.beginPath();
+                ctx.moveTo(cx - wid/2, y); ctx.lineTo(cx + wid/2, y);
+                ctx.stroke();
+            }
+
+            // 5. UMPAK (Batu Pondasi - Isolator)
+            ctx.fillStyle = "#555";
+            ctx.fillRect(cx - 60, pillarBaseY, 20, 20);
+            ctx.fillRect(cx + 40, pillarBaseY, 20, 20);
+        }
+
+        function drawEther() {
+            ctx.fillStyle = "#ffcc00"; // Prana Gold
+
+            particles.forEach(p => {
+                // Logic: Ether jatuh dari langit
+                if(!p.captured) {
+                    p.y += 2;
+                    p.x += Math.sin(time + p.y*0.05);
+
+                    // Cek Tabrakan dengan Atap Joglo
+                    // Area tangkapan: Segitiga atap
+                    let distToCenter = Math.abs(p.x - w/2);
+                    if (p.y > 100 && p.y < 250 && distToCenter < 150) {
+                        p.captured = true; // Masuk ke sistem Tumpang Sari
+                    }
+                    
+                    if(p.y > h) { p.y = -50; p.x = Math.random()*w; } // Respawn
+                } 
+                else {
+                    // PARTIKEL TERTANGKAP (Masuk ke Core)
+                    // Gerakan Spiral menuju tengah bawah (Soko Guru)
+                    let dx = (w/2) - p.x;
+                    let dy = 400 - p.y; // Menuju Lantai/Core
+                    
+                    p.x += dx * 0.05;
+                    p.y += dy * 0.05;
+
+                    // Kalau Mercury Vortex nyala, sedotan makin kenceng
+                    if (vortexSpeed > 0) {
+                        let rot = vortexSpeed * 0.02;
+                        let oldX = p.x - w/2;
+                        let oldY = p.y - 400;
+                        // Rotasi (Vortex Effect)
+                        p.x = (w/2) + (oldX * Math.cos(rot) - oldY * Math.sin(rot));
+                    }
+
+                    // Kalau sudah sampai Core
+                    if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
+                        // Tambah Energi
+                        energy += (layers * 0.1) + (vortexSpeed * 0.05);
+                        // Respawn
+                        p.captured = false; 
+                        p.y = -50; 
+                        p.x = Math.random()*w;
+                    }
+                }
+
+                let size = p.captured ? 3 : 1;
+                ctx.fillRect(p.x, p.y, size, size);
+            });
+            
+            // Limit energy display
+            document.getElementById('energyDisplay').innerText = Math.floor(energy);
+        }
+
+        function drawField() {
+            // Visualisasi Medan Energi di tengah rumah
+            if (energy > 100) {
+                let radius = 50 + (energy / 50);
+                if (radius > 200) radius = 200;
+                
+                let grad = ctx.createRadialGradient(w/2, 400, 10, w/2, 400, radius);
+                grad.addColorStop(0, "rgba(0, 255, 204, 0.5)"); // Inti Dingin
+                grad.addColorStop(1, "rgba(0,0,0,0)");
+                
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(w/2, 400, radius, 0, Math.PI*2); ctx.fill();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+            time += 0.1;
+
+            drawJoglo();
+            drawField();
+            drawEther();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Systems Index</title>
+    <style>
+        :root {
+            --bg: #0b0b0b;
+            --card-bg: #141414;
+            --gold: #d4af37;
+            --alert: #ff3333; /* Merah Alert */
+            --safe: #00ffcc; /* Cyan Safe */
+            --text: #ccc;
+            --border: #333;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Consolas', monospace;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 80%);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 20px;
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-size: 2.2rem;
+            margin: 0;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* GRID SYSTEM */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 180px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: #1a1a1a;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* TIPE DEFENSE (MERAH) */
+        .card.type-def { border-top: 3px solid var(--alert); }
+        .card.type-def:hover { border-color: var(--alert); box-shadow: 0 0 20px rgba(255, 51, 51, 0.1); }
+        .card.type-def .icon-box { color: var(--alert); border-color: var(--alert); }
+
+        /* TIPE ENERGY (CYAN/GOLD) */
+        .card.type-nrg { border-top: 3px solid var(--safe); }
+        .card.type-nrg:hover { border-color: var(--safe); box-shadow: 0 0 20px rgba(0, 255, 204, 0.1); }
+        .card.type-nrg .icon-box { color: var(--safe); border-color: var(--safe); }
+
+        /* CONTENT */
+        .card-num {
+            font-size: 3rem; font-weight: bold; opacity: 0.05;
+            position: absolute; right: 15px; bottom: 10px; pointer-events: none;
+        }
+
+        .card-header {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
+        }
+
+        .icon-box {
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid #444; border-radius: 50%; font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1rem; font-weight: bold; color: #fff; text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-desc {
+            font-size: 0.8rem; color: #888; line-height: 1.5;
+        }
+
+        /* SECTION LABEL */
+        .section-label {
+            grid-column: 1 / -1;
+            margin: 30px 0 10px 0;
+            font-size: 0.8rem; color: var(--gold); 
+            border-bottom: 1px dashed #333; padding-bottom: 5px;
+            display: flex; justify-content: space-between;
+        }
+
+        /* BACK BUTTON */
+        .back-btn {
+            position: absolute; top: 0; left: 0;
+            color: #555; text-decoration: none; font-size: 0.8rem;
+            padding: 10px; border: 1px solid #333;
+        }
+        .back-btn:hover { color: #fff; border-color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="40. Index Tools.html" class="back-btn">← MAIN INDEX</a>
+        <h1>ADVANCED SYSTEMS</h1>
+        <div class="subtitle">SUB-MENU 42: CIVILIZATION DEFENSE & ENERGY ARCHITECTURE</div>
+    </header>
+
+    <div class="grid-container">
+
+        <div class="section-label">
+            <span>/// PROTOKOL PERTAHANAN (DEFENSE GRID)</span>
+            <span>STATUS: ACTIVE</span>
+        </div>
+
+        <a href="55. Keris Scalar Antenna.html" class="card type-def">
+            <span class="card-num">55</span>
+            <div class="card-header">
+                <div class="icon-box">⚔️</div>
+                <div class="card-title">Keris Scalar</div>
+            </div>
+            <div class="card-desc">Master Key Nuswantara. Antena pengendali gelombang skalar untuk stabilisasi medan atau disrupsi.</div>
+        </a>
+
+        <a href="56. Mudflood Defense.html" class="card type-def">
+            <span class="card-num">56</span>
+            <div class="card-header">
+                <div class="icon-box">🏰</div>
+                <div class="card-title">Mudflood Shield</div>
+            </div>
+            <div class="card-desc">Sistem anti-likuifaksi tanah. Kombinasi Paku Bumi (Pasif) dan Phase Cancellator (Aktif).</div>
+        </a>
+
+        <a href="57. Tornado Defense.html" class="card type-def">
+            <span class="card-num">57</span>
+            <div class="card-header">
+                <div class="icon-box">🌪️</div>
+                <div class="card-title">Vortex Breaker</div>
+            </div>
+            <div class="card-desc">Atmospheric Ion Disruption. Senjata pemutus arus listrik badai/puting beliung sebelum menyentuh tanah.</div>
+        </a>
+
+
+        <div class="section-label">
+            <span>/// ARSITEKTUR ENERGI (SMART HOME 2026)</span>
+            <span>STATUS: READY</span>
+        </div>
+
+        <a href="58. Pendopo Energy.html" class="card type-nrg">
+            <span class="card-num">58</span>
+            <div class="card-header">
+                <div class="icon-box">🏠</div>
+                <div class="card-title">Pendopo Harvester</div>
+            </div>
+            <div class="card-desc">Konsep rumah Joglo sebagai mesin energi. Atap kolektor, Tumpang Sari resonator, dan Bata kapasitor.</div>
+        </a>
+
+        <a href="59. Mercury Core.html" class="card type-nrg">
+            <span class="card-num">59</span>
+            <div class="card-header">
+                <div class="icon-box">🔋</div>
+                <div class="card-title">Mercury Core</div>
+            </div>
+            <div class="card-desc">Yoni-Lingga Reactor. Simulasi detail inti reaktor pusaran merkuri/air garam untuk baterai abadi.</div>
+        </a>
+
+        <a href="60. Thermo Vortex.html" class="card type-nrg">
+            <span class="card-num">60</span>
+            <div class="card-header">
+                <div class="icon-box">🔥</div>
+                <div class="card-title">Thermo Vortex</div>
+            </div>
+            <div class="card-desc">Teknologi sirkulasi fluida tanpa listrik (Silent Tech). Memanfaatkan panas api/dupa untuk memutar turbin air.</div>
+        </a>
+
+    </div>
+
+    <div style="margin-top: 50px; font-size: 0.8rem; color: #444; text-align:center;">
+        NUSWANTARA PREPAREDNESS PROTOCOL // PROJECT 2026
+    </div>
+
+</body>
+</html>

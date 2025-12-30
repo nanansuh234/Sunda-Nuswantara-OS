@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keris Scalar Antenna</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --blade: #a0a0a0;
+            --meteor: #505060;
+            --glow: #bf00ff; /* Ungu Mistis */
+            --gold: #d4af37;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #ccc;
+            font-family: 'Consolas', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .keris-box {
+            position: relative;
+            width: 300px; height: 600px;
+            border: 2px solid #333;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 70%);
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(191, 0, 255, 0.1);
+        }
+
+        canvas { display: block; width: 100%; height: 100%; }
+
+        /* CONTROLS */
+        .panel {
+            width: 280px;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--gold);
+            padding: 20px;
+            border-radius: 8px;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+
+        h2 {
+            color: var(--gold); margin: 0 0 10px 0; text-align: center;
+            font-size: 1.2rem; border-bottom: 1px solid #444; padding-bottom: 10px;
+        }
+
+        .stat-box {
+            display: flex; justify-content: space-between; font-size: 0.9rem;
+        }
+        .val { font-weight: bold; color: var(--glow); }
+
+        input[type=range] { width: 100%; accent-color: var(--glow); cursor: pointer; }
+        
+        .mode-btn {
+            background: #222; border: 1px solid #555; color: #aaa;
+            padding: 8px; cursor: pointer; transition: 0.3s;
+            font-family: inherit; font-size: 0.8rem;
+        }
+        .mode-btn.active {
+            background: var(--glow); color: #000; border-color: #fff; font-weight: bold;
+            box-shadow: 0 0 10px var(--glow);
+        }
+
+        .desc {
+            font-size: 0.7rem; color: #666; margin-top: 10px; border-top: 1px dashed #333; padding-top: 10px;
+            text-align: justify;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="keris-box">
+            <canvas id="kerisCanvas" width="300" height="600"></canvas>
+        </div>
+
+        <div class="panel">
+            <h2>KERIS CONTROL</h2>
+            
+            <div class="stat-box">
+                <span>LUK (Waveform):</span>
+                <span class="val" id="lukVal">3</span>
+            </div>
+            <input type="range" id="lukSlider" min="0" max="13" step="1" value="3" oninput="updateKeris()">
+            <div style="font-size:0.7rem; color:#666; text-align:right;">0 = Lurus (Fokus), 13 = Chaos</div>
+
+            <div class="stat-box" style="margin-top:10px;">
+                <span>ENERGY INPUT:</span>
+                <span class="val" id="enerVal">0%</span>
+            </div>
+            <input type="range" id="powerSlider" min="0" max="100" value="0" oninput="updateKeris()">
+
+            <div style="display:flex; gap:5px; margin-top:15px;">
+                <button class="mode-btn active" onclick="setMode('stabilize')" id="btnStab">STABILIZE</button>
+                <button class="mode-btn" onclick="setMode('attack')" id="btnAtt">DISRUPT</button>
+            </div>
+
+            <div class="desc">
+                <b>RAHASIA EMPU:</b><br>
+                Keris adalah "Sirkuit Terbuka". Pamor (Meteorit) menghantarkan ion. Luk (Gelombang) menentukan frekuensi target.<br>
+                *Mode Stabilize: Anti-Gempa/Puting Beliung.<br>
+                *Mode Disrupt: Senjata Sonic/Plasma.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('kerisCanvas');
+        const ctx = canvas.getContext('2d');
+        const cx = 150;
+        const cy = 500; // Gagang di bawah
+
+        // STATE
+        let luk = 3;
+        let power = 0;
+        let mode = 'stabilize'; // stabilize / attack
+        let time = 0;
+        let particles = [];
+
+        function updateKeris() {
+            luk = parseInt(document.getElementById('lukSlider').value);
+            power = parseInt(document.getElementById('powerSlider').value);
+            
+            document.getElementById('lukVal').innerText = luk === 0 ? "LURUS (Beam)" : luk;
+            document.getElementById('enerVal').innerText = power + "%";
+        }
+
+        function setMode(m) {
+            mode = m;
+            document.getElementById('btnStab').className = m === 'stabilize' ? 'mode-btn active' : 'mode-btn';
+            document.getElementById('btnAtt').className = m === 'attack' ? 'mode-btn active' : 'mode-btn';
+            
+            // Ubah warna tema
+            const root = document.documentElement;
+            if(m === 'stabilize') {
+                root.style.setProperty('--glow', '#bf00ff'); // Ungu (Royal)
+            } else {
+                root.style.setProperty('--glow', '#ff3300'); // Merah (Tempur)
+            }
+        }
+
+        function drawKerisBlade() {
+            ctx.save();
+            ctx.translate(cx, cy);
+            
+            // 1. GAGANG (Hulu)
+            ctx.fillStyle = "#8b4513"; // Kayu
+            ctx.beginPath();
+            ctx.moveTo(-10, 0); ctx.lineTo(10, 0);
+            ctx.lineTo(15, 60); ctx.lineTo(-15, 60);
+            ctx.fill();
+            
+            // MENDHAK (Cincin)
+            ctx.fillStyle = "#d4af37"; // Emas
+            ctx.fillRect(-12, -10, 24, 10);
+
+            // 2. BILAH (Blade)
+            // Menggambar kurva sinus berdasarkan jumlah Luk
+            ctx.beginPath();
+            
+            let bladeLength = 400;
+            let widthBase = 20;
+            
+            // Kanan Bilah
+            for(let y=0; y<=bladeLength; y+=5) {
+                let progress = y / bladeLength;
+                let taper = 1 - progress; // Mengecil ke ujung
+                
+                // Rumus Luk (Sinus)
+                let wave = 0;
+                if(luk > 0) {
+                    // Frekuensi gelombang disesuaikan LUK
+                    wave = Math.sin((y / bladeLength) * Math.PI * luk) * 15 * taper;
+                }
+                
+                let x = (widthBase * taper) + wave;
+                
+                if(y===0) ctx.moveTo(x, -y);
+                else ctx.lineTo(x, -y);
+            }
+
+            // Ujung Runcing
+            ctx.lineTo(0, -bladeLength - 10);
+
+            // Kiri Bilah
+            for(let y=bladeLength; y>=0; y-=5) {
+                let progress = y / bladeLength;
+                let taper = 1 - progress;
+                
+                let wave = 0;
+                if(luk > 0) {
+                    wave = Math.sin((y / bladeLength) * Math.PI * luk) * 15 * taper;
+                }
+                
+                let x = -(widthBase * taper) + wave;
+                ctx.lineTo(x, -y);
+            }
+
+            ctx.closePath();
+
+            // WARNA & TEXTURE (Pamor)
+            let grd = ctx.createLinearGradient(0, 0, 0, -400);
+            grd.addColorStop(0, "#555");
+            grd.addColorStop(0.5, "#888");
+            grd.addColorStop(1, "#aaa");
+            ctx.fillStyle = grd;
+            ctx.fill();
+
+            // Efek Pamor (Meteorit Grain)
+            ctx.strokeStyle = "rgba(0,0,0,0.2)";
+            ctx.lineWidth = 1;
+            ctx.stroke(); // Outline
+
+            // Glow Energi di Bilah
+            if (power > 0) {
+                ctx.shadowBlur = power / 2;
+                ctx.shadowColor = mode === 'stabilize' ? '#bf00ff' : '#ff3300';
+                ctx.fillStyle = `rgba(255, 255, 255, ${power/200})`;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.restore();
+        }
+
+        function drawEnergy() {
+            if (power < 5) return;
+
+            let tipX = cx;
+            let tipY = cy - 410; // Ujung keris
+            
+            // 1. EMITTER TIP (Ujung Keris)
+            ctx.save();
+            ctx.translate(tipX, tipY);
+            
+            let color = mode === 'stabilize' ? '191, 0, 255' : '255, 51, 0';
+            
+            // Bola Plasma Kecil di ujung
+            let size = (power / 100) * 10;
+            ctx.fillStyle = `rgb(${color})`;
+            ctx.beginPath(); ctx.arc(0, 0, size, 0, Math.PI*2); ctx.fill();
+            
+            // Aura Wave
+            ctx.strokeStyle = `rgba(${color}, 0.5)`;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(0, 0, size + (Math.sin(time)*5), 0, Math.PI*2);
+            ctx.stroke();
+
+            // 2. SCALAR WAVES (Ripple Effect)
+            if (mode === 'stabilize') {
+                // Gelombang bulat (Shield)
+                for(let i=0; i<3; i++) {
+                    let r = (time * 20 + i * 50) % 200;
+                    let alpha = 1 - (r / 200);
+                    ctx.strokeStyle = `rgba(${color}, ${alpha})`;
+                    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2); ctx.stroke();
+                }
+            } else {
+                // Gelombang tajam / Petir (Attack)
+                for(let i=0; i<3; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    let ex = (Math.random() - 0.5) * 100 * (power/50);
+                    let ey = -(Math.random()) * 200 * (power/50);
+                    ctx.lineTo(ex, ey);
+                    ctx.strokeStyle = `rgba(${color}, 0.8)`;
+                    ctx.lineWidth = Math.random() * 3;
+                    ctx.stroke();
+                }
+            }
+
+            ctx.restore();
+        }
+
+        function drawPamorFlow() {
+            // Visualisasi aliran energi di dalam bilah (Pamor yang menyala)
+            if (power < 10) return;
+            
+            ctx.save();
+            ctx.translate(cx, cy);
+            
+            let bladeLength = 400;
+            ctx.beginPath();
+            
+            // Gambar garis acak yang bergerak naik (Seolah sirkuit pamor nyala)
+            for(let i=0; i<5; i++) {
+                let y = -((time * 50 + i * 80) % bladeLength);
+                // Sesuaikan posisi x dengan kurva Luk
+                let progress = Math.abs(y) / bladeLength;
+                let taper = 1 - progress;
+                let wave = 0;
+                if(luk > 0) wave = Math.sin((Math.abs(y) / bladeLength) * Math.PI * luk) * 15 * taper;
+                
+                let x = wave;
+                
+                ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+                ctx.fillRect(x-1, y, 2, 10);
+            }
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            time += 0.1;
+
+            drawKerisBlade();
+            drawPamorFlow();
+            drawEnergy();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>

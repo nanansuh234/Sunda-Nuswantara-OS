@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex Breaker: Anti-Tornado System</title>
+    <style>
+        body {
+            background: #222; color: #fff; font-family: 'Consolas', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        h1 { margin: 0; text-transform: uppercase; color: #00ccff; text-shadow: 0 0 10px #00ccff; }
+        
+        .viewport {
+            position: relative; width: 800px; height: 500px;
+            background: linear-gradient(#1a1a1a, #000);
+            border: 4px solid #444; border-radius: 10px;
+            overflow: hidden; margin-top: 10px;
+        }
+
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+
+        .hud {
+            position: absolute; top: 20px; left: 20px; z-index: 10;
+            background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px;
+        }
+
+        .controls {
+            width: 800px; background: #333; padding: 15px; margin-top: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold;
+            background: #ff3333; border: 2px solid #fff; color: #fff; cursor: pointer;
+            box-shadow: 0 0 15px #ff0000; text-transform: uppercase;
+        }
+        button:active { transform: scale(0.95); background: #fff; color: #ff0000; }
+
+        .status-bar {
+            width: 300px; height: 20px; background: #000; border: 1px solid #555;
+            position: relative;
+        }
+        .bar-fill { height: 100%; background: #ffaa00; width: 0%; transition: width 0.1s; }
+
+    </style>
+</head>
+<body>
+
+    <h1>VORTEX BREAKER</h1>
+    <div style="font-size:0.8rem; color:#aaa;">Atmospheric Ion Disruption System</div>
+
+    <div class="viewport">
+        <div class="hud">
+            <div>VORTEX STRENGTH: <span id="vortexStr">0%</span></div>
+            <div>STATUS: <span id="statusTxt">FORMING...</span></div>
+        </div>
+        <canvas id="skyCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <div class="controls">
+        <div style="width: 40%;">
+            <label>ENERGY CHARGE</label>
+            <div class="status-bar"><div class="bar-fill" id="energyBar" style="width:100%"></div></div>
+        </div>
+        
+        <button onmousedown="fireBeam(true)" onmouseup="fireBeam(false)" onmouseleave="fireBeam(false)">
+            FIRE DISRUPTOR BEAM
+        </button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('skyCanvas');
+        const ctx = canvas.getContext('2d');
+        const w = 800;
+        const h = 500;
+
+        // TORNADO PHYSICS
+        let particles = [];
+        let vortexPower = 50; // 0-100 (Kekuatan Angin)
+        let isFiring = false;
+        let energy = 100;
+        let beamWidth = 0;
+
+        // Init Particles
+        for(let i=0; i<500; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                angle: Math.random() * Math.PI * 2,
+                radius: Math.random() * 200, // Jarak dari pusat
+                speed: Math.random() * 0.1 + 0.05,
+                h: Math.random() * h // Ketinggian
+            });
+        }
+
+        function fireBeam(active) {
+            isFiring = active;
+        }
+
+        function updateLogic() {
+            const strText = document.getElementById('vortexStr');
+            const statText = document.getElementById('statusTxt');
+            const bar = document.getElementById('energyBar');
+
+            // Logic Tornado Tumbuh
+            if (!isFiring) {
+                vortexPower += 0.2;
+                energy += 0.5; // Recharge
+            } else {
+                if (energy > 0) {
+                    vortexPower -= 2.0; // Damage ke Tornado
+                    energy -= 1.0; // Drain Energy
+                    beamWidth = 20 + Math.random()*10;
+                } else {
+                    isFiring = false; // Habis energi
+                }
+            }
+
+            // Clamp Values
+            if (vortexPower > 100) vortexPower = 100;
+            if (vortexPower < 0) vortexPower = 0;
+            if (energy > 100) energy = 100;
+            if (energy < 0) energy = 0;
+
+            // UI Update
+            strText.innerText = Math.floor(vortexPower) + "%";
+            bar.style.width = energy + "%";
+
+            if (vortexPower > 80) {
+                statText.innerText = "CRITICAL! TOUCHDOWN IMMINENT!";
+                statText.style.color = "red";
+            } else if (vortexPower < 10) {
+                statText.innerText = "DISSIPATED (SAFE)";
+                statText.style.color = "#00ffcc";
+            } else {
+                statText.innerText = "ACTIVE";
+                statText.style.color = "yellow";
+            }
+        }
+
+        function drawTornado() {
+            let cx = w/2; // Pusat Tornado
+            
+            // Warna Tornado (Makin kuat makin gelap/merah)
+            let stormColor = `rgba(${vortexPower*2}, ${vortexPower}, ${vortexPower}, 0.6)`;
+            ctx.fillStyle = stormColor;
+
+            particles.forEach(p => {
+                // Fisika Vortex (Spiral)
+                // Kecepatan putar tergantung VortexPower
+                let rotationSpeed = (vortexPower / 100) * 0.2;
+                p.angle += rotationSpeed;
+
+                // Bentuk Corong (Makin ke bawah makin kecil radiusnya)
+                // Normalisasi ketinggian (0 = atas, 1 = bawah)
+                let level = p.h / h; 
+                let coneFactor = 1 - (level * 0.8); // Atas lebar, bawah sempit
+
+                let currentRadius = p.radius * coneFactor;
+
+                // Kalau ditembak, partikel mental keluar (Disruption)
+                if (isFiring && energy > 0) {
+                    p.radius += 5; // Bubar
+                } else {
+                    // Kalau idle, partikel ditarik ke pusat (Suction)
+                    if (p.radius > 20) p.radius -= 0.5;
+                    else p.radius = Math.random() * 300; // Respawn di luar
+                }
+
+                // Posisi X Y
+                let px = cx + Math.cos(p.angle) * currentRadius;
+                // Tambah getaran random (Chaos)
+                let jitter = (vortexPower/100) * 5;
+                px += (Math.random()-0.5) * jitter;
+
+                let py = p.h;
+
+                // Gambar Partikel (Debu/Awan)
+                let size = 2 + (level * 3);
+                ctx.fillRect(px, py, size, size);
+
+                // Respawn height loop
+                p.h += 2 + (vortexPower/20); // Jatuh/Puter ke bawah
+                if(p.h > h) {
+                    p.h = 0;
+                    p.radius = Math.random() * 300;
+                }
+            });
+        }
+
+        function drawBeam() {
+            if (isFiring && energy > 0) {
+                let cx = w/2;
+                
+                // Beam Utama (Ion Stream)
+                ctx.save();
+                ctx.globalCompositeOperation = "lighter"; // Efek Glowing
+                
+                // Laser Core
+                ctx.strokeStyle = "#fff";
+                ctx.lineWidth = 5;
+                ctx.beginPath(); ctx.moveTo(cx - 300, h); ctx.lineTo(cx, h/2); ctx.stroke(); // Dari kiri bawah (base)
+
+                // Ledakan di tengah tornado
+                let blastSize = 50 + Math.random()*20;
+                let grad = ctx.createRadialGradient(cx, h/2, 10, cx, h/2, blastSize);
+                grad.addColorStop(0, "white");
+                grad.addColorStop(0.5, "#00ccff");
+                grad.addColorStop(1, "transparent");
+                
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(cx, h/2, blastSize, 0, Math.PI*2); ctx.fill();
+
+                // Kilatan Listrik (Discharge)
+                ctx.strokeStyle = "#00ccff";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for(let i=0; i<5; i++) {
+                    ctx.moveTo(cx, h/2);
+                    ctx.lineTo(cx + (Math.random()*200-100), (Math.random()*h));
+                }
+                ctx.stroke();
+
+                ctx.restore();
+            }
+        }
+
+        function animate() {
+            // Langit Gelap
+            ctx.fillStyle = `rgba(10, 10, 20, 0.4)`; // Trail effect
+            ctx.fillRect(0, 0, w, h);
+
+            updateLogic();
+            drawTornado();
+            drawBeam();
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>
