@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Celestial Compass V2</title>
+    <style>
+        :root {
+            --bg: #02020a;
+            --panel: #0a0a1a;
+            --horizon: #001a33;
+            --grid: #333;
+            --north: #00ffcc; /* Polaris */
+            --south: #ffaa00; /* Crux */
+            --eq: #ff00ff;    /* Orion */
+            --text: #00ff88;
+            --gold: #d4af37;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        h1 {
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 20px 0 5px 0;
+            text-align: center;
+            text-shadow: 0 0 10px var(--text);
+        }
+
+        /* --- VISUALISASI UTAMA --- */
+        .container {
+            position: relative;
+            width: 800px;
+            height: 450px;
+            border: 2px solid #333;
+            background: radial-gradient(circle at center bottom, #051a2e 0%, #000 80%);
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+        }
+
+        .dome-grid {
+            position: absolute; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            border-bottom: 2px solid var(--text);
+        }
+
+        .star-marker {
+            position: absolute; width: 12px; height: 12px;
+            border-radius: 50%; transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px currentColor;
+            transition: all 0.3s ease-out;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10;
+        }
+        
+        .label {
+            position: absolute; top: -25px; font-size: 0.8rem;
+            font-weight: bold; white-space: nowrap; color: inherit;
+            text-shadow: 0 0 5px black;
+        }
+
+        .compass-label { position: absolute; bottom: 10px; font-size: 1.5rem; font-weight: bold; color: #fff; }
+        .north-label { left: 20px; color: var(--north); }
+        .south-label { right: 20px; color: var(--south); }
+        .zenith-label { top: 10px; left: 50%; transform: translateX(-50%); color: #666; font-size: 0.7rem; border: 1px dashed #444; padding: 2px 8px; border-radius: 10px; }
+
+        /* --- HUD KONTROL --- */
+        .hud {
+            width: 800px; background: var(--panel);
+            padding: 15px; border: 2px solid #333; border-top: none;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .stat-box { font-size: 0.9rem; }
+        .val { font-size: 1.4rem; font-weight: bold; color: #fff; }
+        .unit { font-size: 0.8rem; color: #888; display: block; }
+
+        input[type=range] { width: 300px; accent-color: var(--text); cursor: pointer; }
+
+        /* --- MANUAL & KETERANGAN --- */
+        .manual-section {
+            width: 800px; margin-top: 20px;
+            background: #080808; border: 1px solid #333;
+            padding: 20px; border-radius: 8px;
+            color: #aaa; font-size: 0.85rem; line-height: 1.5;
+        }
+
+        .manual-title {
+            color: var(--gold); font-size: 1.1rem; font-weight: bold;
+            border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .col-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        h3 { color: #fff; font-size: 0.95rem; margin: 0 0 8px 0; border-left: 3px solid var(--text); padding-left: 8px; }
+        p { margin: 0 0 10px 0; }
+        
+        .highlight { color: var(--text); font-weight: bold; }
+        .warn { color: var(--south); }
+
+        .kamal-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px; border-radius: 5px; margin-top: 10px;
+            border: 1px dashed #555;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>NUSWANTARA SKY COMPASS</h1>
+    <div style="font-size:0.8rem; color:#666; margin-bottom:15px;">Simulasi Navigasi Bintang & Koordinat Lintang</div>
+
+    <div class="container">
+        <div class="dome-grid"></div>
+        
+        <div class="zenith-label">ZENITH (90°) - Titik Tepat di Atas Kepala</div>
+        <div class="compass-label north-label">UTARA (N)</div>
+        <div class="compass-label south-label">SELATAN (S)</div>
+
+        <div id="starPolaris" class="star-marker" style="color:var(--north); background:var(--north);">
+            <div class="label">POLARIS (Utara)</div>
+        </div>
+        <div id="starCrux" class="star-marker" style="color:var(--south); background:var(--south);">
+            <div class="label">CRUX (Selatan)</div>
+        </div>
+        <div id="starOrion" class="star-marker" style="color:var(--eq); background:var(--eq);">
+            <div class="label">ORION (Ekuator)</div>
+        </div>
+
+        <div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); font-size:3rem; text-shadow:0 0 20px #000;">🧍</div>
+    </div>
+
+    <div class="hud">
+        <div class="stat-box">
+            <div style="color:#888;">LOKASI ANDA:</div>
+            <span class="val" id="latVal">0°</span>
+            <span class="unit" id="locText">Khatulistiwa (Nuswantara)</span>
+        </div>
+
+        <div style="text-align:center;">
+            <input type="range" id="latSlider" min="-90" max="90" value="0" oninput="updateSky(this.value)">
+            <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#666; margin-top:5px;">
+                <span>Kutub Selatan (-90)</span>
+                <span>Ekuator (0)</span>
+                <span>Kutub Utara (90)</span>
+            </div>
+        </div>
+
+        <div class="stat-box" style="text-align:right;">
+            <div style="color:#888;">ALTITUDE BINTANG:</div>
+            <div style="color:var(--north)">Polaris: <span id="polarisAlt" class="highlight">0° (Horizon)</span></div>
+            <div style="color:var(--south)">Crux: <span id="cruxAlt" class="highlight">0° (Horizon)</span></div>
+        </div>
+    </div>
+
+    <div class="manual-section">
+        <div class="manual-title">PANDUAN NAVIGASI MANUAL & LOGIKA KOORDINAT</div>
+        
+        <div class="col-2">
+            <div>
+                <h3>1. KONSEP DASAR KOORDINAT</h3>
+                <p>Alat ini mensimulasikan Kubah Langit (Dome) dari sudut pandang pengamat di Bumi.</p>
+                <ul>
+                    <li><span class="highlight">HORIZON (0°):</span> Garis datar pertemuan langit & laut.</li>
+                    <li><span class="highlight">ZENITH (90°):</span> Titik tertinggi tepat di atas ubun-ubun kepala.</li>
+                    <li><span class="highlight">ALTITUDE:</span> Tinggi bintang diukur dari Horizon (0-90°).</li>
+                </ul>
+                
+                <h3>2. TRIO BINTANG NAVIGASI</h3>
+                <p><b style="color:var(--north)">POLARIS (Utara):</b> Bintang jangkar. Diam di Utara. Tingginya = Lintang Anda (di belahan Utara).</p>
+                <p><b style="color:var(--south)">CRUX (Selatan):</b> Rasi Layang-layang/Pari. Penunjuk arah Selatan.</p>
+                <p><b style="color:var(--eq)">ORION (Tengah):</b> Rasi Waluku/Bajak. Selalu terbit di Timur & terbenam di Barat (Lintasan Khatulistiwa).</p>
+            </div>
+
+            <div>
+                <h3>3. CARA MENENTUKAN LOKASI (GPS ALAMI)</h3>
+                <p>Jika GPS mati, lakukan langkah ini di malam hari:</p>
+                <ol>
+                    <li>Cari <b style="color:var(--north)">Polaris</b> (Utara) atau <b style="color:var(--south)">Crux</b> (Selatan).</li>
+                    <li>Ukur ketinggiannya dari laut (Horizon).</li>
+                    <li>Gunakan rumus: <b>Tinggi Bintang = Lintang Posisi.</b></li>
+                </ol>
+                <p class="warn">Contoh: Jika Anda melihat Polaris setinggi 45° dari laut, maka Anda berada di Lintang 45° Utara.</p>
+
+                <div class="kamal-box">
+                    <h3>ALAT BANTU "KAMAL" (Jari Tangan)</h3>
+                    <p>Gunakan jari Anda sebagai penggaris langit:</p>
+                    • 1 Jari Telunjuk ≈ <b>1.6 Derajat</b><br>
+                    • 3 Jari (Telunjuk, Tengah, Manis) ≈ <b>5 Derajat</b><br>
+                    • 4 Jari (Kepalan Tangan) ≈ <b>10 Derajat</b><br>
+                    <i style="font-size:0.75rem">*Luruskan lengan, sejajarkan jari dengan horizon & bintang.</i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateSky(lat) {
+            lat = parseInt(lat);
+            
+            // Text Logic
+            let locText = "Khatulistiwa (Nuswantara)";
+            if(lat > 0) locText = "Belahan Bumi Utara (Arctic Side)";
+            if(lat < 0) locText = "Belahan Bumi Selatan (Antartika Side)";
+            if(lat === 90) locText = "Pusat Utara (North Pole)";
+            if(lat === -90) locText = "Lingkar Luar (Ice Wall)";
+            
+            document.getElementById('latVal').innerText = lat + "°";
+            document.getElementById('locText').innerText = locText;
+
+            // Canvas Config (800x450)
+            const horizonY = 450;
+            const pixelsPerDeg = 400 / 90; // ~4.44 px per degree (400px height area)
+            
+            // 1. POLARIS (NORTH)
+            const polEl = document.getElementById('starPolaris');
+            const polText = document.getElementById('polarisAlt');
+            
+            if (lat >= 0) {
+                let alt = lat;
+                let y = horizonY - (alt * pixelsPerDeg);
+                // X interpolation: Horizon(0)=50px, Zenith(90)=400px
+                let x = 50 + (lat / 90) * 350;
+                
+                polEl.style.top = y + "px";
+                polEl.style.left = x + "px";
+                polEl.style.opacity = 1;
+                polText.innerText = alt + "° (Terlihat)";
+            } else {
+                polEl.style.opacity = 0;
+                polText.innerText = "Di Bawah Horizon";
+            }
+
+            // 2. CRUX (SOUTH)
+            const cruxEl = document.getElementById('starCrux');
+            const cruxText = document.getElementById('cruxAlt');
+            
+            // Crux visible if Lat < 20 (Roughly)
+            // Simplified: Altitude in South = Abs(Lat)
+            if (lat <= 15) {
+                let alt = Math.abs(lat);
+                // Visual trick: If user at North (e.g. 10 deg), Crux is below horizon (-10)
+                if (lat > 0) alt = -lat; 
+
+                let y = horizonY - (alt * pixelsPerDeg);
+                // X interpolation: Zenith(-90)=400px, Horizon(0)=750px
+                // Map 0 -> 750, -90 -> 400
+                let absLat = Math.abs(lat);
+                let x = 750 - (absLat / 90) * 350;
+
+                cruxEl.style.top = y + "px";
+                cruxEl.style.left = x + "px";
+                
+                if (lat > 5) { // Fade out near horizon north
+                    cruxEl.style.opacity = 0;
+                    cruxText.innerText = "Di Bawah Horizon";
+                } else {
+                    cruxEl.style.opacity = 1;
+                    cruxText.innerText = Math.abs(alt) + "° (Terlihat)";
+                }
+            } else {
+                cruxEl.style.opacity = 0;
+                cruxText.innerText = "Di Bawah Horizon";
+            }
+
+            // 3. ORION (EQUATOR)
+            const orionEl = document.getElementById('starOrion');
+            // Altitude at Meridian = 90 - Abs(Lat)
+            let orionAlt = 90 - Math.abs(lat);
+            let orionY = horizonY - (orionAlt * pixelsPerDeg);
+            let orionX = 400; // Always center meridian
+
+            orionEl.style.top = orionY + "px";
+            orionEl.style.left = orionX + "px";
+            
+            // Fade if near horizon
+            orionEl.style.opacity = (orionAlt < 5) ? 0.3 : 1;
+        }
+
+        // Init start at Equator
+        updateSky(0);
+    </script>
+</body>
+</html>

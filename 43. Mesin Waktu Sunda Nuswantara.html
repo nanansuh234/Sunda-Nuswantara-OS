@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Chronometer: The Great Reset</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --gold: #d4af37;
+            --neon: #00ffcc;
+            --danger: #ff0040;
+            --stone: #2a2a2a;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            gap: 20px;
+        }
+
+        canvas {
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.1);
+        }
+
+        .hud {
+            width: 320px;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--gold);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: var(--gold);
+            text-align: center;
+            border-bottom: 1px dashed var(--gold);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .stat-group {
+            margin-bottom: 15px;
+            border-left: 3px solid var(--neon);
+            padding-left: 10px;
+        }
+
+        .label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+        .value { font-size: 1.1rem; color: #fff; font-weight: bold; }
+        .val-gold { color: var(--gold); }
+        .val-neon { color: var(--neon); }
+        
+        .alert-box {
+            text-align: center;
+            padding: 10px;
+            background: #111;
+            border: 1px solid #333;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #555;
+        }
+        .alert-active {
+            background: rgba(255, 0, 64, 0.2);
+            border-color: var(--danger);
+            color: var(--danger);
+            animation: blink 0.5s infinite alternate;
+        }
+
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.5; } }
+
+        .controls {
+            display: flex; flex-direction: column; gap: 8px;
+        }
+
+        button {
+            background: #222; color: var(--gold); border: 1px solid var(--gold);
+            padding: 10px; cursor: pointer; font-family: inherit; font-weight: bold;
+            text-transform: uppercase; transition: 0.2s;
+        }
+        button:hover { background: var(--gold); color: #000; }
+        button.reset { border-color: var(--danger); color: var(--danger); }
+        button.reset:hover { background: var(--danger); color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <canvas id="chronoCanvas" width="650" height="650"></canvas>
+
+        <div class="hud">
+            <h2>NUSWANTARA OS</h2>
+            
+            <div class="stat-group">
+                <div class="label">Tanggal (364 Days/Year)</div>
+                <div class="value val-gold" id="dispDate">1 Wiwitan</div>
+                <div class="value" style="font-size:0.9rem" id="dispWeton">Legi - Sukra</div>
+            </div>
+
+            <div class="stat-group">
+                <div class="label">Tahun Ke- (Siklus Windu)</div>
+                <div class="value val-neon" id="dispYear">TAHUN 1 (2025)</div>
+            </div>
+
+            <div class="stat-group">
+                <div class="label">Jam Kesadaran</div>
+                <div class="value" id="dispPhase">FAJAR</div>
+                <div style="font-size:0.8rem; color:#666;" id="dispTime">03:00 (Masehi)</div>
+            </div>
+
+            <div id="alertBox" class="alert-box">SISTEM STABIL</div>
+
+            <div class="controls">
+                <button onclick="toggleRun()" id="btnRun">JALANKAN WAKTU</button>
+                <button onclick="speedUp()">PERCEPAT (x5)</button>
+                <button class="reset" onclick="resetSim()">RESET AWAL</button>
+            </div>
+            
+            <div style="margin-top:15px; font-size:0.7rem; color:#666; border-top:1px solid #333; padding-top:5px;">
+                *Reset Alignment terjadi setiap 5 Tahun (1 Windu Alit) saat Pasaran kembali ke posisi awal.
+                <br>*Tahun 6 = 2030 (Titik Reset).
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('chronoCanvas');
+        const ctx = canvas.getContext('2d');
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        let running = false;
+        let speed = 1;
+        
+        // --- DATA NUSWANTARA ---
+        const PASARAN = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"]; // 5
+        const DINA = ["Sukra", "Tumpak", "Radite", "Soma", "Anggara", "Budha", "Respati"]; // 7
+        const SASI = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"]; // 13
+        const FASE_JAM = ["Hening", "Fajar", "Duha", "Karya", "Istiwa", "Asar", "Sandikala", "Sirepan"]; // 8
+
+        // --- STATE ---
+        // Kita hitung total jam berlalu sejak T0 (21 Maret 2025, 00:00)
+        let totalHours = 0; 
+        
+        // Gears Config
+        const gearPasaran = { r: 60, teeth: 5, color: '#00ffcc', speedRatio: 1/5 };
+        const gearDina = { r: 90, teeth: 7, color: '#d4af37', speedRatio: -1/7 }; // Negative for counter-rotate
+        const gearSasi = { r: 220, teeth: 28, color: '#444', speedRatio: 1/28 };
+
+        function updateLogic() {
+            // Hitung Tanggal dari Total Jam
+            // 1 Hari = 24 Jam Masehi (8 Fase Nuswantara)
+            let totalDays = Math.floor(totalHours / 24);
+            let currentHour = totalHours % 24;
+
+            // 1. Fase Jam (3 Jam per Fase)
+            let faseIdx = Math.floor(currentHour / 3);
+            
+            // 2. Weton (Pasaran & Dina)
+            let pasaranIdx = totalDays % 5;
+            let dinaIdx = totalDays % 7;
+
+            // 3. Tanggal & Bulan (Sistem 13 Bulan x 28 Hari = 364 Hari)
+            let dayOfYear = totalDays % 364;
+            let monthIdx = Math.floor(dayOfYear / 28);
+            let dateNum = (dayOfYear % 28) + 1;
+
+            // 4. Tahun
+            let yearNum = Math.floor(totalDays / 364) + 1;
+            let realYear = 2024 + yearNum; 
+
+            // UPDATE HUD
+            document.getElementById('dispDate').innerText = `${dateNum} ${SASI[monthIdx]}`;
+            document.getElementById('dispWeton').innerText = `${PASARAN[pasaranIdx]} - ${DINA[dinaIdx]}`;
+            document.getElementById('dispYear').innerText = `TAHUN ${yearNum} (${realYear})`;
+            document.getElementById('dispPhase').innerText = FASE_JAM[faseIdx];
+            document.getElementById('dispTime').innerText = `${Math.floor(currentHour)}:00 (Masehi)`;
+
+            // CEK RESET (2030 / TAHUN 6)
+            // Reset terjadi setiap 5 Tahun (KPK dari 364 dan 5 Pasaran)
+            // 364 % 5 = 4. Geser 4 pasaran tiap tahun.
+            // Tahun 1: 0 (Legi)
+            // Tahun 2: 4 (Kliwon)
+            // Tahun 3: 3 (Wage)
+            // Tahun 4: 2 (Pon)
+            // Tahun 5: 1 (Pahing)
+            // Tahun 6: 0 (Legi) -> KEMBALI KE POSISI AWAL (RESET)
+            
+            const alertBox = document.getElementById('alertBox');
+            if (yearNum === 6) {
+                alertBox.innerText = "⚠️ SIKLUS RESET (2030) TERDETEKSI! ⚠️";
+                alertBox.classList.add('alert-active');
+            } else if (yearNum > 6) {
+                 alertBox.innerText = "PASCA RESET (ERA BARU)";
+                 alertBox.classList.remove('alert-active');
+                 alertBox.style.color = "#00ffcc";
+            } else {
+                alertBox.innerText = "SISTEM STABIL";
+                alertBox.classList.remove('alert-active');
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            let totalDays = totalHours / 24;
+            
+            // --- DRAW GEARS ---
+            // Center Point
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            // 1. GEAR SASI (BULAN) - Besar, Background
+            drawGear(0, 0, gearSasi.r, 28, gearSasi.color, totalDays * (Math.PI*2 / 28), "TANGGAL 1-28");
+
+            // 2. GEAR PASARAN - Kiri
+            drawGear(-120, 120, gearPasaran.r, 5, gearPasaran.color, totalDays * (Math.PI*2 / 5), "PASARAN");
+
+            // 3. GEAR DINA (HARI) - Kanan
+            drawGear(120, 120, gearDina.r, 7, gearDina.color, -totalDays * (Math.PI*2 / 7), "DINA (7)");
+
+            // 4. CINCIN JAM (FASE) - Tengah, Muter Cepat
+            // 1 Putaran = 1 Hari
+            let rotJam = (totalHours / 24) * (Math.PI * 2);
+            drawClockRing(0, -100, 50, rotJam);
+
+            // MARKER ALIGNMENT (Jarum Penunjuk)
+            ctx.fillStyle = "red";
+            ctx.beginPath(); ctx.moveTo(-10, -210); ctx.lineTo(10, -210); ctx.lineTo(0, -190); ctx.fill(); // Penunjuk Tanggal
+
+            ctx.restore();
+        }
+
+        function drawGear(x, y, r, teeth, color, angle, label) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+
+            // Body
+            ctx.beginPath(); ctx.arc(0, 0, r - 5, 0, Math.PI*2);
+            ctx.fillStyle = "rgba(40,40,40,0.9)"; ctx.fill();
+            ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.stroke();
+
+            // Teeth
+            for (let i = 0; i < teeth; i++) {
+                let a = (i / teeth) * Math.PI * 2;
+                let tx = Math.cos(a) * r;
+                let ty = Math.sin(a) * r;
+                ctx.beginPath(); ctx.arc(tx, ty, 6, 0, Math.PI*2);
+                ctx.fillStyle = color; ctx.fill();
+            }
+
+            // Line Marker (Jarum di roda)
+            ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -r);
+            ctx.strokeStyle = "rgba(255,255,255,0.5)"; ctx.lineWidth = 2; ctx.stroke();
+
+            ctx.restore();
+
+            // Label (Non-rotating)
+            ctx.fillStyle = color;
+            ctx.font = "bold 12px Courier New";
+            ctx.textAlign = "center";
+            ctx.fillText(label, x, y + 5);
+        }
+
+        function drawClockRing(x, y, r, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Static Ring
+            ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2);
+            ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+
+            // Rotating Hand
+            ctx.rotate(angle);
+            ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -r+5);
+            ctx.strokeStyle = "#ff0040"; ctx.lineWidth = 4; ctx.stroke();
+            
+            ctx.restore();
+            
+            ctx.fillStyle = "#fff";
+            ctx.textAlign = "center";
+            ctx.fillText("JAM (8 FASE)", x, y + r + 20);
+        }
+
+        function loop() {
+            if (running) {
+                totalHours += 0.5 * speed; // Kecepatan waktu
+                updateLogic();
+            }
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        // Controls
+        function toggleRun() {
+            running = !running;
+            document.getElementById('btnRun').innerText = running ? "PAUSE" : "JALANKAN WAKTU";
+        }
+        function speedUp() {
+            speed *= 2;
+        }
+        function resetSim() {
+            running = false;
+            totalHours = 0;
+            speed = 1;
+            updateLogic();
+            draw();
+            document.getElementById('btnRun').innerText = "JALANKAN WAKTU";
+        }
+
+        // Init
+        updateLogic();
+        draw();
+        loop();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pyramid Etheric Lens (Fixed)</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --pyramid: #d4af37;
+            --beam: #00ffcc;
+            --sun: #ffaa00;
+            --text: #ccc;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow-y: auto; /* Biar bisa discroll */
+        }
+
+        h1 {
+            color: var(--pyramid);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            border: 2px solid #333;
+            background: radial-gradient(circle at center bottom, #1a1a00 0%, #000 70%);
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+            overflow: hidden;
+        }
+
+        canvas { display: block; width: 100%; height: 100%; }
+
+        /* HUD PANEL */
+        .hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--pyramid);
+            padding: 15px;
+            border-radius: 5px;
+            pointer-events: none; /* Biar tembus pandang */
+        }
+
+        .stat-row {
+            display: flex; justify-content: space-between;
+            margin-bottom: 8px; font-size: 0.85rem;
+        }
+        .val { font-weight: bold; color: #fff; }
+        .active-val { color: var(--beam); text-shadow: 0 0 5px var(--beam); }
+
+        /* ENERGY BAR */
+        .energy-meter {
+            width: 100%; height: 10px;
+            background: #222;
+            border: 1px solid #555;
+            margin-top: 10px;
+            position: relative;
+        }
+        .energy-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, transparent, var(--beam));
+            transition: width 0.1s;
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 20px;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            width: 100%; max-width: 800px;
+            background: #111; padding: 15px; border-radius: 10px; border: 1px solid #333;
+        }
+
+        input[type=range] { width: 100%; accent-color: var(--sun); cursor: pointer; }
+        
+        .manual-box {
+            font-size: 0.8rem; color: #aaa; width: 100%; max-width: 800px; 
+            text-align: left; margin-top: 20px; line-height: 1.6;
+            border-top: 1px dashed #444; padding-top: 15px;
+        }
+
+        .highlight { color: var(--beam); font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <h1>PYRAMID ETHER LENS</h1>
+    <div style="font-size:0.8rem; color:#888; margin-bottom:20px;">Simulasi Resonansi Energi Geometris</div>
+
+    <div class="container">
+        <canvas id="simCanvas"></canvas>
+        
+        <div class="hud">
+            <div class="stat-row">
+                <span>Gate Matahari:</span> <span class="val" id="gateVal">4</span>
+            </div>
+            <div class="stat-row">
+                <span>Sudut Datang:</span> <span class="val" id="angleVal">52°</span>
+            </div>
+            <div class="stat-row">
+                <span>Resonansi:</span> <span class="val" id="resVal">0%</span>
+            </div>
+            <div class="energy-meter">
+                <div class="energy-fill" id="energyBar"></div>
+            </div>
+            <div style="font-size:0.7rem; color:#aaa; margin-top:5px; text-align:center;" id="statusText">DORMANT</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div style="display:flex; justify-content:space-between; width:100%; color:var(--sun); font-weight:bold; font-size:0.9rem;">
+            <span>GATE 1 (Selatan)</span>
+            <span>POSISI MATAHARI</span>
+            <span>GATE 6 (Utara)</span>
+        </div>
+        <input type="range" id="sunSlider" min="0" max="180" value="52" oninput="updateSim(this.value)">
+    </div>
+
+    <div class="manual-box">
+        <b>CARA KERJA MESIN INI:</b>
+        <br>
+        1. <b>Geser Slider Matahari:</b> Gerakkan matahari dari kiri (Selatan) ke kanan (Utara).
+        <br>
+        2. <b>Cari "Sweet Spot":</b> Piramida ini hanya aktif pada sudut kemiringan <span class="highlight">51°-53°</span> (Sesuai Giza Slope).
+        <br>
+        3. <b>Efek Resonansi:</b> Saat sudut matahari pas (tegak lurus dengan sisi piramida), "Beam" energi berwarna <span class="highlight">Cyan</span> akan menyala dan mengisi <i>King's Chamber</i>.
+        <br><br>
+        <i>*Ini membuktikan teori bahwa Piramida bukan makam, tapi Lensa Eterik yang memanen energi pada musim tertentu.</i>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Setup Canvas Size Responsif
+        canvas.width = 800;
+        canvas.height = 500;
+
+        // KONFIGURASI PIRAMIDA
+        const px = 400; // Pusat X
+        const py = 450; // Dasar Y (Tanah)
+        const pBase = 240; // Lebar Alas
+        const pHeight = 160; // Tinggi (~51.8 derajat slope visual)
+        
+        // STATE
+        let sunAngle = 52; 
+
+        function drawPyramid() {
+            // Gambar Piramida (Segitiga Emas)
+            ctx.beginPath();
+            ctx.moveTo(px - pBase/2, py); // Kiri Bawah
+            ctx.lineTo(px + pBase/2, py); // Kanan Bawah
+            ctx.lineTo(px, py - pHeight); // Puncak
+            ctx.closePath();
+            
+            // Fill Gradient
+            let grd = ctx.createLinearGradient(px, py-pHeight, px, py);
+            grd.addColorStop(0, "#d4af37");
+            grd.addColorStop(1, "#1a1a00");
+            ctx.fillStyle = grd;
+            ctx.fill();
+            
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "#d4af37"; // Emas
+            ctx.stroke();
+
+            // Gambar King's Chamber (Titik Fokus - 1/3 tinggi)
+            const chamberY = py - (pHeight / 3);
+            ctx.fillStyle = "#ff0040";
+            ctx.beginPath(); ctx.arc(px, chamberY, 5, 0, Math.PI*2); ctx.fill();
+            
+            // Shafts (Saluran Udara)
+            ctx.beginPath(); ctx.moveTo(px, chamberY); ctx.lineTo(px - 100, chamberY - 80); 
+            ctx.strokeStyle = "rgba(255,255,255,0.2)"; ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(px, chamberY); ctx.lineTo(px + 100, chamberY - 80); 
+            ctx.stroke();
+        }
+
+        function updateSim(val) {
+            sunAngle = parseInt(val);
+            
+            // Clear Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 1. GAMBAR MATAHARI (Gerak Parabola/Kubah)
+            const sunDist = 360;
+            const rad = (sunAngle * Math.PI) / 180;
+            const sx = px - (sunDist * Math.cos(rad)); // 0 deg = Kiri
+            const sy = py - (sunDist * Math.sin(rad));
+
+            // Garis Horizon
+            ctx.strokeStyle = "#333"; ctx.lineWidth=2; 
+            ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(800, py); ctx.stroke();
+
+            // Sun Body
+            ctx.beginPath(); ctx.arc(sx, sy, 25, 0, Math.PI*2);
+            ctx.fillStyle = "#ffaa00"; ctx.fill();
+            ctx.shadowBlur = 40; ctx.shadowColor = "#ffaa00"; ctx.fill(); ctx.shadowBlur = 0;
+
+            drawPyramid();
+
+            // 2. HITUNG RESONANSI
+            // Sweet Spot di 52 derajat (Sesuai Slope Giza)
+            // Dan di 128 derajat (Sisi sebaliknya 180-52)
+            // Dan di 90 derajat (Puncak)
+            
+            let resonance = 0;
+            
+            let diffLeft = Math.abs(sunAngle - 52);
+            let diffTop = Math.abs(sunAngle - 90);
+            let diffRight = Math.abs(sunAngle - 128);
+
+            if (diffLeft < 8) resonance = 100 - (diffLeft * 12);
+            else if (diffTop < 8) resonance = 100 - (diffTop * 12);
+            else if (diffRight < 8) resonance = 100 - (diffRight * 12);
+
+            resonance = Math.max(0, resonance);
+
+            // 3. VISUALISASI SINAR (ETHER)
+            if (sunAngle > 5 && sunAngle < 175) {
+                // Ray Tipis (Selalu ada)
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(px, py - pHeight); // Ke Puncak
+                ctx.strokeStyle = `rgba(255, 200, 0, 0.1)`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // BEAM AKTIF (Jika Resonansi > 0)
+                if (resonance > 0) {
+                    const beamIntensity = resonance / 100;
+                    
+                    // Beam Masuk (Refraction ke dalam)
+                    ctx.beginPath();
+                    ctx.moveTo(px, py - pHeight); // Dari Puncak
+                    ctx.lineTo(px, py - (pHeight/3)); // Ke Chamber
+                    ctx.strokeStyle = `rgba(0, 255, 204, ${beamIntensity})`;
+                    ctx.lineWidth = 8 * beamIntensity;
+                    ctx.lineCap = "round";
+                    ctx.shadowBlur = 30 * beamIntensity;
+                    ctx.shadowColor = "#00ffcc";
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+
+                    // Glow Meledak di Chamber
+                    ctx.beginPath(); 
+                    ctx.arc(px, py - (pHeight/3), 15 * beamIntensity, 0, Math.PI*2);
+                    ctx.fillStyle = `rgba(0, 255, 204, ${beamIntensity})`;
+                    ctx.fill();
+                    
+                    // Status
+                    document.getElementById('statusText').innerText = "HARVESTING ETHER... (ACTIVE)";
+                    document.getElementById('statusText').style.color = "#00ffcc";
+                    document.getElementById('statusText').style.fontWeight = "bold";
+                    document.getElementById('resVal').classList.add('active-val');
+                } else {
+                    document.getElementById('statusText').innerText = "DORMANT (OFFLINE)";
+                    document.getElementById('statusText').style.color = "#555";
+                    document.getElementById('statusText').style.fontWeight = "normal";
+                    document.getElementById('resVal').classList.remove('active-val');
+                }
+            }
+
+            // UPDATE HUD
+            document.getElementById('angleVal').innerText = sunAngle + "°";
+            document.getElementById('resVal').innerText = Math.floor(resonance) + "%";
+            document.getElementById('energyBar').style.width = resonance + "%";
+            
+            // Gate Estimation
+            let gate = "Transisi";
+            if (sunAngle < 30) gate = "Gate 1 (Selatan)";
+            else if (sunAngle < 60) gate = "Gate 2-3";
+            else if (sunAngle < 120) gate = "Gate 4-6 (Utara)";
+            else gate = "Gate 3-1";
+            document.getElementById('gateVal').innerText = gate;
+        }
+
+        // Init
+        updateSim(52);
+
+    </script>
+</body>
+</html>

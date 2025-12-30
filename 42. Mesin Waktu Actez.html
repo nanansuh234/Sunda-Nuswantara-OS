@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aztec Gearbox: The Reset Mechanism</title>
+    <style>
+        :root {
+            --bg: #1a0f0a; /* Dark Brown Stone */
+            --stone: #c2b280; /* Sandstone */
+            --jade: #00a86b; /* Jade */
+            --blood: #8a0303; /* Sacrifice Red */
+            --gold: #d4af37;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--stone);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            gap: 20px;
+        }
+
+        canvas {
+            border: 4px solid var(--stone);
+            border-radius: 20px;
+            background: radial-gradient(circle, #2e1e12 0%, #000 100%);
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+        }
+
+        .hud {
+            width: 300px;
+            background: rgba(20, 10, 5, 0.9);
+            border: 2px solid var(--stone);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            color: var(--gold);
+            text-align: center;
+            border-bottom: 2px solid var(--blood);
+            padding-bottom: 10px;
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .highlight { color: var(--gold); font-weight: bold; }
+        .danger { color: var(--blood); font-weight: bold; animation: pulse 1s infinite; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            background: var(--stone);
+            color: #000;
+            border: none;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        button:hover { background: var(--gold); }
+        button.reset { background: var(--blood); color: #fff; }
+
+        .legend {
+            font-size: 0.7rem; color: #888; margin-top: 15px; border-top: 1px solid #555; padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <canvas id="aztecCanvas" width="600" height="600"></canvas>
+
+        <div class="hud">
+            <h2>MESIN WAKTU AZTEC</h2>
+            
+            <div class="stat-row">
+                <span>Era Sekarang:</span>
+                <span class="highlight">MATAHARI KE-5</span>
+            </div>
+            <div class="stat-row">
+                <span>Siklus Tzolkin (260):</span>
+                <span id="dispTzolkin">Day 1</span>
+            </div>
+            <div class="stat-row">
+                <span>Siklus Haab (365):</span>
+                <span id="dispHaab">Day 1</span>
+            </div>
+            <div class="stat-row">
+                <span>Jarak ke Alignment:</span>
+                <span id="dispAlign" class="highlight">---</span>
+            </div>
+            
+            <div id="statusBox" style="text-align:center; margin:20px 0; font-size:1.2rem; font-weight:bold; color:var(--jade);">
+                SYSTEM STABLE
+            </div>
+
+            <div class="controls">
+                <button onclick="toggleRun()" id="btnRun">PUTAR RODA (START)</button>
+                <button onclick="speedUp()">PERCEPAT (x10)</button>
+                <button class="reset" onclick="resetSys()">RESET SIKLUS</button>
+            </div>
+
+            <div class="legend">
+                *Roda Kiri (Hijau): Tzolkin (Spiritual)<br>
+                *Roda Kanan (Emas): Haab (Matahari)<br>
+                *Saat tanda panah bertemu: SIKLUS BESAR (Reset Point).
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('aztecCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        let running = false;
+        let speed = 1;
+        let frameCount = 0;
+
+        // Gear Configuration
+        // Gear A (Tzolkin) - 13 Teeth logic (simplified visual)
+        const gearA = { x: 200, y: 300, r: 120, teeth: 13, angle: 0, color: '#00a86b', label: "TZOLKIN" };
+        // Gear B (Haab) - Larger
+        const gearB = { x: 440, y: 300, r: 150, teeth: 20, angle: 0, color: '#d4af37', label: "HAAB" };
+
+        // State
+        let dayCount = 0;
+        
+        function drawGear(g, speedMult) {
+            ctx.save();
+            ctx.translate(g.x, g.y);
+            ctx.rotate(g.angle);
+
+            // Body
+            ctx.fillStyle = g.color;
+            ctx.beginPath();
+            ctx.arc(0, 0, g.r - 10, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Rim detail
+            ctx.strokeStyle = "#1a0f0a";
+            ctx.lineWidth = 5;
+            ctx.stroke();
+
+            // Teeth (Gigi Roda)
+            ctx.fillStyle = g.color;
+            for (let i = 0; i < g.teeth; i++) {
+                let theta = (i / g.teeth) * Math.PI * 2;
+                let tx = Math.cos(theta) * g.r;
+                let ty = Math.sin(theta) * g.r;
+                
+                ctx.beginPath();
+                ctx.arc(tx, ty, 12, 0, Math.PI*2);
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            // Patterns (Glyphs placeholder)
+            ctx.strokeStyle = "rgba(0,0,0,0.3)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(0, 0, g.r * 0.6, 0, Math.PI*2);
+            ctx.stroke();
+
+            // Marker (Penunjuk Alignment)
+            // Kita taruh marker di gigi pertama (index 0)
+            ctx.fillStyle = "#8a0303"; // Merah Darah
+            ctx.beginPath();
+            ctx.moveTo(g.r - 20, -10);
+            ctx.lineTo(g.r + 20, 0);
+            ctx.lineTo(g.r - 20, 10);
+            ctx.fill();
+
+            ctx.restore();
+
+            // Label di tengah
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 16px Courier New";
+            ctx.textAlign = "center";
+            ctx.fillText(g.label, g.x, g.y + 5);
+        }
+
+        function drawConnectors() {
+            // Garis statis penunjuk alignment di tengah pertemuan dua roda
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+            ctx.setLineDash([5, 5]);
+            ctx.lineWidth = 2;
+            
+            // Garis Horizontal Tengah
+            ctx.beginPath();
+            ctx.moveTo(100, 300);
+            ctx.lineTo(550, 300);
+            ctx.stroke();
+            
+            ctx.setLineDash([]);
+            
+            // Marker Segitiga di titik temu (Tengah canvas)
+            // Titik temu visual ada di sekitar x=330
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.moveTo(320, 280);
+            ctx.lineTo(340, 280);
+            ctx.lineTo(330, 300); // Point down
+            ctx.fill();
+        }
+
+        function update() {
+            if (!running) return;
+
+            // Kecepatan putar
+            let velocity = 0.01 * speed;
+            
+            // Tzolkin (Kiri) putar Clockwise
+            gearA.angle += velocity;
+            
+            // Haab (Kanan) putar Counter-Clockwise (biar "menggigit")
+            // Rasio gigi: Tzolkin lebih kecil, jadi putar lebih cepat secara visual relatif
+            // Tapi dalam kalender, 1 hari = 1 gigi.
+            // Kita simulasikan sudut: 
+            // Sudut A per hari = 2PI / 260
+            // Sudut B per hari = 2PI / 365
+            // Kita override velocity visual dengan logika kalender
+            
+            let dayStep = 1 * speed; 
+            dayCount += dayStep;
+
+            gearA.angle = (dayCount % 260) / 260 * (Math.PI * 2);
+            gearB.angle = -((dayCount % 365) / 365 * (Math.PI * 2)); // Minus biar putar balik
+
+            checkAlignment();
+            updateHUD();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Background Glyph (Matahari Aztec di background)
+            ctx.fillStyle = "rgba(194, 178, 128, 0.05)";
+            ctx.beginPath();
+            ctx.arc(320, 300, 280, 0, Math.PI*2);
+            ctx.fill();
+
+            drawConnectors();
+            drawGear(gearA);
+            drawGear(gearB);
+
+            // Visual Effect kalau Alignment
+            if (isAligned()) {
+                ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
+                ctx.fillRect(0, 0, width, height);
+                
+                ctx.fillStyle = "red";
+                ctx.font = "bold 40px Courier New";
+                ctx.textAlign = "center";
+                ctx.fillText("NAHUI OLLIN!", 320, 100);
+                ctx.font = "20px Courier New";
+                ctx.fillText("(MOVEMENT / EARTHQUAKE)", 320, 130);
+            }
+        }
+
+        function isAligned() {
+            // Alignment terjadi setiap 52 Tahun (18980 hari)
+            // Atau kelipatannya.
+            // Kita cek if dayCount kelipatan 18980 (dengan toleransi speed)
+            let cycle = 18980;
+            let mod = dayCount % cycle;
+            return (mod < 5 * speed && dayCount > 100); 
+        }
+
+        function checkAlignment() {
+            const status = document.getElementById('statusBox');
+            if (isAligned()) {
+                status.innerText = "⚠️ CRITICAL ALIGNMENT ⚠️";
+                status.className = "danger";
+            } else {
+                status.innerText = "SYSTEM STABLE";
+                status.className = "";
+            }
+        }
+
+        function updateHUD() {
+            let tzolkinDay = Math.floor(dayCount % 260) + 1;
+            let haabDay = Math.floor(dayCount % 365) + 1;
+            let cycleLength = 18980; // 52 tahun x 365
+            let daysLeft = cycleLength - (dayCount % cycleLength);
+            
+            let yearsLeft = (daysLeft / 365).toFixed(1);
+
+            document.getElementById('dispTzolkin').innerText = `Hari ke-${tzolkinDay}`;
+            document.getElementById('dispHaab').innerText = `Hari ke-${haabDay}`;
+            document.getElementById('dispAlign').innerText = `${Math.floor(daysLeft)} Hari (${yearsLeft} Thn)`;
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        // Controls
+        function toggleRun() {
+            running = !running;
+            document.getElementById('btnRun').innerText = running ? "PAUSE" : "LANJUTKAN";
+        }
+        function speedUp() {
+            speed *= 5;
+        }
+        function resetSys() {
+            running = false;
+            dayCount = 0;
+            gearA.angle = 0;
+            gearB.angle = 0;
+            speed = 1;
+            draw();
+            updateHUD();
+            document.getElementById('btnRun').innerText = "PUTAR RODA (START)";
+        }
+
+        // Init
+        loop();
+
+    </script>
+</body>
+</html>

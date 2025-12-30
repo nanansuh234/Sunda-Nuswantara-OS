@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enochian Time Spiral</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --solar: #d4af37; /* Emas */
+            --lunar: #00f2ff; /* Cyan */
+            --grid: #333;
+            --text: #0f0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #ccc;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--solar);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .canvas-box {
+            position: relative;
+            border: 1px solid var(--grid);
+            background: #000;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .panel {
+            width: 300px;
+            background: #111;
+            padding: 20px;
+            border: 1px solid var(--grid);
+            font-size: 0.9rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
+        }
+
+        .stat-val {
+            color: var(--lunar);
+            font-weight: bold;
+        }
+
+        .solar-val {
+            color: var(--solar);
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: var(--grid);
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        button:hover {
+            background: var(--lunar);
+            color: #000;
+        }
+
+        .legend {
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #888;
+        }
+        
+        .marker-desc {
+            color: #ff5555;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Enochian Geometry</h1>
+    <div class="subtitle">Solar (364) vs Lunar (354) Harmonic Drift</div>
+
+    <div class="container">
+        <div class="canvas-box">
+            <canvas id="spiralCanvas" width="600" height="600"></canvas>
+        </div>
+
+        <div class="panel">
+            <div class="stat-row">
+                <span>Tahun Simulasi:</span>
+                <span id="dispYear" class="solar-val">0</span>
+            </div>
+            <div class="stat-row">
+                <span>Total Hari Matahari:</span>
+                <span id="dispSolarDays">0</span>
+            </div>
+            <div class="stat-row">
+                <span>Total Hari Bulan:</span>
+                <span id="dispLunarDays">0</span>
+            </div>
+            <div class="stat-row">
+                <span>GAP (Epact):</span>
+                <span id="dispGap" class="stat-val">0 Hari</span>
+            </div>
+            <div class="stat-row">
+                <span>Posisi Bulan (0-364):</span>
+                <span id="dispPos">0</span>
+            </div>
+
+            <div class="legend">
+                <p><span style="color:var(--solar)">●</span> Garis Emas: Siklus Matahari (Fixed)</p>
+                <p><span style="color:var(--lunar)">●</span> Garis Biru: Posisi Bulan (Drifting)</p>
+                <p><span style="color:red">●</span> Merah: Titik "Reset" (Konjungsi/Purnama Awal)</p>
+            </div>
+
+            <div class="controls">
+                <button onclick="step()">+1 Tahun</button>
+                <button onclick="autoRun()">Auto Run</button>
+                <button onclick="reset()">Reset</button>
+            </div>
+            <p style="font-size: 0.7rem; color: #555; margin-top: 15px;">
+                *Note: Dalam Kitab Henokh, Bulan tertinggal 10 hari setiap tahun. Spiral biru menunjukkan kemunduran fase bulan terhadap posisi matahari (emas).
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('spiralCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        const cx = width / 2;
+        const cy = height / 2;
+
+        let year = 0;
+        let solarDays = 0;
+        let lunarDays = 0;
+        let history = []; // Menyimpan posisi bulan tiap tahun
+        let intervalId = null;
+
+        const SOLAR_YEAR = 364;
+        const LUNAR_YEAR = 354;
+        const SCALE_STEP = 3; // Jarak antar lingkaran tahun
+
+        function drawBase() {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, width, height);
+
+            // Gambar "Gerbang" (Gates) - 4 Arah Utama
+            ctx.strokeStyle = "#222";
+            ctx.lineWidth = 1;
+            
+            // Garis Silang
+            ctx.beginPath();
+            ctx.moveTo(cx, 0); ctx.lineTo(cx, height);
+            ctx.moveTo(0, cy); ctx.lineTo(width, cy);
+            ctx.stroke();
+
+            // Lingkaran Dasar
+            ctx.strokeStyle = "#333";
+            ctx.beginPath();
+            ctx.arc(cx, cy, 50, 0, Math.PI * 2); // Start circle
+            ctx.stroke();
+        }
+
+        function updateDisplay() {
+            document.getElementById('dispYear').innerText = year;
+            document.getElementById('dispSolarDays').innerText = solarDays;
+            document.getElementById('dispLunarDays').innerText = lunarDays;
+            
+            const gap = solarDays - lunarDays;
+            document.getElementById('dispGap').innerText = gap + " Hari";
+
+            // Posisi Bulan relatif terhadap tahun Matahari 364 hari
+            // Rumus: (Total Lunar Days) Modulo 364
+            // Ini menunjukkan di "hari ke-berapa" bulan menyelesaikan siklusnya dalam kalender matahari
+            const currentPos = lunarDays % SOLAR_YEAR;
+            document.getElementById('dispPos').innerText = currentPos;
+        }
+
+        function drawData() {
+            drawBase();
+
+            // Draw Solar Reference (Spiral Emas Tipis - Waktu berjalan keluar)
+            ctx.strokeStyle = "rgba(212, 175, 55, 0.2)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            for (let i = 0; i <= year * 10; i++) { // Smooth spiral
+                let angle = 0; // Matahari patokannya di "0" (Awal Tahun)
+                // Tapi kita visualkan waktu berjalan menjauh dari pusat
+                let r = 50 + (i/10 * SCALE_STEP);
+                // Lingkaran penuh di radius tahunan
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            }
+            ctx.stroke();
+
+            // Draw Lunar Drift (Spiral Biru)
+            if (history.length > 0) {
+                ctx.beginPath();
+                ctx.strokeStyle = "#00f2ff";
+                ctx.lineWidth = 2;
+
+                // Titik awal
+                let startR = 50;
+                ctx.moveTo(cx + startR, cy); // Mulai di 0 derajat
+
+                for (let i = 0; i < history.length; i++) {
+                    let r = 50 + ((i + 1) * SCALE_STEP);
+                    
+                    // Sudut Bulan = (Posisi Hari Bulan / 364) * 360 derajat
+                    // Karena dia "tertinggal", secara visual dia akan mundur (Counter-Clockwise atau Clockwise tergantung persepsi)
+                    // Kita plot posisi absolutnya:
+                    let pos = history[i]; 
+                    let angle = (pos / SOLAR_YEAR) * (Math.PI * 2);
+                    
+                    // Koreksi rotasi: 0 ada di atas (-PI/2)
+                    let drawAngle = angle - (Math.PI / 2);
+
+                    let x = cx + r * Math.cos(drawAngle);
+                    let y = cy + r * Math.sin(drawAngle);
+
+                    ctx.lineTo(x, y);
+                    
+                    // Gambar titik di tiap tahun
+                    ctx.fillStyle = "#00f2ff";
+                    ctx.fillRect(x-2, y-2, 4, 4);
+                }
+                ctx.stroke();
+            }
+
+            // Highlight Alignment (Jika Gap kelipatan 364 atau mendekati)
+            // Di tahun ke-X, apakah bulan kembali ke titik 0?
+        }
+
+        function step() {
+            year++;
+            solarDays += SOLAR_YEAR;
+            lunarDays += LUNAR_YEAR;
+            
+            // Hitung posisi "fase" bulan dalam kalender matahari
+            // Ini mensimulasikan "dimana bulan berada ketika matahari merayakan tahun baru"
+            // Karena bulan lebih cepat 10 hari, dia seolah-olah "mundur" 10 derajat setiap tahun.
+            let pos = lunarDays % SOLAR_YEAR;
+            history.push(pos);
+
+            updateDisplay();
+            drawData();
+        }
+
+        function autoRun() {
+            if (intervalId) return;
+            intervalId = setInterval(() => {
+                step();
+                if (year >= 100) { // Stop di 100 tahun biar gak pusing
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+            }, 100);
+        }
+
+        function reset() {
+            clearInterval(intervalId);
+            intervalId = null;
+            year = 0;
+            solarDays = 0;
+            lunarDays = 0;
+            history = [];
+            drawBase();
+            updateDisplay();
+        }
+
+        // Init
+        drawBase();
+    </script>
+
+</body>
+</html>

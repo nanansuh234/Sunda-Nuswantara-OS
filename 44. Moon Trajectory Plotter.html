@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Trajectory Plotter</title>
+    <style>
+        :root {
+            --bg: #000;
+            --grid: #222;
+            --path: #00f7ff; /* Cyan */
+            --danger: #ff0055;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #ccc;
+            font-family: 'Consolas', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            border: 1px solid #333;
+            box-shadow: 0 0 40px rgba(0, 247, 255, 0.1);
+        }
+
+        canvas {
+            display: block;
+            background: #000;
+        }
+
+        .hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-left: 3px solid var(--path);
+            pointer-events: none;
+        }
+
+        h2 { margin: 0; color: var(--path); font-size: 0.9rem; text-transform: uppercase; }
+        .info { font-size: 0.75rem; color: #888; margin-top: 5px; }
+        .highlight { color: #fff; font-weight: bold; }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        button:hover { background: var(--path); color: #000; }
+        button.active { background: var(--path); color: #000; border-color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <canvas id="plotCanvas" width="800" height="800"></canvas>
+        
+        <div class="hud">
+            <h2>MOON ORBITAL GEOMETRY</h2>
+            <div class="info">Trace Mode: <span id="modeDisplay" class="highlight">Stable Loop</span></div>
+            <div class="info">Cycle Iteration: <span id="iterDisplay">0</span></div>
+            <div style="margin-top:10px; font-size:0.7rem; color:#666;">
+                *Garis Putih/Cyan = Jalur Bulan saat ini.<br>
+                *Garis Redup = Jalur masa lalu.<br>
+                *Lingkaran Merah = Batas Khatulistiwa (Zona Tarikan).
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="setMode('stable')" id="btnStable" class="active">Pola Stabil (Normal)</button>
+        <button onclick="setMode('precession')" id="btnPrecess">Pola Spiral (Precession)</button>
+        <button onclick="setMode('chaos')" id="btnChaos">Pola Chaos (2030)</button>
+        <button onclick="clearScreen()">Bersihkan Layar</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('plotCanvas');
+        const ctx = canvas.getContext('2d');
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        let animationId;
+        let iter = 0;
+        let mode = 'stable';
+        
+        // Simpan posisi terakhir untuk menggambar garis
+        let lastX = null;
+        let lastY = null;
+
+        // Setup Awal
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        function drawBaseOverlay() {
+            // Kita gambar batas khatulistiwa tipis saja biar tidak mengganggu
+            ctx.strokeStyle = "rgba(255, 0, 0, 0.2)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 250, 0, Math.PI*2); // R_EQUATOR Visual
+            ctx.stroke();
+            
+            // Titik Pusat
+            ctx.fillStyle = "#444";
+            ctx.beginPath(); ctx.arc(cx, cy, 2, 0, Math.PI*2); ctx.fill();
+        }
+
+        function loop() {
+            // EFEK OVERWRITE / FADE
+            // Ini kuncinya: Kita timpa layar dengan warna hitam transparan setiap frame.
+            // Jejak lama akan pelan-pelan hilang, jejak baru akan terang.
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            drawBaseOverlay();
+
+            // Speed up drawing (banyak step per frame biar garisnya nyambung mulus)
+            let steps = 20; 
+
+            ctx.beginPath();
+            ctx.strokeStyle = "#00f7ff"; // Cyan Neon
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i < steps; i++) {
+                iter += 0.02; // Time flow
+
+                // --- RUMUS ORBITAL ---
+                let rBase = 250; // Radius dasar (Khatulistiwa)
+                
+                // Variabel Mode
+                let freqWave = 0;
+                let ampWave = 0;
+                let precession = 0;
+
+                if (mode === 'stable') {
+                    // Pola Stabil: Bulan balik ke jalur yang sama persis
+                    freqWave = 1.0; 
+                    ampWave = 50;
+                    precession = 0; // Tidak ada pergeseran
+                } else if (mode === 'precession') {
+                    // Pola Spiral: Jalurnya bergeser sedikit setiap putaran (Spirograph)
+                    freqWave = 1.0; 
+                    ampWave = 70;
+                    precession = iter * 0.01; // Geser pelan
+                } else if (mode === 'chaos') {
+                    // Pola Chaos: Frekuensi tidak harmonis, amplitudo gila
+                    freqWave = 1.33; // Disharmonis
+                    ampWave = 100;
+                    precession = iter * 0.05; // Geser cepat
+                }
+
+                // Kalkulasi Posisi
+                // Radius berubah naik-turun (Spiral In-Out)
+                let r = rBase + Math.sin((iter * 0.1) + precession) * ampWave;
+                
+                // Sudut berputar
+                let theta = iter;
+
+                let x = cx + Math.cos(theta) * r;
+                let y = cy + Math.sin(theta) * r;
+
+                // Gambar Garis
+                if (lastX === null) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y); // Sambung dari titik sebelumnya
+                }
+
+                lastX = x;
+                lastY = y;
+            }
+            
+            ctx.stroke(); // Render garis
+
+            // Update Text
+            document.getElementById('iterDisplay').innerText = Math.floor(iter);
+            
+            animationId = requestAnimationFrame(loop);
+        }
+
+        function setMode(newMode) {
+            mode = newMode;
+            // Reset posisi biar gak ada garis loncat
+            lastX = null;
+            lastY = null;
+            
+            // Update UI
+            document.getElementById('modeDisplay').innerText = newMode.toUpperCase();
+            document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            if(newMode === 'stable') document.getElementById('btnStable').classList.add('active');
+            if(newMode === 'precession') document.getElementById('btnPrecess').classList.add('active');
+            if(newMode === 'chaos') document.getElementById('btnChaos').classList.add('active');
+            
+            // Clear layar biar fresh
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function clearScreen() {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            lastX = null;
+        }
+
+        // Start
+        loop();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enochian Gatekeeper x Nuswantara</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --grid: #1a1a1a;
+            --sun: #ffaa00;
+            --moon: #00f7ff;
+            --gate: #333;
+            --gate-active: #00ffcc;
+            --text: #ccc;
+            --nus-green: #00ff88;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: var(--sun);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .container {
+            position: relative;
+            width: 750px;
+            padding: 25px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #0a0a0a;
+            box-shadow: 0 0 40px rgba(255, 170, 0, 0.1);
+        }
+
+        /* --- VISUALISASI GERBANG --- */
+        .gates-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+            height: 220px;
+            border-bottom: 1px solid #333;
+        }
+
+        .gate-group {
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-between;
+            height: 100%;
+            width: 60px;
+            z-index: 2;
+        }
+
+        .gate {
+            height: 22px;
+            border: 2px solid var(--gate);
+            text-align: center;
+            line-height: 20px;
+            font-size: 0.75rem;
+            color: #555;
+            transition: 0.3s;
+            background: #000;
+        }
+        
+        .gate.active {
+            border-color: var(--gate-active);
+            color: var(--gate-active);
+            box-shadow: 0 0 15px var(--gate-active);
+            background: rgba(0, 255, 204, 0.1);
+            font-weight: bold;
+        }
+
+        .gate-label { text-align: center; font-weight: bold; margin-bottom: 10px; color: #888; font-size: 0.8rem; }
+
+        /* MATAHARI & JALUR */
+        .sun-path-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- INFO PANEL (GRID) --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #111;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .card-nus { border-color: var(--nus-green); }
+        
+        .stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .stat-val { font-size: 1.1rem; font-weight: bold; color: #fff; }
+        
+        .moon-icon {
+            font-size: 2rem;
+            display: block;
+            margin: 5px auto;
+            text-shadow: 0 0 10px var(--moon);
+        }
+
+        /* --- RASIO CAHAYA --- */
+        .ratio-bar {
+            height: 30px;
+            background: #222;
+            display: flex;
+            border: 1px solid #555;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .day-part { background: var(--sun); height: 100%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 0.8rem; transition: width 0.3s; }
+        .night-part { background: #003366; height: 100%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 0.8rem; transition: width 0.3s; }
+
+        /* --- KONTROL --- */
+        .controls {
+            margin-top: 25px;
+            display: flex; gap: 10px; justify-content: center; flex-direction: column;
+        }
+        .slider-wrap { display: flex; align-items: center; gap: 10px; width: 100%; }
+        input[type=range] { width: 100%; accent-color: var(--sun); }
+        
+        button {
+            background: #222; border: 1px solid var(--sun); color: var(--sun);
+            padding: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; width: 100%;
+        }
+        button:hover { background: var(--sun); color: #000; }
+
+        .note { font-size: 0.75rem; color: #666; margin-top: 15px; text-align: center; border-top: 1px dashed #333; padding-top: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <h1>ENOCHIAN MASTER PANEL</h1>
+    <div style="font-size: 0.8rem; color: var(--nus-green); margin-bottom: 20px;">Sinkronisasi Gerbang Matahari & Kalender Nuswantara</div>
+
+    <div class="container">
+        
+        <div class="gates-container">
+            <canvas id="sunCanvas" class="sun-path-canvas" width="700" height="220"></canvas>
+
+            <div class="gate-group" id="eastGates">
+                <div class="gate-label">TIMUR</div>
+                </div>
+
+            <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:0;">
+                <div style="font-size:2.5rem; color:#222; font-weight:bold;">EARTH</div>
+            </div>
+
+            <div class="gate-group" id="westGates">
+                <div class="gate-label">BARAT</div>
+                </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="card">
+                <span class="stat-label">HARI KE- (364)</span>
+                <span class="stat-val" style="color:var(--sun); font-size:1.5rem;" id="dayDisplay">1</span>
+                <span class="stat-val" style="display:block; font-size:0.9rem; margin-top:5px; color:#888;" id="seasonDisplay">-</span>
+            </div>
+
+            <div class="card">
+                <span class="stat-label">POSISI GERBANG</span>
+                <span class="stat-val" style="color:var(--gate-active); font-size:1.3rem;" id="gateDisplay">GATE 4</span>
+                <span class="stat-label" style="margin-top:5px;">RASIO CAHAYA (18 Bagian)</span>
+                <div class="ratio-bar">
+                    <div class="day-part" id="barDay" style="width: 50%">9</div>
+                    <div class="night-part" id="barNight" style="width: 50%">9</div>
+                </div>
+            </div>
+
+            <div class="card card-nus">
+                <span class="stat-label" style="color:var(--nus-green)">KALENDER NUSWANTARA</span>
+                <div class="moon-icon" id="moonIcon">🌑</div>
+                <span class="stat-val" id="nusDateDisplay">1 Wiwitan</span>
+                <span class="stat-val" style="font-size:0.8rem; color:#aaa; display:block;">(Bulan Ke-1)</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="slider-wrap">
+                <span style="font-size:0.8rem; min-width:60px;">Timeline:</span>
+                <input type="range" id="daySlider" min="1" max="364" value="1" oninput="manualUpdate(this.value)">
+            </div>
+            <button onclick="toggleAnim()" id="btnPlay">JALANKAN SIKLUS TAHUNAN</button>
+        </div>
+
+        <div class="note">
+            *Gate 1 (Selatan/Dingin) aktif saat bulan <b>LUMBUNG - RESWARA</b> (Musim Hujan/Banjir).<br>
+            *Gate 6 (Utara/Panas) aktif saat bulan <b>TRUBUS - TEJA</b> (Musim Kering).
+        </div>
+
+    </div>
+
+    <script>
+        // --- DATA NUSWANTARA (13 Bulan x 28 Hari) ---
+        const NUS_MONTHS = [
+            "Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", 
+            "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"
+        ];
+
+        // --- DATA ENOCH (Mapping Hari ke Gerbang) ---
+        // Simplified Logic: 
+        // Gate 4 (Start) -> 5 -> 6 (Puncak) -> 5 -> 4 -> 3 -> 2 -> 1 (Dasar) -> 2 -> 3 -> 4
+        // Durasi per segmen ~30 hari.
+        
+        const daysPerYear = 364;
+        let currentDay = 1;
+        let isRunning = false;
+
+        // Init UI
+        const eastContainer = document.getElementById('eastGates');
+        const westContainer = document.getElementById('westGates');
+        
+        for(let i=6; i>=1; i--) {
+            eastContainer.innerHTML += `<div class="gate" id="e-gate-${i}">G${i}</div>`;
+            westContainer.innerHTML += `<div class="gate" id="w-gate-${i}">G${i}</div>`;
+        }
+
+        function getEnochData(day) {
+            let gate = 4;
+            let dayPart = 9;
+            let season = "Normal";
+
+            // Logika Gerbang (Approximation Pasal 72)
+            if (day <= 30) { gate=4; dayPart=9; season="Equinox Awal"; } 
+            else if (day <= 60) { gate=5; dayPart=10; season="Menuju Panas"; } 
+            else if (day <= 91) { gate=6; dayPart=11; if(day>85) dayPart=12; season="SOLSTICE UTARA (PANAS)"; } 
+            else if (day <= 121) { gate=6; dayPart=11; season="Panas Berlanjut"; } 
+            else if (day <= 151) { gate=5; dayPart=10; season="Mereda"; } 
+            else if (day <= 182) { gate=4; dayPart=9; season="Equinox Kedua"; } 
+            else if (day <= 212) { gate=3; dayPart=8; season="Menuju Dingin"; } 
+            else if (day <= 242) { gate=2; dayPart=7; season="Makin Dingin"; } 
+            else if (day <= 273) { gate=1; dayPart=6; season="SOLSTICE SELATAN (DINGIN)"; } 
+            else if (day <= 303) { gate=1; dayPart=7; season="Dingin Berlanjut"; } 
+            else if (day <= 333) { gate=2; dayPart=8; season="Mencair"; } 
+            else { gate=3; dayPart=9; season="Menuju Awal"; }
+
+            return { gate, dayPart, season };
+        }
+
+        function getNuswantaraData(day) {
+            // Mapping Hari 1-364 ke 13 Bulan x 28 Hari
+            // day-1 karena array mulai 0
+            let monthIdx = Math.floor((day - 1) / 28);
+            let dateNum = ((day - 1) % 28) + 1;
+            
+            // Visual Fase Bulan (Siklus 28 Hari)
+            // 1-7: Sabit Awal, 8-14: Menuju Purnama, 15: Purnama, 16-22: Menuju Mati, 23-28: Mati
+            let moonIcon = "🌑"; // Mati/Baru
+            if (dateNum > 2 && dateNum <= 6) moonIcon = "🌒";
+            else if (dateNum > 6 && dateNum <= 10) moonIcon = "🌓";
+            else if (dateNum > 10 && dateNum <= 13) moonIcon = "🌔";
+            else if (dateNum >= 14 && dateNum <= 16) moonIcon = "🌕"; // PURNAMA (Tgl 14-16)
+            else if (dateNum > 16 && dateNum <= 20) moonIcon = "🌖";
+            else if (dateNum > 20 && dateNum <= 24) moonIcon = "🌗";
+            else if (dateNum > 24) moonIcon = "🌘";
+
+            return {
+                monthName: NUS_MONTHS[monthIdx],
+                monthNum: monthIdx + 1,
+                date: dateNum,
+                moon: moonIcon
+            };
+        }
+
+        function updateUI(day) {
+            const enoch = getEnochData(day);
+            const nus = getNuswantaraData(day);
+            const nightPart = 18 - enoch.dayPart;
+
+            // Update Enoch Stats
+            document.getElementById('dayDisplay').innerText = day;
+            document.getElementById('gateDisplay').innerText = `GATE ${enoch.gate}`;
+            document.getElementById('seasonDisplay').innerText = enoch.season;
+
+            // Update Nuswantara Stats
+            document.getElementById('nusDateDisplay').innerText = `${nus.date} ${nus.monthName}`;
+            document.getElementById('moonIcon').innerText = nus.moon;
+
+            // Visual Gates
+            document.querySelectorAll('.gate').forEach(g => g.classList.remove('active'));
+            document.getElementById(`e-gate-${enoch.gate}`).classList.add('active');
+            document.getElementById(`w-gate-${enoch.gate}`).classList.add('active');
+
+            // Ratio Bar
+            const dayPct = (enoch.dayPart / 18) * 100;
+            const nightPct = (nightPart / 18) * 100;
+            document.getElementById('barDay').style.width = `${dayPct}%`;
+            document.getElementById('barDay').innerText = enoch.dayPart;
+            document.getElementById('barNight').style.width = `${nightPct}%`;
+            document.getElementById('barNight').innerText = nightPart;
+
+            // Draw Line
+            drawSunPath(enoch.gate);
+        }
+
+        function drawSunPath(gateNum) {
+            const canvas = document.getElementById('sunCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Koordinat visual hardcoded menyesuaikan layout CSS
+            // Area tinggi 220px. 6 Gates.
+            // Posisi Y (1 di bawah, 6 di atas)
+            const stepY = 200 / 6; 
+            const yPos = 220 - (gateNum * stepY) + 10; 
+
+            const xStart = 60; 
+            const xEnd = 700 - 60;
+
+            // Line
+            ctx.beginPath();
+            ctx.moveTo(xStart, yPos);
+            ctx.lineTo(xEnd, yPos);
+            ctx.strokeStyle = "#ffaa00";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]); 
+            ctx.stroke();
+
+            // Sun
+            ctx.beginPath();
+            ctx.arc(350, yPos, 12, 0, Math.PI*2);
+            ctx.fillStyle = "#ffaa00";
+            ctx.fill();
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "#ffaa00";
+            ctx.fill();
+        }
+
+        function manualUpdate(val) {
+            currentDay = parseInt(val);
+            updateUI(currentDay);
+        }
+
+        function loop() {
+            if(isRunning) {
+                currentDay++;
+                if(currentDay > 364) currentDay = 1;
+                document.getElementById('daySlider').value = currentDay;
+                updateUI(currentDay);
+                setTimeout(() => { if(isRunning) requestAnimationFrame(loop); }, 50);
+            }
+        }
+
+        function toggleAnim() {
+            isRunning = !isRunning;
+            const btn = document.getElementById('btnPlay');
+            if(isRunning) { btn.innerText = "PAUSE"; loop(); } 
+            else { btn.innerText = "LANJUTKAN SIKLUS"; }
+        }
+
+        // Init
+        updateUI(1);
+
+    </script>
+</body>
+</html>
