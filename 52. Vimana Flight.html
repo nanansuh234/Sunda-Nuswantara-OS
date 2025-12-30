@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vimana Nuswantara Flight System</title>
+    <style>
+        body {
+            background: #000; color: #00ffcc; font-family: 'Courier New', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        h1 { margin: 0; text-shadow: 0 0 10px #00ffcc; letter-spacing: 5px; color: #d4af37; }
+        
+        .viewport {
+            position: relative; width: 800px; height: 500px;
+            background: linear-gradient(#051a2e 0%, #000 80%); /* Langit Malam */
+            border: 4px solid #444; border-radius: 10px;
+            overflow: hidden; margin-top: 10px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+        }
+
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+
+        /* HUD OVERLAY */
+        .hud-overlay {
+            position: absolute; width: 100%; height: 100%; z-index: 10;
+            pointer-events: none;
+            background: linear-gradient(rgba(0,255,204,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,204,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .altimeter {
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 300px; border: 2px solid #00ffcc;
+            background: rgba(0,0,0,0.5);
+        }
+        .alt-bar {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 0%;
+            background: #00ffcc; transition: height 0.1s;
+        }
+
+        /* CONTROLS */
+        .cockpit {
+            width: 800px; background: #111; border: 2px solid #333; border-top: none;
+            padding: 20px; display: flex; justify-content: space-around;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .lever-group { text-align: center; width: 45%; }
+        .label { color: #888; font-size: 0.8rem; margin-bottom: 5px; }
+        input[type=range] { width: 100%; accent-color: #d4af37; cursor: pointer; }
+
+        .status-text {
+            position: absolute; top: 20px; left: 20px; font-weight: bold; font-size: 1.2rem;
+            text-shadow: 0 0 5px #fff;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>VIMANA STUPA</h1>
+    <div style="font-size:0.8rem; color:#888;">Nuswantara Anti-Gravity Vehicle</div>
+
+    <div class="viewport">
+        <div class="hud-overlay"></div>
+        <div class="status-text" id="status">SYSTEM IDLE</div>
+        
+        <div class="altimeter">
+            <div class="alt-bar" id="altBar"></div>
+        </div>
+
+        <canvas id="flightCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <div class="cockpit">
+        <div class="lever-group">
+            <div class="label">MERCURY VORTEX (Lift/Levitasi)</div>
+            <input type="range" id="liftSlider" min="0" max="100" value="0" oninput="updateControls()">
+        </div>
+        <div class="lever-group">
+            <div class="label">SONIC FREQUENCY (Thrust/Speed)</div>
+            <input type="range" id="freqSlider" min="0" max="100" value="0" oninput="updateControls()">
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('flightCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = 800;
+        const height = 500;
+
+        // STATE
+        let liftPower = 0; // 0-100
+        let freqPower = 0; // 0-100
+        
+        // Physics
+        let vimanaY = 400; // Posisi Awal (Tanah)
+        let targetY = 400;
+        let vimanaX = 400;
+        let speedX = 0;
+        let hoverOffset = 0;
+        let time = 0;
+
+        // Particles (Ether/Clouds)
+        let clouds = [];
+        for(let i=0; i<20; i++) {
+            clouds.push({x: Math.random()*width, y: Math.random()*height, s: Math.random()*2+1});
+        }
+
+        // Exhaust Particles
+        let exhaust = [];
+
+        function updateControls() {
+            liftPower = parseInt(document.getElementById('liftSlider').value);
+            freqPower = parseInt(document.getElementById('freqSlider').value);
+            
+            // Logic Target Ketinggian
+            // 0% = Tanah (400), 100% = Langit (100)
+            targetY = 400 - (liftPower * 3);
+            
+            // Logic Kecepatan Horizontal (Visual Background Moving)
+            speedX = freqPower * 0.5;
+
+            // Status Text
+            const st = document.getElementById('status');
+            if (liftPower > 90) { st.innerText = "MAX ALTITUDE"; st.style.color = "red"; }
+            else if (liftPower > 10) { st.innerText = "FLIGHT MODE"; st.style.color = "#00ffcc"; }
+            else { st.innerText = "GROUNDED"; st.style.color = "#888"; }
+
+            // Altimeter
+            document.getElementById('altBar').style.height = liftPower + "%";
+        }
+
+        function drawStupa(x, y) {
+            ctx.save();
+            ctx.translate(x, y + hoverOffset);
+
+            // 1. AURA FIELD (Anti-Gravity Bubble)
+            if (liftPower > 0) {
+                let auraSize = 60 + (liftPower/5) + (Math.sin(time)*2);
+                let alpha = liftPower / 200;
+                let grad = ctx.createRadialGradient(0, 0, 30, 0, 0, auraSize);
+                grad.addColorStop(0, `rgba(212, 175, 55, ${alpha})`); // Emas di dalam
+                grad.addColorStop(1, `rgba(0, 255, 204, 0)`);
+                
+                ctx.fillStyle = grad;
+                ctx.beginPath(); ctx.arc(0, 0, auraSize, 0, Math.PI*2); ctx.fill();
+            }
+
+            // 2. STUPA BODY (Bentuk Lonceng)
+            ctx.fillStyle = "#333"; // Batu Andesit Gelap
+            ctx.beginPath();
+            ctx.moveTo(-40, 40); // Kiri Bawah
+            ctx.bezierCurveTo(-40, -40, 40, -40, 40, 40); // Kubah
+            ctx.closePath();
+            ctx.fill();
+            
+            // Detail Relief
+            ctx.strokeStyle = "#555"; ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(-35, 30); ctx.lineTo(35, 30); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(-30, 10); ctx.lineTo(30, 10); ctx.stroke();
+
+            // 3. PUNCAK (Antena Eter)
+            ctx.fillStyle = "#d4af37"; // Emas
+            ctx.beginPath();
+            ctx.moveTo(-5, -25); ctx.lineTo(5, -25);
+            ctx.lineTo(0, -50); ctx.fill();
+
+            // 4. ENGINE GLOW (Bawah Stupa)
+            if (liftPower > 0) {
+                ctx.fillStyle = `rgba(0, 255, 204, ${liftPower/100})`;
+                ctx.beginPath();
+                ctx.ellipse(0, 40, 20, 5, 0, 0, Math.PI*2);
+                ctx.fill();
+            }
+
+            // 5. SONIC RIPPLES (Propulsi Suara)
+            if (freqPower > 0) {
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.5 - (Math.sin(time)*0.5)})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                // Gelombang suara ke belakang
+                for(let i=0; i<3; i++) {
+                    let r = (time*5 + i*20) % 60;
+                    ctx.arc(0, 0, r, Math.PI, 0); // Setengah lingkaran atas (visualized as field)
+                }
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        function drawEnvironment() {
+            // Stars/Clouds Moving
+            ctx.fillStyle = "rgba(255,255,255,0.5)";
+            clouds.forEach(c => {
+                c.x -= speedX; // Gerak berlawanan arah pesawat
+                if (c.x < 0) c.x = width;
+                
+                ctx.beginPath(); ctx.arc(c.x, c.y, c.s, 0, Math.PI*2); ctx.fill();
+            });
+
+            // Ground
+            let groundY = 440 + (liftPower * 3); // Tanah menjauh saat terbang
+            ctx.fillStyle = "#1a1a00";
+            ctx.fillRect(0, groundY, width, height);
+            
+            // Grid Tanah (Nuswantara Leylines)
+            ctx.strokeStyle = "#00ff41"; ctx.lineWidth = 1;
+            ctx.beginPath();
+            for(let i=0; i<width; i+=50) {
+                let x = (i - (time * speedX * 2)) % width;
+                if(x < 0) x += width;
+                // Perspektif
+                ctx.moveTo(x, groundY); ctx.lineTo(x - 200, height); 
+            }
+            ctx.stroke();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            time += 0.1;
+
+            // Physics Smooth
+            vimanaY += (targetY - vimanaY) * 0.05;
+            hoverOffset = Math.sin(time) * 5; // Efek melayang natural
+
+            drawEnvironment();
+            drawStupa(vimanaX, vimanaY);
+
+            // Exhaust effect (Jejak Eter)
+            if (liftPower > 20) {
+                exhaust.push({x: vimanaX, y: vimanaY + 40, life: 1});
+            }
+            
+            exhaust.forEach((p, index) => {
+                p.y += 2; // Jatuh ke bawah
+                p.life -= 0.05;
+                ctx.fillStyle = `rgba(0, 255, 204, ${p.life})`;
+                ctx.beginPath(); ctx.arc(p.x + (Math.random()*10-5), p.y, 3, 0, Math.PI*2); ctx.fill();
+                if(p.life <= 0) exhaust.splice(index, 1);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>

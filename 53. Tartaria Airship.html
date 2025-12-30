@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tartaria Aether Airship</title>
+    <style>
+        body {
+            background: #050510; color: #d4af37; font-family: 'Courier New', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        h1 { margin: 0; text-shadow: 0 0 10px #d4af37; letter-spacing: 3px; font-size: 1.5rem; }
+        
+        .viewport {
+            position: relative; width: 800px; height: 500px;
+            background: linear-gradient(#000022 0%, #1a0b00 100%); /* Langit Senja/Malam */
+            border: 4px solid #554400; border-radius: 10px;
+            overflow: hidden; margin-top: 10px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+        }
+
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+
+        /* CONTROLS */
+        .controls {
+            width: 800px; background: #1a1a1a; border: 2px solid #554400; border-top: none;
+            padding: 20px; display: flex; justify-content: space-around;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .lever-group { text-align: center; width: 45%; }
+        .label { color: #aaa; font-size: 0.8rem; margin-bottom: 5px; text-transform: uppercase; }
+        input[type=range] { width: 100%; accent-color: #d4af37; cursor: pointer; }
+
+        .status-text {
+            position: absolute; top: 20px; left: 20px; font-weight: bold; font-size: 1rem;
+            color: #00ffcc; text-shadow: 0 0 5px #00ffcc; z-index: 10;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>TARTARIAN AETHER FRIGATE</h1>
+    <div style="font-size:0.8rem; color:#888;">Atmospheric Energy Harvesting Vessel</div>
+
+    <div class="viewport">
+        <div class="status-text" id="status">HARVESTING: 0%</div>
+        <canvas id="skyCanvas" width="800" height="500"></canvas>
+    </div>
+
+    <div class="controls">
+        <div class="lever-group">
+            <div class="label">ATMOSPHERIC HARVEST (Seday Listrik)</div>
+            <input type="range" id="harvestSlider" min="0" max="100" value="0" oninput="updateControls()">
+        </div>
+        <div class="lever-group">
+            <div class="label">AETHER THRUST (Kecepatan)</div>
+            <input type="range" id="thrustSlider" min="0" max="100" value="20" oninput="updateControls()">
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('skyCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = 800;
+        const height = 500;
+
+        // STATE
+        let harvestLevel = 0; // 0-100
+        let thrustLevel = 20; // 0-100
+        
+        let shipY = 250;
+        let time = 0;
+        let speed = 0;
+
+        // Cloud Layers (Parallax)
+        let clouds = [];
+        for(let i=0; i<30; i++) {
+            clouds.push({
+                x: Math.random()*width, 
+                y: Math.random()*height, 
+                w: Math.random()*100+50, 
+                speed: Math.random()*0.5+0.1
+            });
+        }
+
+        // Lightning Particles
+        let sparks = [];
+
+        function updateControls() {
+            harvestLevel = parseInt(document.getElementById('harvestSlider').value);
+            thrustLevel = parseInt(document.getElementById('thrustSlider').value);
+            
+            document.getElementById('status').innerText = `HARVESTING: ${harvestLevel}% | VACUUM LIFT: ACTIVE`;
+        }
+
+        function drawShip(y) {
+            let cx = 400; // Center X
+            let cy = y;
+
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            // Efek Hover (Melayang halus)
+            let hover = Math.sin(time * 0.05) * 10;
+            ctx.translate(0, hover);
+
+            // 1. LAMBUNG KAPAL (Rigid Structure - Metallic/Gold)
+            // Bentuk cerutu tapi tajam & elegan (Victorian Style)
+            let grd = ctx.createLinearGradient(0, -60, 0, 60);
+            grd.addColorStop(0, "#8B4513"); // Tembaga gelap
+            grd.addColorStop(0.5, "#d4af37"); // Emas
+            grd.addColorStop(1, "#554400"); // Bayangan
+
+            ctx.fillStyle = grd;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 200, 60, 0, 0, Math.PI*2);
+            ctx.fill();
+            
+            // Detail Plat Besi (Rivets)
+            ctx.strokeStyle = "rgba(0,0,0,0.3)"; ctx.lineWidth = 1;
+            ctx.beginPath();
+            for(let i=-150; i<150; i+=30) {
+                ctx.moveTo(i, -40); ctx.lineTo(i, 40);
+            }
+            ctx.stroke();
+
+            // 2. JENDELA (Portholes) - Nyala kalau harvest aktif
+            let winColor = harvestLevel > 10 ? "#00ffcc" : "#222";
+            let winGlow = harvestLevel > 10 ? 20 : 0;
+            ctx.fillStyle = winColor;
+            ctx.shadowBlur = winGlow; ctx.shadowColor = "#00ffcc";
+            
+            for(let i=-120; i<140; i+=40) {
+                ctx.beginPath(); ctx.arc(i, 10, 8, 0, Math.PI*2); ctx.fill();
+            }
+            ctx.shadowBlur = 0;
+
+            // 3. SPIRES / ANTENA (Di Atas Kapal)
+            // Ini ciri khas Tartaria: Kubah & Tiang
+            ctx.fillStyle = "#888"; // Logam
+            // Kubah Utama
+            ctx.beginPath(); ctx.arc(0, -60, 30, Math.PI, 0); ctx.fill();
+            // Tiang Utama (Tesla Tower style)
+            ctx.beginPath(); ctx.moveTo(0, -90); ctx.lineTo(0, -150); 
+            ctx.strokeStyle = "#d4af37"; ctx.lineWidth = 4; ctx.stroke();
+            // Bola Emas di ujung
+            ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(0, -150, 5, 0, Math.PI*2); ctx.fill();
+
+            // Kubah Kecil Belakang
+            ctx.fillStyle = "#666";
+            ctx.beginPath(); ctx.arc(-100, -45, 20, Math.PI, 0); ctx.fill();
+            ctx.beginPath(); ctx.moveTo(-100, -65); ctx.lineTo(-100, -100); ctx.stroke();
+
+            // 4. HARVESTING EFFECT (Petir Menyambar Antena)
+            if (harvestLevel > 20) {
+                if (Math.random() < (harvestLevel/100)) {
+                    // Petir dari langit ke Antena Utama
+                    ctx.beginPath();
+                    ctx.moveTo(0, -150); // Ujung Antena
+                    ctx.lineTo((Math.random()*100-50), -300); // Langit
+                    ctx.strokeStyle = "rgba(200, 200, 255, 0.8)";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Aura Plasma di bola
+                    ctx.fillStyle = "rgba(0, 255, 255, 0.5)";
+                    ctx.beginPath(); ctx.arc(0, -150, 15 + Math.random()*10, 0, Math.PI*2); ctx.fill();
+                }
+            }
+
+            // 5. PROPULSI (Baling-baling Ion di Belakang)
+            let propSpeed = (thrustLevel * time) * 0.5;
+            ctx.save();
+            ctx.translate(-210, 0);
+            ctx.scale(0.5, 1); // Perspektif miring
+            
+            // Putaran Baling-baling
+            ctx.strokeStyle = `rgba(0, 255, 204, ${thrustLevel/100})`;
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            for(let i=0; i<3; i++) {
+                let ang = propSpeed + (i * (Math.PI*2/3));
+                let px = Math.cos(ang) * 60;
+                let py = Math.sin(ang) * 60;
+                ctx.moveTo(0,0); ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            
+            // Glow Thrust
+            if (thrustLevel > 0) {
+                ctx.fillStyle = `rgba(0, 255, 204, ${thrustLevel/200})`;
+                ctx.beginPath(); ctx.arc(0, 0, 40, 0, Math.PI*2); ctx.fill();
+            }
+            ctx.restore();
+
+            ctx.restore();
+        }
+
+        function drawEnvironment() {
+            // Speed factor based on thrust
+            speed = thrustLevel * 0.2;
+
+            // Clouds Moving Left (Simulate forward motion)
+            ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+            clouds.forEach(c => {
+                c.x -= c.speed + speed;
+                if(c.x < -c.w) c.x = width + c.w;
+                
+                // Draw Cloud Blob
+                ctx.beginPath(); 
+                ctx.ellipse(c.x, c.y, c.w, c.w/2, 0, 0, Math.PI*2); 
+                ctx.fill();
+            });
+
+            // Aether Particles (Bintik-bintik energi di udara)
+            if (harvestLevel > 0) {
+                ctx.fillStyle = "rgba(0, 255, 204, 0.5)";
+                for(let i=0; i<harvestLevel; i++) {
+                    let px = Math.random() * width;
+                    let py = Math.random() * height;
+                    // Efek tarik ke kapal
+                    let dist = Math.abs(px - 400);
+                    if (dist < 200) {
+                        ctx.fillRect(px, py, 2, 2);
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            time += 0.5;
+
+            drawEnvironment();
+            drawShip(shipY);
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>

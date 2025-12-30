@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forbidden Tech Archive</title>
+    <style>
+        :root {
+            --bg: #020202;
+            --card-bg: #0f0f12;
+            --gold: #d4af37;
+            --plasma: #a300cc; /* Ungu Vril */
+            --cyan: #00ffcc;
+            --text: #ccc;
+            --border: #333;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Consolas', monospace;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid var(--plasma);
+            padding-bottom: 20px;
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(163, 0, 204, 0.5);
+        }
+
+        .subtitle {
+            color: var(--cyan);
+            font-size: 0.8rem;
+            margin-top: 10px;
+            letter-spacing: 3px;
+        }
+
+        /* GRID SYSTEM */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--border); /* Default border color */
+            border-radius: 5px;
+            padding: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 160px;
+        }
+
+        /* Hover Effects */
+        .card:hover {
+            transform: scale(1.02);
+            background: #15151a;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* TYPE SPECIFIC COLORS */
+        .card.type-power { border-left-color: var(--plasma); }
+        .card.type-power:hover { box-shadow: 0 0 20px rgba(163, 0, 204, 0.2); border-color: var(--plasma); }
+        
+        .card.type-vehicle { border-left-color: var(--gold); }
+        .card.type-vehicle:hover { box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); border-color: var(--gold); }
+        
+        .card.type-signal { border-left-color: var(--cyan); }
+        .card.type-signal:hover { box-shadow: 0 0 20px rgba(0, 255, 204, 0.2); border-color: var(--cyan); }
+
+        /* CONTENT */
+        .card-header {
+            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;
+        }
+
+        .card-num {
+            font-size: 2.5rem; font-weight: bold; opacity: 0.1;
+            position: absolute; right: 10px; top: 0;
+        }
+
+        .card-title {
+            font-size: 1.1rem; font-weight: bold; color: #fff; text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-desc {
+            font-size: 0.8rem; color: #888; line-height: 1.5; z-index: 2; margin-top: auto;
+        }
+
+        .tag {
+            font-size: 0.6rem; padding: 2px 6px; border-radius: 2px;
+            background: #222; color: #aaa; border: 1px solid #444;
+            display: inline-block; margin-bottom: 10px;
+        }
+
+        /* SECTION LABEL */
+        .section-break {
+            grid-column: 1 / -1;
+            margin: 40px 0 10px 0;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .line { height: 1px; background: #333; flex-grow: 1; }
+        .label { color: var(--gold); font-size: 0.8rem; letter-spacing: 2px; }
+
+        /* BACK BUTTON */
+        .back-btn {
+            position: absolute; top: 0; left: 0;
+            color: #555; text-decoration: none; font-size: 0.8rem;
+            padding: 10px; border: 1px solid #333;
+        }
+        .back-btn:hover { color: #fff; border-color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="40. Index Tools.html" class="back-btn">← BACK TO INDEX</a>
+        <h1>FORBIDDEN TECH</h1>
+        <div class="subtitle">SUB-MENU 43: LOST TECHNOLOGY RECONSTRUCTION</div>
+    </header>
+
+    <div class="grid-container">
+
+        <div class="section-break">
+            <span class="label">/// ZERO POINT ENERGY GENERATION</span>
+            <div class="line"></div>
+        </div>
+
+        <a href="51. Mercury Vortex.html" class="card type-power">
+            <span class="card-num">51</span>
+            <div class="tag">ENGINE</div>
+            <div class="card-title">Mercury Vortex Core</div>
+            <div class="card-desc">Simulasi reaktor "Die Glocke" / Yoni-Lingga. Pembangkitan energi melalui putaran merkuri dan implosion dingin.</div>
+        </a>
+
+        <a href="48. Telluric Grid.html" class="card type-power">
+            <span class="card-num">48</span>
+            <div class="tag">MONITOR</div>
+            <div class="card-title">Telluric Grid Monitor</div>
+            <div class="card-desc">Pemetaan aliran listrik bawah tanah (Ley Lines), deteksi node energi (Paku Bumi), dan status grounding.</div>
+        </a>
+
+
+        <div class="section-break">
+            <span class="label">/// ANTI-GRAVITY PROPULSION</span>
+            <div class="line"></div>
+        </div>
+
+        <a href="52. Vimana Flight.html" class="card type-vehicle">
+            <span class="card-num">52</span>
+            <div class="tag">VEHICLE</div>
+            <div class="card-title">Vimana Flight System</div>
+            <div class="card-desc">Simulasi kokpit Stupa Terbang (Vimana). Kontrol levitasi merkuri dan propulsi sonik frekuensi.</div>
+        </a>
+
+        <a href="53. Tartaria Airship.html" class="card type-vehicle">
+            <span class="card-num">53</span>
+            <div class="tag">VEHICLE</div>
+            <div class="card-title">Tartaria Aether Frigate</div>
+            <div class="card-desc">Kapal udara logam dengan teknologi pemanen energi atmosfer (Atmospheric Harvesting) dan vakum.</div>
+        </a>
+
+
+        <div class="section-break">
+            <span class="label">/// RESONANCE & FREQUENCY</span>
+            <div class="line"></div>
+        </div>
+
+        <a href="50. Surp RF Tuner.html" class="card type-signal">
+            <span class="card-num">50</span>
+            <div class="tag">HACKING</div>
+            <div class="card-title">N-SURP Tuner</div>
+            <div class="card-desc">Signal Uplink Resonance Processor. Alat tuning frekuensi radio untuk hacking sinyal alam/buatan.</div>
+        </a>
+
+        <a href="49. Mikrosonik Tuning Simulator.html" class="card type-signal">
+            <span class="card-num">49</span>
+            <div class="tag">AMPLIFIER</div>
+            <div class="card-title">Microsonic Magnifier</div>
+            <div class="card-desc">Simulasi "Magnifying Transmitter" Tesla. Memperbesar sinyal getaran mikro menjadi listrik tegangan tinggi.</div>
+        </a>
+
+        <a href="54. Cymatic Organ.html" class="card type-signal">
+            <span class="card-num">54</span>
+            <div class="tag">HEALING</div>
+            <div class="card-title">Cymatic Healing Organ</div>
+            <div class="card-desc">Rekonstruksi teknologi penyembuhan suara Katedral/Tartaria. Visualisasi geometri suara (Chladni).</div>
+        </a>
+
+    </div>
+
+    <div style="margin-top: 50px; font-size: 0.8rem; color: #444; text-align:center;">
+        ACCESS LEVEL: RED // USE WITH CAUTION<br>
+        NUSWANTARA UNDERGROUND ARCHIVE
+    </div>
+
+</body>
+</html>

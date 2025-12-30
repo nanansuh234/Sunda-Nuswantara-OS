@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsonic Resonance Magnifier</title>
+    <style>
+        body {
+            background: #020202; color: #00ffcc; font-family: 'Consolas', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0;
+        }
+        .container {
+            position: relative; border: 2px solid #333; padding: 20px;
+            background: #0a0a0a; border-radius: 10px; width: 700px;
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.1);
+        }
+        canvas { display: block; margin: 0 auto; background: #000; border: 1px solid #222; }
+        
+        .hud {
+            display: flex; justify-content: space-between; margin-bottom: 15px; 
+            font-weight: bold; font-size: 1.1rem;
+        }
+        
+        .controls { 
+            margin-top: 20px; display: flex; flex-direction: column; gap: 15px; 
+            background: #111; padding: 15px; border-radius: 8px;
+        }
+
+        .slider-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        label { width: 200px; text-align: left; font-size: 0.9rem; color: #aaa; }
+        input[type=range] { flex-grow: 1; accent-color: #00ffcc; cursor: pointer; }
+        
+        .status-box {
+            text-align: center; margin-top: 10px; padding: 10px;
+            border: 1px dashed #444; color: #555; font-size: 0.9rem;
+        }
+        
+        .glow-text {
+            color: #fff; text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="hud">
+            <div style="color:#aaa">INPUT: <span id="inAmp">Lemah</span></div>
+            <div>MAGNIFIKASI: <span id="magFactor">1x</span></div>
+            <div style="color:#aaa">OUTPUT: <span id="outVolt">0</span> V</div>
+        </div>
+
+        <canvas id="simCanvas" width="650" height="300"></canvas>
+
+        <div class="controls">
+            <div class="slider-row">
+                <label>FREKUENSI ALAM (Source)</label>
+                <input type="range" id="sourceFreq" min="10" max="100" value="50" disabled>
+                <span id="sourceVal" style="width:50px; text-align:right; color:#888;">50Hz</span>
+            </div>
+
+            <div class="slider-row">
+                <label style="color:#00ffcc; font-weight:bold;">TUNING ALAT (Magnifier)</label>
+                <input type="range" id="tunerSlider" min="10" max="100" value="10" oninput="updateTuner(this.value)">
+                <span id="tunerVal" style="width:50px; text-align:right; color:#fff;">10Hz</span>
+            </div>
+        </div>
+
+        <div class="status-box" id="statusBox">
+            GESER TUNER UNTUK MENCARI RESONANSI...
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // STATE
+        let sourceFreq = 50; // Frekuensi Alam (Target) - Kita buat statis dulu biar gampang dituning
+        let tunerFreq = 10;  // Frekuensi Alat Kita
+        let resonance = 0;   // 0 - 100%
+        let time = 0;
+        let waveHistory = [];
+
+        // Ganti frekuensi alam sesekali biar kayak "nyari sinyal"
+        setInterval(() => {
+            // sourceFreq = Math.floor(Math.random() * 80) + 10;
+            // document.getElementById('sourceFreq').value = sourceFreq;
+            // document.getElementById('sourceVal').innerText = sourceFreq + "Hz";
+            // KITA KUNCI DI 50Hz (Schumann Harmonic) BIAR GAMPANG SIMULASINYA
+        }, 5000);
+
+        function updateTuner(val) {
+            tunerFreq = parseInt(val);
+            document.getElementById('tunerVal').innerText = tunerFreq + "Hz";
+            checkResonance();
+        }
+
+        function checkResonance() {
+            // Logika Magnifikasi: Semakin dekat tuner dengan source, semakin besar outputnya
+            let diff = Math.abs(sourceFreq - tunerFreq);
+            
+            // Lebar toleransi sempit (High Q Factor)
+            if (diff === 0) resonance = 100; // PERFECT MATCH
+            else if (diff <= 2) resonance = 80;
+            else if (diff <= 5) resonance = 40;
+            else if (diff <= 10) resonance = 10;
+            else resonance = 1;
+
+            let magText = resonance > 1 ? (resonance * 5) + "x" : "1x";
+            let voltOut = resonance * 2.2; // Simulasi Voltase 220V max
+
+            document.getElementById('magFactor').innerText = magText;
+            document.getElementById('outVolt').innerText = Math.floor(voltOut);
+
+            // Update Visual Status
+            const status = document.getElementById('statusBox');
+            if (resonance >= 100) {
+                status.innerHTML = "RESONANSI SEMPURNA! ETHERIC LOCK!";
+                status.className = "status-box glow-text";
+                status.style.borderColor = "#00ffcc";
+            } else if (resonance >= 40) {
+                status.innerHTML = "SINYAL TERDETEKSI... TUNING LAGI!";
+                status.className = "status-box";
+                status.style.color = "#ffaa00";
+                status.style.borderColor = "#ffaa00";
+            } else {
+                status.innerHTML = "NO MATCH. SINYAL LEMAH.";
+                status.className = "status-box";
+                status.style.color = "#555";
+                status.style.borderColor = "#444";
+            }
+        }
+
+        function drawScope() {
+            // 1. INPUT WAVE (Kecil, Putih)
+            ctx.beginPath();
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i++) {
+                let y = 150 + Math.sin((i + time) * 0.1) * 10; // Amplitudo kecil (10)
+                if (i===0) ctx.moveTo(i, y); else ctx.lineTo(i, y);
+            }
+            ctx.stroke();
+
+            // 2. MAGNIFIED WAVE (Output)
+            // Amplitudo tergantung resonansi
+            let amp = 10 + (resonance * 1.5); // Max 160
+            let color = `rgba(0, 255, 204, ${resonance/100})`;
+            
+            ctx.beginPath();
+            ctx.strokeStyle = resonance > 20 ? "#00ffcc" : "#333";
+            ctx.lineWidth = resonance > 20 ? 3 : 1;
+            
+            // Efek Gelombang Berdiri (Standing Wave)
+            // Frekuensi visual mengikuti Tuner
+            let freqVisual = 0.1; 
+            
+            for (let i = 0; i < canvas.width; i++) {
+                // Jika resonansi pas, gelombangnya jadi raksasa
+                let wave = Math.sin((i + time) * freqVisual) * amp;
+                
+                // Efek jitter kalau belum pas tuningnya
+                if (resonance < 80 && resonance > 10) {
+                    wave += Math.random() * 10; 
+                }
+
+                let y = 150 + wave;
+                if (i===0) ctx.moveTo(i, y); else ctx.lineTo(i, y);
+            }
+            ctx.stroke();
+
+            // Glow Effect saat Perfect Match
+            if (resonance >= 80) {
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = "#00ffcc";
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        function drawDevice() {
+            // Gambar Alat "Magnifier" di tengah (Coil / Crystal)
+            ctx.save();
+            ctx.translate(325, 150);
+            
+            // Lingkaran Resonator
+            let size = 30 + (resonance / 2);
+            ctx.beginPath();
+            ctx.arc(0, 0, size, 0, Math.PI*2);
+            ctx.strokeStyle = resonance > 50 ? "#fff" : "#444";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Inti Kristal
+            ctx.rotate(time * (resonance/100)); // Muter kenceng kalau resonansi
+            ctx.fillStyle = resonance > 80 ? "#00ffcc" : "#222";
+            ctx.fillRect(-10, -10, 20, 20);
+
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Grid Background
+            ctx.strokeStyle = "#111"; ctx.lineWidth=1;
+            ctx.beginPath();
+            for(let i=0; i<canvas.width; i+=20) { ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); }
+            ctx.stroke();
+
+            time += 2;
+            drawScope();
+            drawDevice();
+            
+            requestAnimationFrame(animate);
+        }
+
+        // Init
+        checkResonance();
+        animate();
+
+    </script>
+</body>
+</html>

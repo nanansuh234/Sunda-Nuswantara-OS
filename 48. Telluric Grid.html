@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telluric Monitor (Scrollable)</title>
+    <style>
+        :root {
+            --bg: #020205;
+            --grid: #1a1a1a;
+            --line-idle: #003300;
+            --line-active: #00ff41;
+            --line-danger: #ff0040;
+            --node: #d4af37;
+            --text: #00ff41;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Consolas', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow-y: auto; /* KUNCI SCROLL ADA DI SINI */
+        }
+
+        h1 {
+            color: var(--node);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Responsif */
+            height: 600px;
+            border: 2px solid #333;
+            background: #000;
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px; /* Jarak bawah */
+        }
+
+        canvas { display: block; width: 100%; height: 100%; }
+
+        /* HUD PANEL */
+        .hud-left {
+            position: absolute; top: 20px; left: 20px;
+            width: 250px; background: rgba(0, 20, 0, 0.9);
+            border: 1px solid var(--text); padding: 15px;
+            border-radius: 5px; pointer-events: none;
+        }
+
+        .hud-right {
+            position: absolute; bottom: 20px; right: 20px;
+            width: 200px; background: rgba(20, 0, 0, 0.9);
+            border: 1px solid var(--line-danger); padding: 15px;
+            border-radius: 5px; pointer-events: none; display: none;
+        }
+
+        .stat-row {
+            display: flex; justify-content: space-between;
+            margin-bottom: 8px; font-size: 0.85rem;
+        }
+        .val { font-weight: bold; color: #fff; }
+        .blink { animation: blink 0.2s infinite alternate; color: #ff0040; }
+
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.5; } }
+
+        /* CONTROLS */
+        .controls {
+            display: flex; gap: 20px; width: 100%; max-width: 800px;
+            align-items: center; justify-content: center; flex-wrap: wrap;
+            background: #111; padding: 20px; border-radius: 10px; border: 1px solid #333;
+        }
+
+        .slider-group { display: flex; flex-direction: column; width: 45%; min-width: 200px; }
+        label { font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+        input[type=range] { width: 100%; accent-color: var(--text); cursor: pointer; }
+
+        .legend {
+            font-size: 0.75rem; color: #666; margin-top: 20px; text-align: center;
+            max-width: 800px; line-height: 1.5; border-top: 1px dashed #333; padding-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>TELLURIC CURRENT MONITOR</h1>
+    <div style="font-size:0.8rem; color:#666; margin-bottom:15px;">Peta Aliran Listrik Bawah Tanah (Ley Lines)</div>
+
+    <div class="container">
+        <canvas id="gridCanvas"></canvas>
+        
+        <div class="hud-left">
+            <div class="stat-row">
+                <span>VOLTAGE BUMI:</span> <span class="val" id="voltVal">Low</span>
+            </div>
+            <div class="stat-row">
+                <span>ARUS (AMP):</span> <span class="val" id="ampVal">Stable</span>
+            </div>
+            <div class="stat-row">
+                <span>FREKUENSI:</span> <span class="val" id="freqVal">7.83 Hz</span>
+            </div>
+            <div style="margin-top:10px; border-top:1px dashed #444; padding-top:5px; font-size:0.8rem; color:#aaa;">
+                STATUS GROUNDING:
+                <div id="groundStatus" style="font-size:1.1rem; font-weight:bold; color:var(--text); margin-top:5px;">AMAN (Optimal)</div>
+            </div>
+        </div>
+
+        <div class="hud-right" id="warningBox">
+            <div style="color:red; font-weight:bold; text-align:center; font-size:1.2rem;" class="blink">WARNING!</div>
+            <div style="font-size:0.8rem; color:#fff; text-align:center; margin-top:5px;">
+                OVERLOAD DETECTED<br>
+                Jauhi Titik Node.<br>Jangan tidur di tanah.
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="slider-group">
+            <label>SOLAR INDUCTION (Aktivitas Matahari)</label>
+            <input type="range" id="solarSlider" min="1" max="100" value="20" oninput="updateParams()">
+        </div>
+        <div class="slider-group">
+            <label>GEOMAGNETIC STRESS (Tekanan Kubah)</label>
+            <input type="range" id="geoSlider" min="1" max="100" value="10" oninput="updateParams()">
+        </div>
+    </div>
+
+    <div class="legend">
+        <b>PANDUAN VISUAL:</b><br>
+        * <b>Garis Hijau:</b> Aliran Listrik Normal (Ley Lines). Aman untuk grounding.<br>
+        * <b>Garis Merah:</b> Overload/Bocor. Bahaya bagi jantung & saraf.<br>
+        * <b>Titik Emas:</b> Node Paku Bumi (Giza, Kailash, Nuswantara). Pusat energi.<br>
+        * <b>Partikel Putih:</b> Ion Listrik yang mengalir di permukaan tanah.
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gridCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Setup Canvas Size
+        canvas.width = 800;
+        canvas.height = 600;
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        // PARAMETER SIMULASI
+        let solarInput = 20; 
+        let geoStress = 10;
+        let particles = [];
+        let time = 0;
+
+        // NODE LOKASI (Paku Bumi)
+        const nodes = [
+            { r: 0, a: 0, name: "Arctic (Pusat)" }, 
+            { r: 100, a: 45, name: "Giza" },
+            { r: 120, a: 150, name: "Kailash" },
+            { r: 180, a: 280, name: "Nuswantara (Sagara)" }, 
+            { r: 220, a: 190, name: "Peru/Inca" },
+            { r: 250, a: 10, name: "Stonehenge" }
+        ];
+
+        // INIT PARTICLES
+        for(let i=0; i<200; i++) {
+            particles.push({
+                r: Math.random() * 350,
+                a: Math.random() * Math.PI * 2,
+                speed: Math.random() * 0.5 + 0.2,
+                pathOffset: Math.random() * 100
+            });
+        }
+
+        function updateParams() {
+            solarInput = parseInt(document.getElementById('solarSlider').value);
+            geoStress = parseInt(document.getElementById('geoSlider').value);
+            
+            const voltEl = document.getElementById('voltVal');
+            const ampEl = document.getElementById('ampVal');
+            const freqEl = document.getElementById('freqVal');
+            const statusEl = document.getElementById('groundStatus');
+            const warnBox = document.getElementById('warningBox');
+
+            let voltage = solarInput * 120;
+            let freq = 7.83 + (geoStress / 10);
+            
+            voltEl.innerText = voltage + " mV/m";
+            freqEl.innerText = freq.toFixed(2) + " Hz";
+
+            if (solarInput > 80 || geoStress > 80) {
+                ampEl.innerText = "SURGE (BOCOR)";
+                ampEl.style.color = "red";
+                statusEl.innerText = "BAHAYA (JANGAN GROUNDING)";
+                statusEl.style.color = "red";
+                warnBox.style.display = "block";
+                document.documentElement.style.setProperty('--line-active', '#ff0040');
+            } else if (solarInput > 50) {
+                ampEl.innerText = "High Flow";
+                ampEl.style.color = "yellow";
+                statusEl.innerText = "WASPADA (Energi Tinggi)";
+                statusEl.style.color = "yellow";
+                warnBox.style.display = "none";
+                document.documentElement.style.setProperty('--line-active', '#ffff00');
+            } else {
+                ampEl.innerText = "Stable";
+                ampEl.style.color = "#fff";
+                statusEl.innerText = "AMAN (Optimal)";
+                statusEl.style.color = "#00ff41";
+                warnBox.style.display = "none";
+                document.documentElement.style.setProperty('--line-active', '#00ff41');
+            }
+        }
+
+        function drawMapBase() {
+            ctx.strokeStyle = `rgba(0, 50, 0, 0.5)`;
+            ctx.lineWidth = 1;
+
+            for(let r=50; r<=400; r+=50) {
+                ctx.beginPath();
+                for(let i=0; i<=6; i++) {
+                    let theta = (i / 6) * Math.PI * 2;
+                    let x = cx + r * Math.cos(theta);
+                    let y = cy + r * Math.sin(theta);
+                    if(i===0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            for(let i=0; i<12; i++) {
+                let theta = (i / 12) * Math.PI * 2;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(cx + 400 * Math.cos(theta), cy + 400 * Math.sin(theta));
+                ctx.stroke();
+            }
+        }
+
+        function drawNodes() {
+            nodes.forEach(n => {
+                let rad = (n.a * Math.PI) / 180;
+                let x = cx + n.r * Math.cos(rad);
+                let y = cy + n.r * Math.sin(rad);
+
+                let intensity = (solarInput / 100) * 20;
+                ctx.shadowBlur = 10 + intensity;
+                ctx.shadowColor = "#d4af37";
+                ctx.fillStyle = "#d4af37";
+                ctx.beginPath(); ctx.arc(x, y, 4 + (intensity/5), 0, Math.PI*2); ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = "#aaa";
+                ctx.font = "10px Consolas";
+                ctx.fillText(n.name, x + 8, y + 3);
+            });
+        }
+
+        function drawParticles() {
+            let speedFactor = (solarInput / 100) * 5; 
+            let wobble = (geoStress / 100) * 20; 
+
+            let pColor = "#fff";
+            if (solarInput > 80) pColor = "#ffaa00";
+
+            ctx.fillStyle = pColor;
+
+            particles.forEach(p => {
+                p.r += p.speed + speedFactor;
+                if(p.r > 400) p.r = 0; 
+
+                let noise = Math.sin(time + p.pathOffset) * (wobble * 0.01);
+                let finalAngle = p.a + noise;
+
+                let x = cx + p.r * Math.cos(finalAngle);
+                let y = cy + p.r * Math.sin(finalAngle);
+
+                ctx.beginPath();
+                ctx.arc(x, y, 1.5, 0, Math.PI*2);
+                ctx.fill();
+                
+                if (geoStress > 50 && Math.random() > 0.95) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + (Math.random()*20-10), y + (Math.random()*20-10));
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            });
+        }
+
+        function animate() {
+            time += 0.1;
+            ctx.fillStyle = "rgba(2, 2, 5, 0.2)"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawMapBase();
+            drawParticles(); 
+            drawNodes();     
+
+            requestAnimationFrame(animate);
+        }
+
+        // Init
+        updateParams();
+        animate();
+
+    </script>
+</body>
+</html>

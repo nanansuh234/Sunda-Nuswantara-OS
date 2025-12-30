@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Die Glocke: Mercury Vortex Engine</title>
+    <style>
+        body {
+            background: #050505; color: #a300cc; font-family: 'Consolas', monospace; /* Warna Ungu Vril */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        h1 { margin: 0; text-shadow: 0 0 10px #a300cc; letter-spacing: 5px; }
+        
+        .container {
+            position: relative; width: 600px; height: 500px;
+            background: #111; border: 4px solid #333; border-radius: 50% 50% 10px 10px; /* Bentuk Lonceng */
+            box-shadow: inset 0 0 100px #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            padding-bottom: 20px;
+            overflow: hidden;
+        }
+
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+
+        .hud-panel {
+            z-index: 10; width: 90%;
+            background: rgba(0,0,0,0.8); border: 1px solid #555;
+            padding: 15px; border-radius: 10px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+
+        .stat-box { text-align: center; }
+        .val { font-size: 1.5rem; font-weight: bold; color: #fff; }
+        .label { font-size: 0.8rem; color: #aaa; }
+
+        .controls {
+            margin-top: 20px; width: 600px;
+            display: flex; gap: 20px; justify-content: center;
+        }
+
+        .lever-box {
+            background: #222; padding: 10px; border: 1px solid #444; border-radius: 5px;
+            display: flex; flex-direction: column; align-items: center; width: 100%;
+        }
+
+        input[type=range] { width: 100%; accent-color: #a300cc; cursor: pointer; }
+
+        /* WARNING LIGHT */
+        .hazard-light {
+            position: absolute; top: 20px; width: 20px; height: 20px;
+            background: #300; border-radius: 50%;
+            box-shadow: 0 0 5px #000; z-index: 10;
+        }
+        .hazard-active {
+            background: #ff0000;
+            box-shadow: 0 0 20px #ff0000;
+            animation: blink 0.1s infinite alternate;
+        }
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.5; } }
+
+        .levitation-status {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 3rem; font-weight: bold; color: rgba(255,255,255,0.1);
+            z-index: 2; pointer-events: none; text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="hazard-light" id="hazLight"></div>
+    <h1>DIE GLOCKE</h1>
+    <div style="font-size:0.8rem; color:#666; margin-bottom:20px;">MERCURY VORTEX GENERATOR</div>
+
+    <div class="container" id="bellCase">
+        <canvas id="simCanvas" width="600" height="500"></canvas>
+        <div class="levitation-status" id="levText">GROUNDED</div>
+
+        <div class="hud-panel">
+            <div class="stat-box">
+                <div class="label">ROTOR RPM</div>
+                <div class="val" id="rpmVal">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">FIELD OUTPUT</div>
+                <div class="val" id="fieldVal" style="color:#a300cc">0 TeV</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="lever-box">
+            <div class="label">THROTTLE (Putaran Merkuri)</div>
+            <input type="range" id="throttle" min="0" max="100" value="0" oninput="updateEngine(this.value)">
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const bellCase = document.getElementById('bellCase');
+
+        // ENGINE STATE
+        let throttle = 0;
+        let rpm = 0;
+        let energy = 0;
+        let particles = [];
+        let rotationAngle = 0;
+
+        // Init Mercury Particles
+        for(let i=0; i<300; i++) {
+            particles.push({
+                r: Math.random() * 200 + 50, // Radius dari tengah
+                a: Math.random() * Math.PI * 2, // Sudut
+                size: Math.random() * 3 + 1,
+                layer: Math.random() > 0.5 ? 1 : -1 // 1=Inner (CW), -1=Outer (CCW)
+            });
+        }
+
+        function updateEngine(val) {
+            throttle = parseInt(val);
+        }
+
+        function drawCore() {
+            // Gambar Inti Lonceng
+            let cx = 300;
+            let cy = 250;
+
+            // Poros Tengah
+            ctx.fillStyle = "#222";
+            ctx.fillRect(cx - 20, 50, 40, 400);
+            
+            // Tabung Dalam (Xerum 525)
+            let grad = ctx.createLinearGradient(cx-100, 0, cx+100, 0);
+            grad.addColorStop(0, "rgba(50, 0, 50, 0.5)");
+            grad.addColorStop(0.5, "rgba(200, 0, 200, 0.2)");
+            grad.addColorStop(1, "rgba(50, 0, 50, 0.5)");
+            
+            ctx.fillStyle = grad;
+            ctx.fillRect(cx - 150, 100, 300, 300);
+            ctx.strokeStyle = "#444";
+            ctx.strokeRect(cx - 150, 100, 300, 300);
+        }
+
+        function drawPlasma() {
+            let cx = 300;
+            let cy = 250;
+
+            // Efek putaran
+            rotationAngle += (rpm * 0.001);
+
+            particles.forEach(p => {
+                // Kecepatan putar tergantung layer (Counter-Rotating)
+                let speed = (rpm * 0.002) * p.layer; 
+                p.a += speed;
+
+                let x = cx + Math.cos(p.a) * p.r;
+                let y = cy + Math.sin(p.a) * (p.r * 0.3); // Perspektif oval
+
+                // Warna Plasma (Ungu -> Putih saat kencang)
+                let r = 160 + (rpm); 
+                let g = (rpm * 2);
+                let b = 255;
+                let alpha = 0.5 + (rpm/2000);
+
+                ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+                ctx.beginPath();
+                ctx.arc(x, y, p.size, 0, Math.PI*2);
+                ctx.fill();
+
+                // Lightning Arcs (Jika RPM tinggi)
+                if (rpm > 3000 && Math.random() > 0.98) {
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.lineTo(x, y);
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            });
+        }
+
+        function updateLogic() {
+            // RPM mengejar Throttle (Inersia mesin berat)
+            let targetRpm = throttle * 100; // Max 10.000
+            if (rpm < targetRpm) rpm += 20;
+            if (rpm > targetRpm) rpm -= 20;
+
+            // Output Energi (TeV)
+            // Rumus ngasal: RPM kuadrat / 1.000.000
+            energy = (rpm * rpm) / 500000;
+
+            // Update HUD
+            document.getElementById('rpmVal').innerText = Math.floor(rpm);
+            document.getElementById('fieldVal').innerText = energy.toFixed(2) + " TeV";
+
+            // Efek Bahaya (Radiation Leak)
+            const haz = document.getElementById('hazLight');
+            if (rpm > 8000) haz.className = "hazard-light hazard-active";
+            else haz.className = "hazard-light";
+
+            // Efek Levitasi / Anti-Gravity
+            const levText = document.getElementById('levText');
+            if (rpm > 9000) {
+                levText.innerText = "ANTI-GRAVITY LIFT";
+                levText.style.color = "rgba(255, 255, 255, 0.8)";
+                // Getar container
+                bellCase.style.transform = `translate(${Math.random()*2-1}px, ${Math.random()*2-1}px)`;
+                bellCase.style.boxShadow = `0 0 ${rpm/50}px #a300cc`;
+            } else {
+                levText.innerText = "GROUNDED";
+                levText.style.color = "rgba(255,255,255,0.1)";
+                bellCase.style.transform = "none";
+                bellCase.style.boxShadow = "inset 0 0 100px #000";
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawCore();
+            drawPlasma();
+            updateLogic();
+            
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

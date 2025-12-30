@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tartarian Cymatic Resonator</title>
+    <style>
+        body {
+            background: #050505; color: #d4af37; font-family: 'Garamond', serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        h1 { margin: 0; letter-spacing: 5px; text-transform: uppercase; font-size: 1.8rem; }
+        
+        .container {
+            display: flex; gap: 30px; align-items: center;
+            margin-top: 20px;
+        }
+
+        /* LAYAR CYMATICS (Plat Pasir) */
+        .plate-box {
+            width: 400px; height: 400px;
+            border: 10px solid #333; border-radius: 50%; /* Bulat kayak Rose Window */
+            background: #111;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+            position: relative; overflow: hidden;
+        }
+        
+        canvas { display: block; }
+
+        /* ORGAN CONTROLS */
+        .organ-panel {
+            width: 300px; height: 400px;
+            background: #1a0b00; /* Kayu Gelap */
+            border: 4px solid #554400;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex; flex-direction: column;
+            align-items: center;
+            box-shadow: inset 0 0 20px #000;
+        }
+
+        .pipe-display {
+            display: flex; gap: 5px; justify-content: center; align-items: flex-end;
+            height: 100px; width: 100%; margin-bottom: 20px;
+            border-bottom: 2px solid #554400;
+        }
+        .pipe {
+            width: 15px; background: linear-gradient(90deg, #b8860b, #ffd700, #b8860b);
+            border-radius: 2px 2px 0 0; transition: height 0.2s;
+        }
+
+        .slider-group { width: 100%; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #aaa; }
+        input[type=range] { width: 100%; accent-color: #d4af37; cursor: pointer; }
+
+        .key-deck {
+            display: flex; gap: 2px; width: 100%; height: 60px;
+        }
+        .key {
+            flex-grow: 1; background: #fff; border-radius: 0 0 3px 3px;
+            cursor: pointer; transition: 0.1s;
+        }
+        .key:active, .key.active { background: #d4af37; box-shadow: 0 0 10px #d4af37; }
+        .key-black {
+            background: #000; width: 15px; height: 40px;
+            margin-left: -7px; margin-right: -7px; z-index: 2;
+            border-radius: 0 0 3px 3px;
+        }
+
+        .status { margin-top: 15px; font-weight: bold; font-size: 1.2rem; color: #fff; text-align: center; }
+
+    </style>
+</head>
+<body>
+
+    <h1>AETHERIC HEALING ORGAN</h1>
+    <div style="font-size:0.8rem; color:#888;">Frequency Manipulation & Matter Restructuring</div>
+
+    <div class="container">
+        <div class="plate-box">
+            <canvas id="sandCanvas" width="400" height="400"></canvas>
+        </div>
+
+        <div class="organ-panel">
+            <div class="pipe-display" id="pipeVis">
+                </div>
+
+            <div class="slider-group">
+                <label>RESONANCE FREQUENCY (Hz)</label>
+                <input type="range" id="freqSlider" min="1" max="20" value="3" step="0.1" oninput="updateFreq(this.value)">
+            </div>
+
+            <div class="status" id="patternName">CHAOS</div>
+
+            <div style="margin-top:auto; width:100%;">
+                <div style="font-size:0.7rem; color:#666; text-align:center; margin-bottom:5px;">MANUAL KEYBOARD</div>
+                <div class="key-deck">
+                    <div class="key" onclick="setPreset(2)"></div>
+                    <div class="key key-black"></div>
+                    <div class="key" onclick="setPreset(3)"></div>
+                    <div class="key key-black"></div>
+                    <div class="key" onclick="setPreset(5)"></div>
+                    <div class="key" onclick="setPreset(7)"></div>
+                    <div class="key key-black"></div>
+                    <div class="key" onclick="setPreset(12)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('sandCanvas');
+        const ctx = canvas.getContext('2d');
+        const size = 400;
+        
+        // Setup Particles (Pasir)
+        const numParticles = 3000;
+        let particles = [];
+        
+        // Init Particles spread out
+        for(let i=0; i<numParticles; i++) {
+            particles.push({
+                x: Math.random() * size,
+                y: Math.random() * size,
+                vx: 0, vy: 0
+            });
+        }
+
+        // Pipa Visual
+        const pipeBox = document.getElementById('pipeVis');
+        for(let i=0; i<10; i++) {
+            let h = 30 + Math.random() * 60;
+            let p = document.createElement('div');
+            p.className = 'pipe';
+            p.style.height = h + '%';
+            pipeBox.appendChild(p);
+        }
+
+        let freq = 3; // Parameter m, n untuk rumus Chladni
+        let vibration = 0;
+
+        function updateFreq(val) {
+            freq = parseFloat(val);
+            updateStatus(freq);
+            // Visual Pipa gerak
+            const pipes = document.querySelectorAll('.pipe');
+            pipes.forEach(p => {
+                p.style.height = (20 + Math.random() * 80) + '%';
+            });
+        }
+
+        function setPreset(val) {
+            document.getElementById('freqSlider').value = val;
+            updateFreq(val);
+        }
+
+        function updateStatus(f) {
+            const txt = document.getElementById('patternName');
+            // Cek integer terdekat (Harmonic)
+            let diff = Math.abs(f - Math.round(f));
+            
+            if (diff < 0.1) {
+                txt.innerText = "HARMONIC LOCK";
+                txt.style.color = "#00ffcc";
+                txt.style.textShadow = "0 0 10px #00ffcc";
+            } else {
+                txt.innerText = "DISSONANCE (CHAOS)";
+                txt.style.color = "#888";
+                txt.style.textShadow = "none";
+            }
+        }
+
+        // RUMUS CHLADNI (Matematika Cymatics)
+        // Menentukan di mana titik simpul (Node) getaran terjadi
+        function getChladniValue(x, y, m, n) {
+            // Normalize -1 to 1
+            let nx = (x / size) * 2 - 1;
+            let ny = (y / size) * 2 - 1;
+            
+            // Rumus Klasik: cos(n*pi*x)*cos(m*pi*y) - cos(m*pi*x)*cos(n*pi*y)
+            let pi = Math.PI;
+            return Math.cos(n * pi * nx) * Math.cos(m * pi * ny) - 
+                   Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
+        }
+
+        function animate() {
+            // Bersihkan Layar (Efek Trail dikit)
+            ctx.fillStyle = "rgba(17, 17, 17, 0.2)";
+            ctx.fillRect(0, 0, size, size);
+            
+            ctx.fillStyle = "#d4af37"; // Warna Pasir Emas
+
+            // Variabel Harmonik (m, n) berubah sesuai slider
+            // Kita bikin m dan n saling terkait biar polanya simetris
+            let m = freq; 
+            let n = freq; 
+
+            // Update setiap butir pasir
+            particles.forEach(p => {
+                // Hitung nilai getaran di posisi partikel ini
+                let val = getChladniValue(p.x, p.y, m, n);
+                
+                // Physics: Partikel bergerak MENJAUHI area yang bergetar keras
+                // Partikel berkumpul di area yang valuenya mendekati 0 (Nodal Lines)
+                
+                // Kalau valuenya tinggi (positif/negatif), partikel mental
+                let move = Math.abs(val);
+                
+                // Random walk (jitter)
+                p.x += (Math.random() - 0.5) * 2;
+                p.y += (Math.random() - 0.5) * 2;
+
+                // Push towards nodes (Garis damai)
+                // Kita sederhanakan: Bergerak random, tapi kalau di tempat getar, geraknya kenceng
+                let shake = move * 5; 
+                p.x += (Math.random() - 0.5) * shake;
+                p.y += (Math.random() - 0.5) * shake;
+
+                // Batas Kanvas
+                if (p.x < 0) p.x = size;
+                if (p.x > size) p.x = 0;
+                if (p.y < 0) p.y = size;
+                if (p.y > size) p.y = 0;
+
+                ctx.fillRect(p.x, p.y, 2, 2);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>
