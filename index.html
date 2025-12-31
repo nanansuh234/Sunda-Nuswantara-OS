@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuswantara OS - Persistent Mode</title>
+    <title>Nuswantara OS - Ultimate</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -188,6 +188,48 @@
         .app-window.active { display: flex; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from {opacity:0; transform: scale(0.99);} to {opacity:1; transform: scale(1);} }
         iframe { flex: 1; border: none; width: 100%; height: 100%; background: #fff; }
+
+        /* --- START MENU POPUP (NEW) --- */
+        .start-menu-popup {
+            display: none;
+            position: absolute;
+            bottom: 60px; /* Muncul di atas taskbar */
+            left: 10px;
+            width: 220px;
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 2100;
+            overflow: hidden;
+            animation: slideUp 0.2s ease-out;
+        }
+
+        @keyframes slideUp { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+
+        .start-menu-header {
+            background: linear-gradient(90deg, var(--gold), #b8860b);
+            color: #000;
+            padding: 10px 15px;
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+        }
+
+        .start-menu-item {
+            padding: 12px 15px;
+            color: var(--text);
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .start-menu-item:last-child { border-bottom: none; }
+        .start-menu-item:hover { background: rgba(212, 175, 55, 0.2); }
+        .danger-item:hover { background: rgba(192, 57, 43, 0.4) !important; color: #fff; }
 
         /* --- TASKBAR (IMPROVED) --- */
         .taskbar {
@@ -435,6 +477,9 @@
                 <a href="#" onclick="launchApp('43. Forbidden Tech.html', 'Forbidden', '⚛️')" class="app-card cat-future">
                     <div class="app-icon">⚛️</div><div class="app-label">Forbidden Tech</div>
                 </a>
+                <a href="#" onclick="launchApp('44. Nuswantara Browser.html', 'Browser', '🌐')" class="app-card cat-tech">
+                    <div class="app-icon">🌐</div><div class="app-label">Browser</div>
+                </a>
             </div>
 
             <div style="text-align:center; padding: 20px; font-size:0.6rem; color:#666;">
@@ -447,9 +492,22 @@
 
     </div>
 
+    <div id="startMenu" class="start-menu-popup">
+        <div class="start-menu-header">NUSWANTARA OS</div>
+        <div class="start-menu-item" onclick="showDashboard(); toggleStartMenu()">
+            <span>💠</span> Ke Dashboard
+        </div>
+        <div class="start-menu-item" onclick="closeAllApps(); toggleStartMenu()">
+            <span>🧹</span> Tutup Semua App (Clear RAM)
+        </div>
+        <div class="start-menu-item danger-item" onclick="hardRefresh()">
+            <span>🔄</span> <b>SYSTEM REFRESH (Fix Bug)</b>
+        </div>
+    </div>
+
     <div class="taskbar">
         <div class="taskbar-left">
-            <div class="start-button" onclick="showDashboard()" title="Kembali ke Dashboard">
+            <div class="start-button" onclick="toggleStartMenu()" title="Menu Sistem">
                 💠
             </div>
             <div class="task-list" id="task-list">
@@ -584,7 +642,7 @@
             if (savedApps) {
                 try {
                     openApps = JSON.parse(savedApps);
-                    // Re-create windows
+                    // Re-create windows with AUTO-CLEANER
                     openApps.forEach(app => createAppWindow(app));
                     // Re-render taskbar
                     renderTaskbar();
@@ -639,6 +697,7 @@
             }
         }
 
+        // === AUTO-CLEANER INJECTION (FIX INCEPTION BUG) ===
         function createAppWindow(app) {
             const container = document.getElementById('app-windows-container');
             if (document.getElementById(app.id)) return; // Prevent duplicate DOM
@@ -646,7 +705,34 @@
             const winDiv = document.createElement('div');
             winDiv.id = app.id;
             winDiv.className = 'app-window';
-            winDiv.innerHTML = `<iframe src="${app.url}"></iframe>`;
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = app.url;
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.style.border = "none";
+            iframe.style.background = "#050505";
+
+            // SUNTIK CSS KE DALAM IFRAME AGAR TASKBAR ANAK HILANG
+            iframe.onload = function() {
+                try {
+                    const childDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    const style = childDoc.createElement('style');
+                    style.textContent = `
+                        /* SEMBUNYIKAN ELEMENT SYSTEM DUPLIKAT */
+                        .taskbar, .status-bar, .dock, .settings-btn, #startMenu { display: none !important; }
+                        /* PASTIKAN BODY FULL SCREEN */
+                        body { padding: 0 !important; margin: 0 !important; height: 100vh !important; overflow: hidden !important; }
+                        /* PASTIKAN KONTEN TETAP SCROLLABLE */
+                        .dashboard-content, #desktop-area { padding-bottom: 0 !important; height: 100vh !important; overflow-y: auto !important; }
+                    `;
+                    childDoc.head.appendChild(style);
+                } catch (e) {
+                    console.log("Auto-cleaner CORS restriction (Local File). Use Refresh button if bug persists.");
+                }
+            };
+
+            winDiv.appendChild(iframe);
             container.appendChild(winDiv);
         }
 
@@ -712,7 +798,38 @@
             localStorage.setItem('nus_active_app_id', 'dashboard');
         }
 
+        // === START MENU LOGIC ===
+        function toggleStartMenu() {
+            const menu = document.getElementById('startMenu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+
+        // Close menu when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.start-button') && !event.target.matches('.start-button *')) {
+                const menu = document.getElementById('startMenu');
+                if (menu) menu.style.display = 'none';
+            }
+        }
+
+        // FUNGSI SYSTEM REFRESH
+        function hardRefresh() {
+            location.reload();
+        }
+
+        // FUNGSI TUTUP SEMUA (CLEAN RAM)
+        function closeAllApps() {
+            document.getElementById('app-windows-container').innerHTML = '';
+            openApps = [];
+            renderTaskbar();
+            showDashboard();
+            localStorage.setItem('nus_open_apps', JSON.stringify([]));
+        }
+
     </script>
 </body>
 </html>
-
