@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuswantara OS - Final Stable</title>
+    <title>Nuswantara OS - Persistent Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -189,7 +189,7 @@
         @keyframes fadeIn { from {opacity:0; transform: scale(0.99);} to {opacity:1; transform: scale(1);} }
         iframe { flex: 1; border: none; width: 100%; height: 100%; background: #fff; }
 
-        /* --- TASKBAR (FIXED BOTTOM) --- */
+        /* --- TASKBAR (IMPROVED) --- */
         .taskbar {
             height: var(--taskbar-h);
             background: rgba(10, 10, 10, 0.98);
@@ -262,7 +262,7 @@
     <div class="status-bar">
         <div class="status-left">NUSWANTARA OS</div>
         <div class="status-right-group">
-            <div class="clock-display" id="masehi-clock">Ref: 00:00</div>
+            <div class="clock-display" id="masehi-clock">Local : 00:00</div>
             <div style="position:relative;">
                 <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
                 <div class="settings-dropdown" id="settingsMenu">
@@ -449,7 +449,7 @@
 
     <div class="taskbar">
         <div class="taskbar-left">
-            <div class="start-button" onclick="showDashboard()" title="Kembali ke Dashboard / Minimize Apps">
+            <div class="start-button" onclick="showDashboard()" title="Kembali ke Dashboard">
                 💠
             </div>
             <div class="task-list" id="task-list">
@@ -465,7 +465,7 @@
     </div>
 
     <script>
-        // === LOGIC DATABASE & WAKTU (BASE SYSTEM) ===
+        // === LOGIC DATABASE & WAKTU ===
         const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
         const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
         const saptawara = ["Sukra", "Tumpak", "Radite", "Soma", "Anggara", "Budha", "Respati"]; 
@@ -473,7 +473,7 @@
 
         function updateWidget() {
             const now = new Date();
-            document.getElementById('masehi-clock').innerText = "Local : " + now.toLocaleTimeString('id-ID');
+            document.getElementById('masehi-clock').innerText = "Ref: " + now.toLocaleTimeString('id-ID');
 
             const h = now.getHours();
             const m = now.getMinutes();
@@ -563,12 +563,13 @@
         }
 
         // ============================================
-        // === PERSISTENT MULTITASKING & AUTO CLEANER ===
+        // === PERSISTENT MULTITASKING / TASKBAR LOGIC ===
         // ============================================
 
         let openApps = []; 
-        const MAX_APPS = 6; // Limit Hardcoded agar ringan
+        const MAX_APPS = 6; 
 
+        // Fungsi Load State saat Startup
         window.onload = function() {
             // Load Settings
             const savedWall = localStorage.getItem('nus_wall');
@@ -576,17 +577,21 @@
             const savedTheme = localStorage.getItem('nus_theme');
             if (savedTheme) setTheme(savedTheme);
 
-            // Restore Session
+            // Load Apps State (Session Restore)
             const savedApps = localStorage.getItem('nus_open_apps');
             const savedActiveApp = localStorage.getItem('nus_active_app_id');
 
             if (savedApps) {
                 try {
                     openApps = JSON.parse(savedApps);
-                    openApps.forEach(app => createAppWindow(app)); // Re-create with auto-cleaner
+                    // Re-create windows
+                    openApps.forEach(app => createAppWindow(app));
+                    // Re-render taskbar
                     renderTaskbar();
                     
+                    // Restore Active Window
                     if (savedActiveApp && savedActiveApp !== 'dashboard') {
+                        // Check if app still exists
                         if (openApps.find(a => a.id === savedActiveApp)) {
                             switchToApp(savedActiveApp);
                         } else if (openApps.length > 0) {
@@ -599,7 +604,7 @@
                     }
                 } catch(e) {
                     console.log("Error restore session:", e);
-                    openApps = [];
+                    openApps = []; // Reset if error
                 }
             }
         };
@@ -618,7 +623,7 @@
                 switchToApp(existingApp.id);
             } else {
                 if (openApps.length >= MAX_APPS) {
-                    closeApp(openApps[0].id); // Hapus yg paling lama (FIFO)
+                    closeApp(openApps[0].id); 
                 }
                 
                 const appId = 'app-' + Date.now();
@@ -629,60 +634,19 @@
                 renderTaskbar();
                 switchToApp(appId);
                 
+                // SAVE STATE
                 saveState(appId);
             }
         }
 
-        // === INI JURUS AUTO-CLEANER YANG BARU ===
         function createAppWindow(app) {
             const container = document.getElementById('app-windows-container');
-            if (document.getElementById(app.id)) return; 
+            if (document.getElementById(app.id)) return; // Prevent duplicate DOM
             
             const winDiv = document.createElement('div');
             winDiv.id = app.id;
             winDiv.className = 'app-window';
-            
-            // Buat element Iframe manual
-            const iframe = document.createElement('iframe');
-            iframe.src = app.url;
-            iframe.style.width = "100%";
-            iframe.style.height = "100%";
-            iframe.style.border = "none";
-            iframe.style.background = "#050505"; // Hindari flash putih
-
-            // AUTO-CLEANER LOGIC: Inject CSS ke dalam aplikasi anak
-            iframe.onload = function() {
-                try {
-                    const childDoc = iframe.contentDocument || iframe.contentWindow.document;
-                    
-                    const style = childDoc.createElement('style');
-                    style.textContent = `
-                        /* SEMBUNYIKAN TASKBAR & STATUS BAR BAWAAN */
-                        .taskbar, .status-bar, .dock, .settings-btn { display: none !important; }
-                        
-                        /* HILANGKAN PADDING BODY SUPAYA FULL SCREEN */
-                        body { 
-                            padding: 0 !important; 
-                            margin: 0 !important; 
-                            height: 100vh !important; 
-                            overflow: hidden !important; 
-                        }
-                        
-                        /* PASTIKAN KONTEN UTAMA TETAP BISA SCROLL */
-                        .dashboard-content, #desktop-area {
-                            padding-bottom: 0 !important;
-                            height: 100vh !important;
-                            overflow-y: auto !important;
-                        }
-                    `;
-                    childDoc.head.appendChild(style);
-                } catch (e) {
-                    // Jika error CORS (beda domain/local file strict), biarkan saja.
-                    console.log("Auto-cleaner restricted by browser policy (CORS).");
-                }
-            };
-
-            winDiv.appendChild(iframe);
+            winDiv.innerHTML = `<iframe src="${app.url}"></iframe>`;
             container.appendChild(winDiv);
         }
 
@@ -715,36 +679,39 @@
             const activeTab = document.getElementById('tab-' + appId);
             if(activeTab) activeTab.classList.add('active');
 
+            // SAVE STATE
             saveState(appId);
         }
 
         function closeApp(appId) {
             const win = document.getElementById(appId);
-            if(win) win.remove(); // Hapus total dari RAM (DOM)
-            
+            if(win) win.remove();
             openApps = openApps.filter(app => app.id !== appId);
             renderTaskbar();
 
             if(openApps.length === 0) {
                 showDashboard();
-                saveState('dashboard');
             } else {
                 const lastAppId = openApps[openApps.length - 1].id;
                 switchToApp(lastAppId);
                 saveState(lastAppId);
             }
+            
+            // SAVE STATE (Empty) if all closed
+            if (openApps.length === 0) {
+                 localStorage.setItem('nus_open_apps', JSON.stringify([]));
+                 localStorage.setItem('nus_active_app_id', 'dashboard');
+            }
         }
 
         function showDashboard() {
-            // Minimize semua window
             document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
-            // Matikan highlight taskbar
             document.querySelectorAll('.task-tab').forEach(tab => tab.classList.remove('active'));
             
-            saveState('dashboard');
+            // SAVE STATE
+            localStorage.setItem('nus_active_app_id', 'dashboard');
         }
 
     </script>
 </body>
 </html>
-
