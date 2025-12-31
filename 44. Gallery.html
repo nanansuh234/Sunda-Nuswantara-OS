@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri dengan Popup</title>
+    <style>
+        /* --- RESET & BASIC --- */
+        body {
+            background-color: #121212;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 { text-align: center; margin-bottom: 30px; letter-spacing: 2px; }
+
+        /* --- GRID GALERI --- */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+            aspect-ratio: 1 / 1;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img { transform: scale(1.1); }
+
+        .overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .gallery-item:hover .overlay { transform: translateY(0); }
+
+        /* --- MODAL (POPUP) STYLES --- */
+        .modal {
+            display: none; /* Sembunyi dulu */
+            position: fixed;
+            z-index: 999; /* Paling depan */
+            padding-top: 50px;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9); /* Gelap banget */
+            backdrop-filter: blur(5px); /* Efek blur belakang */
+        }
+
+        /* Gambar di dalam Modal */
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 900px;
+            max-height: 80vh;
+            object-fit: contain; /* Biar gak gepeng */
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            animation: zoomIn 0.3s;
+        }
+
+        /* Caption di bawah gambar modal */
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+        /* Tombol Close (X) */
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover, .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Animasi Zoom saat muncul */
+        @keyframes zoomIn {
+            from {transform:scale(0)} 
+            to {transform:scale(1)}
+        }
+
+        /* Responsif buat HP */
+        @media only screen and (max-width: 700px){
+            .modal-content { width: 95%; }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>GALERI DOKUMENTASI</h2>
+
+    <div class="gallery-container">
+        
+        <div class="gallery-item" onclick="openModal(this)">
+            <img src="https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Pantai yang Indah">
+            <div class="overlay">Klik untuk Zoom</div>
+        </div>
+
+        <div class="gallery-item" onclick="openModal(this)">
+            <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Suasana Senja">
+            <div class="overlay">Senja</div>
+        </div>
+
+        <div class="gallery-item" onclick="openModal(this)">
+            <img src="https://images.unsplash.com/photo-1501854140884-074cf27f731d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Pegunungan Gelap">
+            <div class="overlay">Gunung</div>
+        </div>
+
+        <div class="gallery-item" onclick="openModal(this)">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Hutan Asri">
+            <div class="overlay">Alam Bebas</div>
+        </div>
+
+    </div>
+
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
+
+    <script>
+        // Ambil elemen modal
+        var modal = document.getElementById("myModal");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+
+        // Fungsi buka modal (dipanggil saat gambar diklik)
+        function openModal(element) {
+            var img = element.querySelector('img'); // Ambil tag img di dalam div
+            modal.style.display = "block";
+            modalImg.src = img.src; // Pindahin URL gambar ke modal
+            captionText.innerHTML = img.alt; // Pindahin Text Alt ke caption
+        }
+
+        // Fungsi tutup modal
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // Fitur Tambahan: Klik area gelap (di luar gambar) buat nutup modal
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
