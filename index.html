@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuswantara OS - Desktop Mode</title>
+    <title>Nuswantara OS - Persistent Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -55,7 +55,7 @@
 
         /* --- STATUS BAR (TOP) --- */
         .status-bar {
-            height: 35px; /* Lebih tipis biar fokus ke bawah */
+            height: 35px;
             background: rgba(20, 20, 20, 0.95);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -70,7 +70,7 @@
         body.light-mode .status-bar { background: rgba(240, 240, 240, 0.95); }
         .status-left { color: var(--gold); letter-spacing: 2px; font-weight: bold; }
         .status-right-group { display: flex; align-items: center; gap: 15px; }
-        .clock-display { color: #666; font-size: 0.7rem; } /* Jam masehi dibuat agak redup */
+        .clock-display { color: #666; font-size: 0.7rem; }
 
         /* SETTINGS MENU */
         .settings-btn {
@@ -124,7 +124,6 @@
         }
         body.light-mode .widget-card { background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(240,240,240,0.9)); }
         
-        /* Animation Pulse Background */
         .widget-card::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 60%);
@@ -221,8 +220,8 @@
         }
         
         .task-tab {
-            width: 160px; /* Lebar dinamis */
-            flex-shrink: 1; /* Bisa mengecil kalau penuh */
+            width: 160px;
+            flex-shrink: 1;
             background: rgba(255,255,255,0.05); border-bottom: 2px solid transparent;
             border-radius: 4px; padding: 5px 10px;
             display: flex; align-items: center; justify-content: space-between;
@@ -248,25 +247,9 @@
             margin-left: 10px; min-width: max-content;
         }
         
-        .tray-clock-container {
-            text-align: right;
-            line-height: 1.1;
-            cursor: default;
-        }
-        
-        .tray-time {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            color: var(--gold);
-            font-weight: bold;
-        }
-        
-        .tray-date {
-            font-size: 0.7rem;
-            color: var(--text);
-            opacity: 0.8;
-            text-transform: capitalize;
-        }
+        .tray-clock-container { text-align: right; line-height: 1.1; cursor: default; }
+        .tray-time { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; color: var(--gold); font-weight: bold; }
+        .tray-date { font-size: 0.7rem; color: var(--text); opacity: 0.8; text-transform: capitalize; }
 
         /* SCROLLBAR */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -279,7 +262,7 @@
     <div class="status-bar">
         <div class="status-left">NUSWANTARA OS</div>
         <div class="status-right-group">
-            <div class="clock-display" id="masehi-clock">Masehi: 00:00</div>
+            <div class="clock-display" id="masehi-clock">Ref: 00:00</div>
             <div style="position:relative;">
                 <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
                 <div class="settings-dropdown" id="settingsMenu">
@@ -452,8 +435,8 @@
                 <a href="#" onclick="launchApp('43. Forbidden Tech.html', 'Forbidden', '⚛️')" class="app-card cat-future">
                     <div class="app-icon">⚛️</div><div class="app-label">Forbidden Tech</div>
                 </a>
-                
             </div>
+
             <div style="text-align:center; padding: 20px; font-size:0.6rem; color:#666;">
                 SYSTEM READY // FREQUENCY ALIGNED
             </div>
@@ -490,35 +473,25 @@
 
         function updateWidget() {
             const now = new Date();
-            
-            // 1. UPDATE JAM MASEHI (REF)
-            document.getElementById('masehi-clock').innerText = "local : " + now.toLocaleTimeString('id-ID');
+            document.getElementById('masehi-clock').innerText = "Ref: " + now.toLocaleTimeString('id-ID');
 
-            // 2. HITUNG JAM NUSWANTARA (HH:MM:SS)
             const h = now.getHours();
             const m = now.getMinutes();
             const s = now.getSeconds();
             
             let totalMin = ((h % 12) * 60) + m + (s/60);
-            let nHours = totalMin / 90; // 1 Jam Nus = 90 Menit Masehi
-            
+            let nHours = totalMin / 90; 
             let dH = Math.floor(nHours) || 8; 
-            
-            let remMin = (nHours % 1) * 90; // Sisa menit desimal
+            let remMin = (nHours % 1) * 90;
             let dM = Math.floor(remMin);
-            
-            let remSec = (remMin % 1) * 60; // Sisa detik desimal
+            let remSec = (remMin % 1) * 60;
             let dS = Math.floor(remSec);
 
-            // Format String
             let strH = String(dH).padStart(2,'0');
             let strM = String(dM).padStart(2,'0');
             let strS = String(dS).padStart(2,'0');
 
-            // Update Widget Besar
             document.getElementById('widget-clock').innerText = `${strH}:${strM}`;
-            
-            // Update Tray Taskbar (Lengkap dengan Detik)
             document.getElementById('tray-time').innerText = `${strH}:${strM}:${strS}`;
 
             const phaseIdx = Math.floor(h / 3); 
@@ -526,13 +499,11 @@
             let cycle = (h >= 6 && h < 18) ? "SIANG" : "MALAM";
             document.getElementById('widget-phase').innerText = `${currentPhase} (${cycle})`;
 
-            // 3. HITUNG KALENDER
             let anchor = new Date(now.getFullYear(), 2, 21);
             if (now < anchor) { anchor = new Date(now.getFullYear() - 1, 2, 21); }
             
             const oneDay = 24 * 60 * 60 * 1000;
             let diffDays = Math.floor((now - anchor) / oneDay);
-            
             let mIdx = Math.floor(diffDays / 28);
             let dNus = (diffDays % 28) + 1;
             
@@ -553,19 +524,14 @@
             let sIdx = (diffAbs % 7);
             if (sIdx < 0) sIdx += 7;
 
-            // Data String
             let pasaranName = pasarans[pIdx];
             let dayName = saptawara[sIdx];
 
-            // Update Widget Besar
             document.getElementById('widget-dayname').innerText = dayName.toUpperCase();
             document.getElementById('widget-pasaran').innerText = pasaranName.toUpperCase();
             document.getElementById('widget-fulldate').innerText = `${dNus} ${monthName.toUpperCase()} ${yearStr}`;
-            
-            // Update Tray Taskbar (Compact)
             document.getElementById('tray-date').innerText = `${pasaranName}, ${dNus} ${monthName} ${yearStr}`;
         }
-
         setInterval(updateWidget, 1000);
         updateWidget();
 
@@ -584,38 +550,71 @@
 
         function setWall(type) {
             const body = document.body;
-            if (type === 'default') {
-                body.style.backgroundImage = 'none';
-            } else if (type === 'wall1') {
-                body.style.backgroundImage = "url('https://nanansuh234.github.io/Sunda-Nuswantara-OS/wall1.jpg')";
-            } else if (type === 'wall2') {
-                body.style.backgroundImage = "url('https://nanansuh234.github.io/Sunda-Nuswantara-OS/wall2.jpg')";
-            }
+            if (type === 'default') { body.style.backgroundImage = 'none'; } 
+            else if (type === 'wall1') { body.style.backgroundImage = "url('https://nanansuh234.github.io/Sunda-Nuswantara-OS/wall1.jpg')"; } 
+            else if (type === 'wall2') { body.style.backgroundImage = "url('https://nanansuh234.github.io/Sunda-Nuswantara-OS/wall2.jpg')"; }
             localStorage.setItem('nus_wall', type);
         }
 
         function setTheme(mode) {
-            if (mode === 'light') {
-                document.body.classList.add('light-mode');
-            } else {
-                document.body.classList.remove('light-mode');
-            }
+            if (mode === 'light') { document.body.classList.add('light-mode'); } 
+            else { document.body.classList.remove('light-mode'); }
             localStorage.setItem('nus_theme', mode);
         }
 
+        // ============================================
+        // === PERSISTENT MULTITASKING / TASKBAR LOGIC ===
+        // ============================================
+
+        let openApps = []; 
+        const MAX_APPS = 6; 
+
+        // Fungsi Load State saat Startup
         window.onload = function() {
+            // Load Settings
             const savedWall = localStorage.getItem('nus_wall');
             if (savedWall) setWall(savedWall);
             const savedTheme = localStorage.getItem('nus_theme');
             if (savedTheme) setTheme(savedTheme);
+
+            // Load Apps State (Session Restore)
+            const savedApps = localStorage.getItem('nus_open_apps');
+            const savedActiveApp = localStorage.getItem('nus_active_app_id');
+
+            if (savedApps) {
+                try {
+                    openApps = JSON.parse(savedApps);
+                    // Re-create windows
+                    openApps.forEach(app => createAppWindow(app));
+                    // Re-render taskbar
+                    renderTaskbar();
+                    
+                    // Restore Active Window
+                    if (savedActiveApp && savedActiveApp !== 'dashboard') {
+                        // Check if app still exists
+                        if (openApps.find(a => a.id === savedActiveApp)) {
+                            switchToApp(savedActiveApp);
+                        } else if (openApps.length > 0) {
+                             switchToApp(openApps[openApps.length-1].id);
+                        } else {
+                            showDashboard();
+                        }
+                    } else {
+                        showDashboard();
+                    }
+                } catch(e) {
+                    console.log("Error restore session:", e);
+                    openApps = []; // Reset if error
+                }
+            }
         };
 
-        // ============================================
-        // === MULTITASKING / TASKBAR LOGIC ===
-        // ============================================
-
-        let openApps = []; 
-        const MAX_APPS = 6; // UPDATE: LIMIT JADI 6
+        function saveState(activeId) {
+            localStorage.setItem('nus_open_apps', JSON.stringify(openApps));
+            if(activeId) {
+                localStorage.setItem('nus_active_app_id', activeId);
+            }
+        }
 
         function launchApp(url, title, icon) {
             const existingApp = openApps.find(app => app.title === title);
@@ -634,11 +633,16 @@
                 createAppWindow(appObj);
                 renderTaskbar();
                 switchToApp(appId);
+                
+                // SAVE STATE
+                saveState(appId);
             }
         }
 
         function createAppWindow(app) {
             const container = document.getElementById('app-windows-container');
+            if (document.getElementById(app.id)) return; // Prevent duplicate DOM
+            
             const winDiv = document.createElement('div');
             winDiv.id = app.id;
             winDiv.className = 'app-window';
@@ -674,6 +678,9 @@
             document.querySelectorAll('.task-tab').forEach(tab => tab.classList.remove('active'));
             const activeTab = document.getElementById('tab-' + appId);
             if(activeTab) activeTab.classList.add('active');
+
+            // SAVE STATE
+            saveState(appId);
         }
 
         function closeApp(appId) {
@@ -685,13 +692,24 @@
             if(openApps.length === 0) {
                 showDashboard();
             } else {
-                switchToApp(openApps[openApps.length - 1].id);
+                const lastAppId = openApps[openApps.length - 1].id;
+                switchToApp(lastAppId);
+                saveState(lastAppId);
+            }
+            
+            // SAVE STATE (Empty) if all closed
+            if (openApps.length === 0) {
+                 localStorage.setItem('nus_open_apps', JSON.stringify([]));
+                 localStorage.setItem('nus_active_app_id', 'dashboard');
             }
         }
 
         function showDashboard() {
             document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
             document.querySelectorAll('.task-tab').forEach(tab => tab.classList.remove('active'));
+            
+            // SAVE STATE
+            localStorage.setItem('nus_active_app_id', 'dashboard');
         }
 
     </script>
