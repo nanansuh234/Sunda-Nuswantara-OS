@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuswantara OS - Dashboard</title>
+    <title>Nuswantara OS - Desktop Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,13 +19,14 @@
             --text: #e0e0e0;
             --border: #333;
             --shadow: rgba(0,0,0,0.5);
+            --taskbar-h: 50px; 
         }
 
         /* LIGHT MODE VARIABLES */
         body.light-mode {
             --bg: #e0e0e0;
             --card-bg: #ffffff;
-            --gold: #b8860b; /* Emas lebih gelap biar kontras */
+            --gold: #b8860b;
             --green: #2ecc71;
             --blue: #3498db;
             --red: #e74c3c;
@@ -52,181 +53,117 @@
             overflow: hidden;
         }
 
-        /* --- STATUS BAR --- */
+        /* --- STATUS BAR (TOP) --- */
         .status-bar {
-            height: 45px;
+            height: 35px; /* Lebih tipis biar fokus ke bawah */
             background: rgba(20, 20, 20, 0.95);
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
+            padding: 0 15px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            z-index: 100;
+            font-size: 0.75rem;
+            z-index: 1000;
         }
         
-        /* Light mode status bar fix */
         body.light-mode .status-bar { background: rgba(240, 240, 240, 0.95); }
-
-        .status-left { color: var(--gold); letter-spacing: 2px; }
-        
-        .status-right-group {
-            display: flex; align-items: center; gap: 15px;
-        }
-        
-        .clock-display { color: #888; }
+        .status-left { color: var(--gold); letter-spacing: 2px; font-weight: bold; }
+        .status-right-group { display: flex; align-items: center; gap: 15px; }
+        .clock-display { color: #666; font-size: 0.7rem; } /* Jam masehi dibuat agak redup */
 
         /* SETTINGS MENU */
         .settings-btn {
             background: none; border: none; color: var(--gold);
-            font-size: 1.2rem; cursor: pointer; padding: 5px;
+            font-size: 1rem; cursor: pointer; padding: 5px;
             transition: transform 0.5s;
         }
         .settings-btn:hover { transform: rotate(90deg); color: var(--cyan); }
 
         .settings-dropdown {
-            display: none;
-            position: absolute;
-            top: 45px; right: 10px;
-            width: 220px;
-            background: var(--card-bg);
-            border: 1px solid var(--gold);
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 20px var(--shadow);
-            padding: 15px;
-            z-index: 101;
+            display: none; position: absolute; top: 35px; right: 10px;
+            width: 200px; background: var(--card-bg);
+            border: 1px solid var(--gold); border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px var(--shadow); padding: 15px; z-index: 1100;
         }
-        
         .settings-dropdown.active { display: block; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from {opacity:0; transform:translateY(-10px);} to {opacity:1; transform:translateY(0);} }
-
         .setting-item { margin-bottom: 15px; }
-        .setting-label { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: bold; }
-        
+        .setting-label { font-size: 0.7rem; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: bold; }
         .btn-theme, .btn-wall {
-            width: 100%; padding: 8px; margin-bottom: 5px;
+            width: 100%; padding: 6px; margin-bottom: 4px;
             background: transparent; border: 1px solid var(--border);
-            color: var(--text); cursor: pointer; font-size: 0.85rem;
+            color: var(--text); cursor: pointer; font-size: 0.8rem;
             text-align: left; border-radius: 4px;
         }
         .btn-theme:hover, .btn-wall:hover { background: rgba(212, 175, 55, 0.2); border-color: var(--gold); }
 
-        /* --- HERO WIDGET --- */
-        .hero-section {
-            padding: 20px 30px 0 30px;
+        /* --- MAIN DESKTOP AREA --- */
+        #desktop-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+            position: relative;
         }
 
-        .widget-card {
-            background: linear-gradient(145deg, rgba(26,26,26,0.9), rgba(13,13,13,0.9));
-            border: 1px solid var(--gold);
-            border-radius: 20px;
-            padding: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(5px); /* Efek kaca */
+        /* --- DASHBOARD WIDGETS --- */
+        .dashboard-content {
+            height: 100%;
+            overflow-y: auto;
+            padding-bottom: 60px;
         }
         
-        body.light-mode .widget-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(240,240,240,0.9));
+        .hero-section { padding: 20px 30px 0 30px; }
+        .widget-card {
+            background: linear-gradient(145deg, rgba(26,26,26,0.9), rgba(13,13,13,0.9));
+            border: 1px solid var(--gold); border-radius: 20px;
+            padding: 25px; display: flex; justify-content: space-between;
+            align-items: center; box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+            position: relative; overflow: hidden; backdrop-filter: blur(5px);
         }
-
+        body.light-mode .widget-card { background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(240,240,240,0.9)); }
+        
+        /* Animation Pulse Background */
         .widget-card::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 60%);
             animation: pulse 10s infinite;
         }
-
         @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
 
         .widget-time-group { z-index: 2; }
-        .nus-clock {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: var(--text);
-            line-height: 1;
-            text-shadow: 0 0 10px rgba(128,128,128,0.2);
-        }
-        .nus-phase {
-            font-size: 0.9rem;
-            color: var(--gold);
-            letter-spacing: 4px;
-            margin-top: 5px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
+        .nus-clock { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: bold; color: var(--text); line-height: 1; text-shadow: 0 0 10px rgba(128,128,128,0.2); }
+        .nus-phase { font-size: 0.9rem; color: var(--gold); letter-spacing: 4px; margin-top: 5px; text-transform: uppercase; font-weight: bold; }
         .widget-date-group { text-align: right; z-index: 2; }
-        .nus-dayname {
-            font-size: 1.2rem;
-            color: var(--green);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .nus-full-date {
-            font-size: 0.9rem;
-            color: #888;
-            margin-top: 5px;
-        }
-        .nus-pasaran {
-            display: inline-block;
-            background: var(--gold);
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-top: 5px;
-        }
+        .nus-dayname { font-size: 1.2rem; color: var(--green); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .nus-full-date { font-size: 0.9rem; color: #888; margin-top: 5px; }
+        .nus-pasaran { display: inline-block; background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-top: 5px; }
 
-        /* --- MAIN GRID --- */
-        .dashboard-container {
-            flex: 1;
+        .dashboard-grid {
             padding: 30px;
-            overflow-y: auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            grid-auto-rows: 140px;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            grid-auto-rows: 130px;
+            gap: 15px;
             align-content: start;
         }
 
         a.app-card {
-            text-decoration: none;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-            position: relative;
-            box-shadow: 0 4px 6px var(--shadow);
+            text-decoration: none; background: var(--card-bg);
+            border: 1px solid var(--border); border-radius: 15px;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; transition: 0.3s; position: relative;
+            box-shadow: 0 4px 6px var(--shadow); cursor: pointer;
         }
+        a.app-card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 8px 15px var(--shadow); }
+        .app-icon { font-size: 2.5rem; margin-bottom: 8px; }
+        .app-label { font-size: 0.7rem; font-weight: bold; color: var(--text); opacity: 0.9; text-align: center; letter-spacing: 0.5px; text-transform: uppercase; padding: 0 5px; }
 
-        a.app-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--gold);
-            box-shadow: 0 8px 15px var(--shadow);
-        }
-
-        .app-icon { font-size: 2.8rem; margin-bottom: 10px; }
-        .app-label { 
-            font-size: 0.75rem; font-weight: bold; color: var(--text); opacity: 0.8;
-            text-align: center; letter-spacing: 1px; text-transform: uppercase;
-        }
-
-        /* Category Colors */
+        /* CATEGORY COLORS */
         .cat-time .app-icon { color: var(--gold); }
         .cat-nature .app-icon { color: var(--green); }
-        .cat-culture .app-icon { color: var(--text); } /* Adaptive text color */
+        .cat-culture .app-icon { color: var(--text); }
         .cat-sys .app-icon { color: var(--red); }
         .cat-blue .app-icon { color: var(--blue); }
         .cat-lingo .app-icon { color: var(--purple); }
@@ -237,240 +174,315 @@
         .cat-future .app-icon { color: #00ced1; }
         .cat-tools .app-icon { color: #aaa; }
         .cat-doc .app-icon { color: #fff; }
+        body.light-mode .cat-doc .app-icon, body.light-mode .cat-culture .app-icon { color: #333; }
 
-        /* Light mode specific adjustment for white icon */
-        body.light-mode .cat-doc .app-icon { color: #333; }
-        body.light-mode .cat-culture .app-icon { color: #333; }
+        /* --- APP WINDOWS --- */
+        #app-windows-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+        }
+        .app-window {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); display: none; pointer-events: auto;
+            flex-direction: column;
+        }
+        .app-window.active { display: flex; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from {opacity:0; transform: scale(0.99);} to {opacity:1; transform: scale(1);} }
+        iframe { flex: 1; border: none; width: 100%; height: 100%; background: #fff; }
 
-        /* --- FOOTER --- */
-        .dock {
-            text-align: center;
-            padding: 8px;
-            font-size: 0.65rem;
-            color: #666;
+        /* --- TASKBAR (IMPROVED) --- */
+        .taskbar {
+            height: var(--taskbar-h);
+            background: rgba(10, 10, 10, 0.98);
             border-top: 1px solid var(--border);
-            background: var(--card-bg);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 10px;
+            position: relative; z-index: 2000;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+        }
+        body.light-mode .taskbar { background: rgba(245, 245, 245, 0.98); }
+
+        .taskbar-left {
+            display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden;
         }
 
-        ::-webkit-scrollbar { width: 6px; }
+        .start-button {
+            width: 38px; height: 38px; min-width: 38px;
+            background: var(--gold); border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; cursor: pointer; color: #000;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+            transition: 0.3s;
+        }
+        .start-button:hover { background: #fff; box-shadow: 0 0 15px var(--gold); }
+        
+        .task-list {
+            display: flex; gap: 5px; overflow-x: auto; width: 100%;
+        }
+        
+        .task-tab {
+            width: 160px; /* Lebar dinamis */
+            flex-shrink: 1; /* Bisa mengecil kalau penuh */
+            background: rgba(255,255,255,0.05); border-bottom: 2px solid transparent;
+            border-radius: 4px; padding: 5px 10px;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; user-select: none; transition: 0.2s;
+        }
+        body.light-mode .task-tab { background: rgba(0,0,0,0.05); }
+        
+        .task-tab:hover { background: rgba(255,255,255,0.1); }
+        .task-tab.active { 
+            background: rgba(212, 175, 55, 0.15); 
+            border-bottom: 2px solid var(--gold);
+        }
+        
+        .task-tab-icon { margin-right: 6px; font-size: 0.9rem; }
+        .task-tab-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.75rem; color: var(--text); flex: 1; }
+        .task-close-btn { color: var(--text); font-size: 1rem; margin-left: 5px; opacity: 0.4; border-radius: 50%; padding: 0 4px;}
+        .task-close-btn:hover { opacity: 1; background: var(--red); color: #fff; }
+
+        /* --- TRAY (KANAN TASKBAR) --- */
+        .taskbar-tray {
+            display: flex; align-items: center; gap: 10px;
+            padding-left: 15px; border-left: 1px solid var(--border);
+            margin-left: 10px; min-width: max-content;
+        }
+        
+        .tray-clock-container {
+            text-align: right;
+            line-height: 1.1;
+            cursor: default;
+        }
+        
+        .tray-time {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+        
+        .tray-date {
+            font-size: 0.7rem;
+            color: var(--text);
+            opacity: 0.8;
+            text-transform: capitalize;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
     </style>
 </head>
 <body>
 
     <div class="status-bar">
         <div class="status-left">NUSWANTARA OS</div>
-        
         <div class="status-right-group">
-            <div class="clock-display" id="masehi-clock">Loading...</div>
-            
+            <div class="clock-display" id="masehi-clock">Masehi: 00:00</div>
             <div style="position:relative;">
                 <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
-                
                 <div class="settings-dropdown" id="settingsMenu">
                     <div class="setting-item">
                         <span class="setting-label">TEMA TAMPILAN</span>
                         <button class="btn-theme" onclick="setTheme('dark')">🌑 Dark Mode</button>
                         <button class="btn-theme" onclick="setTheme('light')">☀️ Light Mode</button>
                     </div>
-                    
                     <div class="setting-item">
                         <span class="setting-label">WALLPAPER</span>
-                        <button class="btn-wall" onclick="setWall('default')">⬛ Default (Black)</button>
-                        <button class="btn-wall" onclick="setWall('wall1')">🏔️ Alam (Wall 1)</button>
-                        <button class="btn-wall" onclick="setWall('wall2')">🗿 Tekstur (Wall 2)</button>
+                        <button class="btn-wall" onclick="setWall('default')">⬛ Default</button>
+                        <button class="btn-wall" onclick="setWall('wall1')">🏔️ Alam</button>
+                        <button class="btn-wall" onclick="setWall('wall2')">🗿 Tekstur</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="hero-section">
-        <div class="widget-card">
-            <div class="widget-time-group">
-                <div class="nus-clock" id="widget-clock">00:00</div>
-                <div class="nus-phase" id="widget-phase">---</div>
+    <div id="desktop-area">
+        
+        <div id="dashboard-layer" class="dashboard-content">
+            <div class="hero-section">
+                <div class="widget-card">
+                    <div class="widget-time-group">
+                        <div class="nus-clock" id="widget-clock">00:00</div>
+                        <div class="nus-phase" id="widget-phase">---</div>
+                    </div>
+                    <div class="widget-date-group">
+                        <div class="nus-dayname" id="widget-dayname">---</div>
+                        <div class="nus-full-date" id="widget-fulldate">---</div>
+                        <div class="nus-pasaran" id="widget-pasaran">---</div>
+                    </div>
+                </div>
             </div>
-            <div class="widget-date-group">
-                <div class="nus-dayname" id="widget-dayname">---</div>
-                <div class="nus-full-date" id="widget-fulldate">---</div>
-                <div class="nus-pasaran" id="widget-pasaran">---</div>
+
+            <div class="dashboard-grid">
+                <a href="#" onclick="launchApp('Readme.html', 'Tentang', 'ℹ️')" class="app-card cat-blue">
+                    <div class="app-icon">ℹ️</div><div class="app-label">Tentang</div>
+                </a>
+                <a href="#" onclick="launchApp('01 Jam Sunda Nuswantara.html', 'Jam Utama', '🕐')" class="app-card cat-time">
+                    <div class="app-icon">🕐</div><div class="app-label">Jam Utama</div>
+                </a>
+                <a href="#" onclick="launchApp('02. Kalender Sunda Nuswantara.html', 'Kalender', '📅')" class="app-card cat-time">
+                    <div class="app-icon">📅</div><div class="app-label">Kalender</div>
+                </a>
+                <a href="#" onclick="launchApp('03. Jadwal Shalat Sunda Nuswantara.html', 'Shalat', '🕌')" class="app-card cat-time">
+                    <div class="app-icon">🕌</div><div class="app-label">Shalat</div>
+                </a>
+                <a href="#" onclick="launchApp('04. Converter Waktu & Tanggal Ke Sunda Nuswantara.html', 'Konverter', '🔄')" class="app-card cat-sys">
+                    <div class="app-icon">🔄</div><div class="app-label">Konverter</div>
+                </a>
+                <a href="#" onclick="launchApp('05. Satuan Nilai Sunda Nuswantara.html', 'Satuan Nilai', '⚖️')" class="app-card cat-sys">
+                    <div class="app-icon">⚖️</div><div class="app-label">Satuan Nilai</div>
+                </a>
+                <a href="#" onclick="launchApp('06. Contoh Jadwal Kegiatan Sunda Nuswantara.html', 'Jadwal', '📝')" class="app-card cat-blue">
+                    <div class="app-icon">📝</div><div class="app-label">Jadwal</div>
+                </a>
+                <a href="#" onclick="launchApp('07. Panduan Manual Contoh Pertanian.html', 'Lumbung', '🌾')" class="app-card cat-nature">
+                    <div class="app-icon">🌾</div><div class="app-label">Lumbung</div>
+                </a>
+                <a href="#" onclick="launchApp('08. Panduan Manual Contoh Produktifitas dan Karya.html', 'Karya', '🔨')" class="app-card cat-nature">
+                    <div class="app-icon">🔨</div><div class="app-label">Karya</div>
+                </a>
+                <a href="#" onclick="launchApp('09. Aksara Hanacaraka.html', 'Hanacaraka', 'ꦲ')" class="app-card cat-culture">
+                    <div class="app-icon">ꦲ</div><div class="app-label">Hanacaraka</div>
+                </a>
+                <a href="#" onclick="launchApp('10. Aksara Sunda Kuno.html', 'Sunda Kuno', 'ᮊ')" class="app-card cat-culture">
+                    <div class="app-icon">ᮊ</div><div class="app-label">Sunda Kuno</div>
+                </a>
+                <a href="#" onclick="launchApp('11. Rekonstruksi Bahasa Sunda Kuno.html', 'Kamus', '📖')" class="app-card cat-lingo">
+                    <div class="app-icon">📖</div><div class="app-label">Kamus</div>
+                </a>
+                <a href="#" onclick="launchApp('12. Sunda Kuno.html', 'Olaxara', '✒️')" class="app-card cat-lingo">
+                    <div class="app-icon">✒️</div><div class="app-label">Olaxara</div>
+                </a>
+                <a href="#" onclick="launchApp('Tools.html', 'Logic Engine', '🧠')" class="app-card cat-nature">
+                    <div class="app-icon">🧠</div><div class="app-label">Logic Engine</div>
+                </a>
+                <a href="#" onclick="launchApp('13. Kumpulan Renungan.html', 'Renungan', '📚')" class="app-card cat-lingo">
+                    <div class="app-icon">📚</div><div class="app-label">Renungan</div>
+                </a>
+                <a href="#" onclick="launchApp('14. Terapi Cahaya Malam.html', 'Terapi Sirep', '🕯️')" class="app-card cat-sys">
+                    <div class="app-icon">🕯️</div><div class="app-label">Terapi Sirep</div>
+                </a>
+                <a href="#" onclick="launchApp('15. Appraisal Scanner.html', 'Appraisal', '🔍')" class="app-card cat-tech">
+                    <div class="app-icon">🔍</div><div class="app-label">Appraisal</div>
+                </a>
+                <a href="#" onclick="launchApp('16. Restorasi Pangan.html', 'Teknologi Pangan', '🍯')" class="app-card cat-nature">
+                    <div class="app-icon">🍯</div><div class="app-label">Teknologi Pangan</div>
+                </a>
+                <a href="#" onclick="launchApp('17. Restorasi Arsitektur.html', 'Arsitektur', '🛖')" class="app-card cat-nature">
+                    <div class="app-icon">🛖</div><div class="app-label">Arsitektur</div>
+                </a>
+                <a href="#" onclick="launchApp('18. Restorasi Kesehatan.html', 'Tabib Digital', '🌿')" class="app-card cat-nature">
+                    <div class="app-icon">🌿</div><div class="app-label">Tabib Digital</div>
+                </a>
+                <a href="#" onclick="launchApp('19. Restorasi Wastra.html', 'Wastra Alam', '🧶')" class="app-card cat-culture">
+                    <div class="app-icon">🧶</div><div class="app-label">Wastra Alam</div>
+                </a>
+                <a href="#" onclick="launchApp('20. Restorasi Sosial.html', 'Balai Warga', '🤝')" class="app-card cat-sys">
+                    <div class="app-icon">🤝</div><div class="app-label">Balai Warga</div>
+                </a>
+                <a href="#" onclick="launchApp('21. Pustaka Peradaban.html', 'Leveling Diri', '⏫')" class="app-card cat-lingo">
+                    <div class="app-icon">⏫</div><div class="app-label">Leveling Diri</div>
+                </a>
+                <a href="#" onclick="launchApp('23. Scanner Nilai Dasar.html', 'Analisa Dasar', '🧬')" class="app-card cat-nature">
+                    <div class="app-icon">🧬</div><div class="app-label">Analisa Dasar</div>
+                </a>
+                <a href="#" onclick="launchApp('24. Estafet Kemanusiaan.html', 'Codex Manusia', '👤')" class="app-card cat-human">
+                    <div class="app-icon">👤</div><div class="app-label">Codex Manusia</div>
+                </a>
+                <a href="#" onclick="launchApp('25. Menu Ekonomi.html', 'Ekonomi Nilai', '💰')" class="app-card cat-fin">
+                    <div class="app-icon">💰</div><div class="app-label">Ekonomi Nilai</div>
+                </a>
+                <a href="#" onclick="launchApp('26. Menu Masa Depan.html', 'Realitas & Masa Depan', '💊')" class="app-card cat-future">
+                    <div class="app-icon">💊</div><div class="app-label">Realitas & Masa Depan</div>
+                </a>
+                <a href="#" onclick="launchApp('27. Menu Hukum Syariat dan Hakikat.html', 'Syariat & Hakikat', '⚖️')" class="app-card cat-edu">
+                    <div class="app-icon">⚖️</div><div class="app-label">Syariat & Hakikat</div>
+                </a>
+                <a href="#" onclick="launchApp('28. Indikator Iman.html', 'Iman Metric', '📶')" class="app-card cat-tools">
+                    <div class="app-icon">📶</div><div class="app-label">Iman Metric</div>
+                </a>
+                <a href="#" onclick="launchApp('29. Pustaka Ajaran Tauhid.html', 'Pustaka Tauhid', '📄')" class="app-card cat-doc">
+                    <div class="app-icon">📄</div><div class="app-label">Pustaka Ajaran Tauhid</div>
+                </a>
+                <a href="#" onclick="launchApp('30. Quantum Vitality.html', 'Quantum Vitality', '⚛️')" class="app-card cat-future">
+                    <div class="app-icon">⚛️</div><div class="app-label">Quantum Vitality</div>
+                </a>
+                <a href="#" onclick="launchApp('31. Holistic Calibration.html', 'Holistic Radar', '📡')" class="app-card cat-edu">
+                    <div class="app-icon">📡</div><div class="app-label">Holistic Radar</div>
+                </a>
+                <a href="#" onclick="launchApp('32. Legacy Hub.html', 'Warisan Generasi', '🌳')" class="app-card cat-fin">
+                    <div class="app-icon">🌳</div><div class="app-label">Warisan Generasi</div>
+                </a>
+                <a href="#" onclick="launchApp('33. Civilization Hub.html', 'Civilization Hub', '🌍')" class="app-card cat-future">
+                    <div class="app-icon">🌍</div><div class="app-label">Civilization Hub</div>
+                </a>
+                <a href="#" onclick="launchApp('34.Nusantara Auto-Anchor (POS Mode).html', 'POS Mode', '⚓')" class="app-card cat-future">
+                    <div class="app-icon">⚓</div><div class="app-label">Nusantara Auto-Anchor</div>
+                </a>
+                <a href="#" onclick="launchApp('35.Nusantara Savings Simulator.html', 'Simulasi Dinar', '💰')" class="app-card cat-fin">
+                    <div class="app-icon">💰</div><div class="app-label">Simulasi Tabungan</div>
+                </a>
+                <a href="#" onclick="launchApp('36.Nusantara Income Generator.html', 'Income Gen', '🔨')" class="app-card cat-fin" style="border-color: var(--green);">
+                    <div class="app-icon">🔨</div><div class="app-label">Income Generator</div>
+                </a>
+                <a href="#" onclick="launchApp('37. Pusat Strategi Ekonomi.html', 'Pusat Strategi', '🤝')" class="app-card cat-sys">
+                    <div class="app-icon">🤝</div><div class="app-label">Pusat Strategi Ekonomi</div>
+                </a>
+                <a href="#" onclick="launchApp('37. Jam Pasir Timer.html', 'Jam Pasir', '⏳')" class="app-card cat-sys">
+                    <div class="app-icon">⏳</div><div class="app-label">Jam Pasir Nusantara</div>
+                </a>
+                <a href="#" onclick="launchApp('38. Kawi Jawa Kuno.html', 'Prasasti Kawi', '🗿')" class="app-card cat-sys">
+                    <div class="app-icon">🗿</div><div class="app-label">Prasasti Jawa Kawi</div>
+                </a>
+                <a href="#" onclick="launchApp('39. Pagon Mataram.html', 'Mesin Ketik Pegon', '✒️')" class="app-card cat-sys">
+                    <div class="app-icon">✒️</div><div class="app-label">Mesin Ketik Pegon</div>
+                </a>
+                <a href="#" onclick="launchApp('40. Encoder Arsip Keraton.html', 'Encoder Arsip', '✒️')" class="app-card cat-sys">
+                    <div class="app-icon">✒️</div><div class="app-label">Encoder Arsip Keraton</div>
+                </a>
+                <a href="#" onclick="launchApp('41. Ancient Astronomy.html', 'Astronomy', '🕐')" class="app-card cat-sys">
+                    <div class="app-icon">🕐</div><div class="app-label">Ancient Astronomy</div>
+                </a>
+                <a href="#" onclick="launchApp('42. Advanced Systems.html', 'Adv Systems', '⚛️')" class="app-card cat-future">
+                    <div class="app-icon">⚛️</div><div class="app-label">Advanced Systems</div>
+                </a>
+                <a href="#" onclick="launchApp('43. Forbidden Tech.html', 'Forbidden', '⚛️')" class="app-card cat-future">
+                    <div class="app-icon">⚛️</div><div class="app-label">Forbidden Tech</div>
+                </a>
+                
+            </div>
+            <div style="text-align:center; padding: 20px; font-size:0.6rem; color:#666;">
+                SYSTEM READY // FREQUENCY ALIGNED
+            </div>
+        </div>
+
+        <div id="app-windows-container">
+            </div>
+
+    </div>
+
+    <div class="taskbar">
+        <div class="taskbar-left">
+            <div class="start-button" onclick="showDashboard()" title="Kembali ke Dashboard">
+                💠
+            </div>
+            <div class="task-list" id="task-list">
+                </div>
+        </div>
+
+        <div class="taskbar-tray">
+            <div class="tray-clock-container">
+                <div class="tray-time" id="tray-time">00:00:00</div>
+                <div class="tray-date" id="tray-date">Loading...</div>
             </div>
         </div>
     </div>
 
-    <div class="dashboard-container">
-        
-        <a href="Readme.html" class="app-card cat-blue">
-            <div class="app-icon">ℹ️</div><div class="app-label">Tentang</div>
-        </a>
-
-        <a href="01 Jam Sunda Nuswantara.html" class="app-card cat-time">
-            <div class="app-icon">🕐</div><div class="app-label">Jam Utama</div>
-        </a>
-        <a href="02. Kalender Sunda Nuswantara.html" class="app-card cat-time">
-            <div class="app-icon">📅</div><div class="app-label">Kalender</div>
-        </a>
-        <a href="03. Jadwal Shalat Sunda Nuswantara.html" class="app-card cat-time">
-            <div class="app-icon">🕌</div><div class="app-label">Shalat</div>
-        </a>
-
-        <a href="04. Converter Waktu & Tanggal Ke Sunda Nuswantara.html" class="app-card cat-sys">
-            <div class="app-icon">🔄</div><div class="app-label">Konverter</div>
-        </a>
-        <a href="05. Satuan Nilai Sunda Nuswantara.html" class="app-card cat-sys">
-            <div class="app-icon">⚖️</div><div class="app-label">Satuan Nilai</div>
-        </a>
-        <a href="06. Contoh Jadwal Kegiatan Sunda Nuswantara.html" class="app-card cat-blue">
-            <div class="app-icon">📝</div><div class="app-label">Jadwal</div>
-        </a>
-
-        <a href="07. Panduan Manual Contoh Pertanian.html" class="app-card cat-nature">
-            <div class="app-icon">🌾</div><div class="app-label">Lumbung</div>
-        </a>
-        <a href="08. Panduan Manual Contoh Produktifitas dan Karya.html" class="app-card cat-nature">
-            <div class="app-icon">🔨</div><div class="app-label">Karya</div>
-        </a>
-
-        <a href="09. Aksara Hanacaraka.html" class="app-card cat-culture">
-            <div class="app-icon">ꦲ</div><div class="app-label">Hanacaraka</div>
-        </a>
-        <a href="10. Aksara Sunda Kuno.html" class="app-card cat-culture">
-            <div class="app-icon">ᮊ</div><div class="app-label">Sunda Kuno</div>
-        </a>
-        <a href="11. Rekonstruksi Bahasa Sunda Kuno.html" class="app-card cat-lingo">
-            <div class="app-icon">📖</div><div class="app-label">Kamus</div>
-        </a>
-        <a href="12. Sunda Kuno.html" class="app-card cat-lingo">
-            <div class="app-icon">✒️</div><div class="app-label">Olaxara</div>
-        </a>
-        
-        <a href="Tools.html" class="app-card cat-nature">
-            <div class="app-icon">🧠</div><div class="app-label">Logic Engine</div>
-        </a>
-
-        <a href="13. Kumpulan Renungan.html" class="app-card cat-lingo">
-            <div class="app-icon">📚</div><div class="app-label">Renungan</div>
-        </a>
-
-        <a href="14. Terapi Cahaya Malam.html" class="app-card cat-sys">
-            <div class="app-icon">🕯️</div><div class="app-label">Terapi Sirep</div>
-        </a>
-
-        <a href="15. Appraisal Scanner.html" class="app-card cat-tech">
-            <div class="app-icon">🔍</div><div class="app-label">Appraisal</div>
-        </a>
-
-        <a href="16. Restorasi Pangan.html" class="app-card cat-nature">
-            <div class="app-icon">🍯</div><div class="app-label">Teknologi Pangan</div>
-        </a>
-
-        <a href="17. Restorasi Arsitektur.html" class="app-card cat-nature">
-            <div class="app-icon">🛖</div><div class="app-label">Arsitektur</div>
-        </a>
-
-        <a href="18. Restorasi Kesehatan.html" class="app-card cat-nature">
-            <div class="app-icon">🌿</div><div class="app-label">Tabib Digital</div>
-        </a>
-
-        <a href="19. Restorasi Wastra.html" class="app-card cat-culture">
-            <div class="app-icon">🧶</div><div class="app-label">Wastra Alam</div>
-        </a>
-
-        <a href="20. Restorasi Sosial.html" class="app-card cat-sys">
-            <div class="app-icon">🤝</div><div class="app-label">Balai Warga</div>
-        </a>
-
-        <a href="21. Pustaka Peradaban.html" class="app-card cat-lingo">
-            <div class="app-icon">⏫</div><div class="app-label">Leveling Diri</div>
-        </a>
-
-        <a href="23. Scanner Nilai Dasar.html" class="app-card cat-nature">
-            <div class="app-icon">🧬</div><div class="app-label">Analisa Dasar</div>
-        </a>
-
-        <a href="24. Estafet Kemanusiaan.html" class="app-card cat-human">
-            <div class="app-icon">👤</div><div class="app-label">Codex Manusia</div>
-        </a>
-
-        <a href="25. Menu Ekonomi.html" class="app-card cat-fin">
-            <div class="app-icon">💰</div><div class="app-label">Ekonomi Nilai</div>
-        </a>
-        <a href="26. Menu Masa Depan.html" class="app-card cat-future">
-            <div class="app-icon">💊</div><div class="app-label">Realitas & Masa Depan</div>
-        </a>
-        <a href="27. Menu Hukum Syariat dan Hakikat.html" class="app-card cat-edu">
-            <div class="app-icon">⚖️</div><div class="app-label">Syariat & Hakikat</div>
-        </a>
-        <a href="28. Indikator Iman.html" class="app-card cat-tools">
-            <div class="app-icon">📶</div><div class="app-label">Iman Metric</div>
-        </a>
-        <a href="29. Pustaka Ajaran Tauhid.html" class="app-card cat-doc">
-            <div class="app-icon">📄</div><div class="app-label">Pustaka Ajaran Tauhid</div>
-        </a>
-        <a href="30. Quantum Vitality.html" class="app-card cat-future">
-            <div class="app-icon">⚛️</div><div class="app-label">Quantum Vitality</div>
-        </a>
-        <a href="31. Holistic Calibration.html" class="app-card cat-edu">
-            <div class="app-icon">📡</div><div class="app-label">Holistic Radar</div>
-        </a>
-        <a href="32. Legacy Hub.html" class="app-card cat-fin">
-            <div class="app-icon">🌳</div><div class="app-label">Warisan Generasi</div>
-        </a>
-        <a href="33. Civilization Hub.html" class="app-card cat-future">
-    <div class="app-icon">🌍</div>
-    <div class="app-label">Civilization Hub</div>
-</a>
-        <a href="34.Nusantara Auto-Anchor (POS Mode).html" class="app-card cat-future">
-        <link rel="icon" type="image/png" href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png">
-    <img src="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png" alt="Icon POS" style="width: 50px; height: 50px; margin-bottom: 10px;">
-    <div class="app-label">Nusantara Auto-Anchor (POS Mode)</div>
-</a>
-        <a href="35.Nusantara Savings Simulator.html" class="app-card cat-fin">
-            <div class="app-icon">💰</div>
-            <div class="app-label">Simulasi Tabungan Dinar & Dirham</div>
-        </a>
-        <a href="36.Nusantara Income Generator.html" class="app-card cat-fin" style="border-color: var(--green);">
-            <div class="app-icon">🔨</div>
-            <div class="app-label">Income Generator</div>
-        </a>
-          <a href="37. Pusat Strategi Ekonomi.html" class="app-card cat-sys">
-            <div class="app-icon">🤝</div><div class="app-label">Pusat Strategi Ekonomi Nilai</div>
-        </a>
-        <a href="37. Jam Pasir Timer.html" class="app-card cat-sys">
-            <div class="app-icon">⏳</div>
-            <div class="app-label">Jam Pasir Nusantara</div>
-        </a>
-        <a href="38. Kawi Jawa Kuno.html" class="app-card cat-sys">
-            <div class="app-icon">🗿</div>
-            <div class="app-label">Prasasti Jawa Kawi</div>
-        </a>
-        <a href="39. Pagon Mataram.html" class="app-card cat-sys">
-            <div class="app-icon">✒️</div>
-            <div class="app-label">Mesin Ketik Pegon</div>
-        </a>
-            <a href="40. Encoder Arsip Keraton.html" class="app-card cat-sys">
-            <div class="app-icon">✒️</div>
-            <div class="app-label">Encoder Arsip Keraton</div>
-        </a>
-               <a href="41. Ancient Astronomy.html" class="app-card cat-sys">
-            <div class="app-icon">🕐</div>
-            <div class="app-label">Ancient Astronomy</div>
-        </a>
-                   <a href="42. Advanced Systems.html" class="app-card cat-future">
-            <div class="app-icon">⚛️</div><div class="app-label">Advanced Systems</div>
-        </a>
-               <a href="43. Forbidden Tech.html" class="app-card cat-future">
-            <div class="app-icon">⚛️</div><div class="app-label">Forbidden Tech</div>
-        </a>
-
-    </div>
-
-    <div class="dock">SYSTEM READY // FREQUENCY ALIGNED</div>
-
     <script>
-        // === DATABASE LOGIC ===
+        // === LOGIC DATABASE & WAKTU ===
         const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
         const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
         const saptawara = ["Sukra", "Tumpak", "Radite", "Soma", "Anggara", "Budha", "Respati"]; 
@@ -479,21 +491,35 @@
         function updateWidget() {
             const now = new Date();
             
-            // 1. UPDATE JAM MASEHI
-            document.getElementById('masehi-clock').innerText = "Masehi: " + now.toLocaleTimeString('id-ID');
+            // 1. UPDATE JAM MASEHI (REF)
+            document.getElementById('masehi-clock').innerText = "local : " + now.toLocaleTimeString('id-ID');
 
-            // 2. HITUNG JAM NUSWANTARA
+            // 2. HITUNG JAM NUSWANTARA (HH:MM:SS)
             const h = now.getHours();
             const m = now.getMinutes();
             const s = now.getSeconds();
             
             let totalMin = ((h % 12) * 60) + m + (s/60);
-            let nHours = totalMin / 90;
-            let dH = Math.floor(nHours) || 8; 
-            let dM = Math.floor((nHours % 1) * 90);
+            let nHours = totalMin / 90; // 1 Jam Nus = 90 Menit Masehi
             
-            document.getElementById('widget-clock').innerText = 
-                `${String(dH).padStart(2,'0')}:${String(dM).padStart(2,'0')}`;
+            let dH = Math.floor(nHours) || 8; 
+            
+            let remMin = (nHours % 1) * 90; // Sisa menit desimal
+            let dM = Math.floor(remMin);
+            
+            let remSec = (remMin % 1) * 60; // Sisa detik desimal
+            let dS = Math.floor(remSec);
+
+            // Format String
+            let strH = String(dH).padStart(2,'0');
+            let strM = String(dM).padStart(2,'0');
+            let strS = String(dS).padStart(2,'0');
+
+            // Update Widget Besar
+            document.getElementById('widget-clock').innerText = `${strH}:${strM}`;
+            
+            // Update Tray Taskbar (Lengkap dengan Detik)
+            document.getElementById('tray-time').innerText = `${strH}:${strM}:${strS}`;
 
             const phaseIdx = Math.floor(h / 3); 
             let currentPhase = phases[phaseIdx];
@@ -527,9 +553,17 @@
             let sIdx = (diffAbs % 7);
             if (sIdx < 0) sIdx += 7;
 
-            document.getElementById('widget-dayname').innerText = saptawara[sIdx].toUpperCase();
-            document.getElementById('widget-pasaran').innerText = pasarans[pIdx].toUpperCase();
+            // Data String
+            let pasaranName = pasarans[pIdx];
+            let dayName = saptawara[sIdx];
+
+            // Update Widget Besar
+            document.getElementById('widget-dayname').innerText = dayName.toUpperCase();
+            document.getElementById('widget-pasaran').innerText = pasaranName.toUpperCase();
             document.getElementById('widget-fulldate').innerText = `${dNus} ${monthName.toUpperCase()} ${yearStr}`;
+            
+            // Update Tray Taskbar (Compact)
+            document.getElementById('tray-date').innerText = `${pasaranName}, ${dNus} ${monthName} ${yearStr}`;
         }
 
         setInterval(updateWidget, 1000);
@@ -540,7 +574,6 @@
             document.getElementById('settingsMenu').classList.toggle('active');
         }
 
-        // Close menu when clicking outside
         document.addEventListener('click', function(e) {
             const btn = document.querySelector('.settings-btn');
             const menu = document.getElementById('settingsMenu');
@@ -570,32 +603,97 @@
             localStorage.setItem('nus_theme', mode);
         }
 
-        // Load saved preferences
         window.onload = function() {
             const savedWall = localStorage.getItem('nus_wall');
             if (savedWall) setWall(savedWall);
-
             const savedTheme = localStorage.getItem('nus_theme');
             if (savedTheme) setTheme(savedTheme);
         };
 
+        // ============================================
+        // === MULTITASKING / TASKBAR LOGIC ===
+        // ============================================
+
+        let openApps = []; 
+        const MAX_APPS = 6; // UPDATE: LIMIT JADI 6
+
+        function launchApp(url, title, icon) {
+            const existingApp = openApps.find(app => app.title === title);
+            
+            if (existingApp) {
+                switchToApp(existingApp.id);
+            } else {
+                if (openApps.length >= MAX_APPS) {
+                    closeApp(openApps[0].id); 
+                }
+                
+                const appId = 'app-' + Date.now();
+                const appObj = { id: appId, title: title, icon: icon, url: url };
+                openApps.push(appObj);
+                
+                createAppWindow(appObj);
+                renderTaskbar();
+                switchToApp(appId);
+            }
+        }
+
+        function createAppWindow(app) {
+            const container = document.getElementById('app-windows-container');
+            const winDiv = document.createElement('div');
+            winDiv.id = app.id;
+            winDiv.className = 'app-window';
+            winDiv.innerHTML = `<iframe src="${app.url}"></iframe>`;
+            container.appendChild(winDiv);
+        }
+
+        function renderTaskbar() {
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = ''; 
+
+            openApps.forEach(app => {
+                const tab = document.createElement('div');
+                tab.className = 'task-tab';
+                tab.id = 'tab-' + app.id;
+                
+                tab.innerHTML = `
+                    <span class="task-tab-icon">${app.icon}</span>
+                    <span class="task-tab-title">${app.title}</span>
+                    <span class="task-close-btn" onclick="event.stopPropagation(); closeApp('${app.id}')">×</span>
+                `;
+                
+                tab.onclick = () => switchToApp(app.id);
+                taskList.appendChild(tab);
+            });
+        }
+
+        function switchToApp(appId) {
+            document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
+            const targetWin = document.getElementById(appId);
+            if(targetWin) targetWin.classList.add('active');
+
+            document.querySelectorAll('.task-tab').forEach(tab => tab.classList.remove('active'));
+            const activeTab = document.getElementById('tab-' + appId);
+            if(activeTab) activeTab.classList.add('active');
+        }
+
+        function closeApp(appId) {
+            const win = document.getElementById(appId);
+            if(win) win.remove();
+            openApps = openApps.filter(app => app.id !== appId);
+            renderTaskbar();
+
+            if(openApps.length === 0) {
+                showDashboard();
+            } else {
+                switchToApp(openApps[openApps.length - 1].id);
+            }
+        }
+
+        function showDashboard() {
+            document.querySelectorAll('.app-window').forEach(win => win.classList.remove('active'));
+            document.querySelectorAll('.task-tab').forEach(tab => tab.classList.remove('active'));
+        }
+
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
