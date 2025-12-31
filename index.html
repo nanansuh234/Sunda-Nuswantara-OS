@@ -697,10 +697,10 @@
             }
         }
 
-        // === AUTO-CLEANER INJECTION (FIX INCEPTION BUG) ===
+        // === AUTO-CLEANER V2 (FIX SCROLL) ===
         function createAppWindow(app) {
             const container = document.getElementById('app-windows-container');
-            if (document.getElementById(app.id)) return; // Prevent duplicate DOM
+            if (document.getElementById(app.id)) return; 
             
             const winDiv = document.createElement('div');
             winDiv.id = app.id;
@@ -713,22 +713,32 @@
             iframe.style.border = "none";
             iframe.style.background = "#050505";
 
-            // SUNTIK CSS KE DALAM IFRAME AGAR TASKBAR ANAK HILANG
+            // SUNTIK CSS PERBAIKAN (SCROLL BAR DIPAKSA MUNCUL)
             iframe.onload = function() {
                 try {
                     const childDoc = iframe.contentDocument || iframe.contentWindow.document;
                     const style = childDoc.createElement('style');
                     style.textContent = `
-                        /* SEMBUNYIKAN ELEMENT SYSTEM DUPLIKAT */
+                        /* 1. SEMBUNYIKAN ELEMEN SYSTEM DUPLIKAT */
                         .taskbar, .status-bar, .dock, .settings-btn, #startMenu { display: none !important; }
-                        /* PASTIKAN BODY FULL SCREEN */
-                        body { padding: 0 !important; margin: 0 !important; height: 100vh !important; overflow: hidden !important; }
-                        /* PASTIKAN KONTEN TETAP SCROLLABLE */
-                        .dashboard-content, #desktop-area { padding-bottom: 0 !important; height: 100vh !important; overflow-y: auto !important; }
+
+                        /* 2. PAKSA BODY SUPAYA BISA SCROLL (PENTING!) */
+                        html, body {
+                            overflow: auto !important; /* Izinkan scroll */
+                            height: auto !important;   /* Jangan dikunci tinggi layarnya */
+                        }
+
+                        /* 3. KHUSUS APP YANG COPYAN OS (Punya .dashboard-content) */
+                        /* Kita buka kuncinya biar dia ngikutin tinggi konten asli */
+                        .dashboard-content, #desktop-area {
+                            height: auto !important;
+                            overflow: visible !important; 
+                            padding-bottom: 60px !important; /* Ruang biar konten paling bawah gak ketutup taskbar utama */
+                        }
                     `;
                     childDoc.head.appendChild(style);
                 } catch (e) {
-                    console.log("Auto-cleaner CORS restriction (Local File). Use Refresh button if bug persists.");
+                    console.log("Auto-cleaner CORS restriction. Scroll fix might not work on local file without server.");
                 }
             };
 
@@ -833,3 +843,4 @@
     </script>
 </body>
 </html>
+
