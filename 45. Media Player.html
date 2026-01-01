@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Music Player</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card: #1a1a1a;
+            --gold: #d4af37;
+            --text: #e0e0e0;
+            --text-dim: #888;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* CONTAINER PLAYER */
+        .player-container {
+            background: var(--card);
+            width: 350px;
+            height: 550px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            border: 1px solid #333;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* HEADER & VINYL ANIMATION */
+        .player-header {
+            padding: 30px 20px 20px;
+            text-align: center;
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1), transparent);
+            flex-shrink: 0;
+        }
+
+        .vinyl-wrapper {
+            width: 140px; height: 140px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #111;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            animation: rotate 5s linear infinite;
+            animation-play-state: paused;
+        }
+        .vinyl-wrapper.playing { animation-play-state: running; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .vinyl-inner { width: 40px; height: 40px; background: var(--gold); border-radius: 50%; border: 3px solid #fff; }
+
+        .song-title { font-size: 1.1rem; font-weight: bold; color: var(--gold); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 1px; }
+        .artist-name { font-size: 0.8rem; color: var(--text-dim); margin-top: 5px; }
+
+        /* CONTROLS AREA */
+        .controls {
+            padding: 0 20px 20px;
+            display: flex; flex-direction: column; gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .progress-area { width: 100%; cursor: pointer; padding: 5px 0; }
+        .progress-bar { height: 4px; width: 100%; background: #333; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.1s linear; }
+        .time-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-dim); margin-top: 5px; }
+
+        .buttons { display: flex; justify-content: center; align-items: center; gap: 25px; }
+        .btn-ctrl { background: none; border: none; color: var(--text); font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
+        .btn-ctrl:hover { color: var(--gold); transform: scale(1.1); }
+        
+        .btn-play {
+            width: 55px; height: 55px;
+            background: var(--gold); color: #000;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        .btn-play:hover { transform: scale(1.1); box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
+
+        /* PLAYLIST */
+        .playlist {
+            background: #111;
+            flex: 1;
+            overflow-y: auto;
+            border-top: 1px solid #333;
+        }
+
+        .track-item {
+            padding: 12px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid #222;
+            cursor: pointer; transition: 0.2s;
+        }
+        .track-item:hover { background: rgba(255,255,255,0.05); }
+        
+        /* Active State */
+        .track-item.active { background: rgba(212, 175, 55, 0.15); border-left: 4px solid var(--gold); }
+        .track-item.active .track-name { color: var(--gold); }
+        .track-item.active .track-icon { color: var(--gold); animation: pulse 1s infinite; }
+
+        .track-info-small { display: flex; flex-direction: column; overflow: hidden; }
+        .track-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .track-artist { font-size: 0.7rem; color: var(--text-dim); }
+        .track-icon { font-size: 0.8rem; color: #555; }
+
+        /* SCROLLBAR CUSTOM */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <div class="player-container">
+        
+        <div class="player-header">
+            <div class="vinyl-wrapper" id="vinyl">
+                <div class="vinyl-inner"></div>
+            </div>
+            <h2 class="song-title" id="currentTitle">Pilih Lagu</h2>
+            <p class="artist-name" id="currentArtist">Nuswantara Playlist</p>
+        </div>
+
+        <audio id="mainAudio"></audio>
+
+        <div class="controls">
+            <div class="progress-area" onclick="setProgress(event)">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="time-labels">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalDuration">0:00</span>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn-ctrl" onclick="prevSong()"><i class="fas fa-step-backward"></i></button>
+                <button class="btn-ctrl btn-play" onclick="togglePlay()" id="playBtn"><i class="fas fa-play"></i></button>
+                <button class="btn-ctrl" onclick="nextSong()"><i class="fas fa-step-forward"></i></button>
+            </div>
+        </div>
+
+        <div class="playlist" id="playlistContainer"></div>
+
+    </div>
+
+    <script>
+        // === DATABASE LAGU (CATBOX LINKS) ===
+        const songList = [
+            {
+                title: "Nuswantara Track 01",
+                artist: "Collection 1",
+                url: "https://files.catbox.moe/fc7tst.mp3"
+            },
+            {
+                title: "Nuswantara Track 02",
+                artist: "Collection 2",
+                url: "https://files.catbox.moe/9war6c.mp3"
+            },
+            {
+                title: "Nuswantara Track 03",
+                artist: "Collection 3",
+                url: "https://files.catbox.moe/onwzd3.mp3"
+            }
+        ];
+
+        // === LOGIC PLAYER ===
+        const audio = document.getElementById('mainAudio');
+        const playBtn = document.getElementById('playBtn');
+        const titleEl = document.getElementById('currentTitle');
+        const artistEl = document.getElementById('currentArtist');
+        const vinyl = document.getElementById('vinyl');
+        const progressFill = document.getElementById('progressFill');
+        const currTimeEl = document.getElementById('currentTime');
+        const durTimeEl = document.getElementById('totalDuration');
+        const playlistBox = document.getElementById('playlistContainer');
+
+        let songIndex = 0;
+        let isPlaying = false;
+
+        // 1. FUNGSI LOAD LAGU
+        function loadSong(song) {
+            titleEl.innerText = song.title;
+            artistEl.innerText = song.artist;
+            // Link Langsung (Direct URL)
+            audio.src = song.url; 
+            
+            renderPlaylist();
+        }
+
+        // 2. PLAY & PAUSE
+        function togglePlay() {
+            if (isPlaying) { pauseSong(); } else { playSong(); }
+        }
+
+        function playSong() {
+            audio.play();
+            isPlaying = true;
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            vinyl.classList.add('playing');
+        }
+
+        function pauseSong() {
+            audio.pause();
+            isPlaying = false;
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            vinyl.classList.remove('playing');
+        }
+
+        // 3. NEXT & PREV
+        function nextSong() {
+            songIndex++;
+            if (songIndex > songList.length - 1) { songIndex = 0; }
+            loadSong(songList[songIndex]);
+            playSong();
+        }
+
+        function prevSong() {
+            songIndex--;
+            if (songIndex < 0) { songIndex = songList.length - 1; }
+            loadSong(songList[songIndex]);
+            playSong();
+        }
+
+        // 4. PROGRESS BAR UPDATE
+        audio.addEventListener('timeupdate', (e) => {
+            const { duration, currentTime } = e.srcElement;
+            if(duration) {
+                const progressPercent = (currentTime / duration) * 100;
+                progressFill.style.width = `${progressPercent}%`;
+
+                // Update Waktu Jalan
+                let min = Math.floor(currentTime / 60);
+                let sec = Math.floor(currentTime % 60);
+                if (sec < 10) sec = `0${sec}`;
+                currTimeEl.innerText = `${min}:${sec}`;
+
+                // Update Total Durasi
+                let minD = Math.floor(duration / 60);
+                let secD = Math.floor(duration % 60);
+                if (secD < 10) secD = `0${secD}`;
+                durTimeEl.innerText = `${minD}:${secD}`;
+            }
+        });
+
+        // Klik Progress Bar
+        function setProgress(e) {
+            const width = e.currentTarget.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        // Auto Next saat lagu habis
+        audio.addEventListener('ended', nextSong);
+
+        // 5. RENDER PLAYLIST OTOMATIS
+        function renderPlaylist() {
+            playlistBox.innerHTML = "";
+            songList.forEach((song, index) => {
+                const item = document.createElement('div');
+                item.classList.add('track-item');
+                // Tandai lagu yang lagi aktif
+                if(index === songIndex) item.classList.add('active');
+
+                item.innerHTML = `
+                    <div class="track-info-small">
+                        <span class="track-name">${song.title}</span>
+                        <span class="track-artist">${song.artist}</span>
+                    </div>
+                    <span class="track-icon">
+                        ${index === songIndex ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-play"></i>'}
+                    </span>
+                `;
+
+                // Klik lagu di list
+                item.onclick = () => {
+                    songIndex = index;
+                    loadSong(songList[songIndex]);
+                    playSong();
+                };
+
+                playlistBox.appendChild(item);
+            });
+        }
+
+        // Load Lagu Pertama saat dibuka (Tapi jangan auto-play biar sopan)
+        loadSong(songList[songIndex]);
+
+    </script>
+</body>
+</html>
