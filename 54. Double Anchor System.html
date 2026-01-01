@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuswantara Double Anchor</title>
+    <title>Nuswantara Trade Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b0b0b;
             --panel: #141414;
-            --border: #333;
+            --border: #2a2a2a;
             --gold: #ffd700;
             --silver: #c0c0c0;
             --text-light: #e0e0e0;
             --green: #00e676;
-            --red: #ff1744;
             --blue: #2979ff;
         }
 
@@ -26,7 +25,19 @@
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* --- DASHBOARD UANG (DINAR) --- */
+        /* --- HEADER & CONTROLS --- */
+        .top-bar {
+            width: 100%; max-width: 950px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+        }
+        .app-title { font-size: 1.5rem; font-family: 'Cinzel', serif; color: var(--gold); }
+        .btn-print {
+            background: var(--gold); color: #000; border: none; padding: 10px 20px;
+            font-family: 'Rajdhani', sans-serif; font-weight: bold; cursor: pointer; border-radius: 5px;
+            display: flex; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        .btn-print:hover { background: #fff; }
+
+        /* --- DASHBOARD UANG --- */
         .dashboard-card {
             background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
             width: 100%; max-width: 950px; padding: 30px; margin-bottom: 25px;
@@ -44,9 +55,8 @@
         .anchor-sub { font-size: 0.9rem; color: #555; margin-top: 5px; }
         
         .live-ticker { margin-top: 15px; font-size: 0.9rem; color: #888; text-align: center; }
-        .live-val { color: #fff; font-weight: bold; }
 
-        /* --- TABEL BARANG (DOUBLE ANCHOR) --- */
+        /* --- TABEL BARANG --- */
         .market-table {
             width: 100%; max-width: 950px; border-collapse: collapse;
             background: var(--panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
@@ -68,19 +78,50 @@
         
         .tag-konstan { font-size: 0.7rem; background: #222; color: #888; padding: 2px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle; border: 1px solid #333; }
         
-        /* Animasi Flash kalau harga update */
-        @keyframes flash { 0% { color: #fff; } 50% { color: var(--green); } 100% { color: inherit; } }
-        .updated { animation: flash 1s ease; }
+        /* INPUT QTY */
+        .qty-input {
+            background: #000; border: 1px solid #444; color: #fff;
+            padding: 5px 10px; width: 70px; text-align: center; border-radius: 5px;
+            font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: bold;
+        }
+        .qty-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 5px var(--gold); }
+
+        /* PRINT STYLES */
+        @media print {
+            body { background-color: #fff; color: #000; padding: 0; }
+            .dashboard-card, .market-table { 
+                background: #fff; border: 1px solid #000; box-shadow: none; width: 100%; max-width: 100%; 
+            }
+            .btn-print, .live-ticker, .side-stat, .item-range { display: none; } /* Hide unnecessary items */
+            
+            .center-stat { border: none; padding: 0; text-align: left; }
+            .anchor-price { color: #000; text-shadow: none; font-size: 2.5rem; }
+            .anchor-label, .anchor-sub { color: #000; }
+            
+            th { background: #eee; color: #000; border-bottom: 2px solid #000; }
+            td { border-bottom: 1px solid #ccc; }
+            .item-name, .price-dn, .price-dr, .qty-input { color: #000 !important; }
+            .qty-input { border: none; background: transparent; text-align: left; padding: 0; }
+            
+            /* Show Date */
+            .top-bar { margin-bottom: 10px; }
+            .app-title:after { content: " - Quotation Date: " attr(data-date); font-size: 0.8rem; color: #000; font-family: sans-serif; margin-left: 10px; }
+        }
 
     </style>
 </head>
 <body>
 
+    <div class="top-bar">
+        <div class="app-title" id="appTitle">Nuswantara Trade Calc</div>
+        <button class="btn-print" onclick="window.print()">🖨️ CETAK / PRINT</button>
+    </div>
+
     <div class="dashboard-card">
         <div class="anchor-header">
             <div class="side-stat">
                 <div class="side-label">YTD LOW</div>
-                <div class="side-val" id="goldLow">Loading...</div>
+                <div class="side-val" id="goldLow">...</div>
             </div>
             <div class="center-stat">
                 <div class="anchor-label">Anchor Dinar (Tengah)</div>
@@ -89,21 +130,22 @@
             </div>
             <div class="side-stat">
                 <div class="side-label">YTD HIGH</div>
-                <div class="side-val" id="goldHigh">Loading...</div>
+                <div class="side-val" id="goldHigh">...</div>
             </div>
         </div>
         <div class="live-ticker">
-            LIVE SPOT: <span id="goldSpot" class="live-val">Fetching...</span> 
-            <span style="font-size:0.8rem; margin-left:10px;">(Penyebut Utama)</span>
+            LIVE SPOT: <span id="goldSpot" style="color:#fff; font-weight:bold;">Fetching...</span> 
+            (Double Anchor System Active)
         </div>
     </div>
 
     <table class="market-table">
         <thead>
             <tr>
-                <th width="45%">Komoditas (Harga Tengah)</th>
-                <th width="27%">Nilai Dinar</th>
-                <th width="28%">Nilai Dirham</th>
+                <th width="35%">Komoditas (Harga Tengah)</th>
+                <th width="15%">QTY</th>
+                <th width="25%">Total Dinar</th>
+                <th width="25%">Total Dirham</th>
             </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -116,76 +158,62 @@
     const OZ_TO_GRAM = 31.1035;
     const RASIO_DIRHAM = 27; 
 
-    // --- STATE DATA (DATABASE LIVE) ---
-    // Emas punya range sendiri (Real dari API)
-    let GoldData = {
-        low: 2400.00,
-        high: 3000.00,
-        spot: 0,
-        anchor: 0 // (Low+High)/2
-    };
+    // --- STATE DATA ---
+    let GoldData = { low: 2400.00, high: 3000.00, spot: 0, anchor: 0 };
 
-    // Komoditas punya range masing-masing (Simulasi Live Market)
+    // Tambahkan properti 'qty' di setiap item (Default 1)
     let commodities = [
-        { id: 1, name: "Emas (Gold)", unit: "Troy Ounce", type: 'constant' }, 
-        { id: 2, name: "Perak (Silver)", unit: "Troy Ounce", type: 'constant' },
-        
-        // Base Price adalah harga start simulasi. Low/High akan terbentuk otomatis.
-        { id: 3, name: "Minyak Mentah", unit: "Barel", base: 78.50, low: 70, high: 85, spot: 78.50, type: 'normal' },
-        { id: 4, name: "Sapi Potong", unit: "Cwt (45 kg)", base: 182.00, low: 175, high: 190, spot: 182.00, type: 'normal' },
-        { id: 5, name: "Beras (Rice)", unit: "Cwt (45 kg)", base: 18.00, low: 16, high: 20, spot: 18.00, type: 'normal' },
-        { id: 6, name: "Gandum", unit: "Bushel", base: 6.20, low: 5.5, high: 7.0, spot: 6.20, type: 'normal' },
-        { id: 7, name: "Jagung", unit: "Bushel", base: 4.60, low: 4.0, high: 5.2, spot: 4.60, type: 'normal' },
-        { id: 8, name: "Kopi Arabica", unit: "Pound", base: 2.10, low: 1.8, high: 2.5, spot: 2.10, type: 'normal' },
-        { id: 9, name: "Gula", unit: "Pound", base: 0.24, low: 0.20, high: 0.30, spot: 0.24, type: 'normal' },
-        { id: 10, name: "Tembaga", unit: "Pound", base: 4.40, low: 4.0, high: 5.0, spot: 4.40, type: 'normal' },
-        { id: 11, name: "Platinum", unit: "Troy Ounce", base: 980.00, low: 900, high: 1100, spot: 980.00, type: 'normal' },
-        { id: 12, name: "Palladium", unit: "Troy Ounce", base: 1050.00, low: 950, high: 1200, spot: 1050.00, type: 'normal' }
+        { id: 1, name: "Emas (Gold)", unit: "Troy Ounce", type: 'constant', qty: 1 }, 
+        { id: 2, name: "Perak (Silver)", unit: "Troy Ounce", type: 'constant', qty: 1 },
+        { id: 3, name: "Minyak Mentah", unit: "Barel", base: 78.50, low: 70, high: 85, spot: 78.50, anchor: 0, type: 'normal', qty: 1 },
+        { id: 4, name: "Sapi Potong", unit: "Cwt (45 kg)", base: 182.00, low: 175, high: 190, spot: 182.00, anchor: 0, type: 'normal', qty: 1 },
+        { id: 5, name: "Beras (Rice)", unit: "Cwt (45 kg)", base: 18.00, low: 16, high: 20, spot: 18.00, anchor: 0, type: 'normal', qty: 1 },
+        { id: 6, name: "Gandum", unit: "Bushel", base: 6.20, low: 5.5, high: 7.0, spot: 6.20, anchor: 0, type: 'normal', qty: 1 },
+        { id: 7, name: "Jagung", unit: "Bushel", base: 4.60, low: 4.0, high: 5.2, spot: 4.60, anchor: 0, type: 'normal', qty: 1 },
+        { id: 8, name: "Kopi Arabica", unit: "Pound", base: 2.10, low: 1.8, high: 2.5, spot: 2.10, anchor: 0, type: 'normal', qty: 1 },
+        { id: 9, name: "Gula", unit: "Pound", base: 0.24, low: 0.20, high: 0.30, spot: 0.24, anchor: 0, type: 'normal', qty: 1 },
+        { id: 10, name: "Tembaga", unit: "Pound", base: 4.40, low: 4.0, high: 5.0, spot: 4.40, anchor: 0, type: 'normal', qty: 1 },
+        { id: 11, name: "Platinum", unit: "Troy Ounce", base: 980.00, low: 900, high: 1100, spot: 980.00, anchor: 0, type: 'normal', qty: 1 },
+        { id: 12, name: "Palladium", unit: "Troy Ounce", base: 1050.00, low: 950, high: 1200, spot: 1050.00, anchor: 0, type: 'normal', qty: 1 }
     ];
 
-    // --- FUNGSI UTAMA: UPDATE PASAR ---
+    // Set tanggal hari ini buat print
+    document.getElementById('appTitle').setAttribute('data-date', new Date().toLocaleDateString());
+
+    // Flag biar pas ngetik QTY tabel gak refresh sendiri
+    let isUserTyping = false;
+
     async function updateMarket() {
-        // 1. UPDATE EMAS (JANGKAR UTAMA)
+        // 1. UPDATE EMAS
         try {
             const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
             const data = await res.json();
             GoldData.spot = data['pax-gold'].usd;
 
-            // Update Range Emas
             if (GoldData.spot > GoldData.high) GoldData.high = GoldData.spot;
             if (GoldData.spot < GoldData.low) GoldData.low = GoldData.spot;
-            
-            // Hitung Anchor Emas
             GoldData.anchor = (GoldData.low + GoldData.high) / 2;
+        } catch (err) { }
 
-        } catch (err) {
-            console.log("API Gold Error, pakai last known");
-        }
-
-        // 2. SIMULASI LIVE SPOT KOMODITAS (JANGKAR KEDUA)
-        // Ini biar kelihatan efek "1 pips" nya
+        // 2. SIMULASI BARANG (Double Anchor)
         commodities.forEach(item => {
             if (item.type === 'normal') {
-                // Simulasi fluktuasi kecil (-1% s/d +1%) dari spot terakhir
                 let fluctuation = (Math.random() - 0.5) * (item.spot * 0.02); 
                 item.spot += fluctuation;
-
-                // Update Range Komoditas
                 if (item.spot > item.high) item.high = item.spot;
                 if (item.spot < item.low) item.low = item.spot;
-
-                // Hitung Anchor Komoditas
                 item.anchor = (item.low + item.high) / 2;
             }
         });
 
-        // 3. RENDER UI
-        renderDashboard();
-        renderTable();
+        // 3. RENDER (Cuma kalau user gak lagi ngetik)
+        if (!isUserTyping) {
+            renderDashboard();
+            renderTable();
+        }
     }
 
     function renderDashboard() {
-        // Nilai 1 Dinar (Berdasarkan Anchor Emas)
         let goldGramPrice = GoldData.anchor / OZ_TO_GRAM;
         let oneDinarUSD = goldGramPrice * DINAR_WEIGHT;
 
@@ -193,28 +221,22 @@
         document.getElementById('goldHigh').innerText = `$${GoldData.high.toLocaleString()}`;
         document.getElementById('goldAnchor').innerText = `$${GoldData.anchor.toLocaleString(undefined, {minimumFractionDigits:1, maximumFractionDigits:1})}`;
         document.getElementById('dinarValuation').innerText = `1 Dinar (Fair Value) ≈ $${oneDinarUSD.toFixed(2)}`;
-        
-        let spotEl = document.getElementById('goldSpot');
-        spotEl.innerText = `$${GoldData.spot.toLocaleString()}`;
-        spotEl.classList.remove('updated');
-        void spotEl.offsetWidth; // trigger reflow
-        spotEl.classList.add('updated');
+        document.getElementById('goldSpot').innerText = `$${GoldData.spot.toLocaleString()}`;
     }
 
     function renderTable() {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
 
-        // Hitung Nilai Tukar Dasar (USD per Dinar/Dirham) based on Gold Anchor
+        // Hitung Base Rate
         let goldGramPrice = GoldData.anchor / OZ_TO_GRAM;
         let valDinarUSD = goldGramPrice * DINAR_WEIGHT;
         let valDirhamUSD = valDinarUSD / RASIO_DIRHAM;
 
-        commodities.forEach(item => {
+        commodities.forEach((item, index) => {
             let valDn, valDr, displayInfo = "";
 
             if (item.type === 'constant') {
-                // FIXED ASSET (EMAS/PERAK)
                 if(item.name.includes("Emas")) {
                     valDn = (OZ_TO_GRAM / DINAR_WEIGHT); 
                     valDr = valDn * RASIO_DIRHAM;
@@ -224,24 +246,18 @@
                 }
                 displayInfo = `<span class="tag-konstan">FIXED</span>`;
             } else {
-                // DYNAMIC COMMODITY
-                // Rumus: Anchor Barang (USD) / Anchor Dinar (USD)
-                // Ini implementasi "Sama-sama Jangkar Tengah"
-                
                 valDn = item.anchor / valDinarUSD;
                 valDr = item.anchor / valDirhamUSD;
-
-                displayInfo = `
-                    <div class="item-range">
-                        <span style="color:#666">Spot: $${item.spot.toFixed(2)}</span>
-                        <span class="anchor-badge">Anchor: $${item.anchor.toFixed(2)}</span>
-                    </div>
-                `;
+                displayInfo = `<div class="item-range"><span class="anchor-badge">Anchor: $${item.anchor.toFixed(2)}</span></div>`;
             }
 
+            // KALKULASI QTY (TOTAL)
+            let totalDn = valDn * item.qty;
+            let totalDr = valDr * item.qty;
+
             // Formatting
-            let txtDn = valDn < 0.1 ? valDn.toFixed(4) : valDn.toFixed(2);
-            let txtDr = valDr < 0.1 ? valDr.toFixed(3) : valDr.toFixed(2);
+            let txtDn = totalDn < 0.1 ? totalDn.toFixed(4) : totalDn.toFixed(2);
+            let txtDr = totalDr < 0.1 ? totalDr.toFixed(3) : totalDr.toFixed(2);
 
             let row = `
                 <tr>
@@ -249,6 +265,12 @@
                         <div class="item-name">${item.name} ${item.type==='constant'?displayInfo:''}</div>
                         ${item.type==='normal' ? displayInfo : ''}
                         <div class="item-unit">${item.unit}</div>
+                    </td>
+                    <td>
+                        <input type="number" class="qty-input" value="${item.qty}" min="1" 
+                               onfocus="isUserTyping=true" 
+                               onblur="isUserTyping=false; updateMarket()" 
+                               onchange="updateQty(${index}, this.value)">
                     </td>
                     <td class="price-dn">${txtDn}<span class="unit-s">DN</span></td>
                     <td class="price-dr">${txtDr}<span class="unit-s">DR</span></td>
@@ -258,9 +280,16 @@
         });
     }
 
-    // Update tiap 5 detik biar kelihatan efek "1 pips" nya
+    // Fungsi Update QTY saat user ngetik
+    window.updateQty = function(index, val) {
+        commodities[index].qty = parseFloat(val) || 0;
+        // Kita render manual saat ngetik biar responsif, tanpa nunggu interval 5s
+        renderTable(); 
+    };
+
+    // Auto Refresh 5 Detik
     setInterval(updateMarket, 5000);
-    updateMarket(); // First run
+    updateMarket(); // First Run
 
 </script>
 </body>
