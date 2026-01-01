@@ -3,26 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV Jadul - Final Fix</title>
+    <title>TV Jadul - Volume Control</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #1a1a1a;
             display: flex; align-items: center; justify-content: center;
             height: 100vh; margin: 0; font-family: sans-serif; user-select: none;
-            overflow: hidden;
         }
 
         /* --- STRUKTUR TV --- */
         .tv-set {
-            position: relative; width: 680px; height: auto;
+            position: relative; width: 600px; height: auto;
             display: flex; flex-direction: column; align-items: center;
             filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));
-            transform: scale(0.95);
         }
 
         /* ANTENA */
-        .antenna { position: relative; width: 300px; height: 100px; z-index: 0; margin-bottom: -15px; }
+        .antenna { position: relative; width: 300px; height: 100px; z-index: 0; margin-bottom: -10px; }
         .antenna::before, .antenna::after {
             content: ''; position: absolute; bottom: 0; width: 4px; height: 120px;
             background: linear-gradient(to top, #555, #ccc); border-radius: 4px; transform-origin: bottom center;
@@ -34,19 +32,17 @@
         /* BODY KAYU */
         .tv-case {
             background: #5d4037;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjNWQ0MDM3Ii8+CjxwYXRoIGQ9Ik0wIDBoNHYxSDB6IiBmaWxsPSIjNGUzNDJlIi8+Cjwvc3ZnPg==');
-            width: 100%; padding: 25px; border-radius: 20px;
-            display: flex; gap: 20px; border: 6px solid #3e2723;
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.6); position: relative; z-index: 1;
+            background-image: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, transparent 5%, transparent 95%, rgba(0,0,0,0.2) 100%), url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjNWQ0MDM3Ii8+CjxwYXRoIGQ9Ik0wIDBoNHYxSDB6IiBmaWxsPSIjNGUzNDJlIi8+Cjwvc3ZnPg==');
+            width: 100%; padding: 20px; border-radius: 20px;
+            display: flex; gap: 20px; border: 4px solid #3e2723;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.5); position: relative; z-index: 1;
         }
 
-        /* LAYAR (WADAH UTAMA) */
+        /* LAYAR */
         .tv-screen-bezel {
-            /* Layar ambil sisa ruang, tapi panel kanan prioritas */
-            flex: 1; 
-            background: #222; padding: 15px; border-radius: 30px;
+            flex: 3; background: #222; padding: 15px; border-radius: 30px;
             box-shadow: inset 2px 2px 5px rgba(255,255,255,0.1), inset -2px -2px 5px rgba(0,0,0,0.5);
-            position: relative; overflow: hidden;
+            position: relative;
         }
 
         .tv-screen {
@@ -54,18 +50,7 @@
             border-radius: 50% / 10%; overflow: hidden; position: relative; border: 2px solid #111;
         }
 
-        .screen-content { 
-            width: 100%; height: 100%; border: none; display: block; 
-            overflow: hidden; position: relative;
-        }
-
-        /* FIX FULL SCREEN ZOOM */
-        #youtube-player {
-            width: 100%; height: 100%;
-            transform: scale(1.35); /* Zoom in 35% */
-            transform-origin: center center;
-            pointer-events: none;
-        }
+        .screen-content { width: 100%; height: 100%; border: none; display: block; }
 
         /* EFEK LAYAR */
         .screen-overlay {
@@ -80,92 +65,68 @@
             background-size: 100% 4px; pointer-events: none; z-index: 4; opacity: 0.3;
         }
 
-        /* OSD */
+        /* --- OSD (ON SCREEN DISPLAY) --- */
+        /* Ini tulisan hijau volume di layar */
         .osd-display {
             position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
             font-family: 'VT323', monospace; color: #0f0; font-size: 1.5rem;
             text-shadow: 0 0 5px #0f0; z-index: 10;
             opacity: 0; transition: opacity 0.5s; pointer-events: none;
             background: rgba(0, 20, 0, 0.6); padding: 5px 15px; border-radius: 5px;
-            white-space: nowrap;
         }
         .osd-display.show { opacity: 1; }
         .mute-icon { color: red; text-shadow: 0 0 5px red; display: none; font-size: 3rem; position: absolute; top: 20px; right: 20px; z-index: 10; }
 
-        /* --- PANEL KONTROL (INI YANG DIBENERIN) --- */
+        /* PANEL KONTROL */
         .control-panel {
-            /* Kunci lebar panel biar gak kegencet */
-            width: 140px; 
-            min-width: 140px; 
-            flex-shrink: 0; 
-            
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: #4a342e; border-radius: 10px; border-left: 2px solid rgba(0,0,0,0.3);
-            padding: 20px 10px; gap: 25px; /* Jarak antar tombol */
+            padding: 10px; gap: 15px;
         }
 
-        /* KNOBS (TOMBOL PUTAR) */
-        .knob-group { 
-            display: flex; flex-direction: column; align-items: center; 
-            width: 100%; position: relative; z-index: 10; /* Pastikan di atas layer lain */
-        }
-        
+        /* KNOBS */
+        .knob-group { text-align: center; }
         .knob {
-            width: 70px; height: 70px; /* Ukuran Fix */
-            background: radial-gradient(circle at 30% 30%, #555, #111); /* Efek 3D */
-            border-radius: 50%; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 2px rgba(255,255,255,0.2); 
-            border: 4px solid #000;
-            position: relative; cursor: pointer; 
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efek membal pas diputer */
+            width: 60px; height: 60px; background: radial-gradient(circle, #555, #222);
+            border-radius: 50%; box-shadow: 0 5px 10px rgba(0,0,0,0.5); border: 2px solid #111;
+            position: relative; cursor: pointer; transition: transform 0.1s;
         }
-        
-        /* Indikator Garis Putih di Knob */
         .knob::after {
             content: ''; position: absolute; top: 5px; left: 50%;
-            width: 6px; height: 20px; background: #eee;
-            transform: translateX(-50%); border-radius: 3px;
-            box-shadow: 0 0 2px #000;
+            width: 4px; height: 20px; background: #fff;
+            transform: translateX(-50%); border-radius: 2px;
         }
-        
         .knob:active { transform: scale(0.95); }
-        
-        .knob-label { 
-            font-size: 0.8rem; color: #d4af37; margin-top: 8px; 
-            font-weight: bold; letter-spacing: 1px; text-shadow: 0 1px 2px #000;
-        }
+        .knob-label { font-size: 0.6rem; color: #d4af37; margin-top: 5px; font-weight: bold; letter-spacing: 1px; }
 
         /* MUTE SWITCH */
-        .switch-container { display: flex; flex-direction: column; align-items: center; }
+        .switch-container { display: flex; flex-direction: column; align-items: center; margin-top: 5px; }
         .switch-btn {
-            width: 50px; height: 25px; background: #000; border-radius: 5px;
+            width: 40px; height: 20px; background: #222; border-radius: 4px;
             position: relative; cursor: pointer; border: 1px solid #555;
-            box-shadow: inset 0 0 5px #222;
         }
         .switch-toggle {
-            width: 20px; height: 19px; background: #888; position: absolute; top: 2px; left: 2px;
-            border-radius: 3px; transition: 0.2s;
-            background: linear-gradient(to bottom, #999, #666);
+            width: 18px; height: 16px; background: #888; position: absolute; top: 1px; left: 1px;
+            border-radius: 2px; transition: 0.2s;
         }
-        .switch-btn.active .switch-toggle { left: 26px; background: #d4af37; box-shadow: 0 0 5px #d4af37; }
+        .switch-btn.active .switch-toggle { left: 19px; background: #d4af37; }
+        .switch-btn.active { border-color: #d4af37; }
 
         /* SPEAKER & LED */
         .speaker {
             width: 80%; height: 60px;
-            background-image: radial-gradient(#111 25%, transparent 25%);
-            background-size: 5px 5px; opacity: 0.7; margin-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background-image: radial-gradient(#222 20%, transparent 20%);
+            background-size: 8px 8px; opacity: 0.5; margin-top: 10px;
         }
         .power-led {
-            width: 12px; height: 12px; background: #300; border-radius: 50%;
-            margin-top: 5px; transition: 0.3s; border: 1px solid #000;
+            width: 10px; height: 10px; background: #300; border-radius: 50%;
+            margin-top: 10px; transition: 0.3s;
         }
-        .power-led.on { background: red; box-shadow: 0 0 10px red; }
+        .power-led.on { background: red; box-shadow: 0 0 8px red; }
 
         /* KAKI */
         .legs { width: 80%; display: flex; justify-content: space-between; margin-top: -10px; z-index: 0; }
-        .leg { width: 35px; height: 45px; background: #2e1e19; clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%); }
+        .leg { width: 30px; height: 40px; background: #2e1e19; clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%); }
 
     </style>
 </head>
@@ -184,15 +145,19 @@
                     <div id="osdMute" class="mute-icon">🔇</div>
                     
                     <div class="screen-content">
-                        <div id="youtube-player"></div>
+                        <iframe width="100%" height="100%" 
+                            src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&controls=0&showinfo=0&modestbranding=1" 
+                            title="YouTube video player" frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen>
+                        </iframe>
                     </div>
                 </div>
             </div>
 
             <div class="control-panel">
-                
                 <div class="knob-group">
-                    <div class="knob" id="knobCh" onclick="changeChannel()"></div>
+                    <div class="knob" id="knobCh" onclick="rotateKnob('knobCh', 45)"></div>
                     <div class="knob-label">CHANNEL</div>
                 </div>
                 
@@ -205,7 +170,7 @@
                     <div class="switch-btn" id="muteBtn" onclick="toggleMute()">
                         <div class="switch-toggle"></div>
                     </div>
-                    <div class="knob-label" style="margin-top:5px;">MUTE</div>
+                    <div class="knob-label">MUTE</div>
                 </div>
 
                 <div class="speaker"></div>
@@ -219,63 +184,35 @@
         </div>
     </div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         let volumeLevel = 5; // 0-10
-        let rotVol = 0; // Rotasi Khusus Volume
-        let rotCh = 0;  // Rotasi Khusus Channel
+        let currentRot = 0;
         let osdTimeout;
-        let player;
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '100%',
-                width: '100%',
-                videoId: 'jfKfPfyJRdk', // GANTI ID VIDEO DISINI
-                playerVars: {
-                    'playsinline': 1, 'controls': 0, 'disablekb': 1,
-                    'rel': 0, 'modestbranding': 1, 'iv_load_policy': 3
-                },
-                events: { 'onReady': onPlayerReady }
-            });
+        // Fungsi Putar Knob Visual
+        function rotateKnob(id, deg) {
+            currentRot += deg;
+            document.getElementById(id).style.transform = `rotate(${currentRot}deg)`;
         }
 
-        function onPlayerReady(event) {
-            player.setVolume(volumeLevel * 10);
-            // event.target.playVideo(); // Hapus komen kalau mau autoplay
-        }
-
-        // FUNGSI GANTI CHANNEL (Putar Knob Atas)
-        function changeChannel() {
-            rotCh += 45; // Putar 45 derajat
-            document.getElementById('knobCh').style.transform = `rotate(${rotCh}deg)`;
-            
-            // Efek refresh video (Reload)
-            if(player && player.seekTo) {
-                player.seekTo(0);
-                showOSD("RELOAD...");
-            }
-        }
-
-        // FUNGSI VOLUME (Putar Knob Tengah)
+        // Fungsi Ubah Volume (Visual OSD)
         function changeVol() {
+            // Simulasi: Setiap klik nambah volume, kalau max balik ke 0
             volumeLevel++;
             if (volumeLevel > 10) volumeLevel = 0;
             
-            if(player && player.setVolume) {
-                player.setVolume(volumeLevel * 10);
-            }
-
-            // Putar Knob Visual
-            rotVol += 30; 
-            document.getElementById('knobVol').style.transform = `rotate(${rotVol}deg)`;
-
-            // Update OSD
-            let bars = "|".repeat(volumeLevel * 2); 
+            // Putar Knob Volume
+            rotateKnob('knobVol', 30);
+            
+            // Update OSD Bar
+            let bars = "|".repeat(volumeLevel * 2); // Panjang bar
             document.getElementById('volBar').innerText = bars;
+            
+            // Tampilkan OSD
             showOSD();
         }
 
+        // Fungsi Mute
         function toggleMute() {
             const btn = document.getElementById('muteBtn');
             const icon = document.getElementById('osdMute');
@@ -283,12 +220,12 @@
             btn.classList.toggle('active');
             
             if (btn.classList.contains('active')) {
-                if(player && player.mute) player.mute();
+                // Mute Aktif
                 icon.style.display = 'block';
                 document.getElementById('osdVolume').innerText = "MUTE";
                 showOSD();
             } else {
-                if(player && player.unMute) player.unMute();
+                // Unmute
                 icon.style.display = 'none';
                 let bars = "|".repeat(volumeLevel * 2);
                 document.getElementById('osdVolume').innerHTML = `VOL <span id="volBar">${bars}</span>`;
@@ -296,11 +233,11 @@
             }
         }
 
-        function showOSD(customText) {
+        // Tampilkan OSD selama 2 detik lalu hilang
+        function showOSD() {
             const osd = document.getElementById('osdVolume');
-            if(customText) osd.innerText = customText;
-            
             osd.classList.add('show');
+            
             clearTimeout(osdTimeout);
             osdTimeout = setTimeout(() => {
                 osd.classList.remove('show');
