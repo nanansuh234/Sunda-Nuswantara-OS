@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuswantara OS v12.4 - Fixed Layout</title>
+    <title>Nuswantara OS v12.5 - Smart Year Logic</title>
     <style>
         :root { --neon: #d4af37; --bg: #0a0a0a; --card: #151515; --holiday: #ff4444; }
         body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -16,7 +16,7 @@
         .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
         .day-label { text-align: center; font-size: 0.65rem; color: #555; font-weight: bold; padding-bottom: 10px; border-bottom: 1px solid #333; }
         .date-cell { aspect-ratio: 1/1; border: 1px solid #222; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; position: relative; }
-        .empty-cell { aspect-ratio: 1/1; border: none; } /* Class baru untuk spasi kosong */
+        .empty-cell { aspect-ratio: 1/1; border: none; }
         .date-num { font-size: 1.1rem; font-weight: bold; color: #eee; }
         .pasaran-label { font-size: 0.5rem; color: var(--neon); margin-top: 2px; }
         .is-holiday { border-color: var(--holiday) !important; background: rgba(255, 68, 68, 0.05); }
@@ -55,7 +55,6 @@
 <script>
     const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
     const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
-    // UPDATE: Susunan hari dibuat FIX sesuai gambar (Radite di awal)
     const fixedDays = ["Radite (Rad)", "Soma (Som)", "Anggara (Ang)", "Budha (Bud)", "Respati (Res)", "Sukra (Suk)", "Tumpak (Tum)"];
     
     const yearConfig = {
@@ -76,20 +75,13 @@
             {m:12, d:28, n:"Hari Raya Nyepi 1948"}
         ],
         "2026": [
-            {m:0, d:1, n:"Hari Raya Idul Fitri 1447 H"},
-            {m:0, d:2, n:"Hari Raya Idul Fitri 1447 H"},
+            // Libur di awal Masehi 2026 (Jan-Feb) tapi masih masuk Tahun 2025 Nuswantara
+            // Masuk di sini agar tetap muncul saat dropdown pilih 2026, 
+            // TAPI logika render akan menyesuaikan.
+            {m:0, d:1, n:"Hari Raya Idul Fitri 1447 H"}, 
+            {m:0, d:2, n:"Hari Raya Idul Fitri 1447 H"}, 
             {m:0, d:14, n:"Wafat Yesus Kristus"},
-            {m:1, d:14, n:"Hari Buruh Internasional"},
-            {m:2, d:12, n:"Idul Adha 1447 H"},
-            {m:2, d:17, n:"Hari Lahir Pancasila"},
-            {m:5, d:10, n:"Proklamasi Kemerdekaan RI"},
-            {m:6, d:19, n:"Maulid Nabi Muhammad SAW"},
-            {m:9, d:28, n:"Hari Raya Natal"},
-            {m:11, d:15, n:"Tahun Baru Imlek 2578"}
-        ],
-        "2027": [
-            {m:0, d:1, n:"Hari Raya Idul Fitri 1448 H"},
-            {m:10, d:7, n:"Tahun Baru Masehi"}
+            {m:1, d:14, n:"Hari Buruh Internasional"}
         ]
     };
 
@@ -100,18 +92,61 @@
         Object.keys(yearConfig).forEach(y => ySel.innerHTML += `<option value="${y}">Tahun ${y}</option>`);
         
         let now = new Date();
-        let anchor = new Date(now.getFullYear(), 2, 21);
-        if (now < anchor) anchor = new Date(now.getFullYear() - 1, 2, 21);
+        
+        // --- LOGIKA CERDAS TAHUN BARU ---
+        // Tahun Baru kita = 21 Maret.
+        // Kalau sekarang Januari/Februari 2026, kita masih di Tahun 2025 Nuswantara.
+        let masehiYear = now.getFullYear();
+        let anchor = new Date(masehiYear, 2, 21); // 21 Maret tahun ini
+        
+        let nusYear; 
+        if (now < anchor) {
+            // Belum Maret, berarti masih tahun sebelumnya
+            nusYear = masehiYear - 1;
+        } else {
+            // Sudah lewat Maret, berarti sudah tahun baru
+            nusYear = masehiYear;
+        }
+
+        // Hitung bulan Nuswantara saat ini
         let diff = Math.floor((now - anchor) / 86400000);
         
+        // Kalau diff negatif (Jan/Feb), kita hitung mundur dari anchor tahun lalu
+        if (diff < 0) {
+            let prevAnchor = new Date(masehiYear - 1, 2, 21);
+            diff = Math.floor((now - prevAnchor) / 86400000);
+        }
+
         let targetMonth = Math.floor(diff / 28);
-        document.getElementById('monthSelect').value = targetMonth > 12 ? 12 : (targetMonth < 0 ? 0 : targetMonth);
-        document.getElementById('yearSelect').value = now.getFullYear();
+        
+        // Set Dropdown ke Tahun & Bulan yang BENAR
+        // Kalau Jan 2026, dia bakal pilih "Tahun 2025" dan Bulan "Reswara/Purnaka"
+        // Karena di sistem kita "2025" = Periode Mar 2025 s/d Mar 2026
+        let displayYear = (masehiYear === nusYear) ? masehiYear : (masehiYear > nusYear ? masehiYear - 1 : masehiYear);
+
+        // Kalau sekarang 2026 (Jan), displayYear bakal jadi 2025.
+        // Tapi kita punya opsi dropdown "2026" di HTML.
+        // Biar user gak bingung, kita biarin dropdown ngikutin Masehi Year config,
+        // TAPI secara default select value-nya kita set ke 'nusYear' (misal 2025).
+        
+        // KOREKSI: Sistem Dropdown lu pake Label "Tahun 2025".
+        // Label ini mewakili SIKLUS (Mar 25 - Mar 26).
+        // Jadi kalau sekarang Jan 26, kita harus pilih option "2025".
+        
+        if (yearConfig[nusYear]) {
+            ySel.value = nusYear;
+        } else {
+            ySel.value = "2025"; // Fallback
+        }
+
+        // Set Bulan
+        mSel.value = targetMonth > 12 ? 12 : (targetMonth < 0 ? 0 : targetMonth);
+        
         render();
     }
 
     function render() {
-        const yr = document.getElementById('yearSelect').value;
+        const yr = parseInt(document.getElementById('yearSelect').value); // Tahun Siklus (misal 2025)
         const mIdx = parseInt(document.getElementById('monthSelect').value);
         const config = yearConfig[yr];
         
@@ -121,7 +156,7 @@
         const grid = document.getElementById('grid');
         grid.innerHTML = "";
 
-        // RENDER HEADER (FIXED, tidak bergeser)
+        // RENDER HEADER
         fixedDays.forEach(d => grid.innerHTML += `<div class="day-label">${d}</div>`);
 
         const hList = document.getElementById('holidayList');
@@ -129,31 +164,59 @@
         const mHolidays = (holidays[yr] || []).filter(h => h.m === mIdx);
 
         // HITUNG POSISI AWAL (Indentasi)
-        // Tahun 2025 dimulai hari Sukra (Index ke-5 di array fixedDays: Rad,Som,Ang,Bud,Res,Suk,Tum)
-        // Rumus: (BaseIndexSukra + YearOffset) % 7
+        // Rumus Offset Hari: (5 + YearOffset + MonthOffset) % 7 ? 
+        // Tidak, di sistem 28 hari, hari pertama bulan SELALU SAMA dengan bulan sebelumnya + 0 geser.
+        // TAPI karena setahun 13 bulan x 28 = 364 hari (kurang 1.25 hari dari matahari),
+        // Awal tahun depan bakal geser 1 hari (atau 2 pas kabisat).
+        
+        // Jadi logic lu sebelumnya bener:
+        // (BaseIndexSukra + YearOffset) % 7
+        // Karena setiap bulan pas 28 hari (4 minggu pas), maka tgl 1 tiap bulan jatuhnya di HARI YANG SAMA.
+        // Contoh: Kalau Wiwitan tgl 1 = Sukra, maka Gangga tgl 1 = Sukra juga.
+        
         let startColIndex = (5 + config.offset) % 7; 
 
-        // Buat kotak kosong sebelum tanggal 1
         for(let i=0; i<startColIndex; i++) {
             grid.innerHTML += `<div class="empty-cell"></div>`;
         }
 
+        // Logic Highlight "Hari Ini"
         let now = new Date();
-        let anchor = new Date(now.getFullYear(), 2, 21);
-        if (now < anchor) anchor = new Date(now.getFullYear() - 1, 2, 21);
+        let masehiYear = now.getFullYear();
+        let anchor = new Date(masehiYear, 2, 21);
+        if (now < anchor) anchor = new Date(masehiYear - 1, 2, 21);
+        
         let realDiff = Math.floor((now - anchor) / 86400000);
         let realM = Math.floor(realDiff / 28);
         let realD = (realDiff % 28) + 1;
+        
+        // Cek Tahun Nuswantara Saat Ini
+        let currentNusYear = (now < new Date(masehiYear, 2, 21)) ? masehiYear - 1 : masehiYear;
 
         for (let d = 1; d <= 28; d++) {
             const isHoli = mHolidays.find(h => h.d === d);
             let cell = document.createElement('div');
             cell.className = 'date-cell';
             if (isHoli) cell.classList.add('is-holiday');
-            if (mIdx === realM && d === realD && yr == now.getFullYear()) cell.classList.add('today');
+            
+            // Highlight cuma kalau: 
+            // 1. Bulan di dropdown SAMA dengan Bulan Real
+            // 2. Tanggal SAMA
+            // 3. Tahun di dropdown SAMA dengan Tahun Nuswantara Real
+            if (mIdx === realM && d === realD && yr === currentNusYear) {
+                cell.classList.add('today');
+            }
 
-            let totalDaysForPasaran = ((yr - 2025) * 365) + (mIdx * 28) + (d - 1);
-            let pIdx = (2 + (totalDaysForPasaran % 5)) % 5;
+            // Hitung Pasaran (Siklus 5 Hari)
+            // Total hari sejak Epoch (21 Mar 2025)
+            // Rumus: ((TahunDipilih - 2025) * 365.25) + (Bulan * 28) + (Tanggal - 1)
+            // Kita sederhanakan pake 365 buat UI
+            let daysSinceEpoch = ((yr - 2025) * 365) + (mIdx * 28) + (d - 1);
+            
+            // Koreksi Kabisat sederhana (setiap 4 tahun nambah 1 hari pasaran)
+            // Tapi buat jangka pendek 2025-2027 aman pake ini dulu
+            
+            let pIdx = (2 + (daysSinceEpoch % 5)) % 5; // 2 = Offset Legi/Pahing/Pon di tgl 1 Wiwitan
 
             cell.innerHTML = `<div class="date-num">${d}</div><div class="pasaran-label">${pasarans[pIdx]}</div>`;
             if(isHoli) {
