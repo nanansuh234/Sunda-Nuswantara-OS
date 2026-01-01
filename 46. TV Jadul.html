@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV Jadul - Power Button Fix</title>
+    <title>TV Jadul - Anti Blank</title>
     <style>
         body {
             background-color: #1a1a1a;
@@ -51,59 +51,62 @@
             border-radius: 50% / 10%; overflow: hidden; position: relative; border: 2px solid #111;
         }
         
+        /* CONTAINER VIDEO - SELALU VISIBLE TAPI DI BELAKANG */
         .screen-content { 
             width: 100%; height: 100%; border: none; display: block; overflow: hidden;
-            opacity: 0; transition: opacity 0.5s; /* Default mati (gelap) */
+            position: relative; z-index: 1; /* Paling bawah */
         }
-        .screen-content.active { opacity: 1; } /* Pas nyala */
 
-        /* LAYAR SEMUT (STATIC NOISE) - MUNCUL PAS TV MATI */
+        /* LAYAR SEMUT (COVER) - INI YANG NUTUPIN VIDEO */
         .static-noise {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif'); /* GIF Semut TV */
-            background-size: cover; opacity: 0.15; pointer-events: none; z-index: 6;
-            mix-blend-mode: overlay;
-            display: block;
+            /* Fallback warna abu-abu kalau GIF gak load */
+            background-color: #222; 
+            background-image: url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif'); 
+            background-size: cover; 
+            opacity: 0.8; 
+            z-index: 10; /* Di atas video */
+            display: flex; align-items: center; justify-content: center;
         }
+        
+        /* Class buat ngilangin semut pas TV nyala */
         .static-noise.off { display: none; }
 
         /* FULL SCREEN ZOOM FIX */
         #youtube-player {
             width: 100%; height: 100%;
             transform: scale(1.35); transform-origin: center center;
-            /* pointer-events dihapus biar kalau macet bisa diklik manual */
         }
 
-        /* EFEK LAYAR */
+        /* EFEK LAYAR KACA (Paling Depan) */
         .screen-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.4) 90%);
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.8); pointer-events: none; z-index: 5;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8); pointer-events: none; z-index: 20;
             border-radius: 50% / 10%;
         }
         .scanlines {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-            background-size: 100% 4px; pointer-events: none; z-index: 4; opacity: 0.3;
+            background-size: 100% 4px; pointer-events: none; z-index: 15; opacity: 0.3;
         }
 
         /* OSD & HINT */
         .osd-display {
             position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            font-weight: bold; color: #0f0; font-size: 1.5rem; text-shadow: 0 0 5px #0f0; z-index: 10;
+            font-weight: bold; color: #0f0; font-size: 1.5rem; text-shadow: 0 0 5px #0f0; 
+            z-index: 30; /* Paling atas */
             opacity: 0; transition: opacity 0.5s; pointer-events: none;
             background: rgba(0, 20, 0, 0.6); padding: 5px 15px; border-radius: 5px; white-space: nowrap;
         }
         .osd-display.show { opacity: 1; }
         
         .click-hint {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: #fff; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 5px;
-            font-size: 0.9rem; z-index: 20; text-align: center; border: 1px solid #555;
-            animation: pulse 2s infinite; pointer-events: none;
+            color: #fff; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 5px;
+            font-size: 1rem; text-align: center; border: 2px solid #555;
+            animation: pulse 2s infinite; cursor: pointer;
         }
-        .click-hint.hide { display: none; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         /* PANEL KONTROL */
         .control-panel {
@@ -150,7 +153,7 @@
             width: 12px; height: 12px; background: #300; border-radius: 50%;
             margin-top: 5px; transition: 0.3s; border: 1px solid #000;
         }
-        .power-led.on { background: #00ff00; box-shadow: 0 0 10px #00ff00; } /* Hijau pas nyala */
+        .power-led.on { background: #00ff00; box-shadow: 0 0 10px #00ff00; } 
 
         .legs { width: 80%; display: flex; justify-content: space-between; margin-top: -10px; z-index: 0; }
         .leg { width: 35px; height: 45px; background: #2e1e19; clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%); }
@@ -164,16 +167,15 @@
         <div class="tv-case">
             <div class="tv-screen-bezel">
                 <div class="tv-screen">
+                    <div id="staticNoise" class="static-noise">
+                         <div class="click-hint">KLIK "CHANNEL"<br>UNTUK NYALAKAN</div>
+                    </div>
+
                     <div class="screen-overlay"></div>
                     <div class="scanlines"></div>
-                    
-                    <div id="staticNoise" class="static-noise"></div>
-                    
-                    <div id="hintText" class="click-hint">KLIK "CHANNEL"<br>UNTUK NYALAKAN TV</div>
-
                     <div id="osdVolume" class="osd-display">VOL <span id="volBar">||||||||||</span></div>
                     
-                    <div id="tvContent" class="screen-content">
+                    <div class="screen-content">
                         <div id="youtube-player"></div>
                     </div>
                 </div>
@@ -217,12 +219,11 @@
             player = new YT.Player('youtube-player', {
                 height: '100%',
                 width: '100%',
-                // ID VIDEO YOUTUBE (Ganti kode ini kalau mau ganti video)
+                // ID VIDEO YOUTUBE (Ganti disini)
                 videoId: 'jfKfPfyJRdk', 
                 playerVars: {
                     'playsinline': 1, 'controls': 0, 'disablekb': 1,
-                    'rel': 0, 'modestbranding': 1, 'iv_load_policy': 3,
-                    'autoplay': 0 // Kita kontrol manual biar aman
+                    'rel': 0, 'modestbranding': 1, 'iv_load_policy': 3
                 },
                 events: { 'onReady': onPlayerReady }
             });
@@ -230,49 +231,43 @@
 
         function onPlayerReady(event) {
             player.setVolume(volumeLevel * 10);
-            // Jangan langsung play, tunggu user klik tombol Power
+            // Kita gak auto play disini, tunggu tombol power
         }
 
-        // --- FUNGSI POWER ON/OFF (KNOB CHANNEL) ---
+        // FUNGSI POWER
         function togglePower() {
-            const screen = document.getElementById('tvContent');
-            const noise = document.getElementById('staticNoise');
-            const hint = document.getElementById('hintText');
-            const led = document.getElementById('led');
-
             // Putar Knob
             rotCh += 45; 
             document.getElementById('knobCh').style.transform = `rotate(${rotCh}deg)`;
+
+            const noise = document.getElementById('staticNoise');
+            const led = document.getElementById('led');
 
             if (!isTvOn) {
                 // NYALAKAN TV
                 isTvOn = true;
                 
-                // Efek Visual
-                noise.classList.add('off'); // Hilangkan semut
-                hint.classList.add('hide'); // Hilangkan teks petunjuk
-                screen.classList.add('active'); // Munculkan layar video
-                led.classList.add('on'); // Lampu jadi hijau
+                // Sembunyikan semut (Display None) - Ini kuncinya biar gambar nongol
+                noise.style.display = 'none'; 
+                led.classList.add('on');
 
-                // Play Video (Karena dipicu user click, browser pasti ngasih izin)
+                // Play Video
                 if(player && player.playVideo) {
                     player.playVideo();
                 }
-                
                 showOSD("CHANNEL 1");
 
             } else {
-                // GANTI CHANNEL (Kalau TV udah nyala, tombol ini jadi ganti channel)
+                // GANTI CHANNEL (Kalau udah nyala)
                 if(player && player.seekTo) {
-                    // Efek ganti channel (Reload/Seek)
-                    player.seekTo(player.getCurrentTime()); 
+                    player.seekTo(0); // Ulang dari awal
                     showOSD("CHANNEL " + (Math.floor(rotCh/45) % 10 + 1));
                 }
             }
         }
 
         function changeVol() {
-            if(!isTvOn) return; // Gak fungsi kalau TV mati
+            if(!isTvOn) return; 
 
             volumeLevel++;
             if (volumeLevel > 10) volumeLevel = 0;
@@ -308,7 +303,6 @@
         function showOSD(customText) {
             const osd = document.getElementById('osdVolume');
             if(customText) osd.innerText = customText;
-            
             osd.classList.add('show');
             clearTimeout(osdTimeout);
             osdTimeout = setTimeout(() => {
