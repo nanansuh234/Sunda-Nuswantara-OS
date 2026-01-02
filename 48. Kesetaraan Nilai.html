@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Persamaan Nilai (Barter)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --gold: #d4af37;
+            --silver: #a0a0a0;
+            --text: #e0e0e0;
+            --border: #333;
+            --accent: #27ae60; /* Hijau Barter */
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold);
+            text-align: center; margin-bottom: 5px; letter-spacing: 2px;
+        }
+        .subtitle { color: #888; margin-bottom: 30px; text-align: center; font-size: 0.9rem; }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            width: 100%; max-width: 1000px;
+        }
+
+        /* CARD */
+        .barter-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .header {
+            padding: 20px; text-align: center; border-bottom: 1px solid var(--border);
+            background: rgba(0,0,0,0.2);
+        }
+        .icon-large { font-size: 3rem; margin-bottom: 10px; display: block; }
+        .main-item { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: bold; color: #fff; }
+        .sub-val { color: var(--gold); font-size: 1rem; margin-top: 5px; }
+        
+        .list-container { padding: 0; }
+        .list-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; border-bottom: 1px solid #333;
+            transition: 0.2s;
+        }
+        .list-item:hover { background: rgba(255,255,255,0.05); }
+        .item-name { font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .item-qty { color: var(--accent); font-weight: bold; font-size: 1.1rem; }
+
+        /* COLORS */
+        .c-silver .sub-val { color: var(--silver); }
+        .c-gold .sub-val { color: var(--gold); }
+
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>SISTEM PERSAMAAN NILAI</h1>
+    <div class="subtitle">Konsep Barter / Muqayyadah: Nilai Riil vs Nilai Riil</div>
+
+    <div class="container">
+
+        <div class="barter-card c-silver">
+            <div class="header">
+                <span class="icon-large">🐓</span>
+                <div class="main-item">1 AYAM BESAR</div>
+                <div class="sub-val">Setara ± 1 Dirham Perak</div>
+                <div style="font-size:0.8rem; color:#666; margin-top:5px;">(Kelas Kebutuhan Harian)</div>
+            </div>
+            <div class="list-container">
+                <div class="list-item">
+                    <span class="item-name">🍚 Beras Premium</span>
+                    <span class="item-qty">3 - 4 Kg</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">🐟 Ikan Mas / Lele</span>
+                    <span class="item-qty">1.5 Kg</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">🥚 Telur Ayam</span>
+                    <span class="item-qty">1.5 Kg (24 Butir)</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">💇 Pangkas Rambut</span>
+                    <span class="item-qty">2 - 3 Kepala</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">☕ Kopi (Warung)</span>
+                    <span class="item-qty">10 - 12 Cangkir</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">⛽ Bensin (Pertalite)</span>
+                    <span class="item-qty">3 - 4 Liter</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="barter-card c-gold">
+            <div class="header">
+                <span class="icon-large">🐐</span>
+                <div class="main-item">1 KAMBING SEDANG</div>
+                <div class="sub-val">Setara ± 1 Dinar Emas</div>
+                <div style="font-size:0.8rem; color:#666; margin-top:5px;">(Kelas Aset & Modal)</div>
+            </div>
+            <div class="list-container">
+                <div class="list-item">
+                    <span class="item-name">🐓 Ayam Besar</span>
+                    <span class="item-qty">25 - 27 Ekor</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">👔 Baju/Kain Bagus</span>
+                    <span class="item-qty">10 - 15 Stel</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">📱 Smartphone</span>
+                    <span class="item-qty">1 Unit (Entry Level)</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">🛖 Sewa Kontrakan</span>
+                    <span class="item-qty">2 - 3 Bulan (Petak)</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">🌾 Gabah Kering</span>
+                    <span class="item-qty">4 - 5 Karung</span>
+                </div>
+                <div class="list-item">
+                    <span class="item-name">🐄 Sapi (Patungan)</span>
+                    <span class="item-qty">1/7 Bagian (Qurban)</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="margin-top:30px; text-align:center; color:#666; font-size:0.8rem; max-width:600px;">
+        *Estimasi berdasarkan daya beli rata-rata pasar tradisional Nuswantara. 
+        Rasio tukar: 1 Kambing ≈ 27 Ayam (Sesuai rasio Dinar:Dirham 1:27).
+    </div>
+
+</body>
+</html>

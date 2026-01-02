@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Banking Simulation (USD)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f13;
+            --panel: #1a1a20;
+            --red-alert: #ff3333;
+            --green-real: #00ff66;
+            --blue-credit: #00ccff;
+            --text: #e0e0e0;
+            --border: #333;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--blue-credit);
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        .subtitle { color: #888; margin-bottom: 30px; text-align: center; font-size: 0.9rem; max-width: 800px; }
+
+        .container {
+            width: 100%; max-width: 1000px;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        /* INPUT SECTION */
+        .control-panel {
+            background: var(--panel); border: 2px solid var(--border);
+            padding: 20px; border-radius: 10px;
+            display: flex; flex-direction: column; gap: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .input-row {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px dashed #444; padding-bottom: 10px;
+        }
+        
+        input[type="number"] {
+            background: #000; border: 1px solid var(--green-real);
+            color: var(--green-real); font-family: 'Share Tech Mono';
+            font-size: 1.2rem; padding: 5px 10px; width: 200px; text-align: right;
+        }
+
+        /* SIMULATION VISUAL */
+        .money-flow {
+            display: flex; gap: 10px; height: 100px; margin-top: 10px;
+        }
+        .flow-box {
+            border-radius: 5px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; text-align: center;
+            transition: 0.5s;
+        }
+        .real-money {
+            background: rgba(0, 255, 102, 0.1); border: 2px solid var(--green-real);
+            width: 10%; /* Fractional Reserve 10% */
+        }
+        .fake-money {
+            background: rgba(0, 204, 255, 0.1); border: 2px solid var(--blue-credit);
+            width: 90%; /* 90% Uang adalah Kredit */
+            position: relative; overflow: hidden;
+        }
+        .fake-money::after {
+            content: "FIAT MONEY PRINTING..."; font-size: 3rem; opacity: 0.1;
+            position: absolute; white-space: nowrap;
+            animation: scrollText 10s linear infinite;
+        }
+        @keyframes scrollText { from {transform: translateX(100%);} to {transform: translateX(-100%);} }
+
+        /* IMPACT GRID */
+        .impact-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+        
+        .impact-card {
+            background: var(--panel); padding: 20px; border-radius: 10px;
+            border: 1px solid #333; position: relative; overflow: hidden;
+        }
+        .impact-header { font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; border-bottom: 2px solid #444; padding-bottom: 5px; display: flex; justify-content: space-between;}
+        
+        .bubble-up { border-color: var(--red-alert); }
+        .bubble-up .val-change { color: var(--red-alert); font-size: 1.5rem; }
+        .arrow-up { color: var(--red-alert); }
+
+        .squeeze-down { border-color: var(--green-real); }
+        .squeeze-down .val-change { color: #888; font-size: 1.1rem; }
+        .arrow-down { color: #888; font-size: 0.8rem;}
+
+        .sector-item {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;
+        }
+        .sector-name { font-size: 0.9rem; }
+        .sector-desc { font-size: 0.7rem; color: #666; display: block; margin-top: 2px; }
+
+        .stat-highlight {
+            font-size: 1.8rem; font-weight: bold; color: var(--blue-credit);
+            text-shadow: 0 0 10px rgba(0, 204, 255, 0.4);
+        }
+
+        .note { font-size: 0.75rem; color: #555; margin-top: 20px; text-align: center; font-style: italic;}
+
+        @media (max-width: 768px) { .impact-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>GLOBAL DOLLAR SYSTEM</h1>
+    <div class="subtitle">
+        Simulasi Penciptaan Uang (Credit Creation) Skala Global dengan Mata Uang USD.
+    </div>
+
+    <div class="container">
+
+        <div class="control-panel">
+            <div class="input-row">
+                <div>
+                    <div style="color:#fff; font-weight:bold;">TABUNGAN RATA-RATA ($ USD)</div>
+                    <div style="font-size:0.8rem; color:#888;">Per penduduk bumi</div>
+                </div>
+                <input type="number" id="savingsInput" value="1000" oninput="calculate()">
+            </div>
+            
+            <div class="input-row">
+                <div>
+                    <div style="color:#fff; font-weight:bold;">POPULASI GLOBAL</div>
+                    <div style="font-size:0.8rem; color:#888;">Partisipan Ekonomi</div>
+                </div>
+                <div style="font-size:1.2rem; font-weight:bold;">8.000.000.000</div>
+            </div>
+
+            <div style="margin-top:15px;">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;">
+                    <span style="color:var(--green-real)">BASE MONEY (M0)</span>
+                    <span style="color:var(--blue-credit)">BROAD MONEY (M2/M3) - CREDIT</span>
+                </div>
+                <div class="money-flow">
+                    <div class="flow-box real-money">
+                        <div style="font-size:0.7rem;">UANG FISIK</div>
+                        <div id="realTotal" style="font-weight:bold; font-size:0.8rem;">-</div>
+                    </div>
+                    <div class="flow-box fake-money">
+                        <div style="font-size:0.9rem; color:var(--blue-credit); font-weight:bold; z-index:2;">TOTAL KREDIT TERCIPTA</div>
+                        <div id="creditTotal" class="stat-highlight" style="z-index:2;">-</div>
+                        <div style="font-size:0.7rem; color:#fff; z-index:2;">(Uang Hantu Pemicu Inflasi)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="impact-grid">
+            
+            <div class="impact-card bubble-up">
+                <div class="impact-header">
+                    <span>SEKTOR BUBBLE</span>
+                    <span class="arrow-up">INFLASI TERBANG 📈</span>
+                </div>
+                <div style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">
+                    Sektor yang disuntik kredit bank. Harga naik jauh melebihi inflasi normal.
+                </div>
+
+                <div class="sector-item">
+                    <div>
+                        <span class="sector-name">GLOBAL REAL ESTATE</span>
+                        <span class="sector-desc">Housing Bubble di kota besar dunia.</span>
+                    </div>
+                    <div class="val-change" id="propInf">+0%</div>
+                </div>
+
+                <div class="sector-item">
+                    <div>
+                        <span class="sector-name">BIAYA MEDIS (AS)</span>
+                        <span class="sector-desc">Asuransi & RS menyerap kredit.</span>
+                    </div>
+                    <div class="val-change" id="healthInf">+0%</div>
+                </div>
+
+                <div class="sector-item">
+                    <div>
+                        <span class="sector-name">TUITION FEE (KAMPUS)</span>
+                        <span class="sector-desc">Student Loan memicu kenaikan SPP.</span>
+                    </div>
+                    <div class="val-change" id="eduInf">+0%</div>
+                </div>
+            </div>
+
+            <div class="impact-card squeeze-down">
+                <div class="impact-header">
+                    <span>SEKTOR RIIL</span>
+                    <span class="arrow-down">DAYA BELI HANCUR 📉</span>
+                </div>
+                <div style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">
+                    Biaya hidup dalam Dollar naik, pendapatan riil stagnan.
+                </div>
+
+                <div class="sector-item">
+                    <div>
+                        <span class="sector-name">KOMODITAS TANI</span>
+                        <span class="sector-desc">Harga pupuk naik (Dollar), harga jual ditekan.</span>
+                    </div>
+                    <div class="val-change" id="agriVal" style="color:#f39c12">Tertekan</div>
+                </div>
+
+                <div class="sector-item">
+                    <div>
+                        <span class="sector-name">UMKM / SMALL BIZ</span>
+                        <span class="sector-desc">Kalah saing dengan korporasi penerima kredit.</span>
+                    </div>
+                    <div class="val-change" id="smeVal" style="color:#e74c3c">Bangkrut</div>
+                </div>
+
+                <div class="sector-item">
+                    <div>
+                        <span class="sector-name">GAJI (REAL WAGE)</span>
+                        <span class="sector-desc">Kenaikan gaji tidak bisa mengejar harga Rumah.</span>
+                    </div>
+                    <div class="val-change" id="wageVal" style="color:#e74c3c">-70% Value</span></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="note">
+            *Menggunakan asumsi Money Multiplier 10x (Fractional Reserve Banking). 
+            $1 Tabungan Anda = $10 Uang yang beredar di sistem (90% adalah Hutang).
+        </div>
+
+    </div>
+
+    <script>
+        const POPULATION = 8000000000; // 8 Milyar Penduduk
+        const MULTIPLIER = 10; // 10x Multiplier (Standar Banking)
+
+        function formatUSD(amount) {
+            // Format angka besar
+            if (amount >= 1e12) return "$ " + (amount / 1e12).toFixed(2) + " Triliun";
+            if (amount >= 1e9) return "$ " + (amount / 1e9).toFixed(2) + " Milyar";
+            if (amount >= 1e6) return "$ " + (amount / 1e6).toFixed(2) + " Juta";
+            return "$ " + amount.toLocaleString();
+        }
+
+        function calculate() {
+            let savingsPerPerson = parseFloat(document.getElementById('savingsInput').value) || 0;
+
+            // 1. Total Base Money (M0 - Uang Asli)
+            let totalRealMoney = savingsPerPerson * POPULATION;
+
+            // 2. Total Money Supply (M2 - Setelah Kredit)
+            let totalMoneySupply = totalRealMoney * MULTIPLIER;
+            let createdCredit = totalMoneySupply - totalRealMoney;
+
+            // Update UI
+            document.getElementById('realTotal').innerText = formatUSD(totalRealMoney);
+            document.getElementById('creditTotal').innerText = formatUSD(createdCredit);
+
+            // 3. Logic Inflasi
+            // Jika Uang beredar naik 10x (900% increase), harga aset akan naik gila-gilaan
+            let inflationBase = (MULTIPLIER - 1) * 100; // 900% base
+
+            let propInf = inflationBase * 1.5; // Properti naik lebih gila
+            let healthInf = inflationBase * 1.2;
+            let eduInf = inflationBase * 1.1;
+
+            document.getElementById('propInf').innerText = "+" + propInf.toFixed(0) + "%";
+            document.getElementById('healthInf').innerText = "+" + healthInf.toFixed(0) + "%";
+            document.getElementById('eduInf').innerText = "+" + eduInf.toFixed(0) + "%";
+
+            // Update Sektor Riil Text
+            document.getElementById('agriVal').innerHTML = `<span style="font-size:0.7rem">Cost vs Price gap:</span> <br><span style="color:#e74c3c">MARGIN TIPIS</span>`;
+            document.getElementById('smeVal').innerHTML = `<span style="font-size:0.7rem">Biaya Sewa</span> <br><span style="color:#e74c3c">NAIK +${propInf.toFixed(0)}%</span>`;
+            document.getElementById('wageVal').innerHTML = `<span style="font-size:0.7rem">Daya Beli Rumah</span> <br><span style="color:#e74c3c">TURUN DRASTIS</span>`;
+        }
+
+        // Run on load
+        calculate();
+
+    </script>
+</body>
+</html>

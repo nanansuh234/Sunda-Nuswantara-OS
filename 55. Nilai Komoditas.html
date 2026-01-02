@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusat Data Komoditas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f12;
+            --card-bg: #1a1a20;
+            --gold: #d4af37;
+            --silver: #a0a0a0;
+            --text: #e0e0e0;
+            --border: #333;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 40px;
+            display: flex; flex-direction: column; align-items: center;
+            height: 100vh;
+            background-image: radial-gradient(circle at top, #1f1f25 0%, #000 100%);
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .subtitle {
+            color: #888; margin-bottom: 50px; text-align: center;
+            border-bottom: 1px solid var(--border); padding-bottom: 20px; width: 60%;
+        }
+
+        /* GRID MENU */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            width: 100%; max-width: 900px;
+        }
+
+        /* MENU CARD */
+        .menu-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #25252e;
+        }
+
+        .icon { font-size: 3rem; margin-bottom: 15px; display: block; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+        
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .card-desc { font-size: 0.85rem; color: #888; line-height: 1.4; }
+
+        /* Icon Colors */
+        .c-book .icon { color: #8d6e63; }
+        .c-paper .icon { color: #e0e0e0; }
+        .c-blueprint .icon { color: #00e5ff; }
+        .c-barter .icon { color: #4caf50; }
+
+    </style>
+</head>
+<body>
+
+    <h1>PUSAT NILAI KOMODITAS</h1>
+    <div class="subtitle">Gerbang Data Ekonomi Nilai & Kesepakatan Nuswantara</div>
+
+    <div class="menu-grid">
+        
+        <a href="49. Daftar Nilai Komoditas.html" class="menu-card c-book">
+            <span class="icon">📖</span>
+            <div class="card-title">KITAB KESEPAKATAN</div>
+            <div class="card-desc">Database Live harga kesepakatan komunitas (Tampilan Buku Kuno).</div>
+        </a>
+
+        <a href="47. Community Barter Ledger.html" class="menu-card c-paper">
+            <span class="icon">📝</span>
+            <div class="card-title">LEDGER BARTER</div>
+            <div class="card-desc">Daftar kesetaraan nilai barang harian di atas kertas ledger.</div>
+        </a>
+
+        <a href="46. Silver Gold Value.html" class="menu-card c-blueprint">
+            <span class="icon">💠</span>
+            <div class="card-title">BLUEPRINT INDUSTRI</div>
+            <div class="card-desc">Peta nilai emas & perak dalam teknologi, medis, dan militer.</div>
+        </a>
+
+        <a href="48. Kesetaraan Nilai.html" class="menu-card c-barter">
+            <span class="icon">⚖️</span>
+            <div class="card-title">PERSAMAAN NILAI</div>
+            <div class="card-desc">Konversi langsung Dinar/Dirham ke Ayam, Kambing, & Pangan.</div>
+        </a>
+        
+            <a href="50. Fiat Value & Credit Fractional.html" class="menu-card c-barter">
+            <span class="icon">🤝</span>
+            <div class="card-title">Nilai Fiat VS Credit</div>
+            <div class="card-desc">Memahami Bahaya Tabungan Bank menjadi Uang Hantu di Peredaran.</div>
+        </a>
+
+    </div>
+
+</body>
+</html>

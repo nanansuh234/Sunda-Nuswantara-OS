@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Sovereignty Blueprint</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Architects+Daughter&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-blue: #001a33;
+            --line-blue: #003366;
+            --cyan-bright: #00ffff;
+            --cyan-dim: #008f8f;
+            --chalk-white: #e6e6e6;
+            --gold-neon: #ffd700;
+            --silver-neon: #c0c0c0;
+            --alert-red: #ff3333;
+            --med-green: #00ff66; /* Hijau Medis */
+        }
+
+        body {
+            background-color: var(--bg-blue);
+            background-image: 
+                linear-gradient(var(--line-blue) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line-blue) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--chalk-white);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* Overlay Vignette */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.7) 100%);
+            pointer-events: none; z-index: -1;
+        }
+
+        h1 {
+            font-family: 'Architects Daughter', cursive;
+            color: var(--cyan-bright); text-transform: uppercase; 
+            letter-spacing: 2px; margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            transform: rotate(-1deg); text-align: center;
+        }
+        .subtitle { 
+            color: var(--cyan-dim); margin-bottom: 30px; text-align: center; max-width: 800px; 
+            border-bottom: 2px dashed var(--cyan-dim); padding-bottom: 15px;
+        }
+        .highlight-jajah { color: var(--alert-red); font-weight: bold; text-decoration: underline; }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+            width: 100%; max-width: 1300px;
+        }
+
+        /* --- CARD STYLE --- */
+        .blueprint-card {
+            background: rgba(0, 26, 51, 0.85);
+            border: 2px solid var(--cyan-dim);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.05) inset;
+            padding: 20px; position: relative;
+            outline: 2px dashed var(--line-blue);
+            outline-offset: -10px;
+        }
+        .card-gold { border-color: var(--gold-neon); }
+        .card-silver { border-color: var(--silver-neon); }
+
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; border-bottom: 2px dashed var(--cyan-dim); padding-bottom: 10px;
+        }
+        .metal-title { font-size: 1.8rem; font-weight: bold; text-transform: uppercase; }
+        .txt-gold { color: var(--gold-neon); text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        .txt-silver { color: var(--silver-neon); text-shadow: 0 0 10px rgba(192, 192, 192, 0.3); }
+
+        /* --- INPUT GAUGE --- */
+        .input-gauge {
+            display: flex; align-items: center; justify-content: space-between;
+            background: #001122; border: 2px solid var(--cyan-dim);
+            padding: 15px; margin-bottom: 20px;
+            box-shadow: inset 0 0 15px #000;
+        }
+        .gauge-label { font-size: 0.9rem; color: var(--cyan-dim); text-transform: uppercase; }
+        input[type="number"] {
+            background: transparent; border: none; border-bottom: 2px solid var(--cyan-bright);
+            color: var(--cyan-bright); font-family: 'Share Tech Mono', monospace;
+            font-size: 2rem; width: 140px; text-align: right;
+        }
+        input:focus { outline: none; border-bottom-color: var(--gold-neon); }
+        .unit { font-size: 1.2rem; color: var(--cyan-dim); margin-left: 10px; }
+
+        /* --- VISUALIZATION --- */
+        .schematic-viz {
+            height: 160px; margin-bottom: 20px;
+            background: rgba(0,0,0,0.4);
+            border: 1px dashed var(--cyan-dim);
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .schematic-viz svg { width: 90%; height: 90%; opacity: 0.85; }
+        .viz-label {
+            position: absolute; bottom: 5px; right: 10px;
+            font-size: 0.7rem; color: var(--cyan-dim); font-family: 'Architects Daughter', cursive;
+        }
+
+        /* --- TABLE --- */
+        .manifest-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { 
+            text-align: left; color: var(--cyan-dim); padding: 10px 5px; 
+            border-bottom: 3px double var(--cyan-dim); text-transform: uppercase; letter-spacing: 1px;
+        }
+        td { padding: 10px 5px; border-bottom: 1px dashed var(--line-blue); vertical-align: middle; }
+        
+        .item-schematic { font-weight: bold; color: var(--cyan-bright); display: block; font-size: 1rem; }
+        .item-spec { font-size: 0.7rem; color: #888; }
+        
+        /* TAG KATEGORI */
+        .tag { font-size: 0.6rem; padding: 1px 4px; border-radius: 2px; margin-left: 5px; border: 1px solid; vertical-align: text-top; }
+        .tag-med { color: var(--med-green); border-color: var(--med-green); }
+        .tag-tech { color: var(--cyan-bright); border-color: var(--cyan-bright); }
+        .tag-mil { color: var(--alert-red); border-color: var(--alert-red); }
+
+        .qty-readout { font-size: 1.3rem; font-weight: bold; }
+        .retail-price { color: var(--chalk-white); font-weight: bold; }
+        .retail-note { font-size: 0.7rem; color: var(--alert-red); display: block; font-family: 'Architects Daughter', cursive; }
+
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>BLUEPRINT KEDAULATAN</h1>
+    <div class="subtitle">
+        Peta sebaran bahan baku Emas & Perak dalam <span style="color:var(--cyan-bright)">Teknologi</span>, <span style="color:var(--alert-red)">Militer</span>, dan <span style="color:var(--med-green)">Kesehatan</span> Modern.
+      Saat kita melepas Emas & Perak sebagai uang, Elit Global mengambilnya sebagai bahan baku murah untuk menciptakan teknologi. Mereka menjajah kita dengan menjual kembali teknologi berharga mahal yang bahan dasarnya adalah hak kita.
+        <br><span style="font-family: 'Architects Daughter'; font-size: 0.8rem; color:#fff;">(Default System: Kapasitas Maksimum Item Terberat)</span>
+    </div>
+
+    <div class="container">
+        
+        <div class="blueprint-card card-gold">
+            <div class="card-header">
+                <div class="metal-title txt-gold">SCHEMATIC: GOLD (Au)</div>
+                <div style="font-size:0.8rem;">BIO-TECH & AEROSPACE</div>
+            </div>
+
+            <div class="input-gauge">
+                <span class="gauge-label">INPUT RAW MATERIAL:</span>
+                <div>
+                    <input type="number" id="goldInput" step="0.1" oninput="calcGold()">
+                    <span class="unit">GRAM</span>
+                </div>
+            </div>
+
+            <div class="schematic-viz">
+                <svg viewBox="0 0 250 150" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="30" width="80" height="80" fill="none" stroke="#008f8f" stroke-width="2"/>
+                    <rect x="35" y="45" width="50" height="50" fill="#001122" stroke="#00ffff" stroke-width="1"/>
+                    <path d="M 35 45 L 20 30 M 85 45 L 100 30 M 35 95 L 20 110 M 85 95 L 100 110" stroke="#ffd700" stroke-width="2"/>
+                    <text x="60" y="130" fill="#008f8f" font-size="8" text-anchor="middle">A17 CHIP</text>
+                    
+                    <circle cx="180" cy="70" r="30" fill="none" stroke="#00ff66" stroke-width="2" stroke-dasharray="4,2"/>
+                    <path d="M 180 40 L 180 100" stroke="#ffd700" stroke-width="3"/>
+                    <path d="M 150 70 L 210 70" stroke="#ffd700" stroke-width="3"/>
+                    <text x="180" y="130" fill="#00ff66" font-size="8" text-anchor="middle">BIO-IMPLANT</text>
+                    
+                    <path d="M 100 70 L 150 70" stroke="#00ffff" stroke-width="1" stroke-dasharray="2,2"/>
+                </svg>
+                <span class="viz-label">Fig 1.1: Au Connectors in Tech & Med</span>
+            </div>
+
+            <table class="manifest-table">
+                <thead>
+                    <tr>
+                        <th width="45%">MANIFEST ITEM</th>
+                        <th width="25%">YIELD</th>
+                        <th width="30%">RETAIL (ELITE)</th>
+                    </tr>
+                </thead>
+                <tbody id="goldTable"></tbody>
+            </table>
+        </div>
+
+        <div class="blueprint-card card-silver">
+            <div class="card-header">
+                <div class="metal-title txt-silver">SCHEMATIC: SILVER (Ag)</div>
+                <div style="font-size:0.8rem;">ENERGY & STERILIZATION</div>
+            </div>
+
+            <div class="input-gauge">
+                <span class="gauge-label">INPUT RAW MATERIAL:</span>
+                <div>
+                    <input type="number" id="silverInput" step="1" oninput="calcSilver()">
+                    <span class="unit">GRAM</span>
+                </div>
+            </div>
+
+            <div class="schematic-viz">
+                <svg viewBox="0 0 250 150" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="30" y="30" width="40" height="80" fill="#001122" stroke="#00ffff" stroke-width="2"/>
+                    <rect x="40" y="20" width="20" height="10" fill="#c0c0c0"/>
+                    <line x1="35" y1="40" x2="35" y2="100" stroke="#c0c0c0" stroke-width="2"/>
+                    <line x1="65" y1="40" x2="65" y2="100" stroke="#c0c0c0" stroke-width="2"/>
+                    <text x="50" y="130" fill="#008f8f" font-size="8" text-anchor="middle">EV CELL</text>
+
+                    <rect x="130" y="30" width="80" height="80" fill="rgba(0,255,102,0.1)" stroke="#00ff66"/>
+                    <path d="M 130 30 L 210 110 M 210 30 L 130 110" stroke="#c0c0c0" stroke-width="1"/>
+                    <path d="M 170 30 L 170 110 M 130 70 L 210 70" stroke="#c0c0c0" stroke-width="1"/>
+                    <text x="170" y="130" fill="#00ff66" font-size="8" text-anchor="middle">Ag+ MESH</text>
+
+                    <path d="M 70 70 L 130 70" stroke="#00ffff" stroke-width="1" marker-end="url(#arrow)"/>
+                </svg>
+                <span class="viz-label">Fig 1.2: Ag in Energy & Health</span>
+            </div>
+
+            <table class="manifest-table">
+                <thead>
+                    <tr>
+                        <th width="45%">MANIFEST ITEM</th>
+                        <th width="25%">YIELD</th>
+                        <th width="30%">RETAIL (ELITE)</th>
+                    </tr>
+                </thead>
+                <tbody id="silverTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <svg style="display:none;">
+        <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#00ffff" />
+            </marker>
+        </defs>
+    </svg>
+
+    <script>
+        // === DATABASE MASTER (CAT: MED, TECH, MIL) ===
+        // Need: Gram per unit
+        
+        const goldIndustry = [
+            { name: "Satelit Low-Orbit", spec: "Radiation Shield Foil", need: 800, retail: 500000, cat: "TECH" }, // MAX ITEM
+            { name: "MRI Scanner", spec: "Superconductor Contact", need: 15.0, retail: 1500000, cat: "MED" },
+            { name: "Rudal Pintar", spec: "Guidance Circuit", need: 2.0, retail: 150000, cat: "MIL" },
+            { name: "iPhone 15 Pro Max", spec: "A17 Bionic Chip", need: 0.034, retail: 1200, cat: "TECH" },
+            { name: "Mahkota Gigi", spec: "Biocompatible Alloy", need: 3.0, retail: 800, cat: "MED" },
+            { name: "Rapid Test Kit", spec: "Nano-Gold Particle", need: 0.0001, retail: 5, cat: "MED" }
+        ];
+
+        const silverIndustry = [
+            { name: "Rudal Tomahawk", spec: "Silver-Zinc Battery", need: 1500, retail: 2000000, cat: "MIL" }, // MAX ITEM
+            { name: "Tesla Model 3", spec: "EV Battery System", need: 40, retail: 40000, cat: "TECH" },
+            { name: "Solar Panel (Rumah)", spec: "Conductive Paste", need: 20, retail: 300, cat: "TECH" },
+            { name: "Water Purifier", spec: "Silver Ion Filter", need: 10, retail: 800, cat: "MED" },
+            { name: "Perban Luka Bakar", spec: "Silver Alginate Mesh", need: 0.2, retail: 50, cat: "MED" },
+            { name: "Smartphone 5G", spec: "RF Circuits", need: 0.4, retail: 500, cat: "TECH" }
+        ];
+
+        function formatQty(num) {
+            if (num >= 1000000) return (num/1000000).toFixed(1) + "M";
+            if (num >= 1000) return (num/1000).toFixed(1) + "k";
+            if (num < 1 && num > 0) return Math.floor(num * 1000)/1000; 
+            return Math.floor(num).toLocaleString();
+        }
+
+        function formatCurrency(num) {
+             return "$" + num.toLocaleString();
+        }
+
+        // --- FUNGSI AUTO-SET MAX ---
+        function setInitialValues() {
+            // Cari item dengan 'need' tertinggi
+            let maxGold = 0;
+            goldIndustry.forEach(i => { if(i.need > maxGold) maxGold = i.need; });
+            
+            let maxSilver = 0;
+            silverIndustry.forEach(i => { if(i.need > maxSilver) maxSilver = i.need; });
+
+            // Set input box ke nilai maksimum
+            document.getElementById('goldInput').value = maxGold;
+            document.getElementById('silverInput').value = maxSilver;
+
+            // Render
+            calcGold();
+            calcSilver();
+        }
+
+        function calcGold() {
+            let input = parseFloat(document.getElementById('goldInput').value) || 0;
+            let html = "";
+            
+            goldIndustry.forEach(item => {
+                let qty = input / item.need;
+                let qtyColor = qty >= 1 ? "var(--gold-neon)" : "var(--cyan-dim)"; 
+                let retailTotal = qty * item.retail;
+                
+                // Tagging Warna
+                let tagClass = "tag-tech";
+                if(item.cat === "MED") tagClass = "tag-med";
+                if(item.cat === "MIL") tagClass = "tag-mil";
+
+                html += `
+                <tr>
+                    <td>
+                        <span class="item-schematic">${item.name} <span class="tag ${tagClass}">${item.cat}</span></span>
+                        <span class="item-spec">${item.spec}</span>
+                    </td>
+                    <td>
+                        <div class="qty-readout" style="color:${qtyColor}">${formatQty(qty)} <span style="font-size:0.7rem">UNIT</span></div>
+                    </td>
+                    <td>
+                        <div class="retail-price">${formatCurrency(retailTotal)}</div>
+                        <span class="retail-note">Nilai Pasar</span>
+                    </td>
+                </tr>
+                `;
+            });
+            document.getElementById('goldTable').innerHTML = html;
+        }
+
+        function calcSilver() {
+            let input = parseFloat(document.getElementById('silverInput').value) || 0;
+            let html = "";
+            
+            silverIndustry.forEach(item => {
+                let qty = input / item.need;
+                let qtyColor = qty >= 1 ? "var(--silver-neon)" : "var(--cyan-dim)";
+                let retailTotal = qty * item.retail;
+
+                let tagClass = "tag-tech";
+                if(item.cat === "MED") tagClass = "tag-med";
+                if(item.cat === "MIL") tagClass = "tag-mil";
+
+                html += `
+                <tr>
+                    <td>
+                        <span class="item-schematic">${item.name} <span class="tag ${tagClass}">${item.cat}</span></span>
+                        <span class="item-spec">${item.spec}</span>
+                    </td>
+                    <td>
+                        <div class="qty-readout" style="color:${qtyColor}">${formatQty(qty)} <span style="font-size:0.7rem">UNIT</span></div>
+                    </td>
+                    <td>
+                        <div class="retail-price">${formatCurrency(retailTotal)}</div>
+                        <span class="retail-note">Nilai Pasar</span>
+                    </td>
+                </tr>
+                `;
+            });
+            document.getElementById('silverTable').innerHTML = html;
+        }
+
+        // Jalankan
+        setInitialValues();
+
+    </script>
+</body>
+</html>

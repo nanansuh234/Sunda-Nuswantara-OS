@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Royal Commodity Ledger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wood-bg: #2c1e14;
+            --book-cover: #3e2723;
+            --page-bg: #f3e5ab; /* Warna Kertas Kuno */
+            --ink-color: #2b2b2b;
+            --gold-accent: #d4af37;
+            --line-color: #d1c4a0;
+        }
+
+        body {
+            background-color: var(--wood-bg);
+            /* Pola Meja Kayu (CSS Pattern) */
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z' fill='%233e2b20' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
+            font-family: 'Crimson Text', serif;
+            color: var(--ink-color);
+            overflow: hidden; /* Biar scroll cuma di dalam buku */
+        }
+
+        /* --- THE BOOK CONTAINER --- */
+        .book-wrapper {
+            position: relative;
+            width: 95%; max-width: 1100px;
+            height: 90vh;
+            background: var(--book-cover);
+            border-radius: 15px;
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.8),
+                inset 0 0 100px rgba(0,0,0,0.5); /* Efek Cover Tebal */
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* BUKU TERBUKA */
+        .open-book {
+            width: 100%; height: 100%;
+            background: var(--page-bg);
+            border-radius: 5px;
+            box-shadow: inset 0 0 50px rgba(139, 69, 19, 0.2);
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* GARIS TENGAH BUKU (LIPATAN) */
+        .open-book::before {
+            content: "";
+            position: absolute;
+            left: 50%; top: 0; bottom: 0;
+            width: 40px;
+            background: linear-gradient(90deg, 
+                rgba(0,0,0,0.05), 
+                rgba(0,0,0,0.2) 45%, 
+                rgba(0,0,0,0.2) 55%, 
+                rgba(0,0,0,0.05));
+            transform: translateX(-50%);
+            z-index: 10;
+            pointer-events: none; /* Biar bisa klik di baliknya */
+        }
+
+        /* HALAMAN KIRI & KANAN */
+        .page {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Left Page: Header & Controls */
+        .page-left {
+            border-right: 1px solid rgba(0,0,0,0.1);
+            background-image: linear-gradient(var(--line-color) 1px, transparent 1px);
+            background-size: 100% 30px; /* Garis buku tulis */
+        }
+
+        /* Right Page: Table Data */
+        .page-right {
+            background-image: linear-gradient(var(--line-color) 1px, transparent 1px);
+            background-size: 100% 30px;
+        }
+
+        /* TYPOGRAPHY */
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            text-align: center;
+            color: #3e2723;
+            border-bottom: 2px double #3e2723;
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .subtitle {
+            text-align: center; font-style: italic; font-size: 1rem; color: #5d4037; margin-bottom: 30px;
+        }
+
+        /* CONTROLS (SEARCH & BUTTON) */
+        .control-box {
+            text-align: center; margin-bottom: 30px;
+        }
+
+        .btn-fetch {
+            background: transparent;
+            border: 2px solid #5d4037;
+            color: #5d4037;
+            padding: 10px 25px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: 0.3s;
+        }
+        .btn-fetch:hover { background: #5d4037; color: var(--page-bg); }
+
+        .search-container {
+            margin-top: 20px;
+            position: relative;
+            max-width: 300px;
+            margin-left: auto; margin-right: auto;
+        }
+        .search-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #5d4037;
+            padding: 5px;
+            font-family: 'Special Elite', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            color: #2b2b2b;
+        }
+        .search-input:focus { outline: none; border-bottom-color: var(--gold-accent); }
+        .search-input::placeholder { color: rgba(93, 64, 55, 0.5); font-style: italic; }
+
+        /* TABEL GAYA BUKU */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Special Elite', monospace; /* Font mesin ketik */
+        }
+        
+        th {
+            text-align: left;
+            border-bottom: 2px solid #3e2723;
+            padding: 10px 5px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            color: #3e2723;
+        }
+
+        td {
+            padding: 8px 5px;
+            border-bottom: 1px dashed rgba(62, 39, 35, 0.3);
+            font-size: 0.95rem;
+            vertical-align: top;
+        }
+
+        tr:hover td { background-color: rgba(62, 39, 35, 0.05); }
+
+        /* LOADING & STATUS */
+        .loading-text { text-align: center; font-style: italic; color: #888; margin-top: 50px; display: none; }
+        .stamp-mark {
+            position: absolute; bottom: 30px; right: 30px;
+            border: 3px solid #b71c1c; color: #b71c1c;
+            padding: 10px 20px; font-family: 'Special Elite', cursive;
+            font-size: 1.2rem; transform: rotate(-10deg); opacity: 0.7;
+            mask-image: url('data:image/svg+xml;utf8,<svg...>...'); 
+            border-radius: 5px; pointer-events: none;
+        }
+
+        /* SCROLLBAR CUSTOM (Biar nyatu sama kertas) */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(62, 39, 35, 0.3); border-radius: 3px; }
+
+        /* RESPONSIF HP (JADI 1 HALAMAN) */
+        @media (max-width: 768px) {
+            .book-wrapper { padding: 5px; height: 95vh; width: 100%; }
+            .open-book { flex-direction: column; overflow-y: auto; }
+            .open-book::before { display: none; } /* Hapus lipatan tengah */
+            .page { width: 100%; border-right: none; padding: 20px; flex: none; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="book-wrapper">
+        <div class="open-book">
+            
+            <div class="page page-left">
+                <h1>KITAB KESEPAKATAN</h1>
+                <div class="subtitle">Daftar Nilai Tukar & Komoditas <br>Wilayah Nuswantara</div>
+
+                <div class="control-box">
+                    <p style="font-size:0.9rem; margin-bottom:15px;">
+                        "Dengan ini ditetapkan nilai tukar yang adil bagi seluruh kawula, berdasarkan mufakat bersama."
+                    </p>
+                    
+                    <button class="btn-fetch" onclick="fetchData()">
+                        🖋️ Buka Catatan Terbaru
+                    </button>
+
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Cari Barang..." onkeyup="filterTable()">
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:50px; opacity:0.6;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/70/Ornament_divider.svg" width="150" alt="divider">
+                </div>
+
+                <div class="stamp-mark" id="stamp" style="display:none;">
+                    SAH & VALID<br>
+                    <span style="font-size:0.7rem" id="stampDate"></span>
+                </div>
+            </div>
+
+            <div class="page page-right">
+                <div id="loader" class="loading-text">Sedang membuka lembaran data...</div>
+                
+                <table id="dataTable">
+                    <thead>
+                        <tr id="tableHeader">
+                            <th>Menunggu Data...</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td style="text-align:center; padding-top:20px;">Silakan klik tombol di halaman kiri.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // URL GOOGLE SHEETS CSV
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGkIRI-_XNlA7-5YP1amp9axQdYbGFLERIted9INYCDKpFa8AxtJ-qwVMf9kFLB-kLcmUoJPzCmend/pub?gid=1580176899&single=true&output=csv';
+
+        async function fetchData() {
+            const loader = document.getElementById('loader');
+            const tbody = document.getElementById('tableBody');
+            const thead = document.getElementById('tableHeader');
+            const stamp = document.getElementById('stamp');
+            
+            // Reset & Show Loading
+            tbody.innerHTML = ''; 
+            thead.innerHTML = '';
+            loader.style.display = 'block';
+            stamp.style.display = 'none';
+
+            try {
+                const response = await fetch(SHEET_URL);
+                const data = await response.text();
+                
+                // Parsing CSV
+                const rows = data.split('\n').map(row => row.split(','));
+                
+                loader.style.display = 'none';
+
+                if (rows.length > 0) {
+                    // 1. Header (Judul Kolom)
+                    const headers = rows[0]; 
+                    headers.forEach(h => {
+                        const th = document.createElement('th');
+                        th.innerText = h.replace(/"/g, '').trim().toUpperCase(); 
+                        thead.appendChild(th);
+                    });
+
+                    // 2. Isi Data
+                    for (let i = 1; i < rows.length; i++) {
+                        const rowData = rows[i];
+                        if (rowData.length > 1) { 
+                            const tr = document.createElement('tr');
+                            rowData.forEach(cell => {
+                                const td = document.createElement('td');
+                                // Bersihkan tanda kutip
+                                td.innerText = cell.replace(/"/g, '').trim();
+                                tr.appendChild(td);
+                            });
+                            tbody.appendChild(tr);
+                        }
+                    }
+
+                    // Tampilkan Stempel Validasi
+                    stamp.style.display = 'block';
+                    const today = new Date();
+                    document.getElementById('stampDate').innerText = today.toLocaleDateString('id-ID');
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+                loader.style.display = 'none';
+                tbody.innerHTML = '<tr><td colspan="5" style="color:red; text-align:center;">Gagal membaca naskah. Periksa koneksi.</td></tr>';
+            }
+        }
+
+        // Fungsi Pencarian (Search)
+        function filterTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('dataTable');
+            const tr = table.getElementsByTagName('tr');
+
+            // Mulai dari i=1 karena i=0 adalah Header
+            for (let i = 1; i < tr.length; i++) {
+                const tds = tr[i].getElementsByTagName('td');
+                let found = false;
+                
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j]) {
+                        const txtValue = tds[j].textContent || tds[j].innerText;
+                        if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                tr[i].style.display = found ? "" : "none";
+            }
+        }
+    </script>
+
+</body>
+</html>

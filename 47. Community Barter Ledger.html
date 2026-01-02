@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger Barter Ekonomi Rakyat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-bg: #f4f1ea;
+            --ink-color: #2c3e50;
+            --line-color: #99aab5;
+            --highlight: #b7410e; /* Merah Stempel */
+            --silver-dim: #718093;
+        }
+
+        body {
+            background-color: #2d3436; /* Background luar gelap */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        /* LEMBAR KERTAS */
+        .ledger-paper {
+            background-color: var(--paper-bg);
+            width: 100%;
+            max-width: 900px;
+            padding: 40px;
+            box-shadow: 
+                0 0 5px rgba(0,0,0,0.1),
+                0 0 20px rgba(0,0,0,0.3),
+                inset 0 0 100px rgba(165, 142, 100, 0.1); /* Efek lusuh */
+            position: relative;
+            transform: rotate(0.5deg); /* Sedikit miring natural */
+        }
+
+        /* LUBANG KERTAS BINDER */
+        .ledger-paper::before {
+            content: "";
+            position: absolute;
+            left: 15px; top: 0; bottom: 0;
+            border-right: 2px solid rgba(255, 100, 100, 0.3); /* Garis margin merah */
+        }
+
+        h1 {
+            font-family: 'Special Elite', cursive;
+            text-align: center;
+            font-size: 2rem;
+            color: var(--ink-color);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 3px double var(--ink-color);
+            padding-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        /* STEMPEL */
+        .stamp {
+            position: absolute;
+            top: 30px; right: 40px;
+            border: 3px solid var(--highlight);
+            color: var(--highlight);
+            padding: 10px;
+            font-family: 'Special Elite', cursive;
+            font-size: 1rem;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+            mask-image: url('data:image/svg+xml;utf8,<svg...>...'); /* Efek grunge kalau niat, simple border ok */
+            border-radius: 5px;
+        }
+
+        /* TABEL */
+        .barter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            text-align: left;
+            border-bottom: 2px solid var(--ink-color);
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--line-color);
+            vertical-align: middle;
+            font-size: 1rem;
+            color: var(--ink-color);
+        }
+
+        tr:last-child td { border-bottom: none; }
+        
+        /* Baris Zebra Halus */
+        tr:nth-child(even) { background-color: rgba(0,0,0,0.02); }
+        tr:hover { background-color: rgba(255, 230, 0, 0.1); cursor: crosshair; }
+
+        .num-col { width: 50px; color: #777; }
+        .val-col { font-weight: bold; text-align: right; color: var(--silver-dim); }
+        .cat-tag {
+            font-size: 0.7rem;
+            background: #e0dcd0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* CALCULATOR SECTION */
+        .calc-box {
+            margin-top: 40px;
+            border-top: 2px dashed var(--ink-color);
+            padding-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.03);
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--ink-color);
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.2rem;
+            width: 80px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--highlight);
+        }
+        input:focus { outline: none; }
+
+        .result-display {
+            font-weight: bold;
+            color: var(--ink-color);
+        }
+
+        @media (max-width: 600px) {
+            .ledger-paper { padding: 20px; }
+            .stamp { display: none; }
+            th, td { font-size: 0.8rem; }
+            .cat-tag { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ledger-paper">
+        <div class="stamp">NUSWANTARA<br>VERIFIED</div>
+        
+        <h1>DAFTAR KESETARAAN BARTER</h1>
+        <div class="subtitle">Panduan Nilai Tukar Ekonomi Kerakyatan (Basis: 1 Dirham Perak)</div>
+
+        <table class="barter-table">
+            <thead>
+                <tr>
+                    <th class="num-col">NO</th>
+                    <th>KOMODITAS / JASA</th>
+                    <th>QTY SETARA 1 DIRHAM</th>
+                </tr>
+            </thead>
+            <tbody id="ledgerBody">
+                </tbody>
+        </table>
+
+        <div class="calc-box">
+            <div>
+                <span>Jika saya punya: </span>
+                <input type="number" id="inputQty" value="1" oninput="calculate()">
+                <span> Dirham, saya dapat...</span>
+            </div>
+            <div id="hintText" style="font-size:0.8rem; font-style:italic; color:#666;">
+                *Lihat kolom tabel untuk konversi otomatis
+            </div>
+        </div>
+        
+        <div style="margin-top:20px; text-align:center; font-size:0.7rem; color:#888;">
+            Catatan: Nilai tukar berdasarkan rata-rata harga pasar tradisional & upaya produksi.
+            <br>1 Dirham Perak ≈ Rp 75.000 (Estimasi Daya Beli Beras 5-6 Kg)
+        </div>
+    </div>
+
+    <script>
+        // DATABASE 20 ITEM EKONOMI KERAKYATAN
+        // QTY adalah jumlah barang yang nilainya setara dengan 1 DIRHAM
+        const barterItems = [
+            { name: "Beras Putih Premium", cat: "Pangan", qty: "5 Kg" },
+            { name: "Ayam Kampung (Hidup)", cat: "Ternak", qty: "1 Ekor" },
+            { name: "Telur Ayam Ras", cat: "Ternak", qty: "2.5 Kg" },
+            { name: "Minyak Kelapa Murni", cat: "Olah", qty: "2 Liter" },
+            { name: "Gula Aren Asli", cat: "Kebun", qty: "2.5 Kg" },
+            { name: "Ikan Lele Segar", cat: "Ternak", qty: "3 Kg" },
+            { name: "Tahu / Tempe", cat: "Olah", qty: "10 Papan Besar" },
+            { name: "Sayur Mayur (Campur)", cat: "Tani", qty: "1 Keranjang Penuh" },
+            { name: "Cabai Rawit Merah", cat: "Tani", qty: "1 Kg" },
+            { name: "Bawang Merah", cat: "Tani", qty: "2 Kg" },
+            { name: "Kopi Bubuk Asli", cat: "Kebun", qty: "500 Gram" },
+            { name: "Garam Krosok", cat: "Laut", qty: "1 Bal (20 Pack)" },
+            { name: "Madu Hutan Liar", cat: "Hutan", qty: "1 Botol (250ml)" },
+            { name: "Sabun Herbal/Lerek", cat: "Kriya", qty: "10 Batang" },
+            { name: "Jasa Pangkas Rambut", cat: "Jasa", qty: "3 Kepala (Dewasa)" },
+            { name: "Jasa Urut / Pijat", cat: "Jasa", qty: "1 Sesi (90 Menit)" },
+            { name: "Sapu Ijuk / Lidi", cat: "Kriya", qty: "5 Buah" },
+            { name: "Kelapa Tua (Butir)", cat: "Kebun", qty: "10 Butir" },
+            { name: "Pisang Raja", cat: "Kebun", qty: "2 Sisir Besar" },
+            { name: "Singkong / Ubi", cat: "Tani", qty: "1 Karung (15 Kg)" }
+        ];
+
+        function renderTable(multiplier = 1) {
+            const tbody = document.getElementById('ledgerBody');
+            tbody.innerHTML = '';
+
+            barterItems.forEach((item, index) => {
+                // Parsing QTY string to number for calculation logic (Simplified)
+                // Kita ambil angka di depan string
+                let baseQty = parseFloat(item.qty); 
+                let unit = item.qty.replace(/[0-9.]/g, '').trim();
+                
+                // Kalkulasi Baru
+                let newQty = (baseQty * multiplier).toFixed(1);
+                // Hilangkan desimal .0 jika bulat
+                if (newQty.endsWith('.0')) newQty = newQty.slice(0, -2);
+
+                let row = `
+                    <tr>
+                        <td class="num-col">${String(index + 1).padStart(2, '0')}.</td>
+                        <td>
+                            ${item.name} 
+                            <span class="cat-tag">${item.cat}</span>
+                        </td>
+                        <td class="val-col">
+                            ${newQty} ${unit}
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function calculate() {
+            let input = parseFloat(document.getElementById('inputQty').value) || 0;
+            if(input < 0) input = 0;
+            
+            // Update tabel sesuai multiplier input
+            renderTable(input);
+            
+            document.getElementById('hintText').innerText = 
+                `*Tabel di atas menunjukkan apa yang bisa Anda dapatkan dengan ${input} Dirham.`;
+        }
+
+        // Render awal (1 Dirham)
+        renderTable(1);
+
+    </script>
+</body>
+</html>
