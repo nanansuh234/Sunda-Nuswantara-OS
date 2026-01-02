@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSWANTARA COSMIC CLOCK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050508;
+            --panel: #0f1015;
+            --text: #aaffff;
+            --gold: #ffcc00;
+            --silver: #ddddff;
+            --suwung: #8a2be2; /* Warna Ungu Misterius */
+            --danger: #ff3333;
+        }
+
+        body {
+            margin: 0; padding: 0; background: var(--bg); color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            /* FIX SCROLL: Biarkan body scroll alami */
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* HEADER */
+        .header {
+            width: 100%; text-align: center; padding: 20px; 
+            background: linear-gradient(to bottom, #000 80%, transparent 100%);
+            border-bottom: 1px solid #333; z-index: 10;
+        }
+        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; letter-spacing: 3px; font-size: 1.5rem; }
+        .sub { font-family: 'Orbitron'; font-size: 0.8rem; color: #888; margin-top: 5px; }
+
+        /* VISUALISASI UTAMA */
+        .canvas-container {
+            position: relative; 
+            width: 100%; max-width: 600px; /* Batasi lebar biar enak di HP */
+            aspect-ratio: 1/1; /* Kotak Sempurna */
+            margin: 20px 0;
+            border: 1px solid #333; 
+            box-shadow: 0 0 50px rgba(0,255,255,0.05);
+            background: radial-gradient(circle, #080810 0%, #000 70%);
+            border-radius: 50%; /* Frame Bulat */
+        }
+        canvas { display: block; width: 100%; height: 100%; border-radius: 50%; }
+
+        /* OVERLAY DATA DI ATAS KANVAS */
+        .month-display {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; pointer-events: none; mix-blend-mode: overlay;
+        }
+        .month-name { font-family: 'Cinzel'; font-size: 2.5rem; color: rgba(255,255,255,0.2); font-weight: bold; }
+        .year-name { font-family: 'Orbitron'; font-size: 0.8rem; color: rgba(255,200,0,0.5); }
+
+        /* PANEL KONTROL & INFO (BAWAH) */
+        .info-section {
+            width: 100%; max-width: 800px; padding: 0 20px 50px 20px;
+            display: grid; grid-template-columns: 1fr; gap: 15px;
+        }
+
+        .card {
+            background: var(--panel); border: 1px solid #333; padding: 15px;
+            border-radius: 8px; border-left: 3px solid var(--text);
+        }
+        h3 { font-family: 'Orbitron'; color: var(--gold); margin: 0 0 10px 0; font-size: 1rem; border-bottom: 1px dashed #444; padding-bottom: 5px; }
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
+        .val { font-weight: bold; color: #fff; font-family: monospace; }
+
+        /* TOMBOL */
+        .controls { display: flex; gap: 5px; margin-top: 10px; }
+        button {
+            flex: 1; padding: 10px; background: #1a1a1a; border: 1px solid var(--text); color: var(--text);
+            cursor: pointer; font-family: 'Orbitron'; transition: 0.3s; font-size: 0.8rem;
+        }
+        button:hover { background: var(--text); color: #000; }
+        button.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+        /* STATUS SUWUNG */
+        .suwung-alert {
+            display: none; text-align: center; color: var(--suwung); font-weight: bold; 
+            animation: pulse 2s infinite; margin-top: 5px;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* RESPONSIVE */
+        @media (min-width: 768px) {
+            .info-section { grid-template-columns: 1fr 1fr; } /* 2 Kolom di Desktop */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>NUSWANTARA COSMIC CLOCK</h1>
+        <div class="sub">REALITY MODEL: FLAT EARTH & PRANATA MANGSA</div>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="cosmosCanvas"></canvas>
+        
+        <div class="month-display">
+            <div class="month-name" id="monthWatermark">WIWITAN</div>
+            <div class="year-name" id="yearWatermark">TAHUN AIR</div>
+        </div>
+    </div>
+
+    <div class="info-section">
+        
+        <div class="card">
+            <h3>SIMULATION SPEED</h3>
+            <div class="controls">
+                <button onclick="setSpeed(0.5)">Pelan</button>
+                <button onclick="setSpeed(2)" class="active">Normal</button>
+                <button onclick="setSpeed(10)">Cepat</button>
+                <button onclick="toggleTrails()">Jejak Spiral</button>
+            </div>
+            <div style="font-size:0.7rem; color:#666; margin-top:10px;">
+                *Gunakan "Cepat" untuk melihat pola Bunga Kehidupan (Spiral).
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>POSISI MATAHARI (SUN GATE)</h3>
+            <div class="stat-row"><span>Gate Pos:</span> <span class="val" id="sunGate">EQUATOR</span></div>
+            <div class="stat-row"><span>Season:</span> <span class="val" id="seasonVal">PANCAROBA</span></div>
+            <div class="stat-row"><span>Day Cycle:</span> <span class="val" style="color:var(--gold)">SIANG/MALAM LOKAL</span></div>
+            <div class="suwung-alert" id="suwungAlert">⚠️ BULAN SUWUNG: RESET ENERGI SEMESTA</div>
+        </div>
+
+        <div class="card">
+            <h3>BULAN & GERHANA (RAHU)</h3>
+            <div class="stat-row"><span>Moon Phase:</span> <span class="val" id="moonPhase">SPIRALING</span></div>
+            <div class="stat-row"><span>Eclipse Risk:</span> <span class="val" id="eclipseRisk" style="color:#0f0">LOW</span></div>
+            <div class="stat-row"><span>Rahu Node:</span> <span class="val" style="color:#666">INVISIBLE</span></div>
+        </div>
+
+        <div class="card">
+            <h3>KALENDER NUSWANTARA</h3>
+            <div class="stat-row"><span>Bulan:</span> <span class="val" id="monthVal" style="color:var(--text)">WIWITAN</span></div>
+            <div class="stat-row"><span>Tahun:</span> <span class="val" id="yearVal">001 (AIR)</span></div>
+            <div style="margin-top:10px; font-size:0.75rem; line-height:1.4; color:#aaa;">
+                Sistem kalender berdasarkan pergerakan Matahari di antara Garis Balik (Cancer/Capricorn) di atas piringan bumi.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById('cosmosCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height, cx, cy, R;
+        let time = 0;
+        let speed = 2;
+        let showTrails = true;
+
+        // DATA KALENDER NUSWANTARA (Dari file lu)
+        const MONTHS = [
+            "WIWITAN", "GANGGA", "BIJA", "TRUBUS", "TEJA", "BASKARA", 
+            "KARTIKA", "HUMA", "PHALA", "LUMBUNG", "RESWARA", "PURNAKA", "SUWUNG"
+        ];
+        
+        // OBJEK LANGIT
+        let sun = { angle: 0, r: 0 };
+        let moon = { angle: Math.PI, r: 0 };
+        let rahu = { angle: Math.PI/2, r: 0.6 }; // Black Sun
+
+        // JEJAK VISUAL
+        let sunTrail = [];
+        let moonTrail = [];
+
+        function resize() {
+            width = canvas.parentElement.clientWidth;
+            height = canvas.parentElement.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            cx = width / 2;
+            cy = height / 2;
+            R = width * 0.45; // Radius Bumi (45% dari lebar)
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function draw() {
+            // Hapus Layar (Efek Trail dikit)
+            ctx.fillStyle = 'rgba(5, 5, 8, 0.2)'; 
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            // 1. GAMBAR PETA BUMI DATAR
+            // Lautan Dasar
+            ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI*2);
+            ctx.fillStyle = '#0a1520'; ctx.fill();
+            
+            // Garis Tropis (Lintasan Matahari)
+            let rCancer = R * 0.4; // Dalam (Utara)
+            let rEquator = R * 0.65; // Tengah
+            let rCapricorn = R * 0.9; // Luar (Selatan)
+
+            ctx.lineWidth = 1; 
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.beginPath(); ctx.arc(0, 0, rCancer, 0, Math.PI*2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(0, 0, rEquator, 0, Math.PI*2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(0, 0, rCapricorn, 0, Math.PI*2); ctx.stroke();
+
+            // Ice Wall (Pinggir)
+            ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI*2);
+            ctx.lineWidth = 4; ctx.strokeStyle = '#fff'; ctx.stroke();
+
+            // Pusat Kutub Utara
+            ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI*2); ctx.fill();
+
+            // 2. LOGIKA POSISI (PHYSICS)
+            // Time berjalan
+            time += 0.005 * speed;
+            
+            // SIKLUS TAHUNAN (MATAHARI MAJU MUNDUR)
+            // 1 Tahun = 1 Siklus Penuh Sinus
+            let yearCycle = time * 0.1; 
+            let sunGateFactor = (Math.sin(yearCycle) + 1) / 2; // 0 (Dalam) s/d 1 (Luar)
+            
+            // Hitung Bulan Berdasarkan Posisi Gate Matahari
+            // Kita bagi siklus sinus jadi 13 bagian
+            let monthIndex = Math.floor(sunGateFactor * 12.99); 
+            if(monthIndex > 12) monthIndex = 12;
+            
+            // Update Teks Bulan
+            let currentMonth = MONTHS[monthIndex];
+            document.getElementById('monthWatermark').innerText = currentMonth;
+            document.getElementById('monthVal').innerText = currentMonth;
+            
+            // Cek Suwung (Bulan Terakhir / Matahari Paling Luar)
+            if (currentMonth === "SUWUNG") {
+                document.getElementById('suwungAlert').style.display = 'block';
+                document.getElementById('monthWatermark').style.color = "var(--suwung)";
+                ctx.strokeStyle = "var(--suwung)"; // Ubah warna border jadi ungu
+                ctx.stroke();
+            } else {
+                document.getElementById('suwungAlert').style.display = 'none';
+                document.getElementById('monthWatermark').style.color = "rgba(255,255,255,0.1)";
+            }
+
+            // Update Posisi Matahari
+            sun.r = rCancer + (sunGateFactor * (rCapricorn - rCancer));
+            sun.angle += 0.02 * speed; // Rotasi harian
+
+            // Update Posisi Bulan (Lebih Cepat Spiralnya)
+            moon.r = rCancer + ((Math.sin(yearCycle * 13) + 1) / 2) * (rCapricorn - rCancer);
+            moon.angle += 0.019 * speed; // Bulan lebih lambat dikit rotasinya (Lagging)
+
+            // Update Posisi Rahu (Black Sun)
+            rahu.angle -= 0.001 * speed; // Muter berlawanan pelan
+            rahu.r = rEquator; 
+
+            // 3. GAMBAR JEJAK (TRAILS)
+            if(showTrails) {
+                sunTrail.push({x: Math.cos(sun.angle)*sun.r, y: Math.sin(sun.angle)*sun.r});
+                moonTrail.push({x: Math.cos(moon.angle)*moon.r, y: Math.sin(moon.angle)*moon.r});
+                if(sunTrail.length > 200) sunTrail.shift();
+                if(moonTrail.length > 200) moonTrail.shift();
+
+                ctx.strokeStyle = 'rgba(255, 200, 0, 0.2)'; ctx.lineWidth = 1;
+                ctx.beginPath(); sunTrail.forEach((p,i) => { if(i==0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }); ctx.stroke();
+
+                ctx.strokeStyle = 'rgba(200, 200, 255, 0.2)';
+                ctx.beginPath(); moonTrail.forEach((p,i) => { if(i==0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }); ctx.stroke();
+            }
+
+            // 4. GAMBAR OBJEK
+            
+            // MATAHARI
+            let sx = Math.cos(sun.angle) * sun.r;
+            let sy = Math.sin(sun.angle) * sun.r;
+            
+            // Cahaya (Spotlight)
+            let grad = ctx.createRadialGradient(sx, sy, 5, sx, sy, R*0.6);
+            grad.addColorStop(0, 'rgba(255, 200, 0, 0.5)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(sx, sy, R*0.6, 0, Math.PI*2); ctx.fill();
+
+            // Fisik
+            ctx.fillStyle = '#ffd700'; ctx.shadowBlur = 15; ctx.shadowColor = '#ffd700';
+            ctx.beginPath(); ctx.arc(sx, sy, 8, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
+
+            // BULAN
+            let mx = Math.cos(moon.angle) * moon.r;
+            let my = Math.sin(moon.angle) * moon.r;
+            ctx.fillStyle = '#fff'; ctx.shadowBlur = 5; ctx.shadowColor = '#fff';
+            ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
+
+            // RAHU (BLACK SUN)
+            let rx = Math.cos(rahu.angle) * rahu.r;
+            let ry = Math.sin(rahu.angle) * rahu.r;
+            
+            // Cek Tabrakan Gerhana
+            let dist = Math.sqrt((sx-rx)**2 + (sy-ry)**2);
+            if(dist < 15) {
+                // GERHANA!
+                ctx.fillStyle = '#000'; ctx.strokeStyle = '#f00'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(rx, ry, 9, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                document.getElementById('eclipseRisk').innerText = "TOTAL ECLIPSE!";
+                document.getElementById('eclipseRisk').style.color = "#f00";
+            } else {
+                // Invisible Node
+                ctx.strokeStyle = 'rgba(50,50,50,0.5)'; ctx.setLineDash([2,4]);
+                ctx.beginPath(); ctx.arc(rx, ry, 8, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+                document.getElementById('eclipseRisk').innerText = "LOW";
+                document.getElementById('eclipseRisk').style.color = "#0f0";
+            }
+
+            // Update Text Info
+            let gateTxt = "EQUATOR (PANCAROBA)";
+            if(sun.r < rEquator - 10) gateTxt = "INNER GATE (CANCER)";
+            else if(sun.r > rEquator + 10) gateTxt = "OUTER GATE (CAPRICORN)";
+            document.getElementById('sunGate').innerText = gateTxt;
+
+            ctx.restore();
+            requestAnimationFrame(draw);
+        }
+
+        function setSpeed(val) {
+            speed = val;
+            let btns = document.querySelectorAll('.controls button');
+            btns.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function toggleTrails() {
+            showTrails = !showTrails;
+            sunTrail = []; moonTrail = [];
+        }
+
+        draw();
+
+    </script>
+</body>
+</html>

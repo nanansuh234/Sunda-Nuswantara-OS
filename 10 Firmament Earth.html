@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT FIRMAMENT: The Truth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050510;
+            --dome: rgba(0, 243, 255, 0.3);
+            --dome-border: #00f3ff;
+            --ice-wall: #fff;
+            --earth: #2e8b57;
+            --sun: #ffd700;
+            --moon: #ddd;
+            --text: #fff;
+        }
+
+        body {
+            margin: 0; padding: 0; background: var(--bg); color: var(--text);
+            font-family: 'Orbitron', sans-serif; overflow: hidden;
+            display: flex; flex-direction: column; height: 100vh;
+        }
+
+        /* UI OVERLAY */
+        .ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        .header { text-align: center; text-shadow: 0 0 10px #00f3ff; }
+        h1 { font-family: 'Cinzel', serif; margin: 0; font-size: 2rem; letter-spacing: 5px; color: #fff; border-bottom: 2px solid #fff; display: inline-block; padding-bottom: 10px; }
+        .sub { font-size: 0.8rem; color: #aaa; margin-top: 5px; }
+
+        .controls {
+            pointer-events: auto; background: rgba(0,0,0,0.8); border: 1px solid #444;
+            padding: 15px; border-radius: 10px; width: 300px;
+        }
+        
+        .btn {
+            background: transparent; border: 1px solid #00f3ff; color: #00f3ff;
+            padding: 10px; width: 100%; margin-bottom: 10px; cursor: pointer;
+            font-family: 'Orbitron'; font-weight: bold; transition: 0.3s;
+        }
+        .btn:hover { background: #00f3ff; color: #000; box-shadow: 0 0 20px #00f3ff; }
+        
+        .btn-nasa { border-color: #ff3333; color: #ff3333; }
+        .btn-nasa:hover { background: #ff3333; color: #fff; box-shadow: 0 0 20px #ff3333; }
+
+        .info-panel {
+            background: rgba(0, 20, 40, 0.9); border-left: 3px solid #00f3ff;
+            padding: 15px; max-width: 350px; font-family: monospace; font-size: 0.8rem;
+            position: absolute; right: 20px; top: 100px; pointer-events: none;
+        }
+
+        /* CANVAS */
+        canvas { display: block; }
+
+        /* ANIMATION */
+        @keyframes blink { 50% { opacity: 0; } }
+        .alert { color: #ff3333; font-weight: bold; animation: blink 0.5s infinite; display: none; }
+    </style>
+</head>
+<body>
+
+    <canvas id="flatCanvas"></canvas>
+
+    <div class="ui-layer">
+        <div class="header">
+            <h1>THE FIRMAMENT</h1>
+            <div class="sub">REALITY MODEL v1.0 // ANTI-GLOBALIST</div>
+        </div>
+
+        <div class="info-panel" id="infoBox">
+            > SYSTEM READY.<br>
+            > DOME INTEGRITY: 100%<br>
+            > SUN/MOON: LOCAL ORBIT<br>
+            > OUTER SPACE: <span style="color:red">HOAX</span>
+        </div>
+
+        <div class="controls">
+            <div style="margin-bottom:10px; text-align:center; color:#888; font-size:0.7rem;">SIMULATION CONTROLS</div>
+            <button class="btn" onclick="toggleOrbit()">TOGGLE SUN/MOON ORBIT</button>
+            <button class="btn btn-nasa" onclick="launchRocket()">LAUNCH NASA ROCKET 🚀</button>
+            <div class="alert" id="collisionAlert">⚠️ DOME COLLISION DETECTED! ⚠️</div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('flatCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let centerX, centerY;
+        let domeRadius;
+        
+        // OBJEK
+        let sunAngle = 0;
+        let moonAngle = Math.PI;
+        let orbitActive = true;
+        let rocket = null;
+        let debris = [];
+        let stars = [];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            centerX = width / 2;
+            centerY = height - 50; // Tanah di bawah
+            domeRadius = Math.min(width, height) * 0.8;
+            initStars();
+        }
+        window.addEventListener('resize', resize);
+
+        function initStars() {
+            stars = [];
+            for(let i=0; i<200; i++) {
+                // Bintang nempel di kubah atau di dalamnya
+                let angle = Math.random() * Math.PI; // 0 to 180 deg
+                let r = Math.random() * domeRadius;
+                let x = centerX + Math.cos(angle) * r; // Salah rumus dikit gpp buat sebaran
+                let y = centerY - Math.sin(angle) * r;
+                
+                // Pastikan di dalam kubah
+                if (y < centerY) {
+                    stars.push({x:x, y:y, size: Math.random()*2, twinkle: Math.random()});
+                }
+            }
+        }
+
+        // --- LOGIC ---
+
+        function launchRocket() {
+            if(rocket) return; // Satu-satu
+            document.getElementById('infoBox').innerHTML += "<br>> NASA LAUNCH DETECTED...";
+            rocket = {
+                x: centerX,
+                y: centerY,
+                vx: (Math.random() - 0.5) * 2, // Miring dikit
+                vy: -4, // Naik ke atas
+                active: true
+            };
+        }
+
+        function toggleOrbit() {
+            orbitActive = !orbitActive;
+        }
+
+        function createDebris(x, y) {
+            for(let i=0; i<10; i++) {
+                debris.push({
+                    x: x, y: y,
+                    vx: (Math.random()-0.5)*5, vy: (Math.random()-0.5)*5,
+                    life: 60, color: (i%2==0)?'#ffaa00':'#555'
+                });
+            }
+        }
+
+        // --- DRAWING ---
+
+        function draw() {
+            // Langit Gelap
+            ctx.fillStyle = '#050510';
+            ctx.fillRect(0, 0, width, height);
+
+            // 1. GAMBAR BINTANG (Luminaries in the Firmament)
+            ctx.fillStyle = '#fff';
+            stars.forEach(s => {
+                if(Math.random() > 0.95) s.twinkle = Math.random();
+                ctx.globalAlpha = s.twinkle;
+                ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+
+            // 2. GAMBAR KUBAH (THE FIRMAMENT)
+            // Kaca Luar
+            let domeGradient = ctx.createRadialGradient(centerX, centerY, domeRadius*0.5, centerX, centerY, domeRadius);
+            domeGradient.addColorStop(0, "rgba(0, 243, 255, 0)");
+            domeGradient.addColorStop(1, "rgba(0, 243, 255, 0.2)");
+            
+            ctx.fillStyle = domeGradient;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, domeRadius, Math.PI, 0); // Setengah lingkaran
+            ctx.fill();
+            
+            // Garis Pinggir Kubah (Van Allen Belt / Hard Shell)
+            ctx.strokeStyle = '#00f3ff';
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 20; ctx.shadowColor = '#00f3ff';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, domeRadius, Math.PI, 0);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // 3. GAMBAR BUMI DATAR (FLAT EARTH)
+            // Tanah
+            ctx.fillStyle = '#1a1'; // Hijau
+            ctx.fillRect(centerX - domeRadius - 50, centerY, (domeRadius*2)+100, 20);
+            
+            // Ice Wall (Antartika) di ujung-ujung
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(centerX - domeRadius - 20, centerY - 40, 40, 60); // Kiri
+            ctx.fillRect(centerX + domeRadius - 20, centerY - 40, 40, 60); // Kanan
+            
+            // Text Label
+            ctx.fillStyle = '#aaa';
+            ctx.font = '10px monospace';
+            ctx.fillText("ANTARCTIC ICE WALL", centerX - domeRadius, centerY + 40);
+            ctx.fillText("ANTARCTIC ICE WALL", centerX + domeRadius - 100, centerY + 40);
+
+            // 4. MATAHARI & BULAN (LOKAL)
+            if(orbitActive) {
+                sunAngle += 0.01;
+                moonAngle += 0.01;
+            }
+
+            // Jalur Orbit (Invisible track)
+            let orbitH = domeRadius * 0.6; // Tinggi orbit
+            let orbitW = domeRadius * 0.8; // Lebar orbit
+
+            // Matahari
+            let sunX = centerX + Math.cos(sunAngle) * (orbitW/2);
+            let sunY = centerY - Math.abs(Math.sin(sunAngle) * orbitH) - 50; // Selalu di atas
+            
+            ctx.fillStyle = '#ffd700';
+            ctx.shadowBlur = 50; ctx.shadowColor = '#ffd700';
+            ctx.beginPath(); ctx.arc(sunX, sunY, 20, 0, Math.PI*2); ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Bulan
+            let moonX = centerX + Math.cos(moonAngle) * (orbitW/2);
+            let moonY = centerY - Math.abs(Math.sin(moonAngle) * orbitH) - 50;
+
+            ctx.fillStyle = '#ddd';
+            ctx.shadowBlur = 20; ctx.shadowColor = '#fff';
+            ctx.beginPath(); ctx.arc(moonX, moonY, 18, 0, Math.PI*2); ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // 5. LOGIKA ROKET NASA (NABRAK KUBAH)
+            if(rocket && rocket.active) {
+                // Gambar Roket
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(rocket.x - 2, rocket.y, 4, 10);
+                // Api
+                ctx.fillStyle = '#f50';
+                ctx.beginPath(); ctx.moveTo(rocket.x, rocket.y+15); ctx.lineTo(rocket.x-3, rocket.y+10); ctx.lineTo(rocket.x+3, rocket.y+10); ctx.fill();
+
+                rocket.x += rocket.vx;
+                rocket.y += rocket.vy;
+
+                // Cek Tabrakan dengan Kubah
+                let dx = rocket.x - centerX;
+                let dy = rocket.y - centerY;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+
+                if (dist >= domeRadius - 5) {
+                    // TABRAKAN!
+                    rocket.active = false;
+                    createDebris(rocket.x, rocket.y);
+                    document.getElementById('collisionAlert').style.display = 'block';
+                    document.getElementById('infoBox').innerHTML += "<br> <span style='color:red'>> TRAJECTORY TERMINATED. FIRMAMENT HIT.</span>";
+                    setTimeout(() => { 
+                        document.getElementById('collisionAlert').style.display = 'none'; 
+                        rocket = null;
+                    }, 3000);
+                }
+            }
+
+            // 6. DEBRIS EFFECT
+            for(let i=debris.length-1; i>=0; i--) {
+                let d = debris[i];
+                d.x += d.vx; d.y += d.vy; d.vy += 0.1; // Gravitasi
+                d.life--;
+                ctx.fillStyle = d.color;
+                ctx.fillRect(d.x, d.y, 3, 3);
+                if(d.life <= 0) debris.splice(i, 1);
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        // INIT
+        resize();
+        draw();
+
+    </script>
+</body>
+</html>

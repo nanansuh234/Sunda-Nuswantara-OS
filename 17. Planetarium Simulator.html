@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT CYMATICS: MOVABLE TELESCOPE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000;
+            --star-blue: #aaddff;
+            --ui-border: #333;
+            --text: #fff;
+        }
+
+        body {
+            margin: 0; padding: 0; background: var(--bg); color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh; overflow: hidden; /* Layar gak scroll, tapi konten di dalam bisa digeser */
+            user-select: none; /* Biar teks gak ke-blok pas nge-drag */
+        }
+
+        /* HEADER */
+        .header {
+            position: absolute; top: 0; left: 0; width: 100%;
+            padding: 20px; text-align: center; pointer-events: none; z-index: 10;
+            background: linear-gradient(to bottom, #000 0%, transparent 100%);
+        }
+        h1 { font-family: 'Cinzel', serif; margin: 0; letter-spacing: 3px; color: var(--star-blue); text-shadow: 0 0 10px var(--star-blue); }
+        .sub { font-size: 0.8rem; color: #888; margin-top: 5px; }
+
+        /* VIEWPORT UTAMA */
+        .telescope-view {
+            width: 100%; height: 100%; position: relative;
+            background: radial-gradient(circle at center, #051020 0%, #000 100%);
+            overflow: hidden; 
+            cursor: grab; /* Kursor tangan buat geser */
+        }
+        .telescope-view:active { cursor: grabbing; }
+
+        /* LAYER BINTANG (YANG DIGESER) */
+        #starLayer {
+            width: 200vw; height: 200vh; /* Langitnya GEDE */
+            position: absolute; 
+            top: -50vh; left: -50vw; /* Mulai di tengah dikit */
+            transition: transform 0.1s linear; /* Smooth drag */
+        }
+
+        /* ZOOM LENS EFFECT (DIAM DI TENGAH) */
+        .lens-overlay {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80vh; height: 80vh; border-radius: 50%;
+            border: 2px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 0 100vw rgba(0,0,0,0.85); /* Gelapkan pinggiran luar lensa */
+            pointer-events: none; z-index: 5;
+        }
+        .crosshair {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; height: 100%; opacity: 0.3;
+        }
+        .crosshair::before { content:''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: #0ff; }
+        .crosshair::after { content:''; position: absolute; top: 0; left: 50%; width: 1px; height: 100%; background: #0ff; }
+        .lens-info {
+            position: absolute; bottom: 20px; width: 100%; text-align: center;
+            color: #0ff; font-size: 0.8rem; letter-spacing: 2px;
+        }
+
+        /* ANALYZER PANEL */
+        .analyzer-panel {
+            position: absolute; bottom: 20px; right: 20px; width: 320px;
+            background: rgba(10, 15, 20, 0.95); border: 1px solid var(--star-blue);
+            padding: 20px; display: none; z-index: 20;
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.2); border-radius: 10px;
+        }
+        .analyzer-header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; font-weight: bold; color: var(--star-blue); font-size: 1.2rem; font-family: 'Cinzel'; }
+        
+        .cymatic-visual {
+            width: 100%; height: 150px; background: #000;
+            border: 1px solid #333; margin-bottom: 15px;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; position: relative;
+        }
+
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+        .data-label { color: #888; }
+        .data-val { color: #fff; font-weight: bold; }
+        .hoax-val { color: #555; text-decoration: line-through; font-size: 0.7rem; margin-left: 5px; }
+
+        /* BINTANG */
+        .star {
+            position: absolute; border-radius: 50%; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .star:hover { transform: scale(3); box-shadow: 0 0 15px #fff; z-index: 100; }
+
+        /* RIPPLE ANIMATION */
+        .ripple {
+            position: absolute; border: 2px solid; border-radius: 50%;
+            animation: rippleAnim 2s infinite linear; opacity: 0;
+        }
+        @keyframes rippleAnim {
+            0% { width: 0; height: 0; opacity: 1; transform: rotate(0deg); }
+            100% { width: 100%; height: 100%; opacity: 0; transform: rotate(180deg); }
+        }
+
+        /* NAV HINT */
+        .hint {
+            position: absolute; bottom: 10px; left: 10px; z-index: 10;
+            font-size: 0.7rem; color: #555; pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>PROJECT CYMATICS</h1>
+        <div class="sub">DECODING STAR FREQUENCIES // NIKON P1000 SIMULATOR</div>
+    </div>
+
+    <div class="telescope-view" id="viewport">
+        
+        <div id="starLayer">
+            </div>
+
+        <div class="lens-overlay">
+            <div class="crosshair"></div>
+            <div class="lens-info">DRAG SCREEN TO PAN TELESCOPE</div>
+        </div>
+    </div>
+
+    <div class="hint">TIPS: KLIK & TAHAN UNTUK GESER ARAH TELESKOP • KLIK BINTANG UNTUK ANALISA</div>
+
+    <div class="analyzer-panel" id="panel">
+        <div class="analyzer-header" id="starName">SIRIUS A</div>
+        
+        <div class="cymatic-visual" id="cymaticView"></div>
+
+        <div class="data-row">
+            <span class="data-label">JARAK:</span>
+            <span>
+                <span class="data-val">LOKAL (KUBAH)</span>
+                <span class="hoax-val">8.6 LY</span>
+            </span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">WUJUD:</span>
+            <span>
+                <span class="data-val">PLASMA CAIR</span>
+                <span class="hoax-val">GAS PADAT</span>
+            </span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">FREKUENSI:</span>
+            <span class="data-val" id="starFreq">432 Hz</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">ENERGI:</span>
+            <span class="data-val">SONOLUMINESCENCE</span>
+        </div>
+    </div>
+
+    <script>
+        const viewport = document.getElementById('viewport');
+        const starLayer = document.getElementById('starLayer');
+        const panel = document.getElementById('panel');
+        const cymaticView = document.getElementById('cymaticView');
+
+        // DATABASE BINTANG
+        const STARS_DB = [
+            { name: "SIRIUS (LINTANG WALUKU)", color: "#aaddff", freq: "396 Hz", rippleColor: "cyan" },
+            { name: "BETELGEUSE (BAHU ORION)", color: "#ff5555", freq: "528 Hz", rippleColor: "red" },
+            { name: "RIGEL", color: "#ccccff", freq: "639 Hz", rippleColor: "white" },
+            { name: "ARCTURUS", color: "#ffd700", freq: "741 Hz", rippleColor: "gold" },
+            { name: "VEGA", color: "#eef", freq: "852 Hz", rippleColor: "violet" },
+            { name: "ANTARES", color: "#ff3300", freq: "417 Hz", rippleColor: "orange" },
+            { name: "PLEIADES (7 BIDADARI)", color: "#99ccff", freq: "963 Hz", rippleColor: "lightblue" }
+        ];
+
+        // 1. GENERATE BINTANG (DI AREA YANG LUAS: 200% x 200%)
+        // Bintang Random (Latar)
+        for(let i=0; i<200; i++) {
+            let s = document.createElement('div');
+            s.className = 'star';
+            let size = Math.random() * 2;
+            s.style.width = size + 'px'; s.style.height = size + 'px';
+            s.style.background = '#fff'; s.style.opacity = Math.random();
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 100 + '%';
+            s.style.pointerEvents = 'none';
+            starLayer.appendChild(s);
+        }
+
+        // Bintang Utama (Clickable)
+        STARS_DB.forEach(data => {
+            let s = document.createElement('div');
+            s.className = 'star';
+            let size = Math.random() * 5 + 6; 
+            s.style.width = size + 'px'; s.style.height = size + 'px';
+            s.style.backgroundColor = data.color;
+            s.style.boxShadow = `0 0 ${size*3}px ${data.color}`;
+            
+            // Sebar di area luas (10% - 90% dari container yg besar)
+            let x = 10 + Math.random() * 80;
+            let y = 10 + Math.random() * 80;
+            s.style.left = x + '%'; s.style.top = y + '%';
+            s.style.zIndex = 10;
+
+            // KLIK EVENT
+            s.addEventListener('mousedown', (e) => { e.stopPropagation(); }); // Biar gak trigger drag
+            s.addEventListener('click', (e) => {
+                e.stopPropagation();
+                analyzeStar(data);
+            });
+
+            starLayer.appendChild(s);
+        });
+
+        // 2. FITUR DRAG / PANNING
+        let isDragging = false;
+        let startX, startY;
+        let currentTranslateX = 0, currentTranslateY = 0;
+
+        viewport.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX - currentTranslateX;
+            startY = e.clientY - currentTranslateY;
+            viewport.style.cursor = 'grabbing';
+            panel.style.display = 'none'; // Tutup panel pas geser
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            viewport.style.cursor = 'grab';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            let x = e.clientX - startX;
+            let y = e.clientY - startY;
+
+            // Batasi geseran biar gak kebablasan kosong
+            // Container 200vw/vh, jadi batasnya sekitar +/- 50vw/vh
+            // (Ini logic kasar biar gak ribet)
+            
+            currentTranslateX = x;
+            currentTranslateY = y;
+            
+            starLayer.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        // 3. ANALISIS BINTANG
+        function analyzeStar(data) {
+            panel.style.display = 'block';
+            document.getElementById('starName').innerText = data.name;
+            document.getElementById('starName').style.color = data.color;
+            document.getElementById('starFreq').innerText = data.freq;
+            
+            cymaticView.innerHTML = '';
+            cymaticView.style.borderColor = data.color;
+            
+            // Inti Cahaya
+            let core = document.createElement('div');
+            core.style.width = '20px'; core.style.height = '20px';
+            core.style.background = data.color; core.style.borderRadius = '50%';
+            core.style.position = 'absolute'; core.style.boxShadow = `0 0 50px ${data.color}`;
+            cymaticView.appendChild(core);
+
+            // Animasi Ripple
+            for(let i=0; i<5; i++) {
+                let r = document.createElement('div');
+                r.className = 'ripple';
+                r.style.borderColor = data.rippleColor;
+                r.style.animationDelay = (i * 0.4) + 's';
+                
+                if(data.name.includes("SIRIUS")) r.style.borderRadius = "50%";
+                else if(data.name.includes("BETELGEUSE")) r.style.clipPath = "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)";
+                else if(data.name.includes("PLEIADES")) r.style.borderStyle = "dotted";
+                else r.style.borderStyle = "double";
+                
+                cymaticView.appendChild(r);
+            }
+        }
+
+    </script>
+</body>
+</html>

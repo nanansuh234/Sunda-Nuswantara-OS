@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALMANAK AGUNG: SIKLUS NUSWANTARA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #eaddcf;
+            --ink: #1a1510;
+            --solar-color: #b8860b;
+            --lunar-color: #483d8b;
+            --alert: #8b0000;
+            --ketu: #cd5c5c;
+        }
+
+        body {
+            background-color: #050505;
+            display: flex; justify-content: center; padding: 20px;
+            font-family: 'Courier Prime', monospace; color: var(--ink);
+        }
+
+        .manuscript {
+            background-color: var(--paper);
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0,0,0,0.1) 20px);
+            width: 100%; max-width: 950px;
+            padding: 40px; border: 5px double var(--ink);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            text-align: center; border-bottom: 2px solid var(--ink);
+            padding-bottom: 20px; margin-bottom: 30px;
+        }
+        h1 { font-family: 'Cinzel', serif; font-size: 2.2rem; margin: 0; letter-spacing: 5px; }
+        .sub-header { font-size: 0.9rem; color: #555; margin-top: 5px; font-weight: bold; }
+
+        .control-panel {
+            text-align: center; margin-bottom: 30px;
+            background: rgba(0,0,0,0.05); padding: 15px; border-radius: 5px;
+        }
+        select, button {
+            background: #fff; border: 2px solid var(--ink);
+            padding: 8px 15px; font-family: 'Cinzel'; font-weight: bold; cursor: pointer; font-size: 1rem;
+        }
+
+        .viz-box {
+            width: 100%; height: 180px; background: #fff;
+            border: 2px solid var(--ink); margin-bottom: 20px;
+        }
+
+        .grid-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+        
+        .column { border: 1px solid var(--ink); padding: 10px; }
+        .col-header { 
+            text-align: center; font-family: 'Cinzel'; font-weight: bold; 
+            padding: 10px; border-bottom: 1px solid var(--ink); font-size: 1.1rem;
+        }
+
+        .event-row {
+            display: flex; justify-content: space-between; 
+            padding: 8px 0; border-bottom: 1px dashed #ccc; font-size: 0.85rem;
+        }
+        .event-row:last-child { border-bottom: none; }
+        
+        .solar-eclipse { color: var(--alert); font-weight: bold; background: rgba(255,0,0,0.1); }
+        .lunar-eclipse { color: var(--ketu); font-weight: bold; background: rgba(205, 92, 92, 0.1); }
+
+        .footer {
+            margin-top: 30px; text-align: center; font-size: 0.7rem; font-style: italic; color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="manuscript">
+        <div class="header">
+            <h1>ALMANAK AGUNG</h1>
+            <div class="sub-header">POSISI RAHU (MATAHARI HITAM) & KETU (EKOR NAGA)</div>
+        </div>
+
+        <div class="control-panel">
+            <label>SIKLUS WINDU (ELEMEN):</label>
+            <select id="yearSelector">
+                <option value="2025">2025 : TAHUN 001 - AIR (KEBANGKITAN)</option>
+                <option value="2026">2026 : TAHUN 002 - BATU (PONDASI)</option>
+                <option value="2027">2027 : TAHUN 003 - SURYA (CAHAYA)</option>
+                <option value="2028">2028 : TAHUN 004 - API (PEMURNIAN)</option>
+                <option value="2029">2029 : TAHUN 005 - ANGIN (PERUBAHAN)</option>
+                <option value="2030">2030 : TAHUN 006 - ETHER (KESADARAN)</option>
+            </select>
+            <button onclick="calculateEclipse()">BUKA KITAB</button>
+        </div>
+
+        <canvas id="dragonChart" class="viz-box"></canvas>
+        <div style="text-align:center; font-size:0.7rem; margin-top:-15px; margin-bottom:20px; font-style:italic;">
+            Garis Putus-putus: Jalur Naga (Rahu & Ketu). Peringatan Gerhana aktif jika radius < 10 derajat.
+        </div>
+
+        <div class="grid-container">
+            <div class="column" style="background: rgba(184, 134, 11, 0.1);">
+                <div class="col-header" style="color:var(--solar-color)">GERHANA MATAHARI<br><span style="font-size:0.7rem">(INTERVENSI RAHU)</span></div>
+                <div id="solarList"></div>
+            </div>
+
+            <div class="column" style="background: rgba(72, 61, 139, 0.1);">
+                <div class="col-header" style="color:var(--lunar-color)">GERHANA BULAN<br><span style="font-size:0.7rem">(INTERVENSI KETU)</span></div>
+                <div id="lunarList"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            "Siklus Air membawa kehidupan, Batu membawa kekuatan, Surya membawa kebenaran.<br>
+            Jaga keseimbangan sebelum Rahu menelan cahaya."
+        </div>
+    </div>
+
+    <script>
+        const MONTHS = [
+            "WIWITAN", "GANGGA", "BIJA", "TRUBUS", "TEJA", "BASKARA", 
+            "KARTIKA", "HUMA", "PHALA", "LUMBUNG", "RESWARA", "PURNAKA", "SUWUNG"
+        ];
+
+        const canvas = document.getElementById('dragonChart');
+        const ctx = canvas.getContext('2d');
+
+        function calculateEclipse() {
+            const year = parseInt(document.getElementById('yearSelector').value);
+            const solarDiv = document.getElementById('solarList');
+            const lunarDiv = document.getElementById('lunarList');
+            
+            solarDiv.innerHTML = "";
+            lunarDiv.innerHTML = "";
+
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+
+            // Garis Ecliptic
+            ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); ctx.strokeStyle = "#ccc"; ctx.stroke();
+
+            // RAHU LOGIC 
+            // Rahu mundur sekitar 19.3 derajat per tahun
+            let rahuStart = ((year - 2024) * 19.3) % 360; 
+            
+            for(let i=0; i<13; i++) {
+                // Matahari gerak 360 derajat setahun
+                let sunDeg = (i / 13) * 360;
+                
+                // Rahu gerak mundur
+                let rahuDeg = (rahuStart - (i * 1.5)) % 360; 
+                if(rahuDeg < 0) rahuDeg += 360;
+
+                // Ketu selalu 180 derajat dari Rahu
+                let ketuDeg = (rahuDeg + 180) % 360;
+
+                // Hitung Jarak (Matahari vs Rahu)
+                let diffSunRahu = Math.abs(sunDeg - rahuDeg);
+                if(diffSunRahu > 180) diffSunRahu = 360 - diffSunRahu;
+                
+                // Hitung Jarak (Matahari vs Ketu -> untuk Blood Moon)
+                let diffSunKetu = Math.abs(sunDeg - ketuDeg);
+                if(diffSunKetu > 180) diffSunKetu = 360 - diffSunKetu;
+
+                // Threshold Gerhana 
+                let isSolarEclipse = diffSunRahu < 10; 
+                let isLunarEclipse = diffSunKetu < 10;
+
+                // Render List Solar
+                let rowS = document.createElement('div');
+                rowS.className = "event-row";
+                if(isSolarEclipse) {
+                    rowS.classList.add('solar-eclipse');
+                    rowS.innerHTML = `<span>${MONTHS[i]}</span> <span>⚠️ TOTAL ECLIPSE</span>`;
+                } else {
+                    rowS.innerHTML = `<span>${MONTHS[i]}</span> <span style="color:#aaa">Aman</span>`;
+                }
+                solarDiv.appendChild(rowS);
+
+                // Render List Lunar
+                let rowL = document.createElement('div');
+                rowL.className = "event-row";
+                if(isLunarEclipse) {
+                    rowL.classList.add('lunar-eclipse');
+                    rowL.innerHTML = `<span>${MONTHS[i]}</span> <span>🔴 BLOOD MOON</span>`;
+                } else {
+                    rowL.innerHTML = `<span>${MONTHS[i]}</span> <span style="color:#aaa">Purnama Biasa</span>`;
+                }
+                lunarDiv.appendChild(rowL);
+
+                // Draw Visual
+                let x = (i / 13) * w + (w/26);
+                let ySun = (h/2) + Math.sin((sunDeg * Math.PI)/180) * (h/3);
+                let yRahu = (h/2) + Math.sin((rahuDeg * Math.PI)/180) * (h/3);
+                let yKetu = (h/2) + Math.sin((ketuDeg * Math.PI)/180) * (h/3);
+
+                ctx.fillStyle = "#b8860b"; ctx.beginPath(); ctx.arc(x, ySun, 4, 0, Math.PI*2); ctx.fill(); // Sun
+                ctx.fillStyle = "#333"; ctx.beginPath(); ctx.arc(x, yRahu, 3, 0, Math.PI*2); ctx.fill(); // Rahu
+                ctx.fillStyle = "#cd5c5c"; ctx.beginPath(); ctx.arc(x, yKetu, 3, 0, Math.PI*2); ctx.fill(); // Ketu
+
+                if(isSolarEclipse) {
+                    ctx.strokeStyle = "red"; ctx.lineWidth=2; 
+                    ctx.beginPath(); ctx.moveTo(x, ySun); ctx.lineTo(x, yRahu); ctx.stroke();
+                }
+                if(isLunarEclipse) {
+                    ctx.strokeStyle = "purple"; ctx.lineWidth=2;
+                    ctx.beginPath(); ctx.moveTo(x, ySun); ctx.lineTo(x, yKetu); ctx.stroke();
+                }
+            }
+        }
+        
+        // Auto load
+        setTimeout(calculateEclipse, 500);
+    </script>
+</body>
+</html>

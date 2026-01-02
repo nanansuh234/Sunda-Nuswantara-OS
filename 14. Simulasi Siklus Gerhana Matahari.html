@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAWUKON RAHU: SIKLUS NUSWANTARA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #e3dccf;
+            --ink: #382c1e;
+            --red: #8a1c1c;
+            --gold: #b08d55;
+            --grid: #b8b0a0;
+        }
+
+        body {
+            background-color: #0c0c0c;
+            display: flex; justify-content: center; padding: 20px;
+            font-family: 'Courier Prime', monospace; color: var(--ink);
+        }
+
+        .manuscript {
+            background-color: var(--paper);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+            width: 100%; max-width: 900px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            border: 1px solid #5c4d3c;
+            position: relative;
+        }
+
+        .header {
+            text-align: center; border-bottom: 3px double var(--ink);
+            padding-bottom: 20px; margin-bottom: 30px;
+        }
+        h1 { font-family: 'Cinzel', serif; font-size: 2.2rem; margin: 0; color: var(--ink); letter-spacing: 5px; }
+        .sub-header { font-size: 0.9rem; letter-spacing: 2px; color: var(--gold); font-weight: bold; margin-top: 5px; }
+
+        .control-panel {
+            background: rgba(0,0,0,0.05); border: 1px solid var(--grid);
+            padding: 15px; margin-bottom: 20px; text-align: center;
+        }
+        select, button {
+            background: var(--paper); border: 2px solid var(--ink);
+            padding: 8px 15px; font-family: 'Cinzel'; font-weight: bold; cursor: pointer;
+            color: var(--ink); font-size: 1rem;
+        }
+
+        .data-grid {
+            display: grid; grid-template-columns: 1fr; gap: 20px;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th { 
+            background: var(--ink); color: var(--paper); 
+            padding: 10px; font-family: 'Cinzel'; text-align: left;
+        }
+        td { 
+            border-bottom: 1px dashed var(--grid); padding: 8px; 
+            font-size: 0.9rem;
+        }
+        
+        .row-suwung { background: rgba(138, 43, 226, 0.1); font-weight: bold; color: #4b0082; }
+        .row-eclipse { background: rgba(138, 28, 28, 0.15); color: var(--red); font-weight: bold; }
+        .alert-eclipse { color: var(--red); font-weight: bold; animation: blink 2s infinite; }
+
+        .mini-viz {
+            width: 100%; height: 150px; background: #fff;
+            border: 2px solid var(--ink); margin-bottom: 20px;
+            position: relative; overflow: hidden;
+        }
+
+        .stamp-box {
+            position: absolute; top: 30px; right: 30px;
+            border: 4px solid var(--red); color: var(--red);
+            padding: 5px 10px; font-weight: bold; transform: rotate(-15deg);
+            font-family: sans-serif; opacity: 0.7; font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+        .stamp-date {
+            position: absolute; top: 40px; left: 30px;
+            font-size: 0.7rem; color: #666; font-family: monospace;
+        }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+
+    <div class="manuscript">
+        <div class="stamp-box">VALIDATED<br>BY ADAT</div>
+        <div class="stamp-date">NO GREGORIAN<br>SYSTEM ALLOWED</div>
+
+        <div class="header">
+            <h1>PAWUKON RAHU</h1>
+            <div class="sub-header">ALMANAK GERHANA & POSISI MATAHARI</div>
+        </div>
+
+        <div class="control-panel">
+            <label style="font-family:'Cinzel'; margin-right:10px;">PILIH SIKLUS TAHUN (WINDU):</label>
+            <select id="yearSelector">
+                <option value="2025">2025 : TAHUN 001 - AIR (KEBANGKITAN)</option>
+                <option value="2026">2026 : TAHUN 002 - BATU (PONDASI)</option>
+                <option value="2027">2027 : TAHUN 003 - SURYA (CAHAYA)</option>
+                <option value="2028">2028 : TAHUN 004 - API (PEMURNIAN)</option>
+                <option value="2029">2029 : TAHUN 005 - ANGIN (PERUBAHAN)</option>
+                <option value="2030">2030 : TAHUN 006 - ETHER (KESADARAN)</option>
+            </select>
+            <button onclick="generateAlmanac()">BUKA KITAB</button>
+        </div>
+
+        <canvas id="stripChart" class="mini-viz"></canvas>
+
+        <div class="data-grid">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SASIH (BULAN)</th>
+                        <th>POSISI GERBANG</th>
+                        <th>STATUS RAHU</th>
+                        <th>PREDIKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="almanacBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top:30px; text-align:center; font-size:0.8rem; font-style:italic; border-top:1px solid var(--grid); padding-top:10px;">
+            "Waktu bukanlah angka di kalender penjajah, melainkan napas alam semesta."<br>
+            ~ Arsiparis Nuswantara
+        </div>
+    </div>
+
+    <script>
+        const MONTHS = [
+            "WIWITAN (1)", "GANGGA (2)", "BIJA (3)", "TRUBUS (4)", 
+            "TEJA (5)", "BASKARA (6)", "KARTIKA (7)", "HUMA (8)", 
+            "PHALA (9)", "LUMBUNG (10)", "RESWARA (11)", "PURNAKA (12)", "SUWUNG (Ø)"
+        ];
+
+        const canvas = document.getElementById('stripChart');
+        const ctx = canvas.getContext('2d');
+
+        function generateAlmanac() {
+            const realYear = parseInt(document.getElementById('yearSelector').value);
+            const tbody = document.getElementById('almanacBody');
+            tbody.innerHTML = "";
+
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.clearRect(0,0,w,h);
+            
+            ctx.beginPath(); ctx.moveTo(0, h/2); ctx.lineTo(w, h/2); 
+            ctx.strokeStyle = "#ccc"; ctx.stroke();
+
+            // Loop 13 Bulan (Termasuk Suwung)
+            for(let i=0; i<13; i++) {
+                
+                // --- LOGIKA KOSMOLOGI ---
+                // Matahari (Gate)
+                let sunPos = (i / 12); 
+                let sunWave = Math.sin((i/12) * Math.PI) * (h/2 - 20); 
+                
+                let gateName = "DALAM (UTARA)";
+                if(i > 3 && i < 9) gateName = "TENGAH (EQUATOR)";
+                if(i >= 9) gateName = "LUAR (SELATAN)";
+                if(i === 12) gateName = "DINDING ES (VOID)";
+
+                // Rahu (Retrograde)
+                // Offset Rahu bergeser tiap tahun
+                let rahuOffset = (realYear % 19) * 2; 
+                let rahuPos = (12 - i + rahuOffset) % 13; 
+                
+                // Deteksi Pertemuan (Gerhana)
+                let isEclipse = Math.abs(i - rahuPos) < 1.5; 
+                let isSuwung = (i === 12);
+
+                // --- RENDER TABEL ---
+                let row = document.createElement('tr');
+                let statusRahu = "Jauh";
+                let note = "Energi Stabil";
+                
+                if(isEclipse) {
+                    row.className = "row-eclipse";
+                    statusRahu = "⚠️ MENDEKAT";
+                    note = "<span class='alert-eclipse'>GERHANA MATAHARI</span>";
+                }
+                
+                if(isSuwung) {
+                    row.className = "row-suwung";
+                    gateName = "OUTER RIM (DINDING ES)";
+                    statusRahu = "Tidak Relevan";
+                    note = "RESET ENERGI (HENING)";
+                }
+
+                row.innerHTML = `
+                    <td><strong>${MONTHS[i]}</strong></td>
+                    <td>${gateName}</td>
+                    <td>${statusRahu}</td>
+                    <td>${note}</td>
+                `;
+                tbody.appendChild(row);
+
+                // --- RENDER GRAFIK DI CANVAS ---
+                let x = (i / 13) * w + (w/26);
+                let y = (h/2) - (Math.cos((i/12)*Math.PI) * (h/3)); // Matahari Curve
+
+                ctx.fillStyle = isSuwung ? "#8a2be2" : "#b8860b";
+                ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI*2); ctx.fill();
+
+                let yRahu = (h/2) - (Math.cos(((rahuPos)/12)*Math.PI) * (h/3)); // Rahu Curve
+                ctx.strokeStyle = "#333"; ctx.lineWidth = 2; ctx.setLineDash([2,2]);
+                ctx.beginPath(); ctx.arc(x, yRahu, 4, 0, Math.PI*2); ctx.stroke();
+                ctx.setLineDash([]);
+
+                if(isEclipse) {
+                    ctx.strokeStyle = "red"; ctx.lineWidth = 2;
+                    ctx.beginPath(); ctx.moveTo(x-5, y-5); ctx.lineTo(x+5, y+5); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(x+5, y-5); ctx.lineTo(x-5, y+5); ctx.stroke();
+                }
+            }
+        }
+
+        generateAlmanac();
+    </script>
+</body>
+</html>

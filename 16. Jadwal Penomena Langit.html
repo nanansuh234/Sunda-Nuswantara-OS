@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COUNTER-ASTRONOMY 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Share+Tech+Mono&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --nasa-blue: #003366;
+            --nasa-text: #88ccff;
+            --nus-gold: #d4af37;
+            --nus-red: #8b0000;
+            --nus-bg: #1a1a1a;
+            --border: #333;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #eee;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .header {
+            text-align: center; border-bottom: 3px double var(--nus-gold);
+            padding-bottom: 20px; margin-bottom: 40px; width: 100%; max-width: 1000px;
+        }
+        h1 { font-family: 'Cinzel', serif; color: var(--nus-gold); font-size: 2.5rem; margin: 0; letter-spacing: 5px; }
+        .sub { color: #888; margin-top: 10px; }
+
+        .comparison-table {
+            width: 100%; max-width: 1100px;
+            border-collapse: separate;
+            border-spacing: 0 15px; /* Jarak antar baris */
+        }
+
+        th {
+            font-family: 'Orbitron'; padding: 15px; text-transform: uppercase; letter-spacing: 2px; font-size: 1.2rem;
+        }
+        .th-nasa { color: var(--nasa-text); border-bottom: 2px solid var(--nasa-blue); }
+        .th-nus { color: var(--nus-gold); border-bottom: 2px solid var(--nus-gold); }
+
+        .row-card td {
+            background: #111;
+            padding: 20px;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            vertical-align: top;
+            position: relative;
+        }
+
+        /* KOLOM NASA (HOAX) */
+        .col-nasa {
+            border-left: 5px solid var(--nasa-blue);
+            color: #aaa; width: 40%;
+            background: linear-gradient(90deg, #001 0%, #050505 100%);
+        }
+        .nasa-label { 
+            font-size: 0.7rem; background: var(--nasa-blue); color: #fff; 
+            padding: 2px 5px; display: inline-block; margin-bottom: 5px; 
+        }
+
+        /* KOLOM NUSWANTARA (TRUTH) */
+        .col-nus {
+            border-right: 5px solid var(--nus-gold);
+            color: #fff; width: 45%;
+            background: linear-gradient(90deg, #050505 0%, #151000 100%);
+        }
+        .nus-label { 
+            font-size: 0.7rem; background: var(--nus-gold); color: #000; 
+            padding: 2px 5px; display: inline-block; margin-bottom: 5px; font-weight: bold; 
+        }
+
+        /* TANGGAL DI TENGAH */
+        .col-date {
+            width: 15%; text-align: center; font-weight: bold; color: #fff;
+            font-family: 'Cinzel'; background: #222 !important; border: 1px solid #333;
+            display: flex; flex-direction: column; justify-content: center; height: 100%;
+        }
+        .date-month { font-size: 0.8rem; color: #888; }
+        .date-day { font-size: 1.5rem; color: #fff; }
+
+        /* STAMPS */
+        .stamp-hoax {
+            position: absolute; top: 10px; right: 10px;
+            border: 2px solid red; color: red; font-size: 0.7rem; 
+            padding: 2px 5px; transform: rotate(15deg); opacity: 0.5; font-weight: bold;
+        }
+        .stamp-truth {
+            position: absolute; top: 10px; right: 10px;
+            border: 2px solid #0f0; color: #0f0; font-size: 0.7rem; 
+            padding: 2px 5px; transform: rotate(-10deg); opacity: 0.8; font-weight: bold;
+        }
+
+        h3 { margin: 0 0 5px 0; font-size: 1.1rem; }
+        p { margin: 0; font-size: 0.9rem; line-height: 1.4; }
+
+        .highlight { color: var(--nus-gold); font-weight: bold; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .comparison-table, tbody, tr, td { display: block; width: 100%; }
+            .col-date { text-align: left; padding: 10px; border-bottom: none; background: #333; }
+            .col-nasa { border-left: none; border-top: 5px solid var(--nasa-blue); }
+            .col-nus { border-right: none; border-bottom: 5px solid var(--nus-gold); margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>ALMANAK KOSMOS 2026</h1>
+        <div class="sub">DEBUNKING GLOBAL ASTRONOMY WITH NUSWANTARA LOGIC</div>
+        <div style="margin-top:10px; color:var(--nus-gold); font-weight:bold;">TAHUN 002 - BATU (SATURNUS)</div>
+    </div>
+
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th class="th-nasa">NARASI GLOBAL (NASA)</th>
+                <th>WAKTU</th>
+                <th class="th-nus">REALITA NUSWANTARA</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr class="row-card">
+                <td class="col-nasa">
+                    <div class="stamp-hoax">TEORI</div>
+                    <span class="nasa-label">METEOR SHOWER</span>
+                    <h3>Hujan Meteor Quadrantid</h3>
+                    <p>Disebabkan oleh debu asteroid 2003 EH1 yang terbakar di atmosfer.</p>
+                </td>
+                <td class="col-date">
+                    <span class="date-month">JAN</span>
+                    <span class="date-day">04</span>
+                </td>
+                <td class="col-nus">
+                    <div class="stamp-truth">FAKTA</div>
+                    <span class="nus-label">AKTIVITAS ETHER</span>
+                    <h3>Pelepasan Muatan Kubah</h3>
+                    <p>Bukan batu luar angkasa. Ini adalah <span class="highlight">ionisasi Ether</span> atau rontokan elektromagnetik dari lapisan Firmament (Kubah) yang bergesekan dengan medan atas.</p>
+                </td>
+            </tr>
+
+            <tr class="row-card">
+                <td class="col-nasa">
+                    <span class="nasa-label">PLANET ORBIT</span>
+                    <h3>Oposisi Jupiter</h3>
+                    <p>Jupiter berada di jarak terdekat dengan Bumi dalam orbitnya mengelilingi Matahari.</p>
+                </td>
+                <td class="col-date">
+                    <span class="date-month">JAN</span>
+                    <span class="date-day">10</span>
+                </td>
+                <td class="col-nus">
+                    <span class="nus-label">BINTANG SIARAH</span>
+                    <h3>Jupiter Merapat ke Kubah</h3>
+                    <p>Bintang Siarah (Wandering Star) Jupiter sedang berada di titik <span class="highlight">Perigee Lokal</span>. Dia adalah sonoluminesensi (cahaya suara) yang sedang "Full Power" di lintasannya sendiri.</p>
+                </td>
+            </tr>
+
+            <tr class="row-card">
+                <td class="col-nasa">
+                    <div class="stamp-hoax">MATH ERROR</div>
+                    <span class="nasa-label">SOLAR ECLIPSE</span>
+                    <h3>Gerhana Matahari Cincin</h3>
+                    <p>Bulan menutupi tengah Matahari. Terlihat di Antartika.</p>
+                </td>
+                <td class="col-date">
+                    <span class="date-month">FEB</span>
+                    <span class="date-day">17</span>
+                </td>
+                <td class="col-nus">
+                    <div class="stamp-truth">RAHU EVENT</div>
+                    <span class="nus-label">GERBANG SELATAN</span>
+                    <h3>Portal Suwung Terbuka</h3>
+                    <p>Bukan Bulan! Ini ulah <span class="highlight">RAHU (Matahari Hitam)</span> yang melintas di jalur luar (Dinding Es). Cincin Api adalah tanda energi Matahari sedang disaring oleh Rahu di Outer Rim.</p>
+                </td>
+            </tr>
+
+            <tr class="row-card">
+                <td class="col-nasa">
+                    <span class="nasa-label">ALIGNMENT</span>
+                    <h3>Parade 6 Planet</h3>
+                    <p>Merkurius, Mars, Jupiter, Saturnus dll sejajar dalam orbit heliosentris.</p>
+                </td>
+                <td class="col-date">
+                    <span class="date-month">FEB</span>
+                    <span class="date-day">END</span>
+                </td>
+                <td class="col-nus">
+                    <span class="nus-label">HARMONI ETHER</span>
+                    <h3>Sinkronisasi Jalur Langit</h3>
+                    <p>Para "Penjaga Langit" (Bintang Siarah) sedang berbaris di jalur sirkuit Kubah. Ini momen <span class="highlight">Resonansi Energi</span> tinggi, bukan kebetulan gravitasi.</p>
+                </td>
+            </tr>
+
+            <tr class="row-card">
+                <td class="col-nasa">
+                    <span class="nasa-label">LUNAR ECLIPSE</span>
+                    <h3>Gerhana Bulan Total</h3>
+                    <p>Bulan masuk ke bayangan Bumi (Umbra). Warna merah karena pembiasan atmosfer.</p>
+                </td>
+                <td class="col-date">
+                    <span class="date-month">MAR</span>
+                    <span class="date-day">03</span>
+                </td>
+                <td class="col-nus">
+                    <div class="stamp-truth">KETU EVENT</div>
+                    <span class="nus-label">INTERVENSI KETU</span>
+                    <h3>Bulan Berdarah (Blood Moon)</h3>
+                    <p>Bulan masuk penuh ke zona <span class="highlight" style="color:#ff4444">EKOR NAGA (KETU)</span>. Medan magnet padat/kotor di zona Ketu mengubah cahaya dingin bulan menjadi merah. Tidak ada hubungannya dengan bayangan bumi.</p>
+                </td>
+            </tr>
+
+            <tr class="row-card">
+                <td class="col-nasa">
+                    <span class="nasa-label">TILTING</span>
+                    <h3>Ekuinoks September</h3>
+                    <p>Matahari tepat di atas khatulistiwa karena kemiringan sumbu bumi.</p>
+                </td>
+                <td class="col-date">
+                    <span class="date-month">SEP</span>
+                    <span class="date-day">23</span>
+                </td>
+                <td class="col-nus">
+                    <span class="nus-label">GERBANG TENGAH</span>
+                    <h3>Matahari di Pagar Ayu</h3>
+                    <p>Matahari sedang melintasi <span class="highlight">Gerbang Tengah (Equator)</span> dalam perjalanan spiralnya menuju ke luar (Selatan). Distribusi cahaya seimbang di seluruh piringan bumi.</p>
+                </td>
+            </tr>
+
+            <tr class="row-card">
+                <td class="col-nasa">
+                    <span class="nasa-label">DEEP SPACE</span>
+                    <h3>Gugus Bintang Pleiades</h3>
+                    <p>Kumpulan bintang muda berjarak 444 tahun cahaya.</p>
+                </td>
+                <td class="col-date">
+                    <span class="date-month">NOV</span>
+                    <span class="date-day">ALL</span>
+                </td>
+                <td class="col-nus">
+                    <span class="nus-label">LAMPU KUBAH</span>
+                    <h3>Tujuh Bidadari (Lintang Wuluh)</h3>
+                    <p>Mereka bukan matahari jauh. Mereka adalah ornamen cahaya yang menempel pada <span class="highlight">Firmament (Kubah)</span>. Getarannya mempengaruhi pertanian (Pranata Mangsa).</p>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <div style="margin-top:30px; text-align:center; color:#666; font-size:0.8rem; border:1px solid #333; padding:10px;">
+        DATA TANGGAL DIAMBIL DARI OBSERVASI GLOBAL, NAMUN INTERPRETASI DIKOREKSI MENGGUNAKAN LOGIKA BUMI DATAR.<br>
+        © NUSWANTARA COSMOLOGY
+    </div>
+
+</body>
+</html>

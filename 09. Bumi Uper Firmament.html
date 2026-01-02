@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE COSMIC CLOCKWORK: 1 DAY = 1 YEAR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050508;
+            --panel: #0f1015;
+            --text: #aaffff;
+            --gold: #ffcc00;
+            --silver: #ddddff;
+            --ice: #ffffff;
+            --rahu: #111; /* Black Sun */
+        }
+
+        body {
+            margin: 0; padding: 0; background: var(--bg); color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto; /* SCROLLABLE ENABLED */
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center; padding: 20px; border-bottom: 2px solid var(--text);
+            background: #000;
+        }
+        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; letter-spacing: 3px; }
+        .sub { font-family: 'Orbitron'; font-size: 0.8rem; color: #888; margin-top: 5px; }
+
+        /* CONTAINER UTAMA */
+        .main-container {
+            display: flex; flex-direction: column; align-items: center; width: 100%;
+        }
+
+        /* CANVAS WRAPPER */
+        .canvas-box {
+            position: relative; width: 100%; max-width: 800px; height: 800px;
+            margin-top: 20px; border: 1px solid #333; box-shadow: 0 0 50px rgba(0,255,255,0.1);
+            background: radial-gradient(circle, #001 0%, #000 70%);
+        }
+        canvas { display: block; width: 100%; height: 100%; }
+
+        /* OVERLAY INFO DI ATAS CANVAS */
+        .overlay-stat {
+            position: absolute; top: 10px; left: 10px; 
+            background: rgba(0,0,0,0.7); padding: 10px; border: 1px solid var(--text);
+            font-family: 'Orbitron'; font-size: 0.8rem; pointer-events: none;
+        }
+        .legend {
+            position: absolute; bottom: 10px; right: 10px; text-align: right;
+            background: rgba(0,0,0,0.7); padding: 10px; font-size: 0.7rem; pointer-events: none;
+        }
+        .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+
+        /* PANEL KONTROL & PENJELASAN (SCROLLABLE AREA) */
+        .details-panel {
+            width: 100%; max-width: 800px; padding: 20px; margin-bottom: 50px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+
+        .card {
+            background: var(--panel); border: 1px solid #333; padding: 20px;
+            border-radius: 5px;
+        }
+        h3 { font-family: 'Orbitron'; color: var(--gold); border-bottom: 1px dashed #555; padding-bottom: 5px; margin-top: 0; }
+        p { font-size: 0.9rem; line-height: 1.5; color: #ccc; }
+
+        .control-row { display: flex; gap: 10px; margin-top: 10px; }
+        button {
+            flex: 1; padding: 10px; background: #222; border: 1px solid var(--text); color: var(--text);
+            cursor: pointer; font-family: 'Orbitron'; transition: 0.3s;
+        }
+        button:hover { background: var(--text); color: #000; }
+        button.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+        /* RESPONSIVE */
+        @media (max-width: 700px) {
+            .canvas-box { height: 100vw; } /* Kotak di HP */
+            .details-panel { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>THE GREAT COSMIC CLOCK</h1>
+        <div class="sub">REALITY MODEL: SPIRAL GATES & TIME DILATION</div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="canvas-box">
+            <canvas id="cosmosCanvas"></canvas>
+            
+            <div class="overlay-stat">
+                <div>TIME: <span id="timeVal" style="color:var(--gold)">DAY 1</span></div>
+                <div>SUN GATE: <span id="sunGateVal">EQUATOR</span></div>
+                <div>ECLIPSE RISK: <span id="eclipseVal" style="color:#f00">LOW</span></div>
+            </div>
+
+            <div class="legend">
+                <div><span class="dot" style="background:var(--gold)"></span> MATAHARI (PEMBAWA SIANG)</div>
+                <div><span class="dot" style="background:var(--silver)"></span> BULAN (SPIRAL ORBIT)</div>
+                <div><span class="dot" style="background:#333; border:1px solid #555"></span> RAHU (BLACK SUN/BAYANGAN)</div>
+                <div style="margin-top:5px; color:#f55;">OUTER RIM: 1 DAY = 1 YEAR</div>
+            </div>
+        </div>
+
+        <div class="details-panel">
+            
+            <div class="card">
+                <h3>KONTROL SIMULASI</h3>
+                <p>Atur kecepatan waktu untuk melihat pola spiral bulan dan perpindahan gerbang matahari.</p>
+                <div class="control-row">
+                    <button onclick="setSpeed(1)">1x (Real)</button>
+                    <button onclick="setSpeed(20)" class="active">20x (Fast)</button>
+                    <button onclick="setSpeed(100)">100x (Hyper)</button>
+                </div>
+                <div class="control-row">
+                    <button onclick="toggleTrails()">TOGGLE JEJAK SPIRAL</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>KONSEP 1: SUN GATES</h3>
+                <p>
+                    Matahari tidak statis. Dia bergerak <strong>Maju-Mundur (Spiral)</strong> antara 3 Gerbang:
+                    <br>- <strong>Dalam (Cancer):</strong> Musim Panas Utara.
+                    <br>- <strong>Tengah (Equator):</strong> Pancaroba.
+                    <br>- <strong>Luar (Capricorn):</strong> Musim Dingin Utara / Panas Selatan.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>KONSEP 2: RAHU & GERHANA</h3>
+                <p>
+                    Gerhana terjadi bukan karena bayangan bumi. Tapi karena <strong>RAHU (Matahari Hitam)</strong>. 
+                    Benda gelap tak kasat mata yang memiliki orbit sendiri. Saat Rahu menabrak Matahari/Bulan, cahaya tertutup.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>KONSEP 3: DINDING WAKTU</h3>
+                <p>
+                    Di ujung dunia (Ice Wall), medan magnet sangat kuat sehingga waktu melambat drastis. 
+                    <strong>1 Putaran di Pusat (24 Jam) = 1 Derajat pergeseran di Luar.</strong> 
+                    Itulah kenapa "Sehari bagi Tuhan sama dengan 1000 tahun bagi manusia".
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('cosmosCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height, cx, cy, R;
+        let time = 0;
+        let speed = 20; // Default speed
+        let showTrails = true;
+
+        // PARAMS OBJEK
+        let sun = { angle: 0, r: 0, gate: 0 }; // Gate 0 = Inner, 1 = Outer
+        let moon = { angle: Math.PI, r: 0, spiralPhase: 0 };
+        let rahu = { angle: Math.PI/2, r: 0 }; // Black Sun
+
+        // TRAIL BUFFERS
+        let sunTrail = [];
+        let moonTrail = [];
+
+        function resize() {
+            width = canvas.clientWidth;
+            height = canvas.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            cx = width / 2;
+            cy = height / 2;
+            R = Math.min(width, height) * 0.45; // Radius Bumi
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function draw() {
+            // Clear Screen
+            ctx.fillStyle = '#050508';
+            ctx.fillRect(0, 0, width, height);
+
+            // 1. GAMBAR PETA BUMI DATAR (BASE)
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            // Ice Wall Border
+            ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI*2);
+            ctx.fillStyle = '#001a33'; ctx.fill();
+            ctx.lineWidth = 5; ctx.strokeStyle = '#fff'; ctx.stroke();
+
+            // Gates (Garis Orbit)
+            let rCancer = R * 0.4;
+            let rEquator = R * 0.65;
+            let rCapricorn = R * 0.9;
+
+            ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.beginPath(); ctx.arc(0, 0, rCancer, 0, Math.PI*2); ctx.stroke(); // Cancer
+            ctx.beginPath(); ctx.arc(0, 0, rEquator, 0, Math.PI*2); ctx.stroke(); // Equator
+            ctx.beginPath(); ctx.arc(0, 0, rCapricorn, 0, Math.PI*2); ctx.stroke(); // Capricorn
+
+            // North Pole
+            ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI*2); ctx.fill();
+
+            // TIME DILATION TEXT (Muter pelan di pinggir)
+            ctx.save();
+            ctx.rotate(time * 0.001); // Muter lambat banget (1 tahun)
+            ctx.fillStyle = 'rgba(255, 50, 50, 0.5)';
+            ctx.font = '10px monospace';
+            for(let i=0; i<12; i++) {
+                ctx.save();
+                ctx.rotate(i * (Math.PI/6));
+                ctx.fillText("TIME DILATION ZONE", R-90, 0);
+                ctx.restore();
+            }
+            ctx.restore();
+
+            ctx.restore();
+
+            // 2. LOGIKA PERGERAKAN (PHYSICS)
+            
+            // Waktu berjalan
+            time += 0.01 * speed;
+            let dayCycle = time % (Math.PI * 2); // 1 Hari = 1 Putaran penuh (2PI)
+            let yearCycle = time * 0.01; // 1 Tahun lambat
+
+            // POSISI MATAHARI (Spiral Tahunan)
+            // Radius matahari berubah berdasarkan tahun (Sinus wave)
+            // Dari Cancer (0.4) ke Capricorn (0.9) bolak balik
+            let sunGateFactor = (Math.sin(yearCycle) + 1) / 2; // 0 to 1
+            sun.r = rCancer + (sunGateFactor * (rCapricorn - rCancer));
+            sun.angle += 0.01 * speed;
+
+            // Update UI Gate Text
+            let gateTxt = "EQUATOR";
+            if(sunGateFactor < 0.2) gateTxt = "TROPIC OF CANCER (INNER)";
+            else if(sunGateFactor > 0.8) gateTxt = "TROPIC OF CAPRICORN (OUTER)";
+            document.getElementById('sunGateVal').innerText = gateTxt;
+
+            // POSISI BULAN (Spiral Bulanan - Lebih Cepat)
+            // Bulan lebih lambat dikit dari matahari (makanya dia ketinggalan tiap hari)
+            moon.angle += 0.0095 * speed; 
+            // Radius bulan naik turun lebih cepat (Sebulan sekali masuk keluar)
+            moon.r = rCancer + ((Math.sin(yearCycle * 12) + 1) / 2) * (rCapricorn - rCancer);
+
+            // POSISI RAHU (Black Sun - Orbit Miring/Lonjong)
+            rahu.angle += 0.0102 * speed; // Kecepatan beda dikit biar jarang ketemu
+            rahu.r = rEquator; // Dia stay di tengah tapi kadang motong jalan
+
+            // 3. GAMBAR JEJAK SPIRAL (TRAILS)
+            if(showTrails) {
+                // Simpan posisi
+                sunTrail.push({x: cx + Math.cos(sun.angle)*sun.r, y: cy + Math.sin(sun.angle)*sun.r});
+                moonTrail.push({x: cx + Math.cos(moon.angle)*moon.r, y: cy + Math.sin(moon.angle)*moon.r});
+                
+                // Batasi panjang trail biar gak berat
+                if(sunTrail.length > 300) sunTrail.shift();
+                if(moonTrail.length > 300) moonTrail.shift();
+
+                // Draw Sun Trail
+                ctx.strokeStyle = 'rgba(255, 200, 0, 0.3)'; ctx.lineWidth = 2;
+                ctx.beginPath();
+                for(let t of sunTrail) ctx.lineTo(t.x, t.y);
+                ctx.stroke();
+
+                // Draw Moon Trail (Spiral Khas)
+                ctx.strokeStyle = 'rgba(200, 200, 255, 0.3)';
+                ctx.beginPath();
+                for(let t of moonTrail) ctx.lineTo(t.x, t.y);
+                ctx.stroke();
+            }
+
+            // 4. GAMBAR BENDA LANGIT
+            
+            // Matahari
+            let sx = cx + Math.cos(sun.angle) * sun.r;
+            let sy = cy + Math.sin(sun.angle) * sun.r;
+            
+            // Cahaya Matahari (Spotlight Siang)
+            let gradSun = ctx.createRadialGradient(sx, sy, 10, sx, sy, R*0.5);
+            gradSun.addColorStop(0, 'rgba(255, 200, 0, 0.8)');
+            gradSun.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = gradSun;
+            ctx.beginPath(); ctx.arc(sx, sy, R*0.5, 0, Math.PI*2); ctx.fill();
+
+            // Fisik Matahari
+            ctx.fillStyle = '#ffd700';
+            ctx.shadowBlur = 20; ctx.shadowColor = '#ffd700';
+            ctx.beginPath(); ctx.arc(sx, sy, 15, 0, Math.PI*2); ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Bulan
+            let mx = cx + Math.cos(moon.angle) * moon.r;
+            let my = cy + Math.sin(moon.angle) * moon.r;
+            ctx.fillStyle = '#ddd';
+            ctx.shadowBlur = 10; ctx.shadowColor = '#fff';
+            ctx.beginPath(); ctx.arc(mx, my, 12, 0, Math.PI*2); ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Rahu (Invisible unless eclipse)
+            let rx = cx + Math.cos(rahu.angle) * rahu.r;
+            let ry = cy + Math.sin(rahu.angle) * rahu.r;
+            
+            // Cek Tabrakan (Gerhana)
+            let distSunRahu = Math.sqrt((sx-rx)**2 + (sy-ry)**2);
+            let distMoonRahu = Math.sqrt((mx-rx)**2 + (my-ry)**2);
+            
+            let eclipseStatus = "LOW";
+            let colorStatus = "#0f0";
+
+            if (distSunRahu < 30 || distMoonRahu < 30) {
+                // GERHANA TERJADI!
+                eclipseStatus = "TOTAL ECLIPSE ACTIVE";
+                colorStatus = "#f00";
+                
+                // Visualisasi Rahu (Lingkaran Hitam dengan aura gelap)
+                ctx.fillStyle = '#000';
+                ctx.strokeStyle = 'rgba(100, 0, 0, 0.8)';
+                ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.arc(rx, ry, 16, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            } else {
+                // Rahu samar-samar (Invisible node)
+                ctx.strokeStyle = 'rgba(50, 50, 50, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath(); ctx.arc(rx, ry, 15, 0, Math.PI*2); ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            document.getElementById('eclipseVal').innerText = eclipseStatus;
+            document.getElementById('eclipseVal').style.color = colorStatus;
+            document.getElementById('timeVal').innerText = "CYCLE: " + Math.floor(time);
+
+            requestAnimationFrame(draw);
+        }
+
+        function setSpeed(val) {
+            speed = val;
+            // Update button styles
+            let btns = document.querySelectorAll('button');
+            btns.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function toggleTrails() {
+            showTrails = !showTrails;
+            sunTrail = []; moonTrail = [];
+        }
+
+        draw();
+
+    </script>
+</body>
+</html>

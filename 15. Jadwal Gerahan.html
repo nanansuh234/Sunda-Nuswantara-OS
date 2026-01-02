@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEJAK NAGA: VERSI NUSWANTARA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0c10;
+            --card: #1f2833;
+            --text: #c5c6c7;
+            --gold: #d4af37; /* Warna Emas Nuswantara */
+            --cyan: #66fcf1;
+            --solar: #e6b800;
+            --lunar: #a39bd6;
+            --sync: #666; /* Warna Masehi (Gelap) */
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Orbitron', sans-serif;
+            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* HEADER */
+        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid var(--gold); padding-bottom: 20px; width: 100%; max-width: 800px; }
+        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; letter-spacing: 4px; font-size: 2rem; }
+        .sub { color: var(--cyan); font-size: 0.9rem; margin-top: 5px; }
+
+        /* LIST GERHANA */
+        .timeline {
+            width: 100%; max-width: 800px;
+            position: relative;
+        }
+        
+        /* Garis Tengah */
+        .timeline::before {
+            content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+            width: 2px; background: #333; z-index: 0;
+        }
+
+        .event-card {
+            background: var(--card); 
+            margin-bottom: 25px; 
+            padding: 20px; 
+            margin-left: 50px; /* Space buat garis */
+            border-left: 5px solid #555;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+        .event-card:hover { transform: translateX(5px); }
+
+        /* Titik di Garis */
+        .event-card::before {
+            content: ''; position: absolute; left: -36px; top: 25px;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: #000; border: 2px solid #555; z-index: 1;
+        }
+
+        /* STYLE KHUSUS TIPE */
+        .solar-event { border-color: var(--solar); }
+        .solar-event::before { border-color: var(--solar); background: var(--solar); box-shadow: 0 0 10px var(--solar); }
+        .solar-title { color: var(--solar); }
+
+        .lunar-event { border-color: var(--lunar); }
+        .lunar-event::before { border-color: var(--lunar); background: var(--lunar); box-shadow: 0 0 10px var(--lunar); }
+        .lunar-title { color: var(--lunar); }
+
+        /* TANGGAL NUSWANTARA (BESAR) */
+        .date-nuswantara {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* TANGGAL MASEHI (KECIL) */
+        .date-masehi {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: var(--sync);
+            border-top: 1px dashed #444;
+            display: inline-block;
+            padding-top: 2px;
+        }
+
+        .event-title { font-weight: bold; font-size: 1.1rem; margin-top: 10px; margin-bottom: 5px; }
+        .event-desc { font-size: 0.85rem; color: #aaa; line-height: 1.5; }
+        
+        /* BADGE TAHUN ELEMEN */
+        .year-badge {
+            position: absolute; top: 10px; right: 10px;
+            font-size: 0.7rem; padding: 3px 8px; border: 1px solid var(--gold);
+            color: var(--gold); border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>PAWUKON NAGA</h1>
+        <div class="sub">JADWAL GERHANA BERDASARKAN KALENDER NUSWANTARA</div>
+    </div>
+
+    <div class="timeline" id="timelineList">
+        </div>
+
+    <script>
+        // === KONFIGURASI KALENDER NUSWANTARA ===
+        const MONTHS_NUS = ["WIWITAN", "GANGGA", "BIJA", "TRUBUS", "TEJA", "BASKARA", "KARTIKA", "HUMA", "PHALA", "LUMBUNG", "RESWARA", "PURNAKA", "SUWUNG"];
+        const YEAR_ELEMENTS = {
+            2025: "TAHUN 001 - AIR",
+            2026: "TAHUN 002 - BATU",
+            2027: "TAHUN 003 - SURYA",
+            2028: "TAHUN 004 - API",
+            2029: "TAHUN 005 - ANGIN",
+            2030: "TAHUN 006 - ETHER"
+        };
+        
+        // Anchor: 21 Maret 2025 = Tanggal 1 Wiwitan Tahun 1
+        const ANCHOR_DATE = new Date("2025-03-21T00:00:00"); 
+
+        // === DATA REAL NASA (2025-2028) ===
+        const RAW_DATA = [
+            { d: "2025-03-14", type: "LUNAR", title: "Blood Moon (Merah Darah)", desc: "Bulan masuk zona Ekor Naga (Ketu). Energi dingin mendominasi." },
+            { d: "2025-03-29", type: "SOLAR", title: "Gerhana Matahari Sebagian", desc: "Rahu menggigit sebagian kecil Matahari di utara." },
+            { d: "2025-09-07", type: "LUNAR", title: "Blood Moon Total", desc: "Intervensi Ketu penuh. Bulan memerah di langit Asia." },
+            { d: "2025-09-21", type: "SOLAR", title: "Gerhana Matahari Sebagian", desc: "Rahu melintas di belahan selatan." },
+            
+            { d: "2026-02-17", type: "SOLAR", title: "Gerhana Cincin (Annular)", desc: "Cincin Api di Antartika. Portal Suwung terbuka." },
+            { d: "2026-03-03", type: "LUNAR", title: "Blood Moon Total", desc: "Bulan kembali ditelan Naga." },
+            { d: "2026-08-12", type: "SOLAR", title: "TOTAL SOLAR ECLIPSE", desc: "GERHANA TOTAL! Rahu menelan Matahari sepenuhnya. Puncak energi gelap." },
+            
+            { d: "2027-02-06", type: "SOLAR", title: "Gerhana Cincin", desc: "Matahari membentuk cincin di Afrika." },
+            { d: "2027-08-02", type: "SOLAR", title: "TOTAL SOLAR ECLIPSE", desc: "Gerhana Total terpanjang abad ini di wilayah Arab." }
+        ];
+
+        // === FUNGSI KONVERSI ===
+        function convertToNuswantara(dateString) {
+            let targetDate = new Date(dateString);
+            
+            // Hitung selisih hari dari Anchor (21 Maret 2025)
+            // 1 Hari = 86400000 ms
+            let diffTime = targetDate - ANCHOR_DATE;
+            let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            let yearNum = 1;
+            let monthIdx = 0;
+            let dayNum = 1;
+            
+            if (diffDays < 0) {
+                // Handle tanggal sebelum 21 Maret 2025 (Masa Transisi/Suwung Tahun 0)
+                // Kita anggap Mundur ke Tahun 0 (Akhir Siklus Lama)
+                // Logic simpel: Mundur dari Wiwitan 1
+                // Ini cuma simulasi display untuk data awal 2025
+                yearNum = 0; 
+                // Hitung mundur manual simpel untuk display Maret awal
+                monthIdx = 12; // Suwung
+                dayNum = 28 + diffDays + 1; // Kira-kira akhir Suwung
+            } else {
+                // Logic Maju
+                // 1 Tahun Nuswantara = 13 Bulan x 28 Hari = 364 Hari (Siklus 13 Bulan)
+                // *Note: Di file HTML lu, logika pastinya pake offset grid, di sini kita pake matematik murni 13x28
+                let daysPerYear = 364;
+                
+                yearNum = 1 + Math.floor(diffDays / daysPerYear);
+                let dayOfYear = diffDays % daysPerYear;
+                
+                monthIdx = Math.floor(dayOfYear / 28);
+                dayNum = (dayOfYear % 28) + 1;
+            }
+
+            let yName = YEAR_ELEMENTS[2024 + yearNum] || ("TAHUN " + yearNum);
+            if(yearNum === 0) yName = "TRANSISI AWAL";
+
+            return {
+                d: dayNum,
+                m: MONTHS_NUS[monthIdx],
+                y: yName,
+                orig: targetDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+            };
+        }
+
+        // === RENDER ===
+        const container = document.getElementById('timelineList');
+
+        RAW_DATA.forEach(ev => {
+            const nus = convertToNuswantara(ev.d);
+            
+            let typeClass = ev.type === "SOLAR" ? "solar-event" : "lunar-event";
+            let titleClass = ev.type === "SOLAR" ? "solar-title" : "lunar-title";
+            
+            let html = `
+                <div class="event-card ${typeClass}">
+                    <div class="year-badge">${nus.y}</div>
+                    
+                    <div class="date-nuswantara">
+                        ${nus.d} ${nus.m}
+                    </div>
+                    
+                    <div class="date-masehi">
+                        Sinkronisasi Masehi: ${nus.orig}
+                    </div>
+
+                    <div class="event-title ${titleClass}">${ev.title}</div>
+                    <div class="event-desc">${ev.desc}</div>
+                </div>
+            `;
+            container.innerHTML += html;
+        });
+
+    </script>
+</body>
+</html>
