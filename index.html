@@ -297,43 +297,6 @@
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
-
-        /* ============================================================ */
-        /* === TAMBAHAN KHUSUS HP (MOBILE FIX) === */
-        /* Agar taskbar nempel di bawah dan tidak hilang saat scroll */
-        /* ============================================================ */
-        @media (max-width: 768px) {
-            .taskbar {
-                position: fixed !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                z-index: 99999 !important; /* Paling atas */
-                padding-bottom: env(safe-area-inset-bottom); /* Aman untuk iPhone */
-            }
-
-            /* Start Menu ngikutin taskbar fixed */
-            .start-menu-popup {
-                position: fixed !important;
-                bottom: calc(var(--taskbar-h) + 10px + env(safe-area-inset-bottom)) !important;
-                left: 10px !important;
-            }
-
-            /* Geser konten dashboard biar icon paling bawah gak ketutup taskbar */
-            .dashboard-content {
-                padding-bottom: 100px !important; 
-            }
-
-            /* Agar tab aplikasi bisa di-scroll horizontal di HP */
-            .task-list {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .task-tab {
-                min-width: 120px; /* Lebar minimal tab di HP */
-            }
-        }
     </style>
 </head>
 <body>
@@ -427,7 +390,7 @@
                 <a href="#" onclick="launchApp('14. Terapi Cahaya Malam.html', 'Terapi Sirep', '🕯️')" class="app-card cat-sys">
                     <div class="app-icon">🕯️</div><div class="app-label">Terapi Sirep</div>
                 </a>
-                <a href="15. Appraisal Scanner.html" class="app-card cat-doc">
+                <a href="#" onclick="launchApp('15. Appraisal Scanner.html', 'Appraisal', '🔍')" class="app-card cat-tech">
                     <div class="app-icon">🔍</div><div class="app-label">Appraisal</div>
                 </a>
                 <a href="#" onclick="launchApp('16. Restorasi Pangan.html', 'Teknologi Pangan', '🍯')" class="app-card cat-nature">
@@ -448,8 +411,8 @@
                 <a href="#" onclick="launchApp('21. Pustaka Peradaban.html', 'Leveling Diri', '⏫')" class="app-card cat-lingo">
                     <div class="app-icon">⏫</div><div class="app-label">Leveling Diri</div>
                 </a>
-                <a href="23. Scanner Nilai Dasar.html" class="app-card cat-doc">
-                    <div class="app-icon">🔍</div><div class="app-label">Analisa Dasar</div>
+                <a href="#" onclick="launchApp('23. Scanner Nilai Dasar.html', 'Analisa Dasar', '🧬')" class="app-card cat-nature">
+                    <div class="app-icon">🧬</div><div class="app-label">Analisa Dasar</div>
                 </a>
                 <a href="#" onclick="launchApp('24. Estafet Kemanusiaan.html', 'Codex Manusia', '👤')" class="app-card cat-human">
                     <div class="app-icon">👤</div><div class="app-label">Codex Manusia</div>
@@ -528,12 +491,9 @@
                     <div class="app-icon">📺</div>
                     <div class="app-label">TV Jadul</div>
                 </a>
-                <a href="54. Double Anchor System.html" class="app-card cat-doc">
-                    <div class="app-icon">⚖️</div><div class="app-label">Double Anchor System</div>
-                </a>
-                <a href="#" onclick="launchApp('55. Nilai Komoditas.html', 'Daftar Nilai', '📚')" class="app-card cat-fin">
-                    <div class="app-icon">📚</div>
-                    <div class="app-label">Daftar Nilai Komoditas</div>
+                <a href="#" onclick="launchApp('54. Double Anchor System.html', 'Market Watch', '⚖️')" class="app-card cat-finance">
+                    <div class="app-icon">⚖️</div>
+                    <div class="app-label">Market Watch</div>
                 </a>
                 <a href="#" onclick="launchApp('56. Sunda Nuswantara Archive.html', 'Nuswantara Archive', '📚')" class="app-card cat-fin">
                     <div class="app-icon">📖</div>
@@ -903,5 +863,3 @@
     </script>
 </body>
 </html>
-
-
