@@ -535,10 +535,30 @@
                     <div class="app-icon">📚</div>
                     <div class="app-label">Daftar Nilai Komoditas</div>
                 </a>
-                <a href="#" onclick="launchApp('56. Sunda Nuswantara Archive.html', 'Daftar Nilai', '📚')" class="app-card cat-fin">
+               <a href="#" onclick="launchApp('56. Sunda Nuswantara Archive.html', 'Nuswantara Archive', '📚')" class="app-card cat-fin">
                     <div class="app-icon">📖</div>
                     <div class="app-label">SUNDA NUSWANTARA ARCHIVE</div>
-                </div>
+                </a> </div> <div style="text-align:center; padding: 20px; font-size:0.6rem; color:#666;">
+                SYSTEM READY // FREQUENCY ALIGNED // NANAN SUHENDAR
+            </div>
+        </div> <div id="app-windows-container">
+            </div>
+
+    </div> ```
+
+### ⚙️ Tambahan CSS (Biar Taskbar Lebih Aman)
+
+Biar tombol Start gak "lari" ke tengah lagi kalau ada error dikit, tambahkan/update CSS `.taskbar-left` kamu dengan yang ini:
+
+```css
+.taskbar-left {
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    flex: 1; /* Ini kunci biar dia nekan tray ke kanan */
+    width: 100%; /* Paksa lebar penuh di container flexnya */
+    overflow: hidden;
+}
 
             <div style="text-align:center; padding: 20px; font-size:0.6rem; color:#666;">
                 SYSTEM READY // FREQUENCY ALIGNED // NANAN SUHENDAR
@@ -901,6 +921,7 @@
     </script>
 </body>
 </html>
+
 
 
 
