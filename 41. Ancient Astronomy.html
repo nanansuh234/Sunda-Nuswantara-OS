@@ -10,6 +10,7 @@
             --card-bg: #0a0a0a;
             --gold: #d4af37;
             --neon: #00ffcc;
+            --red: #ff3333; /* Warna khusus Forbidden */
             --text: #ccc;
             --border: #333;
         }
@@ -103,6 +104,22 @@
         }
         .card.gold-tier:hover::before {
             background: var(--gold);
+        }
+
+        /* KHUSUS CARD MERAH (Forbidden) */
+        .card.red-tier:hover {
+            border-color: var(--red);
+            box-shadow: 0 5px 20px rgba(255, 51, 51, 0.2);
+        }
+        .card.red-tier:hover::before {
+            background: var(--red);
+        }
+        .card.red-tier .status-dot {
+            background: #500;
+        }
+        .card.red-tier:hover .status-dot {
+            background: var(--red);
+            box-shadow: 0 0 10px var(--red);
         }
 
         /* TYPOGRAPHY */
@@ -200,6 +217,80 @@
             <div>
                 <div class="card-title"><span class="status-dot"></span>Enoch Gatekeeper</div>
                 <div class="card-desc">Sinkronisasi Gerbang Matahari dengan musim dan kalender tanam Nuswantara.</div>
+            </div>
+        </a>
+
+        <div class="section-label">/// COSMIC SIMULATIONS & ALMANACS</div>
+
+        <a href="09. Bumi Uper Firmament.html" class="card">
+            <span class="card-num">09</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Cosmic Clockwork</div>
+                <div class="card-desc">Simulasi dilatasi waktu 1 Hari = 1 Tahun di Outer Rim (Dinding Es) dan gerbang spiral.</div>
+            </div>
+        </a>
+
+        <a href="10 Firmament Earth.html" class="card">
+            <span class="card-num">10</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Project Firmament</div>
+                <div class="card-desc">Model interaktif integritas kubah bumi, orbit lokal, dan batas ketinggian roket.</div>
+            </div>
+        </a>
+
+        <a href="11. Sunda Nuswantara Clock Cosmos.html" class="card">
+            <span class="card-num">11</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Cosmic Clock</div>
+                <div class="card-desc">Visualisasi jam kosmik Pranata Mangsa, posisi Rahu, dan pergerakan spiral bulan.</div>
+            </div>
+        </a>
+
+        <a href="12. Buku Kosmologi Nuswantara.html" class="card gold-tier">
+            <span class="card-num">12</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Buku Putih Kosmologi</div>
+                <div class="card-desc">Dokumen induk pengetahuan leluhur: Kebohongan gravitasi, spiral matahari, dan Rahu.</div>
+            </div>
+        </a>
+
+        <a href="13. Simulasi Siklus Gerhana Bulan dan Matahari Tahunan.html" class="card">
+            <span class="card-num">13</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Almanak Rahu & Ketu</div>
+                <div class="card-desc">Simulasi siklus tahunan pergerakan Rahu (Matahari Hitam) untuk prediksi gerhana presisi.</div>
+            </div>
+        </a>
+
+        <a href="14. Simulasi Siklus Gerhana Matahari.html" class="card">
+            <span class="card-num">14</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Pawukon Rahu</div>
+                <div class="card-desc">Almanak posisi gerbang matahari dan deteksi intervensi Rahu dalam siklus Windu.</div>
+            </div>
+        </a>
+
+        <a href="15. Jadwal Gerahan.html" class="card">
+            <span class="card-num">15</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Pawukon Naga</div>
+                <div class="card-desc">Jadwal komparasi gerhana Matahari dan Bulan: Data NASA vs Kalender Nuswantara.</div>
+            </div>
+        </a>
+
+        <a href="16. Jadwal Penomena Langit.html" class="card">
+            <span class="card-num">16</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Almanak Kosmos 2026</div>
+                <div class="card-desc">Analisis tandingan fenomena langit 2026: Debunking narasi meteor & planet.</div>
+            </div>
+        </a>
+
+        <a href="17. Planetarium Simulator.html" class="card">
+            <span class="card-num">17</span>
+            <div>
+                <div class="card-title"><span class="status-dot"></span>Star Cymatics</div>
+                <div class="card-desc">Simulator teleskop Nikon P1000 untuk dekode frekuensi cymatic bintang dan nebula.</div>
             </div>
         </a>
 
