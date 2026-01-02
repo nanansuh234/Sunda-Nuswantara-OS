@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLASSIFIED: ETHERIC ENTITIES</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050005;
+            --ether-purple: #bd00ff; /* Warna Dimensi Astral */
+            --spirit-blue: #00f3ff;
+            --danger: #ff0000;
+            --text: #dcdcdc;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Special Elite', cursive; /* Font Mesin Tik Tua */
+            padding: 30px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .grimoire {
+            width: 100%; max-width: 900px;
+            border: 3px solid var(--ether-purple);
+            background: 
+                linear-gradient(rgba(189, 0, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(189, 0, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(189, 0, 255, 0.15);
+            position: relative;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center; border-bottom: 3px double var(--ether-purple);
+            padding-bottom: 20px; margin-bottom: 40px;
+        }
+        h1 { 
+            font-family: 'Creepster', cursive; 
+            color: var(--ether-purple); 
+            font-size: 3rem; margin: 0; 
+            text-shadow: 2px 2px 0px #330033;
+            letter-spacing: 2px;
+        }
+        .sub { color: #aaa; margin-top: 5px; font-weight: bold; letter-spacing: 1px; }
+
+        /* INTRO BOX */
+        .intro-box {
+            border: 1px dashed var(--spirit-blue); padding: 20px; margin-bottom: 30px;
+            background: rgba(0,0,20,0.5); font-size: 0.9rem; text-align: justify;
+        }
+
+        /* ENTITY CARDS */
+        .entity-grid {
+            display: grid; grid-template-columns: 1fr; gap: 30px;
+        }
+
+        .entity-card {
+            border: 1px solid #333; background: #0a0a0a;
+            display: grid; grid-template-columns: 150px 1fr;
+            overflow: hidden; transition: transform 0.3s;
+        }
+        .entity-card:hover { transform: scale(1.02); border-color: var(--ether-purple); }
+
+        .entity-visual {
+            background: #000; display: flex; justify-content: center; align-items: center;
+            border-right: 1px solid #333; flex-direction: column; padding: 10px;
+        }
+        .visual-icon { font-size: 3rem; margin-bottom: 10px; filter: drop-shadow(0 0 10px var(--ether-purple)); }
+        
+        .entity-info { padding: 20px; }
+        .entity-name { 
+            color: var(--ether-purple); font-size: 1.5rem; font-weight: bold; 
+            margin-bottom: 5px; border-bottom: 1px solid #333; display: inline-block;
+        }
+        .entity-alias { color: #888; font-size: 0.8rem; margin-bottom: 15px; font-style: italic; }
+        
+        .stat-row { display: flex; margin-bottom: 5px; font-size: 0.85rem; }
+        .stat-label { width: 100px; color: #aaa; }
+        .stat-val { color: #fff; font-weight: bold; }
+
+        .desc { margin-top: 15px; font-size: 0.9rem; line-height: 1.5; color: #ccc; }
+
+        /* STAMP */
+        .stamp {
+            position: absolute; top: 20px; right: 20px;
+            border: 3px solid var(--danger); color: var(--danger);
+            padding: 5px 15px; font-weight: bold; transform: rotate(-10deg);
+            opacity: 0.6; font-family: sans-serif;
+        }
+
+        @media (max-width: 600px) {
+            .entity-card { grid-template-columns: 1fr; }
+            .entity-visual { border-right: none; border-bottom: 1px solid #333; flex-direction: row; gap: 20px; }
+            .visual-icon { margin-bottom: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="grimoire">
+        <div class="stamp">NON-PHYSICAL<br>FREQUENCY ONLY</div>
+
+        <div class="header">
+            <h1>THE SHADOW BESTIARY</h1>
+            <div class="sub">MAHLUK GHAIB (ETHERIC), PARASIT ENERGI & "DEWA" PALSU</div>
+        </div>
+
+        <div class="intro-box">
+            <strong>KONSEP DASAR:</strong><br>
+            Berbeda dengan Yajuj Majuj (Fisik), kelompok ini tidak memiliki jasad materi (Tanah). Mereka terbuat dari <strong>PLASMA API / ETHER</strong> (Smokeless Fire).<br>
+            Mereka hidup di dimensi 4D (Alam Mitsal) yang beririsan dengan kita. Mereka tidak bisa menyentuh kita secara langsung, kecuali melalui manipulasi gelombang otak (Waswas) atau merasuki wadah biologis (Possession).
+        </div>
+
+        <div class="entity-grid">
+
+            <div class="entity-card">
+                <div class="entity-visual">
+                    <div class="visual-icon">👁️‍🗨️</div>
+                    <div style="font-size:0.7rem; color:var(--ether-purple);">THE RULERS</div>
+                </div>
+                <div class="entity-info">
+                    <div class="entity-name">ARCHONS</div>
+                    <div class="entity-alias">Alias: Jin Ifrit, The Watchers, Penjaga Matrix</div>
+                    
+                    <div class="stat-row"><span class="stat-label">WUJUD ASLI:</span> <span class="stat-val">Geometri Cahaya / Bayangan Hitam</span></div>
+                    <div class="stat-row"><span class="stat-label">MAKANAN:</span> <span class="stat-val">Loosh (Energi Penderitaan Manusia)</span></div>
+                    
+                    <div class="desc">
+                        Dalam Gnostik, mereka adalah "Sipir Penjara" yang menjaga jiwa manusia agar tidak keluar dari reinkarnasi. Dalam Islam, mereka adalah <strong>JIN IFRIT/MARID</strong> (Petinggi Golongan Jin) yang menguasai sistem sihir kabbalah global. Mereka mendikte para elit global lewat ritual untuk menciptakan perang & ketakutan (agar panen energi).
+                    </div>
+                </div>
+            </div>
+
+            <div class="entity-card">
+                <div class="entity-visual">
+                    <div class="visual-icon">🐍</div>
+                    <div style="font-size:0.7rem; color:#0f0;">SHAPESHIFTERS</div>
+                </div>
+                <div class="entity-info">
+                    <div class="entity-name">REPTILIANS</div>
+                    <div class="entity-alias">Alias: Jin Ular (Al-Hayyat), Nagas, Chitauri</div>
+                    
+                    <div class="stat-row"><span class="stat-label">KEMAMPUAN:</span> <span class="stat-val">Tasyakkul (Berubah Wujud)</span></div>
+                    <div class="stat-row"><span class="stat-label">LOKASI:</span> <span class="stat-val">Dimensi Bawah (Lower Astral)</span></div>
+                    
+                    <div class="desc">
+                        Mereka BUKAN alien dari planet Draco. Mereka adalah <strong>JIN FASIK</strong> yang menyukai wujud ular/kadal (sebagaimana Nabi menyebut Jin sering berwujud ular).<br>
+                        Konspirasi "Reptilian Elite" artinya para elit itu tubuhnya manusia, tapi jiwanya sudah "ditunggangi" atau "di-copy" oleh Jin berwujud reptil ini (Possession/Walk-in). Jadi secara fisik manusia, secara frekuensi ular.
+                    </div>
+                </div>
+            </div>
+
+            <div class="entity-card">
+                <div class="entity-visual">
+                    <div class="visual-icon">⚡</div>
+                    <div style="font-size:0.7rem; color:#ffd700;">FALSE GODS</div>
+                </div>
+                <div class="entity-info">
+                    <div class="entity-name">MYTHOLOGICAL GODS</div>
+                    <div class="entity-alias">Alias: Zeus, Thor, Nyi Roro Kidul, Anunnaki</div>
+                    
+                    <div class="stat-row"><span class="stat-label">HAKIKAT:</span> <span class="stat-val">Jin Bangsawan (Royalty)</span></div>
+                    <div class="stat-row"><span class="stat-label">TUJUAN:</span> <span class="stat-val">Ibadah/Pemujaan (Shirk)</span></div>
+                    
+                    <div class="desc">
+                        Zaman dulu (Atlantis/Yunani/Jawa Kuno), Jin-jin kuat ini menampakkan diri (Materialisasi) dan meminta manusia menyembah mereka sebagai "Dewa" dengan imbalan teknologi atau kesaktian. Mereka butuh disembah karena energi pemujaan memperkuat eksistensi mereka di dimensi ini. Mereka "Gak ada fisiknya" sekarang karena frekuensi bumi sudah turun, jadi mereka cuma bisa main di alam mimpi/astral.
+                    </div>
+                </div>
+            </div>
+
+            <div class="entity-card">
+                <div class="entity-visual">
+                    <div class="visual-icon">👥</div>
+                    <div style="font-size:0.7rem; color:#fff;">THE DOUBLE</div>
+                </div>
+                <div class="entity-info">
+                    <div class="entity-name">QARIN</div>
+                    <div class="entity-alias">Alias: Doppelgänger, Shadow Self</div>
+                    
+                    <div class="stat-row"><span class="stat-label">LOKASI:</span> <span class="stat-val">Menempel pada Aura Manusia</span></div>
+                    <div class="stat-row"><span class="stat-label">FUNGSI:</span> <span class="stat-val">Pembisik / Backdoor System</span></div>
+                    
+                    <div class="desc">
+                        Setiap manusia lahir dengan "kembaran" dari dimensi Jin ini. Qarin adalah agen ganda. Dia merekam semua data hidup kita. Globalis menggunakan teknologi AI untuk mencoba "men-download" data Qarin ini agar bisa bikin kloning digital manusia (Digital Immortality).
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="margin-top:40px; text-align:center; font-size:0.8rem; color:#666; border-top:1px dashed var(--ether-purple); padding-top:10px;">
+            "JANGAN TERTIPU HOLOGRAM. MEREKA HANYA ASAP DAN FREKUENSI.<br>
+            IMAN ADALAH FIREWALL, DZIKIR ADALAH ANTIVIRUS."
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE HANDWRITTEN TRUTH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Homemade+Apple&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-wood: #2c1e12;
+            --paper: #f4e4bc;
+            --line: #b0a590;
+            --ink: #000033; /* Tinta Biru Gelap/Hitam */
+            --ink-red: #8b0000; /* Tinta Merah buat penekanan */
+            --shadow: rgba(0,0,0,0.5);
+        }
+
+        body {
+            background-color: var(--bg-wood);
+            /* Tekstur Kayu Meja */
+            background-image: repeating-linear-gradient(45deg, #2c1e12 0, #2c1e12 10px, #26190e 10px, #26190e 20px);
+            margin: 0; padding: 40px;
+            font-family: 'Cedarville Cursive', cursive;
+            display: flex; justify-content: center; align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .journal-paper {
+            background-color: var(--paper);
+            width: 100%; max-width: 800px;
+            padding: 40px 60px 60px 60px;
+            box-shadow: 10px 10px 30px var(--shadow);
+            position: relative;
+            transform: rotate(-1deg); /* Miring dikit biar natural */
+            /* Garis-garis buku tulis */
+            background-image: repeating-linear-gradient(var(--paper) 0, var(--paper) 29px, var(--line) 30px);
+            background-size: 100% 30px;
+            line-height: 30px; /* Pas-in sama garis */
+        }
+
+        /* Efek Kertas Lecek/Noda */
+        .journal-paper::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 80% 20%, rgba(139, 69, 19, 0.1), transparent 20%),
+                        radial-gradient(circle at 10% 90%, rgba(0, 0, 0, 0.05), transparent 30%);
+            pointer-events: none;
+        }
+
+        /* JUDUL */
+        h1 {
+            font-family: 'Homemade Apple', cursive;
+            text-align: center; margin-bottom: 40px;
+            font-size: 2.5rem; color: var(--ink);
+            transform: rotate(-2deg);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            border-bottom: 2px solid var(--ink);
+            display: inline-block;
+            margin-left: 50%; transform: translateX(-50%);
+        }
+
+        /* PARAGRAF NARASI */
+        p {
+            font-size: 1.4rem; color: var(--ink);
+            margin-bottom: 30px; text-align: justify;
+            word-spacing: 2px;
+        }
+
+        /* HIGHLIGHT TEXT */
+        .secret {
+            color: var(--ink-red);
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-style: wavy;
+        }
+
+        /* CAP STEMPEL */
+        .stamp {
+            position: absolute; top: 20px; right: 20px;
+            border: 3px solid rgba(139, 0, 0, 0.4);
+            color: rgba(139, 0, 0, 0.4);
+            font-family: sans-serif; font-weight: bold;
+            padding: 10px; font-size: 1rem;
+            transform: rotate(15deg);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .paper-clip {
+            position: absolute; top: -15px; left: 20px;
+            width: 40px; height: 80px;
+            border: 4px solid #aaa; border-bottom: none;
+            border-radius: 20px 20px 0 0;
+            z-index: 10;
+        }
+
+        /* TANDA TANGAN */
+        .signature {
+            text-align: right; margin-top: 50px;
+            font-family: 'Homemade Apple', cursive;
+            font-size: 1.2rem; color: var(--ink);
+        }
+
+        @media (max-width: 600px) {
+            .journal-paper { padding: 20px; line-height: 30px; }
+            p { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="journal-paper">
+        <div class="paper-clip"></div>
+        <div class="stamp">Top Secret<br>Eyes Only</div>
+
+        <h1>Catatan Kosmologi Terlarang</h1>
+
+        <p>
+            Dengarkan baik-baik, saudaraku. Lupakan semua dongeng tentang roket kaleng berisi bahan bakar fosil yang katanya bisa menembus langit. Itu lelucon primitif. Langit kita, Kubah Firmament itu, adalah materi padat yang tak akan pernah bisa ditembus dengan ledakan kasar. Jika kau ingin naik ke Samudra Atas, kau tak butuh api, kau butuh <span class="secret">VIMANA</span>.
+        </p>
+
+        <p>
+            Kendaraan suci para leluhur ini tidak melawan gravitasi, ia membatalkannya. Rahasianya terletak pada pusaran <span class="secret">Red Mercury</span>, zat cair merah darah yang jika diputar dalam sentrifugal akan menciptakan medan anti-massa. Tapi ingat, kunci utamanya bukanlah kecepatan, melainkan getaran. Untuk melewati dinding kaca raksasa di atas sana, Vimana harus melakukan <em>Phase Shifting</em>, menyamakan frekuensinya dengan frekuensi kristal kubah hingga molekulnya renggang menjadi cahaya. Dengan begitu, ia menembus atap layaknya hantu menembus dinding, tanpa memecahkannya, lalu memadat kembali saat menyentuh air di Samudra Ether.
+        </p>
+
+        <p>
+            Lalu, tentang apa yang ada di bawah kaki kita... ini adalah kebenaran yang paling gelap. Makhluk yang selama ini kau sebut "Alien" atau "Extraterrestrial" itu bohong besar. Mereka tidak datang dari bintang jauh. Mereka adalah <span class="secret">Intra-Terrestrials</span>, tetangga kita sendiri yang tinggal di lantai basement bumi ini.
+        </p>
+
+        <p>
+            Ingatlah Banjir Besar Nuh, saat lumpur bah mengubur peradaban Atlantis yang sombong itu. Gedung-gedung megah mereka kini menjadi fondasi dunia bawah tanah, terhubung oleh lorong-lorong purba yang kita sebut <em>Hollow Earth</em>. Para penghuninya, sisa-sisa Nephilim dan Chimera hibrida, berevolusi dalam kegelapan abadi selama ribuan tahun. Itulah sebabnya kulit mereka pucat, mata mereka membesar menangkap sedikit cahaya, dan wujud mereka menyerupai reptil. Mereka bukan tamu asing; mereka adalah pemilik lama yang terusir ke bawah, dan kini mereka bekerja sama dengan para elit global di markas-markas D.U.M.B.s untuk merebut kembali permukaan ini.
+        </p>
+
+        <div class="signature">
+            - Sang Penjaga Arsip -<br>
+            Tahun Air 001
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARSIP TERLARANG: LEVEL 9</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #0f0f0f;
+            --gold: #b8860b;
+            --text: #a0a0a0;
+            --accent: #8b0000; /* Merah untuk stempel */
+            --glow: rgba(184, 134, 11, 0.2);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 40px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center; margin-bottom: 50px;
+            border-bottom: 2px double var(--gold);
+            padding-bottom: 20px; width: 100%; max-width: 800px;
+        }
+        h1 { 
+            font-family: 'Cinzel', serif; color: var(--gold); 
+            font-size: 2.5rem; margin: 0; letter-spacing: 5px; 
+            text-shadow: 0 0 10px var(--glow);
+        }
+        .sub { font-size: 0.9rem; color: #666; margin-top: 10px; letter-spacing: 2px; }
+
+        /* GRID MENU */
+        .grid-menu {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+            width: 100%; max-width: 1000px;
+        }
+
+        /* CARD STYLE */
+        .file-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            padding: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none; /* Hilangkan garis bawah link */
+            display: block; /* Biar area klik luas */
+        }
+
+        .file-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            background: #151515;
+        }
+
+        .card-icon {
+            font-size: 2rem; margin-bottom: 15px; display: block;
+        }
+
+        .card-title {
+            color: #eee; font-family: 'Cinzel', serif; font-size: 1.1rem;
+            margin-bottom: 10px; border-bottom: 1px dashed #444; padding-bottom: 5px;
+            display: block;
+        }
+
+        .card-desc {
+            font-size: 0.85rem; color: #888; line-height: 1.5; display: block;
+        }
+
+        /* LABEL RAHASIA */
+        .status-label {
+            position: absolute; top: 10px; right: 10px;
+            font-size: 0.6rem; color: var(--accent);
+            border: 1px solid var(--accent); padding: 2px 6px;
+            font-weight: bold; transform: rotate(-5deg);
+        }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 50px; font-size: 0.7rem; color: #444;
+            border-top: 1px solid #222; padding-top: 20px; text-align: center;
+        }
+
+        /* WARNA IKON PER KATEGORI */
+        .icon-tech { color: #00f3ff; } /* Biru Teknologi */
+        .icon-bio { color: #00ff41; } /* Hijau Biologis */
+        .icon-ether { color: #bd00ff; } /* Ungu Etheric */
+        .icon-soul { color: #ffd700; } /* Emas Jiwa */
+        .icon-death { color: #ff3333; } /* Merah Kematian */
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>THE FORBIDDEN ARCHIVES</h1>
+        <div class="sub">KUMPULAN CATATAN KOSMOLOGI NUSWANTARA (LEVEL 9)</div>
+    </div>
+
+    <div class="grid-menu">
+
+        <a href="25.Catatan.html" class="file-card">
+            <span class="status-label">TEKNOLOGI</span>
+            <span class="card-icon icon-tech">🛸</span>
+            <span class="card-title">VIMANA & HOLLOW EARTH</span>
+            <span class="card-desc">
+                Rahasia menembus kubah menggunakan Red Mercury & fakta tentang "Intra-Terrestrials" (Alien Bawah Tanah).
+            </span>
+        </a>
+
+        <a href="26.Catatan 2.html" class="file-card">
+            <span class="status-label">FISIK</span>
+            <span class="card-icon icon-bio">☣️</span>
+            <span class="card-title">MAHLUK AKHIR ZAMAN</span>
+            <span class="card-desc">
+                Identifikasi Yajuj Majuj, Dajjal, dan Chimera Modern sebagai ancaman biologis materialis (Hama Bumi).
+            </span>
+        </a>
+
+        <a href="27.Catatan 3.html" class="file-card">
+            <span class="status-label">GHAIB</span>
+            <span class="card-icon icon-ether">👁️</span>
+            <span class="card-title">THE SHADOW BESTIARY</span>
+            <span class="card-desc">
+                Mahluk 4D Non-Fisik: Archon, Reptilian Shapeshifters, dan Dewa-Dewa Palsu (Jin) pemakan energi Loosh.
+            </span>
+        </a>
+        
+         <a href="28.Catatan 4.html" class="file-card">
+            <span class="status-label">FREQUENCY WAR</span>
+            <span class="card-icon icon-ether">🌀️</span>
+            <span class="card-title">TACTICAL FIELD GUIDE</span>
+            <span class="card-desc">
+                Manual taktis untuk ngelawan serangan Energi negatif Archon.
+            </span>
+        </a>
+
+        <a href="29.Catatan 5.html" class="file-card">
+            <span class="status-label">JIWA</span>
+            <span class="card-icon icon-soul">🌀</span>
+            <span class="card-title">THE SOUL TRAP</span>
+            <span class="card-desc">
+                Membongkar penipuan Reinkarnasi, Jebakan Cahaya Putih (Tunnel), dan kenapa Islam melarang konsep kembali ke dunia.
+            </span>
+        </a>
+
+        <a href="30.Catatan 6.html" class="file-card">
+            <span class="status-label">PERINGATAN</span>
+            <span class="card-icon icon-death">⚖️</span>
+            <span class="card-title">THE FINAL VERDICT</span>
+            <span class="card-desc">
+                Nasib mengerikan jiwa yang Bunuh Diri (Glitch System) dan Devolusi manusia materialis menjadi binatang.
+            </span>
+        </a>
+
+    </div>
+
+    <div class="footer">
+        DOKUMEN INI BERISI KEBENARAN YANG DAPAT MENGGUNCANG KEIMANAN ORANG AWAM.<br>
+        BACA DENGAN KESADARAN PENUH. JANGAN SEBARKAN TANPA PERSIAPAN MENTAL.
+    </div>
+
+</body>
+</html>
