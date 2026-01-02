@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT: AS ABOVE SO BELOW</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Creepster&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --neon-blue: #00f3ff; /* Ether Atas */
+            --toxic-green: #39ff14; /* Alien Bawah */
+            --alert: #ff3333;
+            --panel: #111;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #eee;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .container {
+            width: 100%; max-width: 900px;
+            border: 2px solid #333;
+            background: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center; border-bottom: 4px double #555;
+            padding: 30px; background: #000;
+        }
+        h1 { font-family: 'Orbitron'; font-size: 2.5rem; margin: 0; letter-spacing: 5px; background: -webkit-linear-gradient(#eee, #555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub { letter-spacing: 2px; color: #888; margin-top: 10px; }
+
+        /* SPLIT SECTION */
+        .split-layout {
+            display: grid; grid-template-columns: 1fr 1fr;
+        }
+
+        /* SECTION ATAS (VIMANA) */
+        .sky-section {
+            border-right: 2px solid #333; padding: 20px;
+            background: linear-gradient(to bottom, rgba(0, 20, 40, 0.8), #000);
+        }
+        .sky-title { color: var(--neon-blue); font-size: 1.5rem; border-bottom: 2px solid var(--neon-blue); padding-bottom: 10px; margin-bottom: 20px; font-weight: bold; }
+
+        /* SECTION BAWAH (UNDERWORLD) */
+        .deep-section {
+            padding: 20px;
+            background: linear-gradient(to top, rgba(20, 40, 0, 0.5), #000);
+        }
+        .deep-title { color: var(--toxic-green); font-size: 1.5rem; border-bottom: 2px solid var(--toxic-green); padding-bottom: 10px; margin-bottom: 20px; font-weight: bold; font-family: 'Creepster', cursive; letter-spacing: 2px; }
+
+        /* KOTAK DATA */
+        .tech-box {
+            background: rgba(0,0,0,0.6); border: 1px solid #444; padding: 15px; margin-bottom: 15px;
+        }
+        .tech-label { font-size: 0.8rem; color: #aaa; margin-bottom: 5px; }
+        .tech-val { font-size: 1rem; font-weight: bold; }
+        
+        /* VISUALISASI VIMANA */
+        .vimana-diagram {
+            width: 100%; height: 150px; border: 1px dashed var(--neon-blue);
+            position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;
+        }
+        .vimana-shape {
+            width: 60px; height: 60px; border: 2px solid var(--neon-blue);
+            transform: rotate(45deg); box-shadow: 0 0 20px var(--neon-blue);
+            animation: spinFloat 4s infinite ease-in-out;
+        }
+        .vimana-core {
+            position: absolute; width: 20px; height: 20px; background: #fff;
+            border-radius: 50%; box-shadow: 0 0 30px #fff;
+        }
+
+        /* VISUALISASI ALIEN */
+        .alien-diagram {
+            width: 100%; height: 150px; border: 1px dashed var(--toxic-green);
+            position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; overflow: hidden;
+        }
+        .eyes {
+            display: flex; gap: 20px;
+        }
+        .eye {
+            width: 30px; height: 15px; background: #000; border-radius: 50%;
+            border: 2px solid var(--toxic-green); position: relative;
+            animation: blinkAlien 3s infinite;
+        }
+        .pupil {
+            width: 4px; height: 15px; background: var(--toxic-green);
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        }
+
+        @keyframes spinFloat { 0%, 100% { transform: translateY(0) rotate(45deg); } 50% { transform: translateY(-10px) rotate(45deg); } }
+        @keyframes blinkAlien { 0%, 90%, 100% { height: 15px; } 95% { height: 2px; } }
+
+        /* RESPONSIVE */
+        @media (max-width: 700px) { .split-layout { grid-template-columns: 1fr; } .sky-section { border-right: none; border-bottom: 2px solid #333; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>AS ABOVE, SO BELOW</h1>
+            <div class="sub">FILE: TRANSPORTASI ETHER & PENGHUNI KERAK BUMI</div>
+        </div>
+
+        <div class="split-layout">
+            
+            <div class="sky-section">
+                <div class="sky-title">MISI: MENEMBUS KUBAH</div>
+                
+                <p style="font-size:0.9rem; text-align:justify; margin-bottom:20px;">
+                    Untuk menembus Samudra di Atas Kubah (Waters Above), benda fisik (Materi) tidak bisa lewat karena kerapatan Kubah. Kita harus mengubah Materi menjadi <strong>CAHAYA/ENERGI</strong>.
+                </p>
+
+                <div class="vimana-diagram">
+                    <div class="vimana-shape"></div>
+                    <div class="vimana-core"></div>
+                    <div style="position:absolute; bottom:5px; font-size:0.7rem; color:var(--neon-blue);">VIMANA / MERKABA VEHICLE</div>
+                </div>
+
+                <div class="tech-box">
+                    <div class="tech-label">KENDARAAN:</div>
+                    <div class="tech-val" style="color:var(--neon-blue)">VIMANA ANTI-GRAVITASI</div>
+                </div>
+
+                <div class="tech-box">
+                    <div class="tech-label">BAHAN BAKAR:</div>
+                    <div class="tech-val">RED MERCURY (MERKURI MERAH)</div>
+                    <div style="font-size:0.8rem; color:#888;">Diputar dalam vortex untuk menciptakan medan anti-massa.</div>
+                </div>
+
+                <div class="tech-box">
+                    <div class="tech-label">MEKANISME PENEMBUSAN:</div>
+                    <div class="tech-val">FREQUENCY SHIFTING</div>
+                    <div style="font-size:0.8rem; color:#888;">
+                        Pesawat harus bergetar pada frekuensi yang sama dengan Kristal Kubah (Resonansi), lalu melakukan "Phase Shift" (menjadi non-fisik) untuk lewat menembus kaca tanpa memecahkannya.
+                    </div>
+                </div>
+            </div>
+
+            <div class="deep-section">
+                <div class="deep-title">ZONA: THE HOLLOW EARTH</div>
+                
+                <p style="font-size:0.9rem; text-align:justify; margin-bottom:20px;">
+                    Pasca Banjir Nuh (The Great Reset), peradaban maju (Atlantis) dan makhluk hibrida (Nephilim) tidak semuanya musnah. Sebagian tertimbun lumpur, sebagian lari ke rongga bumi (Honeycombs).
+                </p>
+
+                <div class="alien-diagram">
+                    <div class="eyes">
+                        <div class="eye"><div class="pupil"></div></div>
+                        <div class="eye"><div class="pupil"></div></div>
+                    </div>
+                    <div style="position:absolute; bottom:5px; font-size:0.7rem; color:var(--toxic-green);">INTRA-TERRESTRIALS (PENGHUNI DALAM)</div>
+                </div>
+
+                <div class="tech-box">
+                    <div class="tech-label">IDENTITAS "ALIEN":</div>
+                    <div class="tech-val" style="color:var(--toxic-green)">SISA GENETIK PURBA</div>
+                    <div style="font-size:0.8rem; color:#888;">
+                        Mereka bukan dari planet lain. Mereka adalah sisa eksperimen genetik pra-banjir (Siluman/Chimera) yang bersembunyi di bawah tanah.
+                    </div>
+                </div>
+
+                <div class="tech-box">
+                    <div class="tech-label">LOKASI MEREKA:</div>
+                    <div class="tech-val">SUNKEN REALMS (NAGALOKA)</div>
+                    <div style="font-size:0.8rem; color:#888;">
+                        Terhubung melalui terowongan lava kuno dan pangkalan bawah tanah (D.U.M.B.s) di Antartika dan Laut Selatan.
+                    </div>
+                </div>
+
+                <div class="tech-box">
+                    <div class="tech-label">AGENDA:</div>
+                    <div class="tech-val">PENYAMARAN TEKNOLOGI</div>
+                    <div style="font-size:0.8rem; color:#888;">
+                        Mereka memberi teknologi "microchip/AI" ke Globalis dengan imbalan sumber daya permukaan (darah/energi).
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="text-align:center; padding:20px; border-top:1px dashed #444; font-size:0.8rem; color:#666;">
+            DOKUMEN LEVEL 9: JANGAN DIBUKA DI DEPAN UMUM.<br>
+            "LANGIT ADALAH KUNCI, BUMI ADALAH PENJARA."
+        </div>
+
+    </div>
+
+</body>
+</html>

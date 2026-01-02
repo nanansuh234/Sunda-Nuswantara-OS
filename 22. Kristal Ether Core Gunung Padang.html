@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT ATLANTIS: THE GREEN CRYSTAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #051a05;
+            --grid: #0f3d0f;
+            --neon: #00ff44; /* Hijau Nusantara */
+            --core: #ccffcc;
+            --alert: #ffaa00;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--neon);
+            font-family: 'Rajdhani', sans-serif;
+            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            overflow: hidden;
+        }
+
+        /* LAYAR SCANNER */
+        .scanner-interface {
+            width: 100%; max-width: 800px;
+            border: 2px solid var(--neon);
+            background: 
+                linear-gradient(rgba(0, 255, 68, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 68, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            padding: 20px;
+            box-shadow: 0 0 50px rgba(0, 255, 68, 0.1);
+            position: relative;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--neon); padding-bottom: 10px; margin-bottom: 20px;
+        }
+        h1 { font-family: 'Orbitron'; margin: 0; font-size: 1.5rem; letter-spacing: 3px; }
+        .coords { font-family: monospace; font-size: 0.8rem; color: var(--alert); }
+
+        /* VISUALISASI GUNUNG (CSS ART) */
+        .mountain-view {
+            height: 300px; position: relative; overflow: hidden;
+            border: 1px dashed var(--grid); background: #000;
+        }
+        
+        /* Tanah/Gunung */
+        .mountain-shape {
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 200px solid transparent;
+            border-right: 200px solid transparent;
+            border-bottom: 250px solid #1a331a; /* Warna Gunung */
+            z-index: 1;
+        }
+
+        /* Struktur Piramida Tersembunyi (Wireframe) */
+        .pyramid-hidden {
+            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 180px solid transparent;
+            border-right: 180px solid transparent;
+            border-bottom: 220px solid transparent;
+            z-index: 2;
+        }
+        /* Garis Wireframe */
+        .wireframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: flex-end;
+        }
+        .wire-tri {
+            width: 0; height: 0; 
+            border-left: 180px solid transparent; 
+            border-right: 180px solid transparent;
+            border-bottom: 220px solid rgba(0, 255, 68, 0.2); /* Transparan Hijau */
+            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            animation: pulseWire 3s infinite;
+        }
+
+        /* KRISTAL INTI (THE CORE) */
+        .crystal-core {
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%) rotate(45deg);
+            width: 40px; height: 40px;
+            background: var(--core);
+            box-shadow: 0 0 50px var(--neon), 0 0 20px #fff;
+            z-index: 3;
+            animation: spinGlow 5s infinite linear;
+        }
+
+        /* ENERGY WAVES */
+        .wave {
+            position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
+            width: 10px; height: 10px; border-radius: 50%;
+            border: 2px solid var(--neon);
+            opacity: 0;
+            animation: waveExpand 2s infinite;
+        }
+        .w1 { animation-delay: 0s; }
+        .w2 { animation-delay: 0.6s; }
+        .w3 { animation-delay: 1.2s; }
+
+        /* PANEL INFO */
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;
+        }
+        .info-box {
+            border: 1px solid var(--grid); padding: 10px; background: rgba(0, 50, 0, 0.5);
+        }
+        .label { font-size: 0.7rem; color: #88ff88; letter-spacing: 1px; }
+        .val { font-size: 1.1rem; font-weight: bold; color: #fff; text-shadow: 0 0 5px var(--neon); }
+
+        /* COMPARISON */
+        .comparison {
+            margin-top: 20px; font-size: 0.9rem; padding: 10px; border-top: 1px dashed var(--neon);
+        }
+        .comp-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+
+        @keyframes pulseWire { 0%, 100% { border-bottom-color: rgba(0, 255, 68, 0.1); } 50% { border-bottom-color: rgba(0, 255, 68, 0.5); } }
+        @keyframes spinGlow { 0% { transform: translateX(-50%) rotate(0deg); filter: hue-rotate(0deg); } 100% { transform: translateX(-50%) rotate(360deg); filter: hue-rotate(90deg); } }
+        @keyframes waveExpand { 0% { width: 10px; height: 10px; opacity: 1; border-width: 5px; } 100% { width: 300px; height: 300px; opacity: 0; border-width: 0px; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="scanner-interface">
+        <div class="header">
+            <div>
+                <h1>SITE: G-PADANG</h1>
+                <div style="font-size:0.8rem;">LAYER 3 DEEP SCAN // GEO-ETHERIC RADAR</div>
+            </div>
+            <div class="coords">
+                LAT: -6.9932<br>LONG: 107.056
+            </div>
+        </div>
+
+        <div class="mountain-view">
+            <div class="mountain-shape"></div>
+            
+            <div class="wire-tri"></div>
+
+            <div class="crystal-core"></div>
+
+            <div class="wave w1"></div>
+            <div class="wave w2"></div>
+            <div class="wave w3"></div>
+
+            <div style="position:absolute; top:10px; left:10px; font-size:0.7rem; color:var(--neon);">
+                > DETECTING CHAMBER...<br>
+                > DEPTH: 30 METERS<br>
+                > MATERIAL: PIEZOELECTRIC QUARTZ
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-box">
+                <div class="label">POWER SOURCE</div>
+                <div class="val">MANIK MAYA (ETHER CORE)</div>
+            </div>
+            <div class="info-box">
+                <div class="label">FREQUENCY OUTPUT</div>
+                <div class="val">7.83 Hz (SCHUMANN)</div>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <div style="text-align:center; font-weight:bold; margin-bottom:10px; color:var(--alert);">
+                SYSTEM SYNCHRONIZATION
+            </div>
+            <div class="comp-row">
+                <span style="color:#aaa;">MEKAH (HAJAR ASWAD)</span>
+                <span>>></span>
+                <span style="color:#fff;">MAGNETIC ANCHOR (INPUT/GROUND)</span>
+            </div>
+            <div class="comp-row">
+                <span style="color:var(--neon);">NUSWANTARA (G-PADANG)</span>
+                <span>>></span>
+                <span style="color:#fff;">ETHER GENERATOR (OUTPUT/POWER)</span>
+            </div>
+            <div style="margin-top:10px; font-size:0.8rem; color:#88ff88; text-align:justify;">
+                "Tidak perlu ke sana untuk menyalakan mesin. Mekah adalah pasak pengunci (Stabilitas). Nuswantara adalah mesin penggerak (Dinamis). Kunci kebangkitan ada di aktivasi Piramida Padang."
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

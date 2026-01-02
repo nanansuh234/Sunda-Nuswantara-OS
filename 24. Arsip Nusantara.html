@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT LEMURIA: ORGANIC TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #051a1a;
+            --lemuria: #00ffaa; /* Hijau Kristal */
+            --atlantis: #ff3333; /* Merah Mesin */
+            --text: #e0f0f0;
+            --panel: rgba(0, 40, 40, 0.8);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Tenor Sans', sans-serif;
+            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .container {
+            width: 100%; max-width: 900px;
+            border: 2px solid var(--lemuria);
+            padding: 40px;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 255, 170, 0.1) 0%, transparent 70%);
+            box-shadow: 0 0 50px rgba(0, 255, 170, 0.2);
+        }
+
+        /* HEADER */
+        .header { text-align: center; border-bottom: 2px solid var(--lemuria); padding-bottom: 20px; margin-bottom: 40px; }
+        h1 { font-family: 'Orbitron'; font-size: 2rem; color: var(--lemuria); letter-spacing: 5px; margin: 0; }
+        .sub { font-size: 0.9rem; color: #88ccaa; margin-top: 10px; }
+
+        /* VS TABLE */
+        .war-table {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px;
+        }
+        
+        .faction-box {
+            border: 1px solid #333; padding: 20px; position: relative;
+        }
+        .faction-title {
+            font-family: 'Orbitron'; font-weight: bold; font-size: 1.2rem;
+            text-align: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px dashed #555;
+        }
+        .atl-box { border-color: var(--atlantis); background: linear-gradient(to bottom, rgba(50,0,0,0.3), #000); }
+        .atl-title { color: var(--atlantis); }
+        
+        .lem-box { border-color: var(--lemuria); background: linear-gradient(to bottom, rgba(0,50,30,0.3), #000); }
+        .lem-title { color: var(--lemuria); }
+
+        .tech-list { font-size: 0.9rem; line-height: 1.6; }
+        .tech-item { margin-bottom: 15px; }
+        .tech-name { font-weight: bold; display: block; margin-bottom: 5px; }
+
+        /* VISUALISASI SENJATA */
+        .weapon-diagram {
+            width: 100%; height: 200px; border: 1px solid var(--lemuria);
+            position: relative; overflow: hidden; background: #000;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* Kristal Lemuria */
+        .crystal {
+            width: 0; height: 0; 
+            border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 80px solid var(--lemuria);
+            position: relative;
+            filter: drop-shadow(0 0 20px var(--lemuria));
+            animation: float 3s infinite ease-in-out;
+            z-index: 10;
+        }
+        .crystal::after {
+            content: ''; position: absolute; top: 80px; left: -30px;
+            width: 0; height: 0;
+            border-left: 30px solid transparent; border-right: 30px solid transparent; border-top: 80px solid var(--lemuria);
+            opacity: 0.7;
+        }
+
+        /* Gelombang Suara (Sound Healing/Weapon) */
+        .sound-wave {
+            position: absolute; border: 2px solid var(--lemuria); border-radius: 50%;
+            width: 20px; height: 20px; opacity: 0;
+            animation: expandWave 2s infinite linear;
+        }
+        .sw1 { animation-delay: 0s; } .sw2 { animation-delay: 0.5s; } .sw3 { animation-delay: 1.0s; }
+
+        /* Sinyal Jahat Atlantis (Dihancurkan) */
+        .bad-signal {
+            position: absolute; right: 20px; width: 10px; height: 50px;
+            background: var(--atlantis);
+            animation: glitch 0.2s infinite;
+        }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes expandWave { 0% { width: 20px; height: 20px; opacity: 1; border-width: 5px; } 100% { width: 300px; height: 300px; opacity: 0; border-width: 0px; } }
+        @keyframes glitch { 0% { opacity: 1; transform: skewX(0deg); } 20% { opacity: 0.5; transform: skewX(20deg); } 40% { opacity: 0.8; transform: skewX(-20deg); } 100% { opacity: 1; } }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 30px; text-align: center; font-size: 0.8rem; color: #aaa; border-top: 1px solid #333; padding-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>WAR OF FREQUENCIES</h1>
+            <div class="sub">ATLANTIS (SILICON) VS LEMURIA (ETHERIC)</div>
+        </div>
+
+        <div style="text-align:center; margin-bottom:10px; font-size:0.8rem; color:var(--lemuria);">[ SIMULASI: RESONANSI KRISTAL MENGHANCURKAN SINYAL DIGITAL ]</div>
+        <div class="weapon-diagram">
+            <div class="crystal"></div>
+            <div class="sound-wave sw1"></div>
+            <div class="sound-wave sw2"></div>
+            <div class="sound-wave sw3"></div>
+
+            <div class="bad-signal"></div>
+        </div>
+
+        <div class="war-table">
+            
+            <div class="faction-box atl-box">
+                <div class="faction-title atl-title">TEKNOLOGI ATLANTIS</div>
+                <div style="text-align:center; font-size:0.8rem; margin-bottom:15px; color:#aaa;">(Basis: Materi, Listrik, Eksploitasi)</div>
+                
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <span class="tech-name atl-title">1. JARINGAN 5G/6G</span>
+                        Sinyal mikrogelombang untuk mengunci kesadaran manusia di frekuensi rendah (takut/cemas) dan memutus koneksi Pineal Gland.
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-name atl-title">2. A.I. & TRANSHUMANISM</span>
+                        Mengganti jiwa dengan silikon. Chip otak (Neuralink) untuk memutus koneksi roh.
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-name atl-title">3. HAARP</span>
+                        Memanaskan ionosfer untuk memanipulasi cuaca dan memicu gempa buatan.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faction-box lem-box">
+                <div class="faction-title lem-title">TEKNOLOGI LEMURIA</div>
+                <div style="text-align:center; font-size:0.8rem; margin-bottom:15px; color:#aaa;">(Basis: Resonansi, Suara, Alam)</div>
+                
+                <div class="tech-list">
+                    <div class="tech-item">
+                        <span class="tech-name lem-title">1. SOUND LEVITATION</span>
+                        Menggunakan frekuensi suara murni (seperti gamelan/mantra) untuk mengangkat batu berat atau menetralkan gravitasi.
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-name lem-title">2. PIEZO-ELECTRIC CRYSTAL</span>
+                        Menanam kristal kuarsa di titik bumi (Gunung Padang) untuk memancarkan "Anti-Sinyal" yang melumpuhkan AI dan tower 5G.
+                    </div>
+                    <div class="tech-item">
+                        <span class="tech-name lem-title">3. TELEPATHIC GRID</span>
+                        Komunikasi tanpa alat (internet organik) melalui jaringan akar pohon dan jamur (Mycelium) yang terhubung ke otak manusia sadar.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            "KITA TIDAK BISA MELAWAN MESIN DENGAN MESIN.<br>
+            KITA LAWAN BESI DENGAN GETARAN. KITA LAWAN SINYAL DENGAN KESADARAN."<br>
+            ~ Arsiparis Lemuria
+        </div>
+
+    </div>
+
+</body>
+</html>

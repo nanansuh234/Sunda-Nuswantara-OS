@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAT EARTH: RESPONSIVE VIEW</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #020205; --text: #00f3ff; --gold: #ffd700; --panel: rgba(0, 20, 40, 0.85); }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Orbitron', sans-serif; overflow: hidden; height: 100vh; width: 100vw; }
+        
+        /* CANVAS FULLSCREEN */
+        canvas { display: block; width: 100%; height: 100%; }
+
+        /* UI CONTAINER (Aman dari Canvas) */
+        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 10px; box-sizing: border-box; }
+
+        /* HEADER */
+        .header { text-align: center; text-shadow: 0 0 10px var(--text); z-index: 10; margin-top: 10px; }
+        h1 { margin: 0; font-size: 1.2rem; letter-spacing: 2px; color: #fff; }
+        .sub { font-size: 0.7rem; color: #aaa; }
+
+        /* WARNING SIDE (Ice Wall) */
+        .edge-warning { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); text-align: right; color: #ff3333; font-size: 0.6rem; animation: pulse 2s infinite; writing-mode: vertical-rl; text-orientation: mixed; }
+
+        /* INFO PANEL (Pojok Kiri Bawah) */
+        .info-panel { background: var(--panel); border: 1px solid var(--text); padding: 10px; border-radius: 5px; font-size: 0.7rem; max-width: 200px; margin-bottom: 10px; pointer-events: auto; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 3px; }
+        .val { color: var(--gold); font-weight: bold; }
+
+        /* CONTROLS (Pojok Kanan Bawah) */
+        .controls { pointer-events: auto; display: flex; gap: 5px; justify-content: center; }
+        button { background: rgba(0,0,0,0.6); border: 1px solid var(--text); color: var(--text); padding: 8px 12px; cursor: pointer; font-family: inherit; font-size: 0.7rem; border-radius: 4px; }
+        button:hover { background: var(--text); color: #000; }
+
+        /* BOTTOM AREA (Layout HP vs PC) */
+        .bottom-ui { display: flex; justify-content: space-between; align-items: flex-end; width: 100%; }
+
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* RESPONSIVE TWEAKS */
+        @media (max-width: 600px) {
+            .bottom-ui { flex-direction: column; align-items: center; gap: 10px; }
+            .info-panel { width: 100%; max-width: none; text-align: center; }
+            .edge-warning { display: none; /* Sempit di HP, hide aja */ }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="flatCanvas"></canvas>
+
+    <div class="ui-layer">
+        <div class="header">
+            <h1>AZIMUTHAL PROJECTION</h1>
+            <div class="sub">DAY & NIGHT CYCLE SIMULATION</div>
+        </div>
+
+        <div class="edge-warning">⚠️ OUTER RIM ZONE (1 DAY = 1 YEAR)</div>
+
+        <div class="bottom-ui">
+            <div class="info-panel">
+                <div class="info-row"><span>SUN:</span> <span class="val" id="sunPos">EQUATOR</span></div>
+                <div class="info-row"><span>MOON:</span> <span class="val" id="moonPhase">SPIRAL</span></div>
+                <div style="margin-top:5px; color:#aaa; font-size:0.6rem;">*Matahari & Bulan lokal di dalam kubah.</div>
+            </div>
+
+            <div class="controls">
+                <button onclick="toggleSpeed()">SPEED: <span id="spdVal">1x</span></button>
+                <button onclick="toggleView()">GRID</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('flatCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, cx, cy, radius;
+        let sunAngle = 0, moonAngle = Math.PI, moonSpiral = 0, moonDir = 1;
+        let speedMult = 1, showGrid = true;
+        let continents = [];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            cx = width / 2;
+            cy = height / 2;
+            // Radius responsif: Ambil sisi terpendek biar bulet sempurna di HP/PC
+            radius = Math.min(width, height) * 0.42; 
+            generateContinents();
+        }
+        window.addEventListener('resize', resize);
+
+        function generateContinents() {
+            continents = [];
+            for(let i=0; i<30; i++) {
+                let r = Math.random() * (radius * 0.8);
+                let a = Math.random() * Math.PI * 2;
+                continents.push({ x: Math.cos(a)*r, y: Math.sin(a)*r, size: 10 + Math.random()*40 });
+            }
+        }
+
+        function draw() {
+            // Background
+            ctx.fillStyle = '#020205'; ctx.fillRect(0, 0, width, height);
+
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            // 1. Piringan Bumi
+            ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI*2);
+            ctx.fillStyle = '#001a33'; ctx.fill();
+            
+            // Ice Wall
+            ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI*2);
+            ctx.lineWidth = 3; ctx.strokeStyle = '#fff'; ctx.stroke();
+            ctx.beginPath(); ctx.arc(0, 0, radius, 0, Math.PI*2);
+            ctx.arc(0, 0, radius-8, 0, Math.PI*2, true);
+            ctx.fillStyle = '#eef'; ctx.fill();
+
+            // Benua
+            ctx.fillStyle = '#1a4d1a';
+            continents.forEach(c => { ctx.beginPath(); ctx.arc(c.x, c.y, c.size, 0, Math.PI*2); ctx.fill(); });
+
+            // Grid
+            if(showGrid) {
+                ctx.strokeStyle = 'rgba(0, 243, 255, 0.15)'; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.arc(0, 0, radius*0.3, 0, Math.PI*2); ctx.stroke();
+                ctx.beginPath(); ctx.arc(0, 0, radius*0.6, 0, Math.PI*2); ctx.stroke();
+                for(let i=0; i<8; i++) {
+                    ctx.beginPath(); ctx.moveTo(0,0); 
+                    ctx.lineTo(Math.cos(i*Math.PI/4)*radius, Math.sin(i*Math.PI/4)*radius); ctx.stroke();
+                }
+            }
+            // Kutub Utara
+            ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,4,0,Math.PI*2); ctx.fill();
+            ctx.restore();
+
+            // 2. Matahari & Siang/Malam
+            // Posisi
+            let sunR = radius * 0.55; 
+            let sx = cx + Math.cos(sunAngle) * sunR;
+            let sy = cy + Math.sin(sunAngle) * sunR;
+
+            // Gelap Malam (Shadow Layer)
+            ctx.save();
+            ctx.fillStyle = 'rgba(0, 0, 10, 0.7)';
+            ctx.fillRect(0, 0, width, height);
+            
+            // Hapus Gelap di area Matahari (Spotlight)
+            ctx.globalCompositeOperation = 'destination-out';
+            let grad = ctx.createRadialGradient(sx, sy, 10, sx, sy, radius * 0.75);
+            grad.addColorStop(0, 'rgba(255,255,255,1)');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath(); ctx.arc(sx, sy, radius*0.8, 0, Math.PI*2); ctx.fill();
+            ctx.restore();
+
+            // Gambar Fisik Matahari
+            ctx.shadowBlur = 30; ctx.shadowColor = '#ffd700';
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath(); ctx.arc(sx, sy, radius*0.04, 0, Math.PI*2); ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Gambar Fisik Bulan
+            let moonR = radius * (0.3 + (moonSpiral * 0.5)); // Spiral in/out
+            let mx = cx + Math.cos(moonAngle) * moonR;
+            let my = cy + Math.sin(moonAngle) * moonR;
+            
+            ctx.shadowBlur = 10; ctx.shadowColor = '#fff';
+            ctx.fillStyle = '#ddd';
+            ctx.beginPath(); ctx.arc(mx, my, radius*0.03, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.beginPath(); ctx.arc(mx+2, my, radius*0.025, 0, Math.PI*2); ctx.fill(); // Fase
+            ctx.shadowBlur = 0;
+
+            // Update Logika
+            sunAngle += 0.005 * speedMult;
+            moonAngle += 0.0048 * speedMult;
+            moonSpiral += (0.0005 * speedMult * moonDir);
+            if(moonSpiral > 1 || moonSpiral < 0) moonDir *= -1;
+
+            let mText = moonDir > 0 ? "OUT ⤮" : "IN ⤯";
+            document.getElementById('moonPhase').innerText = mText;
+
+            requestAnimationFrame(draw);
+        }
+
+        function toggleSpeed() {
+            speedMult = (speedMult === 1) ? 10 : 1;
+            document.getElementById('spdVal').innerText = speedMult + "x";
+        }
+        function toggleView() { showGrid = !showGrid; }
+
+        resize();
+        draw();
+    </script>
+</body>
+</html>

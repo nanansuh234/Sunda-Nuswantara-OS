@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAHASIA STRUKTUR VERTIKAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f15;
+            --paper: #e0e5eb; /* Kertas agak kebiruan (nuansa air) */
+            --ink: #051025;
+            --blue-ink: #003366;
+            --alert: #8b0000;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--ink);
+            font-family: 'Courier Prime', monospace;
+            padding: 40px;
+            display: flex; justify-content: center;
+        }
+
+        .document {
+            background-color: var(--paper);
+            width: 100%; max-width: 900px;
+            padding: 50px;
+            box-shadow: 0 0 80px rgba(0, 200, 255, 0.1);
+            position: relative;
+            border-top: 10px solid var(--blue-ink);
+            background-image: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), 
+                              url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1h2v2H1V1zm4 0h2v2H5V1zm4 0h2v2H9V1z' fill='%23003366' fill-opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center; border-bottom: 3px double var(--blue-ink);
+            padding-bottom: 20px; margin-bottom: 40px;
+        }
+        h1 { font-family: 'Cinzel', serif; font-size: 2.2rem; color: var(--blue-ink); margin: 0; letter-spacing: 3px; }
+        .classified-stamp {
+            position: absolute; top: 40px; right: 40px;
+            border: 4px solid var(--alert); color: var(--alert);
+            padding: 5px 15px; font-weight: bold; transform: rotate(-10deg);
+            font-size: 1.2rem; opacity: 0.8;
+        }
+
+        /* SECTIONS */
+        h2 { 
+            font-family: 'Cinzel', serif; color: var(--blue-ink); 
+            border-left: 5px solid var(--blue-ink); padding-left: 15px;
+            margin-top: 40px;
+        }
+        
+        p { line-height: 1.6; font-size: 0.95rem; text-align: justify; }
+
+        .data-box {
+            background: rgba(0, 51, 102, 0.1);
+            border: 1px dashed var(--blue-ink);
+            padding: 15px; margin: 20px 0;
+            display: flex; justify-content: space-between;
+        }
+        .data-label { font-weight: bold; }
+        .data-val { font-family: 'Arial', sans-serif; font-weight: bold; color: var(--alert); }
+
+        /* DIAGRAM VISUALIZATION (CSS) */
+        .layer-diagram {
+            width: 100%; height: 300px; border: 2px solid var(--ink);
+            margin: 30px 0; position: relative; overflow: hidden;
+            background: linear-gradient(to bottom, #001 0%, #00f 40%, #87ceeb 100%);
+        }
+        
+        /* Layers */
+        .layer-waters { 
+            position: absolute; top: 0; width: 100%; height: 40%; 
+            background: rgba(0, 0, 50, 0.8); display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 0.8rem; border-bottom: 3px solid #0ff;
+        }
+        .layer-dome {
+            position: absolute; top: 40%; width: 100%; height: 5px; 
+            background: #0ff; box-shadow: 0 0 20px #0ff; z-index: 10;
+        }
+        .layer-stars {
+            position: absolute; top: 42%; width: 100%; text-align: center;
+        }
+        .star-icon { color: #ffd700; font-size: 10px; animation: twinkle 1s infinite; }
+        
+        .distance-marker {
+            position: absolute; right: 10px; font-size: 0.7rem; color: #fff; text-shadow: 1px 1px 2px #000;
+        }
+
+        @keyframes twinkle { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 50px; font-size: 0.7rem; text-align: center; color: #666; border-top: 1px solid #ccc; padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document">
+        <div class="classified-stamp">TOP SECRET<br>EYES ONLY</div>
+
+        <div class="header">
+            <h1>STRUKTUR VERTIKAL</h1>
+            <div style="letter-spacing: 2px; margin-top:5px;">PETA KETINGGIAN & SAMUDRA LANGIT</div>
+        </div>
+
+        <p>
+            Dokumen ini memuat data teknis mengenai batas vertikal dunia kita. Data ini dikumpulkan melalui metode triangulasi kuno (Sextant) dan eksperimen rahasia roket amatir, menyanggah total klaim "Ruang Angkasa Tak Terbatas" milik NASA.
+        </p>
+
+        <h2>1. BATAS KETINGGIAN KUBAH (FIRMAMENT)</h2>
+        <p>
+            Bumi kita bukanlah bola di ruang hampa, melainkan "Wadah Tertutup" seperti terarium. Batas atasnya adalah Kubah (Firmament) yang bersifat fisik, keras, dan elektromagnetik.
+        </p>
+
+        <div class="data-box">
+            <span class="data-label">JARAK DARAT KE KUBAH (TITIK TERTINGGI):</span>
+            <span class="data-val">± 4.800 KM - 5.000 KM</span>
+        </div>
+        <div class="data-box">
+            <span class="data-label">JARAK DARAT KE KUBAH (PINGGIR/ES):</span>
+            <span class="data-val">± 1.500 KM (Melengkung Turun)</span>
+        </div>
+
+        <p>
+            <strong>BUKTI LOGIS:</strong> Mengapa roket NASA selalu melengkung (Dogleg Maneuver) setelah lepas landas? Karena mereka tidak bisa menembus atap setinggi 5.000 KM ini. Mereka hanya terbang mendatar di bawah kubah sampai jatuh ke laut (Segitiga Bermuda/Point Nemo).
+        </p>
+
+        <div class="layer-diagram">
+            <div class="layer-waters">
+                <div style="text-align:center;">
+                    SAMUDRA DI ATAS LANGIT (THE WATERS ABOVE)<br>
+                    <span style="font-size:0.6rem; opacity:0.7;">ZONA ETHER & PLASMA AIR</span>
+                </div>
+                <div class="distance-marker" style="top:10px;">∞ (TAK TERHINGGA)</div>
+            </div>
+
+            <div class="layer-dome"></div>
+            <div class="distance-marker" style="top:41%;">5.000 KM (BATAS FISIK)</div>
+
+            <div class="layer-stars">
+                <span class="star-icon">✦</span> <span class="star-icon">✦</span> <span class="star-icon">✦</span>
+                <span class="star-icon">✦</span> <span class="star-icon">✦</span>
+            </div>
+
+            <div class="distance-marker" style="bottom:10px;">0 KM (PERMUKAAN TANAH)</div>
+        </div>
+
+        <h2>2. POSISI BINTANG & MATAHARI</h2>
+        <p>
+            Bintang, Matahari, dan Bulan berada <strong>DI BAWAH</strong> atau <strong>MENEMPEL</strong> pada lapisan Kubah. Mereka TIDAK berada di luar kubah.
+        </p>
+        <ul>
+            <li><strong>Matahari & Bulan:</strong> Mengapung di ketinggian sekitar <strong>4.000 - 4.500 KM</strong> (sedikit di bawah atap kubah). Sifatnya lokal.</li>
+            <li><strong>Bintang (Fixed Stars):</strong> Adalah fenomena <em>Cymatics</em> (Suara dalam Air) yang menempel pada dinding Kubah. Jaraknya sama dengan ketinggian kubah (± 5.000 KM).</li>
+        </ul>
+        <p style="color:var(--alert); font-weight:bold; font-style:italic;">
+            DEBUNKED: Tidak ada bintang yang jaraknya "Jutaan Tahun Cahaya". Itu adalah omong kosong untuk membuat manusia merasa kecil dan tidak berarti. Semua cahaya di langit bersifat LOKAL.
+        </p>
+
+        <h2>3. KONDISI SAMUDRA DI ATAS KUBAH</h2>
+        <p>
+            Apa yang ada di balik kaca kubah? Ruang hampa? BUKAN.
+            Di balik kubah terdapat <strong>SAMUDRA PRIMORDIAL (The Waters Above)</strong>.
+        </p>
+        
+        <div class="data-box" style="display:block;">
+            <div style="margin-bottom:5px;"><strong>DATA OBSERVASI WARNA LANGIT:</strong></div>
+            Kenapa langit berwarna <strong>BIRU</strong>?
+            <br>
+            Itu bukan pantulan laut. Itu adalah warna air yang ada di ATAS kita. Kita hidup di dasar samudra udara, melihat ke atas menembus kubah menuju samudra air yang mahaluas.
+        </div>
+
+        <p>
+            <strong>KONDISI FISIK:</strong>
+            <br>
+            1. <strong>Massa Jenis:</strong> Air di atas sana tidak seperti air laut. Ia adalah "Hidrogen Murni" atau "Ether Cair". Sangat dingin (Cryogenic).
+            <br>
+            2. <strong>Fungsi:</strong> Menahan radiasi panas dari luar sistem, mendinginkan mesin Matahari/Bulan, dan sebagai media penghantar frekuensi bintang.
+            <br>
+            3. <strong>Kebocoran:</strong> Peristiwa "Air Bah Nabi Nuh" adalah sejarah ketika "Pintu-pintu langit dibuka" (Kubah retak), sehingga air dari atas tumpah ke bumi.
+        </p>
+
+        <div class="footer">
+            DOKUMEN INI MENYATAKAN BAHWA MANUSIA ADALAH PUSAT SEMESTA.<br>
+            TIDAK ADA RUANG HAMPA. TIDAK ADA BIG BANG. KITA DILINDUNGI.<br>
+            © NUSWANTARA COSMOLOGY
+        </div>
+    </div>
+
+</body>
+</html>
