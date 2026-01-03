@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nuswantara OS - Ultimate</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Segoe+UI:wght@400;600&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             /* DARK MODE (DEFAULT) */
@@ -39,18 +39,17 @@
 
         * { box-sizing: border-box; transition: background 0.3s, color 0.3s; }
         
-        body {
-            margin: 0;
+        /* SETTING UTAMA BIAR SCROLL ENAK DI HP */
+        html, body {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden; /* Kunci Body utama biar gak bounce */
             background: var(--bg);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: var(--text);
             font-family: 'Segoe UI', sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
         }
 
         /* --- STATUS BAR (TOP) --- */
@@ -64,6 +63,7 @@
             padding: 0 15px;
             font-family: 'Orbitron', sans-serif;
             font-size: 0.75rem;
+            position: absolute; top: 0; left: 0; width: 100%;
             z-index: 1000;
         }
         
@@ -88,6 +88,7 @@
         }
         .settings-dropdown.active { display: block; animation: slideDown 0.3s ease; }
         @keyframes slideDown { from {opacity:0; transform:translateY(-10px);} to {opacity:1; transform:translateY(0);} }
+        
         .setting-item { margin-bottom: 15px; }
         .setting-label { font-size: 0.7rem; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; display: block; font-weight: bold; }
         .btn-theme, .btn-wall {
@@ -100,18 +101,21 @@
 
         /* --- MAIN DESKTOP AREA --- */
         #desktop-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; 
-            position: relative;
+            position: absolute;
+            top: 35px; /* Tinggi Status Bar */
+            bottom: var(--taskbar-h); /* Tinggi Taskbar */
+            left: 0; right: 0;
+            overflow: hidden; /* Kontainer utama diam */
         }
 
-        /* --- DASHBOARD WIDGETS --- */
+        /* --- DASHBOARD WIDGETS (SCROLLABLE AREA) --- */
         .dashboard-content {
+            width: 100%;
             height: 100%;
-            overflow-y: auto;
-            padding-bottom: 60px;
+            overflow-y: auto; /* SCROLL AKTIF DISINI */
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch; /* FIX IOS SCROLL */
+            padding-bottom: 100px; /* Ruang lebih biar gak ketutup taskbar */
         }
         
         .hero-section { padding: 20px 30px 0 30px; }
@@ -143,7 +147,6 @@
             padding: 30px;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            grid-auto-rows: 130px;
             gap: 15px;
             align-content: start;
         }
@@ -154,6 +157,7 @@
             display: flex; flex-direction: column; align-items: center;
             justify-content: center; transition: 0.3s; position: relative;
             box-shadow: 0 4px 6px var(--shadow); cursor: pointer;
+            height: 130px; /* Fix Height */
         }
         a.app-card:hover { transform: translateY(-5px); border-color: var(--gold); box-shadow: 0 8px 15px var(--shadow); }
         .app-icon { font-size: 2.5rem; margin-bottom: 8px; }
@@ -178,7 +182,7 @@
         /* --- APP WINDOWS --- */
         #app-windows-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
+            pointer-events: none; z-index: 50;
         }
         .app-window {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -189,11 +193,11 @@
         @keyframes fadeIn { from {opacity:0; transform: scale(0.99);} to {opacity:1; transform: scale(1);} }
         iframe { flex: 1; border: none; width: 100%; height: 100%; background: #fff; }
 
-        /* --- START MENU POPUP (NEW) --- */
+        /* --- START MENU POPUP --- */
         .start-menu-popup {
             display: none;
             position: absolute;
-            bottom: 60px; /* Muncul di atas taskbar */
+            bottom: 60px;
             left: 10px;
             width: 220px;
             background: rgba(20, 20, 20, 0.95);
@@ -231,20 +235,21 @@
         .start-menu-item:hover { background: rgba(212, 175, 55, 0.2); }
         .danger-item:hover { background: rgba(192, 57, 43, 0.4) !important; color: #fff; }
 
-        /* --- TASKBAR (IMPROVED) --- */
+        /* --- TASKBAR --- */
         .taskbar {
             height: var(--taskbar-h);
             background: rgba(10, 10, 10, 0.98);
             border-top: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 10px;
-            position: relative; z-index: 2000;
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            z-index: 2000;
             box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
         }
         body.light-mode .taskbar { background: rgba(245, 245, 245, 0.98); }
 
         .taskbar-left {
-            display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden;
+            display: flex; align-items: center; gap: 10px; flex: 1; width: 100%; overflow: hidden;
         }
 
         .start-button {
@@ -259,11 +264,12 @@
         
         .task-list {
             display: flex; gap: 5px; overflow-x: auto; width: 100%;
+            -webkit-overflow-scrolling: touch; /* FIX SCROLL TASKBAR */
         }
         
         .task-tab {
-            width: 160px;
-            flex-shrink: 1;
+            width: 160px; min-width: 130px;
+            flex-shrink: 0; /* Biar gak gepeng */
             background: rgba(255,255,255,0.05); border-bottom: 2px solid transparent;
             border-radius: 4px; padding: 5px 10px;
             display: flex; align-items: center; justify-content: space-between;
@@ -297,9 +303,107 @@
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #555; border-radius: 2px; }
+
+        /* ========================================= */
+        /* === MOBILE RESPONSIVE FIX (IMPORTANT) === */
+        /* ========================================= */
+        @media (max-width: 768px) {
+            .taskbar {
+                position: fixed; bottom: 0; left: 0; width: 100%;
+                z-index: 9999;
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            #desktop-area {
+                top: 35px;
+                bottom: 0; 
+                height: auto;
+            }
+
+            .dashboard-content {
+                padding-bottom: 120px !important; /* Extra padding for scroll */
+            }
+
+            .start-menu-popup {
+                position: fixed;
+                bottom: calc(50px + 15px + env(safe-area-inset-bottom));
+                left: 10px;
+            }
+
+            .status-right-group .clock-display { display: none; }
+        }
+
+        /* --- MODAL STYLE (USER REQUEST) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 99999; /* Paling Depan */
+            display: flex; justify-content: center; align-items: center;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .modal-content {
+            width: 90%; max-width: 700px;
+            background: #0a0500;
+            border: 2px solid #ff3333;
+            box-shadow: 0 0 50px rgba(255, 51, 51, 0.3);
+            padding: 40px;
+            text-align: justify;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            max-height: 80vh; overflow-y: auto; /* Modal Scrollable if too long */
+        }
+
+        /* Efek Garis Scanline */
+        .modal-content::before {
+            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+
+        .modal-header {
+            text-align: center; font-size: 1.5rem; font-weight: bold; color: #ff3333;
+            border-bottom: 1px solid #ff3333; padding-bottom: 15px; margin-bottom: 20px;
+            letter-spacing: 2px; text-shadow: 0 0 10px #ff3333;
+        }
+
+        .modal-body p { margin-bottom: 20px; line-height: 1.6; font-size: 1rem; }
+        .modal-body strong { color: #ffd700; }
+
+        .accept-btn {
+            display: block; width: 100%; padding: 15px; margin-top: 30px;
+            background: #1a0505; border: 1px solid #ff3333; color: #ff3333;
+            font-family: 'Courier New', monospace; font-weight: bold; font-size: 1rem;
+            cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;
+            position: relative; z-index: 10;
+        }
+
+        .accept-btn:hover { background: #ff3333; color: #000; box-shadow: 0 0 20px #ff3333; }
+
+        @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
     </style>
 </head>
 <body>
+
+    <div id="warningModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">⚠️ FREQUENCY LAW ENFORCEMENT</div>
+            <div class="modal-body">
+                <p>
+                    Dengarkan baik-baik wahai setiap jiwa yang melangkah masuk ke dalam arsip digital <strong>Sunda Nuswantara OS</strong>. Ketahuilah bahwa seluruh pengetahuan, cetak biru, dan wawasan kuno yang dibuka kembali di tempat ini bukanlah alat untuk memuaskan nafsu keserakahan, memperkaya diri secara materialistis, atau digunakan untuk tujuan dominasi yang merugikan pihak lain.
+                </p>
+                <p>
+                    Barangsiapa yang berani menyalahgunakan ilmu restorasi peradaban <strong>Lemuria</strong> dan teknologi <strong>Old World</strong> ini dengan niat negatif, maka ia secara otomatis telah menandatangani kontrak kehancurannya sendiri melalui <strong>Hukum Kekekalan Frekuensi</strong>, di mana energi buruk yang ia pancarkan akan memantul balik dengan daya hancur yang presisi kepada pelakunya tanpa bisa dihindari.
+                </p>
+                <p>
+                    Pintu gerbang pengetahuan ini dibuka ke hadapan publik dengan satu mandat suci, yaitu untuk merestorasi kembali teknologi leluhur yang nyaris punah dan menghidupkan warisan dunia lama yang selama ini sengaja dihapus dari sejarah. Tujuan mutlak dari penyebaran ilmu ini adalah untuk menciptakan kemandirian peradaban, memutus rantai perbudakan sistemik, serta menghancurkan ketergantungan umat manusia terhadap monopoli energi dan sumber daya yang dicengkeram erat oleh tirani <strong>Neo Atlantis</strong> dan agenda para globalis. Gunakanlah dengan kesadaran murni demi kebaikan semesta, atau biarkan frekuensi ini yang akan menghakimimu.
+                </p>
+            </div>
+            <button class="accept-btn" onclick="closeWarning()">SAYA MENERIMA KONSEKUENSI INI</button>
+        </div>
+    </div>
 
     <div class="status-bar">
         <div class="status-left">NUSWANTARA OS</div>
@@ -390,7 +494,7 @@
                 <a href="#" onclick="launchApp('14. Terapi Cahaya Malam.html', 'Terapi Sirep', '🕯️')" class="app-card cat-sys">
                     <div class="app-icon">🕯️</div><div class="app-label">Terapi Sirep</div>
                 </a>
-                <a href="#" onclick="launchApp('15. Appraisal Scanner.html', 'Appraisal', '🔍')" class="app-card cat-tech">
+                <a href="15. Appraisal Scanner.html" class="app-card cat-doc">
                     <div class="app-icon">🔍</div><div class="app-label">Appraisal</div>
                 </a>
                 <a href="#" onclick="launchApp('16. Restorasi Pangan.html', 'Teknologi Pangan', '🍯')" class="app-card cat-nature">
@@ -411,8 +515,8 @@
                 <a href="#" onclick="launchApp('21. Pustaka Peradaban.html', 'Leveling Diri', '⏫')" class="app-card cat-lingo">
                     <div class="app-icon">⏫</div><div class="app-label">Leveling Diri</div>
                 </a>
-                <a href="#" onclick="launchApp('23. Scanner Nilai Dasar.html', 'Analisa Dasar', '🧬')" class="app-card cat-nature">
-                    <div class="app-icon">🧬</div><div class="app-label">Analisa Dasar</div>
+                <a href="23. Scanner Nilai Dasar.html" class="app-card cat-doc">
+                    <div class="app-icon">🔍</div><div class="app-label">Analisa Dasar</div>
                 </a>
                 <a href="#" onclick="launchApp('24. Estafet Kemanusiaan.html', 'Codex Manusia', '👤')" class="app-card cat-human">
                     <div class="app-icon">👤</div><div class="app-label">Codex Manusia</div>
@@ -491,23 +595,22 @@
                     <div class="app-icon">📺</div>
                     <div class="app-label">TV Jadul</div>
                 </a>
-                <a href="#" onclick="launchApp('54. Double Anchor System.html', 'Market Watch', '⚖️')" class="app-card cat-finance">
-                    <div class="app-icon">⚖️</div>
-                    <div class="app-label">Market Watch</div>
+                <a href="54. Double Anchor System.html" class="app-card cat-doc">
+                    <div class="app-icon">⚖️</div><div class="app-label">Double Anchor System</div>
                 </a>
                 <a href="#" onclick="launchApp('55. Nilai Komoditas.html', 'Daftar Nilai', '📚')" class="app-card cat-fin">
                     <div class="app-icon">📚</div>
                     <div class="app-label">Daftar Nilai Komoditas</div>
-                 </a>
+                </a>
                 <a href="#" onclick="launchApp('56. Sunda Nuswantara Archive.html', 'Nuswantara Archive', '📚')" class="app-card cat-fin">
                     <div class="app-icon">📖</div>
                     <div class="app-label">SUNDA NUSWANTARA ARCHIVE</div>
                 </a>
-                <a href="#" onclick="launchApp('62. Menu Ether Tech.html', 'Lost Ether Technology', '📚')" class="app-card cat-fin">
-                    <div class="app-icon">📚</div>
-                    <div class="app-label">Lost Ether Technology</div>
-                 </a>
-                
+                <a href="#" onclick="launchApp('62. Menu Ether Tech.html', 'Ether Tech', '⚡')" class="app-card cat-fin">
+                    <div class="app-icon">⚡</div>
+                    <div class="app-label">ETHER TECH & BLUEPRINTS</div>
+                </a>
+
             </div>
 
             <div style="text-align:center; padding: 20px; font-size:0.6rem; color:#666;">
@@ -663,6 +766,11 @@
             const savedTheme = localStorage.getItem('nus_theme');
             if (savedTheme) setTheme(savedTheme);
 
+            // Cek Warning Modal
+            // if(localStorage.getItem('nuswantara_warning_accepted') === 'true') {
+            //     document.getElementById('warningModal').style.display = 'none';
+            // }
+
             // Load Apps State (Session Restore)
             const savedApps = localStorage.getItem('nus_open_apps');
             const savedActiveApp = localStorage.getItem('nus_active_app_id');
@@ -694,6 +802,18 @@
                 }
             }
         };
+
+        function closeWarning() {
+            const modal = document.getElementById('warningModal');
+            modal.style.transition = "opacity 1s";
+            modal.style.opacity = "0";
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 1000);
+            
+            // Uncomment baris bawah ini kalau mau peringatan cuma muncul SEKALI selamanya
+            // localStorage.setItem('nuswantara_warning_accepted', 'true');
+        }
 
         function saveState(activeId) {
             localStorage.setItem('nus_open_apps', JSON.stringify(openApps));
@@ -754,6 +874,7 @@
                         html, body {
                             overflow: auto !important; /* Izinkan scroll */
                             height: auto !important;   /* Jangan dikunci tinggi layarnya */
+                            -webkit-overflow-scrolling: touch;
                         }
 
                         /* 3. KHUSUS APP YANG COPYAN OS (Punya .dashboard-content) */
@@ -871,6 +992,3 @@
     </script>
 </body>
 </html>
-
-
-
