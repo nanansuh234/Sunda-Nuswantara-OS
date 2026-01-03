@@ -1,0 +1,118 @@
+<div id="warningModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">⚠️ FREQUENCY LAW ENFORCEMENT</div>
+        <div class="modal-body">
+            <p>
+                Dengarkan baik-baik wahai setiap jiwa yang melangkah masuk ke dalam arsip digital <strong>Sunda Nuswantara OS</strong>. Ketahuilah bahwa seluruh pengetahuan, cetak biru, dan wawasan kuno yang dibuka kembali di tempat ini bukanlah alat untuk memuaskan nafsu keserakahan, memperkaya diri secara materialistis, atau digunakan untuk tujuan dominasi yang merugikan pihak lain.
+            </p>
+            <p>
+                Barangsiapa yang berani menyalahgunakan ilmu restorasi peradaban <strong>Lemuria</strong> dan teknologi <strong>Old World</strong> ini dengan niat negatif, maka ia secara otomatis telah menandatangani kontrak kehancurannya sendiri melalui <strong>Hukum Kekekalan Frekuensi</strong>, di mana energi buruk yang ia pancarkan akan memantul balik dengan daya hancur yang presisi kepada pelakunya tanpa bisa dihindari.
+            </p>
+            <p>
+                Pintu gerbang pengetahuan ini dibuka ke hadapan publik dengan satu mandat suci, yaitu untuk merestorasi kembali teknologi leluhur yang nyaris punah dan menghidupkan warisan dunia lama yang selama ini sengaja dihapus dari sejarah. Tujuan mutlak dari penyebaran ilmu ini adalah untuk menciptakan kemandirian peradaban, memutus rantai perbudakan sistemik, serta menghancurkan ketergantungan umat manusia terhadap monopoli energi dan sumber daya yang dicengkeram erat oleh tirani <strong>Neo Atlantis</strong> dan agenda para globalis. Gunakanlah dengan kesadaran murni demi kebaikan semesta, atau biarkan frekuensi ini yang akan menghakimimu.
+            </p>
+        </div>
+        <button class="accept-btn" onclick="closeWarning()">SAYA MENERIMA KONSEKUENSI INI</button>
+    </div>
+</div>
+
+<style>
+    /* MODAL STYLE */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 99999; /* Paling Depan */
+        display: flex; justify-content: center; align-items: center;
+        backdrop-filter: blur(10px);
+        animation: fadeIn 1s ease-out;
+    }
+
+    .modal-content {
+        width: 90%; max-width: 700px;
+        background: #0a0500;
+        border: 2px solid #ff3333;
+        box-shadow: 0 0 50px rgba(255, 51, 51, 0.3);
+        padding: 40px;
+        text-align: justify;
+        color: #e0e0e0;
+        font-family: 'Courier New', monospace;
+        position: relative;
+    }
+
+    /* Efek Garis Scanline */
+    .modal-content::before {
+        content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+    }
+
+    .modal-header {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ff3333;
+        border-bottom: 1px solid #ff3333;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px #ff3333;
+    }
+
+    .modal-body p {
+        margin-bottom: 20px;
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+    .modal-body strong {
+        color: #ffd700; /* Emas untuk kata kunci */
+    }
+
+    .accept-btn {
+        display: block; width: 100%;
+        padding: 15px;
+        margin-top: 30px;
+        background: #1a0505;
+        border: 1px solid #ff3333;
+        color: #ff3333;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .accept-btn:hover {
+        background: #ff3333;
+        color: #000;
+        box-shadow: 0 0 20px #ff3333;
+    }
+
+    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+</style>
+
+<script>
+    // Script untuk menutup modal dan menyimpan status di LocalStorage
+    // Jadi kalau udah setuju, pas refresh gak muncul lagi (Opsional)
+    
+    function closeWarning() {
+        const modal = document.getElementById('warningModal');
+        modal.style.transition = "opacity 1s";
+        modal.style.opacity = "0";
+        setTimeout(() => {
+            modal.style.display = "none";
+        }, 1000);
+        
+        // Uncomment baris bawah ini kalau mau peringatan cuma muncul SEKALI selamanya
+        // localStorage.setItem('nuswantara_warning_accepted', 'true');
+    }
+
+    // Cek apakah user sudah pernah setuju (Uncomment jika pakai fitur di atas)
+    // window.onload = function() {
+    //     if(localStorage.getItem('nuswantara_warning_accepted') === 'true') {
+    //         document.getElementById('warningModal').style.display = 'none';
+    //     }
+    // }
+</script>
