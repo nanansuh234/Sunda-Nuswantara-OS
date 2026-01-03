@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TARTARIAN ARCHITECT: RESONANCE TOOL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1a0505;
+            --panel: #220a0a;
+            --gold: #d4af37;
+            --copper: #b87333; /* Tembaga (Khas Tartaria) */
+            --aether: #00ffff; /* Energi Ether */
+            --text: #f0e68c;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            /* Pattern Bata Merah Khas Tartaria */
+            background-image: 
+                linear-gradient(335deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+                linear-gradient(155deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+                linear-gradient(335deg, rgba(0,0,0,0.3) 23px, transparent 23px),
+                linear-gradient(155deg, rgba(0,0,0,0.3) 23px, transparent 23px);
+            background-size: 58px 58px;
+            background-color: #1a0505;
+        }
+
+        .container {
+            width: 100%; max-width: 850px;
+            border: 4px double var(--gold);
+            background: rgba(20, 10, 10, 0.95);
+            box-shadow: 0 0 60px rgba(184, 115, 51, 0.2);
+            padding: 30px; position: relative;
+        }
+
+        /* HEADER */
+        .header { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; letter-spacing: 3px; font-size: 2.2rem; text-shadow: 2px 2px 0 #000; }
+        .sub { color: var(--copper); margin-top: 5px; font-size: 0.9rem; font-weight: bold; }
+
+        /* SECTIONS */
+        .section-title {
+            color: var(--aether); border-left: 4px solid var(--aether);
+            padding-left: 10px; margin: 30px 0 15px 0; font-size: 1.1rem; font-weight: bold;
+        }
+
+        /* CALC BOX */
+        .calc-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+        
+        .input-group { background: #2a1515; padding: 15px; border: 1px solid var(--copper); }
+        label { display: block; color: var(--gold); margin-bottom: 5px; font-size: 0.8rem; }
+        input {
+            width: 100%; padding: 8px; background: #000; border: 1px solid var(--gold);
+            color: var(--aether); font-family: inherit; font-size: 1.1rem; text-align: center;
+        }
+
+        /* RESULTS */
+        .result-box {
+            background: #000; border: 1px solid var(--gold); padding: 15px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .res-val { font-size: 1.5rem; color: var(--gold); font-weight: bold; }
+        .res-note { font-size: 0.7rem; color: #888; margin-top: 5px; text-align: center; }
+
+        /* RESONANCE METER */
+        .resonance-panel {
+            background: linear-gradient(to bottom, #001, #002);
+            border: 2px solid var(--aether); padding: 20px;
+            text-align: center; margin-top: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1);
+        }
+        .freq-display {
+            font-size: 2.5rem; color: #fff; text-shadow: 0 0 20px var(--aether);
+            font-family: 'Cinzel'; margin: 10px 0;
+        }
+        .cymatic-desc { color: var(--aether); font-size: 0.9rem; }
+
+        /* TABS */
+        .tabs { display: flex; gap: 5px; margin-bottom: 20px; }
+        .tab-btn {
+            flex: 1; padding: 10px; background: #221111; border: 1px solid var(--copper);
+            color: #aaa; cursor: pointer; font-family: 'Cinzel'; transition: 0.3s;
+        }
+        .tab-btn.active { background: var(--gold); color: #000; font-weight: bold; }
+
+        /* STAMP */
+        .stamp {
+            position: absolute; top: 20px; right: 20px;
+            border: 3px solid var(--copper); color: var(--copper);
+            padding: 5px 10px; font-weight: bold; transform: rotate(15deg);
+            opacity: 0.6; font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) { .calc-grid { grid-template-columns: 1fr; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="stamp">OLD WORLD<br>TECH</div>
+
+        <div class="header">
+            <h1>DIVINE ARCHITECT</h1>
+            <div class="sub">TARTARIA EDITION: GOLDEN RATIO & RESONANCE</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="setMode('phi')">1. PHI GEOMETRY</button>
+            <button class="tab-btn" onclick="setMode('freq')">2. AETHER FREQUENCY</button>
+        </div>
+
+        <div id="mod-phi">
+            <div class="section-title">PROPORSI RUANGAN / KUBAH (PHI 1.618)</div>
+            <div class="calc-grid">
+                <div class="input-group">
+                    <label>INPUT DIMENSI UTAMA (METER):</label>
+                    <input type="number" id="phiInput" placeholder="Misal: Tinggi Kubah" oninput="calcPhi()">
+                    <div style="font-size:0.7rem; color:#666; margin-top:5px;">(Panjang Tanah / Tinggi Pilar)</div>
+                </div>
+                
+                <div class="result-box">
+                    <label>PASANGAN HARMONIS (MINOR):</label>
+                    <div class="res-val" id="resMinor">0.000 m</div>
+                    <div class="res-note">Gunakan angka ini untuk lebar lorong atau jendela.</div>
+                </div>
+                
+                <div class="result-box" style="grid-column: 1 / -1; border-color: var(--aether);">
+                    <label>TOTAL HARMONIS (MAJOR):</label>
+                    <div class="res-val" style="color:var(--aether)" id="resMajor">0.000 m</div>
+                    <div class="res-note">Total Panjang Bangunan agar mengunci energi.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mod-freq" style="display:none;">
+            <div class="section-title">HITUNG FREKUENSI BANGUNAN (CYMATICS)</div>
+            <div style="font-size:0.8rem; color:#aaa; margin-bottom:15px; text-align:justify;">
+                "Setiap ruangan adalah kotak suara. Agar bangunan 'hidup', dimensinya harus menghasilkan Standing Wave yang harmonis (Healing Frequency)."
+            </div>
+
+            <div class="input-group">
+                <label>PANJANG / DIAMETER RUANGAN (METER):</label>
+                <input type="number" id="freqInput" placeholder="10" oninput="calcFreq()">
+            </div>
+
+            <div class="resonance-panel">
+                <label style="color:#aaa;">FREKUENSI DASAR RUANGAN:</label>
+                <div class="freq-display" id="hzDisplay">0 Hz</div>
+                <div class="cymatic-desc" id="noteDisplay">SILENCE</div>
+                <div style="margin-top:10px; font-size:0.7rem; color:#666;">*Basis Kecepatan Suara: 343 m/s (Udara)</div>
+            </div>
+
+            <div class="calc-grid" style="margin-top:20px;">
+                <div class="result-box">
+                    <label>EFEK MEDIS:</label>
+                    <div class="res-val" style="font-size:1rem; color:var(--copper)" id="medEffect">-</div>
+                </div>
+                <div class="result-box">
+                    <label>FUNGSI TARTARIA:</label>
+                    <div class="res-val" style="font-size:1rem; color:var(--gold)" id="tarEffect">-</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const PHI = 1.61803398875;
+        const SPEED_OF_SOUND = 343; // m/s
+
+        function setMode(mode) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('mod-phi').style.display = mode === 'phi' ? 'block' : 'none';
+            document.getElementById('mod-freq').style.display = mode === 'freq' ? 'block' : 'none';
+        }
+
+        function calcPhi() {
+            let val = parseFloat(document.getElementById('phiInput').value);
+            if(isNaN(val)) return;
+
+            let minor = val / PHI;
+            let major = val * PHI;
+
+            document.getElementById('resMinor').innerText = minor.toFixed(3) + " m";
+            document.getElementById('resMajor').innerText = major.toFixed(3) + " m";
+        }
+
+        function calcFreq() {
+            let dim = parseFloat(document.getElementById('freqInput').value);
+            if(isNaN(dim) || dim <= 0) return;
+
+            // Rumus Standing Wave (Fundamental Frequency f1)
+            // f = v / (2 * L) -> Open pipe analogy for room resonance
+            let freq = SPEED_OF_SOUND / (2 * dim);
+            
+            document.getElementById('hzDisplay').innerText = freq.toFixed(2) + " Hz";
+            
+            // Analisa Note & Efek
+            let effect = analyzeFreq(freq);
+            document.getElementById('noteDisplay').innerText = "NADA: " + effect.note;
+            document.getElementById('medEffect').innerText = effect.med;
+            document.getElementById('tarEffect').innerText = effect.tar;
+        }
+
+        function analyzeFreq(hz) {
+            // Logika Sederhana efek frekuensi rendah (Infrasound - Bass)
+            // Bangunan besar = Hz rendah = Grounding/Trance
+            // Bangunan kecil = Hz tinggi = Focus/Energy
+            
+            let note = "UNKNOWN";
+            let med = "NETRAL";
+            let tar = "STRUKTUR BIASA";
+
+            if (hz < 4) { 
+                note = "DELTA (Deep Sleep)"; med = "Koma / Trance Dalam"; tar = "SEISMIK DAMPENER (Penyerap Gempa)";
+            } else if (hz >= 4 && hz < 8) {
+                note = "THETA (Dream)"; med = "Penyembuhan Sel / DNA"; tar = "HEALING CHAMBER (RS Kuno)";
+            } else if (hz >= 8 && hz < 14) {
+                note = "ALPHA (Relax)"; med = "Ketenangan Mental"; tar = "PERPUSTAKAAN / PEMBELAJARAN";
+            } else if (hz >= 14 && hz < 40) {
+                note = "BETA (Active)"; med = "Fokus & Konsentrasi"; tar = "WORKSHOP / PABRIK ETHER";
+            } else if (hz >= 40 && hz < 100) {
+                note = "GAMMA (Insight)"; med = "Aktivasi Otak Tinggi"; tar = "POWER PLANT (Pembangkit)";
+            } else if (hz >= 100) {
+                note = "HIGH PITCH"; med = "Stimulasi Syaraf"; tar = "TRANSMITTER (Antena)";
+            }
+
+            // Spesial Angka Keramat Solfeggio (Approximation)
+            if (Math.abs(hz - 174) < 5) { med = "Pain Relief"; tar = "ANESTESI ALAMI"; }
+            if (Math.abs(hz - 285) < 5) { med = "Tissue Repair"; tar = "REGENERASI ORGANIK"; }
+            if (Math.abs(hz - 396) < 5) { med = "Liberating Fear"; tar = "GROUNDING STATION"; }
+            if (Math.abs(hz - 417) < 5) { med = "Undo Situation"; tar = "TIME MANIPULATION"; }
+            if (Math.abs(hz - 432) < 5) { med = "SEMESTA ALAMI"; tar = "HARMONIC RESONATOR (Utama)"; }
+            if (Math.abs(hz - 528) < 5) { med = "DNA Repair (Miracle)"; tar = "GENETIC LAB / PERTANIAN"; }
+
+            return { note, med, tar };
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETHER-NET: Skywave Mapping (Tactical)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --ether-cyan: #00f3ff;
+            --ether-glow: rgba(0, 243, 255, 0.5);
+            --gold: #ffd700;
+            --alert: #ff3333;
+            --text: #e0e0e0;
+            --grid: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+            overflow-x: hidden; overflow-y: auto; 
+        }
+
+        /* UI LAYOUT */
+        .main-interface {
+            display: grid; grid-template-columns: 300px 1fr 300px;
+            width: 100%; height: 90vh; min-height: 600px;
+            border-bottom: 2px solid var(--ether-cyan);
+            position: relative; z-index: 10;
+        }
+
+        .panel {
+            background: var(--panel); border-right: 1px solid #333;
+            padding: 20px; display: flex; flex-direction: column; gap: 15px;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8); z-index: 2;
+        }
+        .panel-right { border-left: 1px solid #333; border-right: none; }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif; color: var(--ether-cyan);
+            margin: 0; font-size: 1.1rem; letter-spacing: 2px;
+            border-bottom: 2px solid var(--ether-cyan); padding-bottom: 10px;
+        }
+
+        .status-box { background: #000; border: 1px solid #333; padding: 10px; border-radius: 5px; }
+        .label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
+        .value { font-size: 1.1rem; font-weight: bold; color: var(--gold); }
+        .value.cyan { color: var(--ether-cyan); }
+
+        .viz-container {
+            position: relative; background: radial-gradient(circle at bottom, #0f1820 0%, #000 100%);
+            overflow: hidden; display: flex; justify-content: center; align-items: center;
+        }
+        canvas { display: block; }
+
+        .grid-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px; opacity: 0.3; pointer-events: none;
+        }
+
+        .log-terminal {
+            flex: 1; background: #000; border: 1px solid #333;
+            padding: 10px; font-family: monospace; font-size: 0.7rem;
+            color: #0f0; overflow-y: auto; opacity: 0.8; height: 150px;
+        }
+        .log-entry { margin-bottom: 3px; border-bottom: 1px solid #222; }
+
+        /* BUTTONS */
+        .btn-action {
+            background: transparent; border: 1px solid var(--ether-cyan);
+            color: var(--ether-cyan); padding: 8px; font-family: 'Orbitron', sans-serif; font-size: 0.8rem;
+            cursor: pointer; transition: 0.3s; text-transform: uppercase; width: 100%;
+        }
+        .btn-action:hover { background: var(--ether-cyan); color: #000; box-shadow: 0 0 15px var(--ether-glow); }
+        
+        .btn-destroy { border-color: var(--alert); color: var(--alert); margin-top: 5px; }
+        .btn-destroy:hover { background: var(--alert); color: #000; box-shadow: 0 0 15px var(--alert); }
+
+        /* INFO PANEL */
+        .info-panel { width: 100%; background: #080808; border-top: 1px solid #333; padding: 40px 20px; color: #ccc; display: flex; justify-content: center; }
+        .info-content { max-width: 1000px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; font-size: 0.9rem; }
+        .info-card { background: #111; border: 1px solid #333; padding: 20px; border-radius: 8px; }
+        .cost-row { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 5px 0; }
+        .cost-val { color: var(--gold); font-family: monospace; }
+
+        @media (max-width: 900px) {
+            .main-interface { grid-template-columns: 1fr; grid-template-rows: auto 50vh auto; height: auto; }
+            .panel { height: auto; flex-direction: row; flex-wrap: wrap; }
+            .info-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-interface">
+        <div class="panel">
+            <h2>TACTICAL CONTROL</h2>
+            <div class="status-box">
+                <div class="label">Network Integrity</div>
+                <div class="value cyan" id="netIntegrity">100%</div>
+            </div>
+            
+            <button class="btn-action" onclick="addTower()">+ Deploy Static Tower</button>
+            <button class="btn-action" onclick="addMobileUnit()">+ Deploy Mobile Unit 🚚</button>
+            
+            <div style="border-top:1px solid #333; margin-top:10px; padding-top:10px;">
+                <div class="label" style="color:var(--alert)">ENEMY SIMULATION</div>
+                <button class="btn-action btn-destroy" onclick="destroyRandomTower()">💥 DESTROY RANDOM NODE</button>
+            </div>
+            
+            <button class="btn-action" onclick="clearMap()" style="margin-top:auto;">SYSTEM RESET</button>
+        </div>
+
+        <div class="viz-container" id="vizContainer">
+            <div class="grid-overlay"></div>
+            <canvas id="skyCanvas"></canvas>
+            <div style="position:absolute; top:20px; text-align:center; pointer-events:none;">
+                <div style="font-family:'Orbitron'; color:var(--ether-cyan); letter-spacing:3px;">ETHER-NET TACTICAL MAP</div>
+                <div style="font-size:0.7rem; color:#666;">RESILIENCE TEST MODE</div>
+            </div>
+        </div>
+
+        <div class="panel panel-right">
+            <h2>DATA FEED</h2>
+            <div class="status-box">
+                <div class="label">Mapped Area</div>
+                <div class="value" id="mappedArea">0 Km²</div>
+            </div>
+            <div class="status-box">
+                <div class="label">Active Nodes</div>
+                <div class="value cyan" id="nodeCount">0</div>
+            </div>
+            <div class="log-terminal" id="sysLog">
+                <div class="log-entry">> Tactical System Ready.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-panel">
+        <div class="info-content">
+            <div class="info-card">
+                <h3 style="color:var(--gold); border-bottom:1px solid #333; padding-bottom:5px;">ANALISA BIAYA PERANG</h3>
+                <div class="cost-row"><span>🛰️ 1 SATELIT MUSUH</span> <span class="cost-val">$ 250,000,000</span></div>
+                <div class="cost-row"><span>🚀 1 RUDAL TOMAHAWK</span> <span class="cost-val">$ 2,000,000</span></div>
+                <div class="cost-row"><span>🗼 1 TOWER KITA</span> <span class="cost-val">$ 100,000</span></div>
+                <div class="cost-row" style="color:#0f0; margin-top:10px;">
+                    <strong>KESIMPULAN:</strong> Musuh rugi $1.9 Juta setiap kali menembak 1 Tower kita.
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h3 style="color:var(--ether-cyan); border-bottom:1px solid #333; padding-bottom:5px;">STRATEGI BERTAHAN</h3>
+                <p><strong>1. Decentralized Mesh:</strong> Hancurnya 1 tower tidak mematikan sistem. Sinyal otomatis mencari rute lain.</p>
+                <p><strong>2. Mobile Units:</strong> Truk/Drone pemancar yang terus bergerak, mustahil dibidik rudal jarak jauh.</p>
+                <p><strong>3. Cheap & Fast:</strong> Tower dibangun dalam 2 hari. Satelit butuh 2 tahun.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('skyCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('vizContainer');
+        
+        let width, height;
+        let towers = [];
+        let pulses = [];
+        let ripples = [];
+        let terrain = [];
+        let mappedSegments = [];
+
+        function resize() {
+            width = container.clientWidth;
+            height = container.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            generateTerrain();
+        }
+        window.addEventListener('resize', resize);
+
+        function generateTerrain() {
+            terrain = [];
+            mappedSegments = new Array(width).fill(0);
+            let y = height - 50;
+            for(let x = 0; x <= width; x++) {
+                y += (Math.random() - 0.5) * 5; 
+                if(y > height - 10) y = height - 10;
+                if(y < height - 100) y = height - 100;
+                terrain.push(y);
+            }
+        }
+
+        class Tower {
+            constructor(x, type = 'static') {
+                this.x = x;
+                this.y = terrain[Math.floor(x)];
+                this.type = type; // 'static' or 'mobile'
+                this.color = type === 'mobile' ? '#0f0' : '#ffd700';
+                this.timer = Math.floor(Math.random() * 60);
+                this.dead = false;
+                
+                // Mobile unit bergerak dikit
+                this.speed = type === 'mobile' ? (Math.random() - 0.5) * 0.5 : 0;
+            }
+            update() {
+                if(this.type === 'mobile' && !this.dead) {
+                    this.x += this.speed;
+                    // Batas layar
+                    if(this.x < 10 || this.x > width - 10) this.speed *= -1;
+                    // Update ketinggian tanah
+                    this.y = terrain[Math.floor(this.x)];
+                }
+            }
+            draw() {
+                if(this.dead) {
+                    // Gambar puing
+                    ctx.fillStyle = '#555';
+                    ctx.fillRect(this.x - 5, this.y - 5, 10, 5);
+                    return;
+                }
+
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                
+                if(this.type === 'static') {
+                    ctx.lineTo(this.x, this.y - 25); // Tower Tinggi
+                    // Base
+                    ctx.fillStyle = '#222';
+                    ctx.fillRect(this.x - 4, this.y - 5, 8, 5);
+                } else {
+                    ctx.lineTo(this.x, this.y - 15); // Mobile Pendek
+                    // Roda/Truk
+                    ctx.fillStyle = '#0f0';
+                    ctx.fillRect(this.x - 6, this.y - 6, 12, 6);
+                }
+                ctx.stroke();
+            }
+            emit() {
+                if(this.dead) return;
+                if(this.timer++ % 60 === 0) {
+                    let angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.5;
+                    pulses.push(new Pulse(this.x, this.y - (this.type==='static'?25:15), angle));
+                }
+            }
+        }
+
+        class Pulse {
+            constructor(x, y, angle) {
+                this.x = x; this.y = y;
+                this.vx = Math.cos(angle) * 3;
+                this.vy = Math.sin(angle) * 3;
+                this.life = 200;
+                this.history = [];
+                this.bounced = false;
+            }
+            update() {
+                this.history.push({x: this.x, y: this.y});
+                if(this.history.length > 15) this.history.shift();
+                this.x += this.vx; this.y += this.vy; this.life--;
+
+                if (this.y < 50 && !this.bounced) { // Ether reflection
+                    this.vy = -this.vy; this.bounced = true;
+                    createRipple(this.x, 50);
+                }
+                if (this.bounced && this.y >= terrain[Math.floor(this.x)]) { // Ground hit
+                    mapArea(Math.floor(this.x)); this.life = 0;
+                }
+            }
+            draw() {
+                ctx.strokeStyle = this.bounced ? '#00f3ff' : (this.vy < 0 ? '#ff0055' : '#ffff00');
+                ctx.lineWidth = 2; ctx.beginPath();
+                if(this.history.length > 0) {
+                    ctx.moveTo(this.history[0].x, this.history[0].y);
+                    for(let i=1; i<this.history.length; i++) ctx.lineTo(this.history[i].x, this.history[i].y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function createRipple(x, y) { ripples.push({x:x, y:y, r:0, alpha:1}); }
+
+        function mapArea(centerIndex) {
+            let range = 20;
+            for(let i = centerIndex - range; i < centerIndex + range; i++) {
+                if(i >= 0 && i < width) mappedSegments[i] = 1;
+            }
+            updateStats();
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Langit
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.2)';
+            ctx.lineWidth = 2; ctx.setLineDash([10, 10]);
+            ctx.beginPath(); ctx.moveTo(0, 50); ctx.quadraticCurveTo(width/2, 30, width, 50); ctx.stroke(); ctx.setLineDash([]);
+
+            // Tanah
+            ctx.fillStyle = '#111'; ctx.beginPath(); ctx.moveTo(0, height);
+            for(let i=0; i<width; i++) ctx.lineTo(i, terrain[i]);
+            ctx.lineTo(width, height); ctx.fill();
+
+            // Mapped Area
+            ctx.strokeStyle = '#0f0'; ctx.lineWidth = 1; ctx.beginPath();
+            let drawing = false;
+            for(let i=0; i<width; i++) {
+                if(mappedSegments[i] === 1) {
+                    if(!drawing) { ctx.moveTo(i, terrain[i]); drawing = true; } else { ctx.lineTo(i, terrain[i]); }
+                } else { drawing = false; }
+            }
+            ctx.stroke();
+
+            // Objects
+            towers.forEach(t => { t.update(); t.draw(); t.emit(); });
+            
+            for(let i=pulses.length-1; i>=0; i--) {
+                pulses[i].update(); pulses[i].draw();
+                if(pulses[i].life <= 0) pulses.splice(i, 1);
+            }
+            for(let i=ripples.length-1; i>=0; i--) {
+                let r = ripples[i];
+                ctx.strokeStyle = `rgba(0, 243, 255, ${r.alpha})`;
+                ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, Math.PI*2); ctx.stroke();
+                r.r += 2; r.alpha -= 0.05; if(r.alpha <= 0) ripples.splice(i, 1);
+            }
+            requestAnimationFrame(draw);
+        }
+
+        function addTower() {
+            let x = Math.random() * (width - 100) + 50;
+            towers.push(new Tower(x, 'static'));
+            updateNodeCount();
+            log(`Static Node deployed at ${Math.floor(x)}`);
+        }
+
+        function addMobileUnit() {
+            let x = Math.random() * (width - 100) + 50;
+            towers.push(new Tower(x, 'mobile'));
+            updateNodeCount();
+            log(`Mobile Unit deployed. Moving...`);
+        }
+
+        function destroyRandomTower() {
+            let activeTowers = towers.filter(t => !t.dead);
+            if(activeTowers.length > 0) {
+                let target = activeTowers[Math.floor(Math.random() * activeTowers.length)];
+                target.dead = true;
+                createRipple(target.x, target.y); // Explosion effect
+                log(`ALERT: Node at ${Math.floor(target.x)} DESTROYED!`);
+                updateNodeCount();
+            } else {
+                log("No active nodes to destroy.");
+            }
+        }
+
+        function clearMap() {
+            mappedSegments.fill(0);
+            towers = []; pulses = []; ripples = [];
+            updateNodeCount();
+            log("System Reset Complete.");
+        }
+
+        function updateNodeCount() {
+            let active = towers.filter(t => !t.dead).length;
+            document.getElementById('nodeCount').innerText = active;
+            let total = towers.length;
+            let integrity = total > 0 ? Math.round((active/total)*100) : 100;
+            document.getElementById('netIntegrity').innerText = integrity + "%";
+            document.getElementById('netIntegrity').style.color = integrity < 50 ? 'red' : '#00f3ff';
+        }
+
+        function log(msg) {
+            const term = document.getElementById('sysLog');
+            const d = document.createElement('div');
+            d.className = 'log-entry'; d.innerText = `> ${msg}`;
+            term.appendChild(d); term.scrollTop = term.scrollHeight;
+        }
+
+        function updateStats() {
+            let c = mappedSegments.filter(x => x === 1).length;
+            document.getElementById('mappedArea').innerText = ((c/width)*100).toFixed(1) + "%";
+        }
+
+        setTimeout(() => { resize(); draw(); log("Ether-Net Tactical Mode."); }, 100);
+    </script>
+</body>
+</html>

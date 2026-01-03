@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETHER-TECH & BLUEPRINTS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020205;
+            --card-bg: #0a0f14;
+            --tech-cyan: #00f3ff;
+            --blueprint-blue: #0055ff;
+            --gold: #ffd700;
+            --danger: #ff3333;
+            --text: #aaccff;
+            --border: #333;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 40px;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center; margin-bottom: 50px;
+            border-bottom: 2px solid var(--tech-cyan);
+            padding-bottom: 20px; width: 100%; max-width: 1000px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0;
+            color: var(--tech-cyan); letter-spacing: 5px;
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+        .subtitle { color: #5577aa; letter-spacing: 2px; margin-top: 10px; font-size: 0.9rem; }
+
+        /* GRID SYSTEM */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            width: 100%; max-width: 1200px;
+        }
+
+        /* SECTION DIVIDER */
+        .section-label {
+            grid-column: 1 / -1;
+            margin-top: 30px; margin-bottom: 10px;
+            font-family: 'Orbitron'; font-size: 1rem;
+            border-bottom: 1px dashed #444; padding-bottom: 5px;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--border);
+            border-radius: 5px; padding: 20px;
+            text-decoration: none; color: inherit;
+            transition: 0.3s; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+            height: 160px;
+        }
+
+        .card:hover { transform: translateY(-5px); background: #10151a; }
+        
+        .card-icon { font-size: 2rem; margin-bottom: 10px; }
+        .card-title { font-family: 'Orbitron'; font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; }
+        .card-desc { font-size: 0.8rem; color: #778899; line-height: 1.4; }
+
+        /* THEME COLORS */
+        /* NETWORK (Cyan) */
+        .theme-net { border-left-color: var(--tech-cyan); }
+        .theme-net:hover { border-color: var(--tech-cyan); box-shadow: 0 0 20px rgba(0, 243, 255, 0.1); }
+        .theme-net .card-title { color: var(--tech-cyan); }
+
+        /* BLUEPRINT (Blue) */
+        .theme-print { border-left-color: var(--blueprint-blue); }
+        .theme-print:hover { border-color: var(--blueprint-blue); box-shadow: 0 0 20px rgba(0, 85, 255, 0.15); }
+        .theme-print .card-title { color: var(--blueprint-blue); }
+
+        /* ARCHITECT (Gold) */
+        .theme-arch { border-left-color: var(--gold); }
+        .theme-arch:hover { border-color: var(--gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.1); }
+        .theme-arch .card-title { color: var(--gold); }
+
+        /* ENERGY (Danger/Power) */
+        .theme-pwr { border-left-color: var(--danger); }
+        .theme-pwr:hover { border-color: var(--danger); box-shadow: 0 0 20px rgba(255, 51, 51, 0.15); }
+        .theme-pwr .card-title { color: var(--danger); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ETHER-TECH ARSENAL</h1>
+        <div class="subtitle">BLUEPRINTS - SIMULATIONS - NETWORK TOOLS</div>
+    </header>
+
+    <div class="grid-container">
+
+        <div class="section-label" style="color:var(--tech-cyan)">/// DIVISION 1: ETHER-NET MAPPING</div>
+
+        <a href="01. Mobile GPS.html" class="card theme-net">
+            <div class="card-icon">📱</div>
+            <div>
+                <div class="card-title">MOBILE GPS (TACTICAL)</div>
+                <div class="card-desc">Pelacak sinyal node Ether versi mobile/HP. Mendeteksi menara aktif dan integritas jaringan secara real-time.</div>
+            </div>
+        </a>
+
+        <a href="02. Tower GPS Ether.html" class="card theme-net">
+            <div class="card-icon">🗼</div>
+            <div>
+                <div class="card-title">TOWER GPS (FULL MAP)</div>
+                <div class="card-desc">Sistem pemetaan Skywave skala penuh. Visualisasi gelombang dan triangulasi posisi tower Ether.</div>
+            </div>
+        </a>
+
+        <a href="4. Ether-Link Command Console.html" class="card theme-net">
+            <div class="card-icon">💻</div>
+            <div>
+                <div class="card-title">COMMAND CONSOLE</div>
+                <div class="card-desc">Terminal baris perintah (CLI) untuk akses "Backdoor" ke jaringan Ether Nuswantara. Hacking mode.</div>
+            </div>
+        </a>
+
+        <a href="5. Balanced.html" class="card theme-net">
+            <div class="card-icon">⚖️</div>
+            <div>
+                <div class="card-title">ETHER-WEB (LITE MODE)</div>
+                <div class="card-desc">Versi ringan untuk monitoring jaringan dengan latensi rendah (Potato Mode). Hemat sumber daya.</div>
+            </div>
+        </a>
+
+        <div class="section-label" style="color:var(--danger)">/// DIVISION 2: FREE ENERGY HARDWARE</div>
+
+        <a href="6. Ether-Volt Generator.html" class="card theme-pwr">
+            <div class="card-icon">⚡</div>
+            <div>
+                <div class="card-title">ETHER-VOLT SIMULATOR</div>
+                <div class="card-desc">Simulasi visual pemanenan muatan listrik statis dari udara. Monitoring Volt, Ampere, dan Watt.</div>
+            </div>
+        </a>
+
+        <a href="7. Ether-Transmitter Blueprint.html" class="card theme-print">
+            <div class="card-icon">📡</div>
+            <div>
+                <div class="card-title">BLUEPRINT: TRANSMITTER</div>
+                <div class="card-desc">Skematik teknis rahasia "EST-MK1". Panduan merakit pemancar gelombang Tesla untuk broadcast energi.</div>
+            </div>
+        </a>
+
+        <a href="3. Fractal Resonator Blueprint.html" class="card theme-print">
+            <div class="card-icon">🌀</div>
+            <div>
+                <div class="card-title">BLUEPRINT: FRACTAL RESONATOR</div>
+                <div class="card-desc">Panduan lilitan tembaga geometri fraktal & kristal kuarsa untuk menangkap frekuensi Schumann.</div>
+            </div>
+        </a>
+
+        <a href="8. Mini Aether Harvester.html" class="card theme-print">
+            <div class="card-icon">🔌</div>
+            <div>
+                <div class="card-title">BLUEPRINT: MINI HARVESTER</div>
+                <div class="card-desc">Panduan perakitan alat penangkap energi skala kecil (Avramenko Plug) untuk pemula.</div>
+            </div>
+        </a>
+
+        <div class="section-label" style="color:var(--gold)">/// DIVISION 3: SACRED ARCHITECTURE</div>
+
+        <a href="9. Divine Architect (Tartaria Edition).html" class="card theme-arch">
+            <div class="card-icon">🏛️</div>
+            <div>
+                <div class="card-title">TARTARIAN ARCHITECT</div>
+                <div class="card-desc">Kalkulator canggih untuk menghitung resonansi frekuensi bangunan dan proporsi Golden Ratio (Tartaria).</div>
+            </div>
+        </a>
+
+        <a href="10. Perhitungan Struktur Candi.html" class="card theme-arch">
+            <div class="card-icon">📐</div>
+            <div>
+                <div class="card-title">CANDI GEOMETRY CALC</div>
+                <div class="card-desc">Alat hitung presisi untuk struktur Candi Nuswantara. Menyelaraskan fisik bangunan dengan energi alam.</div>
+            </div>
+        </a>
+
+    </div>
+
+    <div style="margin-top: 50px; border-top: 1px solid #222; padding-top: 20px; color: #555; font-size: 0.8rem;">
+        ACCESS LEVEL 62 GRANTED // USE KNOWLEDGE WISELY
+    </div>
+
+</body>
+</html>

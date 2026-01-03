@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER-VOLT: Free Energy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --volt-blue: #4488ff;
+            --volt-glow: rgba(68, 136, 255, 0.6);
+            --danger: #ff3333;
+            --success: #00ff66;
+            --text: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 0;
+            height: 100vh;
+            display: flex; flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            padding: 15px 20px; border-bottom: 2px solid var(--volt-blue);
+            background: #080808; display: flex; justify-content: space-between; align-items: center;
+        }
+        h1 { margin: 0; font-family: 'Orbitron'; color: var(--volt-blue); font-size: 1.5rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--volt-glow); }
+
+        /* MAIN GRID */
+        .main-grid {
+            display: grid; grid-template-columns: 300px 1fr 250px;
+            flex: 1; overflow: hidden;
+        }
+
+        /* PANELS */
+        .panel {
+            background: var(--panel); border-right: 1px solid #333;
+            padding: 20px; display: flex; flex-direction: column; gap: 20px;
+        }
+        .panel-right { border-left: 1px solid #333; border-right: none; }
+
+        h2 { color: var(--volt-blue); font-size: 1rem; border-bottom: 1px dashed #444; padding-bottom: 5px; margin-top: 0; }
+
+        /* VISUALIZER (TENGAH) */
+        .viz-area {
+            position: relative; background: radial-gradient(circle at bottom, #101520 0%, #000 100%);
+            display: flex; justify-content: center; align-items: flex-end; overflow: hidden;
+        }
+        
+        /* TESLA COIL CSS ART */
+        .coil-container {
+            position: relative; width: 200px; height: 400px; margin-bottom: 0;
+        }
+        .toroid {
+            width: 200px; height: 60px; background: #333; border-radius: 30px;
+            position: absolute; top: 0; left: 0;
+            border: 2px solid #555; box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            z-index: 2;
+        }
+        .secondary {
+            width: 80px; height: 300px; background: repeating-linear-gradient(0deg, #b87333 0px, #b87333 2px, #000 2px, #000 4px);
+            position: absolute; bottom: 0; left: 60px;
+            border-left: 2px solid #555; border-right: 2px solid #555;
+        }
+        .spark-point {
+            position: absolute; top: -50px; left: 50%; width: 2px; height: 50px; background: #888;
+        }
+
+        /* LIGHTNING CANVAS */
+        #sparkCanvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5;
+        }
+
+        /* METERS & GAUGES */
+        .gauge-box { background: #000; border: 1px solid #333; padding: 10px; border-radius: 5px; }
+        .gauge-label { font-size: 0.8rem; color: #888; }
+        .gauge-val { font-size: 1.5rem; font-weight: bold; color: var(--volt-blue); }
+        .gauge-unit { font-size: 0.8rem; color: #666; }
+
+        /* BATTERY BAR */
+        .battery-container {
+            width: 100%; height: 40px; border: 2px solid #555; border-radius: 5px;
+            position: relative; overflow: hidden; background: #222;
+        }
+        .battery-level {
+            height: 100%; width: 0%; background: linear-gradient(90deg, #444, var(--success));
+            transition: width 0.2s; box-shadow: 0 0 15px var(--success);
+        }
+        .battery-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-weight: bold; color: #fff; text-shadow: 0 0 5px #000; z-index: 2;
+        }
+
+        /* CONTROLS */
+        input[type=range] { width: 100%; accent-color: var(--volt-blue); cursor: pointer; }
+        
+        .btn-start {
+            background: transparent; border: 2px solid var(--success); color: var(--success);
+            padding: 15px; font-family: 'Orbitron'; font-size: 1rem; cursor: pointer;
+            text-transform: uppercase; transition: 0.3s;
+        }
+        .btn-start:hover { background: var(--success); color: #000; box-shadow: 0 0 20px var(--success); }
+
+        .btn-dump {
+            background: transparent; border: 2px solid var(--danger); color: var(--danger);
+            padding: 10px; font-family: 'Orbitron'; cursor: pointer; margin-top: 10px;
+        }
+        .btn-dump:hover { background: var(--danger); color: #000; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; grid-template-rows: auto 400px auto; }
+            .panel { height: auto; border-right: none; border-bottom: 1px solid #333; }
+            .viz-area { order: 2; } .panel:nth-child(1) { order: 1; } .panel-right { order: 3; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <h1>AETHER-VOLT</h1>
+            <div style="font-size:0.7rem; color:#666;">ATMOSPHERIC ENERGY HARVESTER // PROTO TYPE-01</div>
+        </div>
+        <div style="text-align:right;">
+            <div style="font-size:0.8rem; color:var(--success);">GRID INDEPENDENT</div>
+            <div style="font-size:0.7rem; color:#888;">0.00 IDR / KWh</div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        
+        <div class="panel">
+            <h2>SYSTEM CONTROL</h2>
+            
+            <div class="gauge-box">
+                <div class="gauge-label">SPARK GAP DISTANCE</div>
+                <input type="range" min="1" max="100" value="20" id="gapSlider">
+                <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-top:5px;">
+                    <span>CLOSE (Safe)</span><span>WIDE (High Voltage)</span>
+                </div>
+            </div>
+
+            <div class="gauge-box">
+                <div class="gauge-label">CAPACITOR BANK</div>
+                <div class="gauge-val" id="capVal">0</div>
+                <div class="gauge-unit">MICROFARADS CHARGED</div>
+            </div>
+
+            <button class="btn-start" id="btnToggle" onclick="toggleSystem()">ENGAGE SYSTEM</button>
+            
+            <div style="font-size:0.7rem; color:#666; margin-top:auto; line-height:1.4;">
+                WARNING: High Voltage Scalar Waves. 
+                Do not touch the collector coil while active.
+            </div>
+        </div>
+
+        <div class="viz-area">
+            <canvas id="sparkCanvas"></canvas>
+            
+            <div class="coil-container">
+                <div class="spark-point"></div>
+                <div class="toroid"></div>
+                <div class="secondary"></div>
+            </div>
+
+            <div style="position:absolute; top:20px; text-align:center; opacity:0.7;">
+                <div style="color:var(--volt-blue); font-family:'Orbitron';">ATMOSPHERE POTENTIAL</div>
+                <div style="font-size:2rem; font-weight:bold;" id="airVolt">0 V</div>
+            </div>
+        </div>
+
+        <div class="panel panel-right">
+            <h2>POWER OUTPUT</h2>
+            
+            <div>
+                <div class="gauge-label">BATTERY STORAGE</div>
+                <div class="battery-container">
+                    <div class="battery-level" id="battBar"></div>
+                    <div class="battery-text" id="battText">0%</div>
+                </div>
+            </div>
+
+            <div class="gauge-box">
+                <div class="gauge-label">INSTANT POWER</div>
+                <div class="gauge-val" id="wattVal">0</div>
+                <div class="gauge-unit">WATTS (FREE)</div>
+            </div>
+
+            <div class="gauge-box">
+                <div class="gauge-label">HOUSE LOAD</div>
+                <div class="gauge-val" id="loadVal">OFF</div>
+                <div class="gauge-unit">STATUS</div>
+            </div>
+
+            <button class="btn-dump" onclick="dumpEnergy()">DUMP TO GROUND</button>
+        </div>
+
+    </div>
+
+    <script>
+        const canvas = document.getElementById('sparkCanvas');
+        const ctx = canvas.getContext('2d');
+        const gapSlider = document.getElementById('gapSlider');
+        let width, height;
+        let active = false;
+        let capacitorCharge = 0;
+        let batteryLevel = 0;
+        let airVoltage = 0;
+        
+        // SETUP CANVAS
+        function resize() {
+            width = canvas.parentElement.clientWidth;
+            height = canvas.parentElement.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // LOGIC SISTEM
+        function toggleSystem() {
+            active = !active;
+            const btn = document.getElementById('btnToggle');
+            if(active) {
+                btn.innerText = "DISENGAGE SYSTEM";
+                btn.style.borderColor = "var(--danger)";
+                btn.style.color = "var(--danger)";
+                btn.style.boxShadow = "0 0 20px var(--danger)";
+            } else {
+                btn.innerText = "ENGAGE SYSTEM";
+                btn.style.borderColor = "var(--success)";
+                btn.style.color = "var(--success)";
+                btn.style.boxShadow = "none";
+                airVoltage = 0;
+                document.getElementById('wattVal').innerText = "0";
+            }
+        }
+
+        function dumpEnergy() {
+            batteryLevel = 0;
+            capacitorCharge = 0;
+            updateUI();
+        }
+
+        // VISUALISASI PETIR (CANVAS)
+        function drawLightning(x1, y1, x2, y2, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = color;
+            
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            
+            let currentX = x1;
+            let currentY = y1;
+            let segments = 10;
+            
+            for(let i=0; i<segments; i++) {
+                currentX += (x2 - x1) / segments + (Math.random() - 0.5) * 30; // Jiggle X
+                currentY += (y2 - y1) / segments + (Math.random() - 0.5) * 30; // Jiggle Y
+                ctx.lineTo(currentX, currentY);
+            }
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+        }
+
+        // MAIN LOOP
+        function loop() {
+            ctx.clearRect(0, 0, width, height);
+
+            if(active) {
+                // 1. Hitung Energi dari Atmosfer
+                let gap = parseInt(gapSlider.value);
+                let potential = gap * 500 + Math.random() * 1000; // Fake Volt
+                airVoltage = Math.floor(potential);
+                
+                // 2. Gambar Petir (Dari Langit ke Coil)
+                // Titik coil ada di tengah bawah
+                let coilX = width / 2;
+                let coilY = height - 350; // Atas toroid
+
+                // Petir Acak dari langit
+                if(Math.random() > 0.8) {
+                    let skyX = Math.random() * width;
+                    let skyY = 0;
+                    drawLightning(skyX, skyY, coilX, coilY, '#4488ff');
+                    
+                    // Charge Capacitor
+                    capacitorCharge += (gap / 10);
+                    if(capacitorCharge > 1000) capacitorCharge = 1000;
+                }
+
+                // 3. Transfer ke Baterai
+                if(capacitorCharge > 100) {
+                    batteryLevel += 0.05;
+                    capacitorCharge -= 5; // Drain cap
+                    if(batteryLevel > 100) batteryLevel = 100;
+                }
+
+                // 4. Update Watts (Output)
+                let watts = (batteryLevel > 0) ? (gap * 10 + Math.random()*50).toFixed(0) : 0;
+                document.getElementById('wattVal').innerText = watts;
+
+            } else {
+                // Idle Drain
+                if(airVoltage > 0) airVoltage -= 100;
+                if(airVoltage < 0) airVoltage = 0;
+            }
+
+            updateUI();
+            requestAnimationFrame(loop);
+        }
+
+        function updateUI() {
+            document.getElementById('airVolt').innerText = airVoltage.toLocaleString() + " V";
+            document.getElementById('capVal').innerText = Math.floor(capacitorCharge);
+            
+            // Battery Bar
+            const bar = document.getElementById('battBar');
+            bar.style.width = batteryLevel + "%";
+            document.getElementById('battText').innerText = Math.floor(batteryLevel) + "%";
+            
+            // Load Status
+            const load = document.getElementById('loadVal');
+            if(batteryLevel > 80) {
+                load.innerText = "FULL HOUSE POWER";
+                load.style.color = "var(--success)";
+            } else if (batteryLevel > 20) {
+                load.innerText = "LIGHTS & FRIDGE";
+                load.style.color = "var(--volt-blue)";
+            } else {
+                load.innerText = "CHARGING...";
+                load.style.color = "#666";
+            }
+        }
+
+        // Start
+        loop();
+
+    </script>
+</body>
+</html>

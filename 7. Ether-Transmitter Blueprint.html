@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLUEPRINT: EST-MK1 TRANSMITTER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #001a33; /* Dark Blueprint Blue */
+            --ink: #80b3ff;   /* Blueprint Light Blue */
+            --grid: rgba(128, 179, 255, 0.1);
+            --highlight: #ffffff;
+            --alert: #ff3333;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 20px;
+            /* Grid Background Pattern */
+            background-image: 
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+                linear-gradient(rgba(128,179,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(128,179,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            border: 4px solid var(--ink);
+            padding: 10px 40px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--highlight);
+            text-shadow: 0 0 10px var(--ink);
+            margin-bottom: 5px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .doc-meta {
+            display: flex; gap: 20px; font-size: 0.8rem; margin-bottom: 30px; border-bottom: 1px solid var(--ink); padding-bottom: 10px; width: 100%; max-width: 1000px; justify-content: space-between;
+        }
+
+        .main-container {
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px;
+            width: 100%; max-width: 1200px;
+        }
+
+        /* CARD BOXES */
+        .blueprint-box {
+            border: 2px solid var(--ink);
+            background: rgba(0, 26, 51, 0.8);
+            padding: 20px;
+            position: relative;
+        }
+        .box-title {
+            position: absolute; top: -12px; left: 15px;
+            background: var(--paper); padding: 0 10px;
+            font-weight: bold; color: var(--highlight);
+            border: 1px solid var(--ink);
+        }
+
+        /* SCHEMATIC DRAWING AREA (CSS ART) */
+        .schematic-view {
+            height: 400px;
+            position: relative;
+            background: radial-gradient(circle, #002244 0%, #001a33 100%);
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: flex-end;
+            border: 1px dashed var(--ink);
+        }
+
+        /* --- CSS DRAWING: TESLA TRANSMITTER --- */
+        
+        /* 1. GROUNDING */
+        .earth-ground {
+            position: absolute; bottom: 0; width: 100%; height: 20px;
+            background: repeating-linear-gradient(45deg, #333, #333 5px, #444 5px, #444 10px);
+            border-top: 2px solid var(--ink);
+        }
+        .ground-rod {
+            width: 4px; height: 50px; background: var(--ink);
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+        }
+
+        /* 2. PRIMARY COIL (Lilitan Besar Bawah) */
+        .primary-coil {
+            width: 200px; height: 40px;
+            border: 4px solid var(--highlight);
+            border-radius: 50%;
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%) rotateX(60deg);
+            box-shadow: 0 0 15px var(--ink);
+            z-index: 2;
+        }
+        
+        /* 3. SECONDARY COIL (Tiang Lilitan) */
+        .secondary-coil {
+            width: 60px; height: 200px;
+            background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, var(--ink) 2px, var(--ink) 4px);
+            border-left: 2px solid var(--ink); border-right: 2px solid var(--ink);
+            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        /* 4. TOP LOAD (Toroid/Donat) */
+        .top-load {
+            width: 140px; height: 40px;
+            background: transparent;
+            border: 3px solid var(--highlight);
+            border-radius: 20px;
+            position: absolute; bottom: 280px; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 0 20px var(--highlight);
+            z-index: 3;
+        }
+        
+        /* 5. ANTENNA SPIKE */
+        .antenna {
+            width: 2px; height: 80px; background: var(--highlight);
+            position: absolute; bottom: 320px; left: 50%; transform: translateX(-50%);
+        }
+        .antenna-tip {
+            width: 10px; height: 10px; background: var(--highlight); border-radius: 50%;
+            position: absolute; top: -5px; left: -4px;
+            box-shadow: 0 0 15px var(--highlight);
+            animation: pulse 0.5s infinite alternate;
+        }
+
+        /* 6. SPARK GAP BOX */
+        .spark-box {
+            width: 40px; height: 30px; border: 1px solid var(--ink);
+            position: absolute; bottom: 40px; left: 20%;
+        }
+        .spark {
+            width: 20px; height: 2px; background: var(--highlight);
+            position: absolute; top: 14px; left: 10px;
+            animation: sparkFlash 0.1s infinite;
+        }
+
+        /* 7. CAPACITOR BANK */
+        .cap-bank {
+            width: 30px; height: 40px; border: 1px solid var(--ink);
+            position: absolute; bottom: 40px; right: 20%;
+            display: flex; justify-content: center; gap: 3px; align-items: center;
+        }
+        .cap-plate { width: 2px; height: 30px; background: var(--ink); }
+
+        /* WIRING LINES */
+        .wire { position: absolute; background: var(--ink); opacity: 0.6; }
+
+        /* LABELS */
+        .label {
+            position: absolute; color: var(--highlight); font-size: 0.7rem; 
+            background: rgba(0,0,0,0.5); padding: 2px 5px; border: 1px solid var(--ink);
+        }
+        .lbl-toroid { top: 60px; right: 100px; }
+        .lbl-sec { top: 200px; right: 110px; }
+        .lbl-pri { bottom: 90px; left: 80px; }
+        .lbl-spark { bottom: 20px; left: 20%; }
+        .lbl-gnd { bottom: 5px; left: 52%; }
+
+        /* LISTS */
+        ul { list-style: none; padding: 0; }
+        li { 
+            border-bottom: 1px dashed var(--grid); padding: 8px 0; 
+            display: flex; justify-content: space-between;
+        }
+        li strong { color: var(--highlight); }
+
+        @keyframes pulse { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 1; transform: scale(1.5); } }
+        @keyframes sparkFlash { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
+        @media (max-width: 800px) { .main-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>ETHER-SCALAR TRANSMITTER</h1>
+    
+    <div class="doc-meta">
+        <div>PROJECT: EST-MK1 (The "Sky-Pillar")</div>
+        <div>STATUS: CLASSIFIED // OPEN SOURCE</div>
+        <div>DATE: 2024 (Re-issue)</div>
+    </div>
+
+    <div class="main-container">
+
+        <div class="blueprint-box">
+            <div class="box-title">SCHEMATIC DIAGRAM A-1</div>
+            
+            <div class="schematic-view">
+                <div class="antenna"><div class="antenna-tip"></div></div>
+                <div class="top-load"></div>
+                <div class="secondary-coil"></div>
+                <div class="primary-coil"></div>
+                
+                <div class="spark-box"><div class="spark"></div></div>
+                <div class="cap-bank">
+                    <div class="cap-plate"></div><div class="cap-plate"></div><div class="cap-plate"></div>
+                </div>
+
+                <div class="earth-ground"></div>
+                <div class="ground-rod"></div>
+
+                <div class="label lbl-toroid">TOP LOAD (C1)<br>Aluminium Toroid</div>
+                <div class="label lbl-sec">SECONDARY (L2)<br>1000 Turns (0.2mm)</div>
+                <div class="label lbl-pri">PRIMARY (L1)<br>5 Turns (6mm)</div>
+                <div class="label lbl-spark">SPARK GAP<br>(Tungsten)</div>
+                <div class="label lbl-gnd">EARTH GND</div>
+
+                <div class="wire" style="width:100px; height:2px; bottom:55px; left:22%;"></div>
+                <div class="wire" style="width:2px; height:30px; bottom:55px; left:48%;"></div>
+                <div class="wire" style="width:100px; height:2px; bottom:55px; right:22%;"></div>
+            </div>
+
+            <div style="margin-top:20px; font-size:0.9rem; line-height:1.5;">
+                <strong>PRINSIP RESONANSI:</strong><br>
+                Rangkaian ini tidak memancarkan gelombang Hertzian (Transversal) yang boros daya.
+                Rangkaian ini menciptakan <u>Gelombang Longitudinal (Skalar)</u>. 
+                Saat L1 dan L2 beresonansi sempurna, energi dipompa ke Bumi dan Ionosfer, menjadikan seluruh planet sebagai "kabel" transmisi.
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:20px;">
+            
+            <div class="blueprint-box">
+                <div class="box-title">SPECIFICATIONS</div>
+                <ul>
+                    <li><span>Frequency</span> <strong>7.83 Hz - 50 kHz</strong></li>
+                    <li><span>Input Voltage</span> <strong>12V DC (Solar/Battery)</strong></li>
+                    <li><span>Output Voltage</span> <strong>250,000 - 500,000 Volts</strong></li>
+                    <li><span>Range</span> <strong>Global (via Earth Resonance)</strong></li>
+                    <li><span>Power Cons.</span> <strong>50 Watts (Idle)</strong></li>
+                </ul>
+            </div>
+
+            <div class="blueprint-box">
+                <div class="box-title">BILL OF MATERIALS (BOM)</div>
+                <ul>
+                    <li>
+                        <strong>1. PRIMARY COIL (L1)</strong>
+                        <span>Pipa Tembaga AC 1/4 inch. 5-7 Lilitan diameter 30cm. Bentuk kerucut terbalik (Pancake Coil).</span>
+                    </li>
+                    <li>
+                        <strong>2. SECONDARY COIL (L2)</strong>
+                        <span>Kawat Email 0.2mm - 0.5mm. 1000-1200 Lilitan pada pipa PVC 4 inch. Vernis tebal.</span>
+                    </li>
+                    <li>
+                        <strong>3. TOP LOAD (C1)</strong>
+                        <span>Aluminium Ducting (Selang Fleksibel) diameter 10cm. Bentuk Donat/Toroid. Haluskan permukaan.</span>
+                    </li>
+                    <li>
+                        <strong>4. SPARK GAP</strong>
+                        <span>2 Baut Tungsten/Baja. Jarak celah bisa diatur (1mm - 5mm). Wajib pakai kipas pendingin.</span>
+                    </li>
+                    <li>
+                        <strong>5. CAPACITOR BANK (MMC)</strong>
+                        <span>Seri-Paralel Kapasitor Keramik (High Voltage). Total 0.05uF / 20kV.</span>
+                    </li>
+                    <li>
+                        <strong>6. POWER SOURCE</strong>
+                        <span>Flyback Driver (ZVS) atau Neon Sign Transformer (NST) bekas.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="blueprint-box" style="border-color:var(--alert);">
+                <div class="box-title" style="color:var(--alert); border-color:var(--alert);">⚠️ SAFETY PROTOCOLS</div>
+                <div style="font-size:0.8rem; color:var(--alert);">
+                    1. RF BURN HAZARD: Jangan sentuh Output saat aktif. Luka bakar RF tidak terasa sakit tapi merusak jaringan dalam.<br>
+                    2. UV LIGHT: Spark Gap memancarkan UV kuat. Gunakan kacamata las.<br>
+                    3. GROUNDING: Wajib grounding terpisah dari instalasi rumah (listrik PLN) agar elektronik tetangga tidak jebol.
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SACRED GEOMETRY: ARCHITECT TOOL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --panel: #111;
+            --gold: #d4af37;
+            --blue-print: #0077be;
+            --text: #e0e0e0;
+            --grid-line: rgba(212, 175, 55, 0.1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            /* Latar Belakang Grid Blueprint */
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .container {
+            width: 100%; max-width: 800px;
+            border: 2px solid var(--gold);
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+            padding: 30px; position: relative;
+        }
+
+        /* HEADER */
+        .header { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { font-family: 'Cinzel', serif; color: var(--gold); margin: 0; letter-spacing: 3px; font-size: 2rem; }
+        .sub { color: #888; margin-top: 5px; font-size: 0.9rem; }
+
+        /* CALC SECTION */
+        .calc-box {
+            display: grid; grid-template-columns: 1fr; gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            background: #1a1a1a; padding: 20px; border: 1px solid #333;
+            border-left: 4px solid var(--gold);
+        }
+        
+        label { display: block; color: var(--gold); margin-bottom: 10px; font-weight: bold; }
+        
+        input[type="number"] {
+            width: 100%; padding: 10px; background: #000; border: 1px solid #555;
+            color: #fff; font-family: inherit; font-size: 1.2rem;
+        }
+
+        .result-display {
+            margin-top: 15px; padding: 15px; background: #000; border: 1px dashed var(--gold);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .res-label { font-size: 0.8rem; color: #888; }
+        .res-val { font-size: 1.5rem; color: var(--gold); font-weight: bold; }
+
+        /* VISUALISASI PERSEGI */
+        .visualizer {
+            width: 100%; height: 200px; border: 1px solid #333;
+            margin-top: 20px; position: relative; display: flex;
+            background: #000; overflow: hidden;
+        }
+        .box-a {
+            background: rgba(212, 175, 55, 0.2); border-right: 1px solid var(--gold);
+            display: flex; justify-content: center; align-items: center; color: var(--gold);
+            transition: width 0.5s;
+        }
+        .box-b {
+            background: rgba(0, 119, 190, 0.2);
+            display: flex; justify-content: center; align-items: center; color: var(--blue-print);
+            flex: 1;
+        }
+
+        /* FIBONACCI STAIRS */
+        .stairs-panel {
+            margin-top: 40px; border-top: 1px solid #333; padding-top: 20px;
+        }
+        .stairs-list {
+            display: flex; gap: 5px; overflow-x: auto; padding-bottom: 10px;
+        }
+        .stair-step {
+            min-width: 60px; background: #222; border: 1px solid #444; padding: 10px;
+            text-align: center; font-size: 0.9rem; color: #aaa;
+        }
+        .stair-step strong { display: block; color: #fff; font-size: 1.1rem; margin-bottom: 5px; }
+
+        /* SWITCHER */
+        .mode-switch {
+            display: flex; gap: 10px; margin-bottom: 20px;
+        }
+        button {
+            flex: 1; padding: 10px; cursor: pointer; background: #222; border: 1px solid #444; color: #888;
+            font-family: 'Share Tech Mono'; transition: 0.3s;
+        }
+        button.active { background: var(--gold); color: #000; font-weight: bold; border-color: var(--gold); }
+
+        /* FOOTER */
+        .note { margin-top: 20px; font-size: 0.8rem; color: #666; text-align: center; font-style: italic; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>THE DIVINE ARCHITECT</h1>
+            <div class="sub">GOLDEN RATIO (PHI 1.618) PRECISION CALCULATOR</div>
+        </div>
+
+        <div class="mode-switch">
+            <button class="active" onclick="setMode('total')">DARI TOTAL PANJANG</button>
+            <button onclick="setMode('major')">DARI SISI PANJANG (A)</button>
+            <button onclick="setMode('minor')">DARI SISI PENDEK (B)</button>
+        </div>
+
+        <div class="calc-box">
+            
+            <div class="input-group">
+                <label id="inputLabel">MASUKKAN TOTAL PANJANG (METER/HASTA):</label>
+                <input type="number" id="inputVal" placeholder="Contoh: 10" oninput="calculate()">
+            </div>
+
+            <div class="result-display">
+                <div>
+                    <div class="res-label">SISI PANJANG (A)</div>
+                    <div class="res-label" style="font-size:0.7rem">Dominant Energy (Yang)</div>
+                </div>
+                <div class="res-val" id="resA">0.000</div>
+            </div>
+
+            <div class="result-display" style="border-color: var(--blue-print);">
+                <div>
+                    <div class="res-label">SISI PENDEK (B)</div>
+                    <div class="res-label" style="font-size:0.7rem">Recessive Energy (Yin)</div>
+                </div>
+                <div class="res-val" id="resB" style="color:var(--blue-print)">0.000</div>
+            </div>
+
+            <div class="result-display" id="totalRow" style="display:none; border-color: #fff;">
+                <div>
+                    <div class="res-label">TOTAL (A + B)</div>
+                    <div class="res-label" style="font-size:0.7rem">Kesempurnaan</div>
+                </div>
+                <div class="res-val" id="resTotal" style="color:#fff">0.000</div>
+            </div>
+
+        </div>
+
+        <label>VISUALISASI PROPORSI:</label>
+        <div class="visualizer">
+            <div class="box-a" id="visA">A (61.8%)</div>
+            <div class="box-b">B (38.2%)</div>
+        </div>
+
+        <div class="stairs-panel">
+            <label>DERET HARMONIK (UNTUK ANAK TANGGA / TINGKATAN CANDI):</label>
+            <div class="sub" style="margin-bottom:10px;">Gunakan angka-angka ini untuk urutan tinggi atau jumlah pilar agar resonansi terjaga.</div>
+            <div class="stairs-list" id="fibList">
+                </div>
+        </div>
+
+        <div class="note">
+            "Bangunan yang mengikuti Rasio Emas tidak akan lekang oleh waktu, karena ia bergetar pada frekuensi yang sama dengan alam semesta."
+        </div>
+
+    </div>
+
+    <script>
+        const PHI = 1.61803398875;
+        let currentMode = 'total';
+
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // Update Buttons
+            document.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update UI
+            const label = document.getElementById('inputLabel');
+            const totalRow = document.getElementById('totalRow');
+            
+            if(mode === 'total') {
+                label.innerText = "MASUKKAN TOTAL PANJANG (A+B):";
+                totalRow.style.display = 'none';
+            } else if(mode === 'major') {
+                label.innerText = "MASUKKAN SISI PANJANG (A):";
+                totalRow.style.display = 'flex';
+            } else {
+                label.innerText = "MASUKKAN SISI PENDEK (B):";
+                totalRow.style.display = 'flex';
+            }
+            calculate();
+        }
+
+        function calculate() {
+            let val = parseFloat(document.getElementById('inputVal').value);
+            if(isNaN(val)) {
+                document.getElementById('resA').innerText = "0.000";
+                document.getElementById('resB').innerText = "0.000";
+                return;
+            }
+
+            let A, B, Total;
+
+            if(currentMode === 'total') {
+                // Input is Total -> Cari A & B
+                // A = Total / PHI
+                A = val / PHI;
+                B = val - A;
+                Total = val;
+            } else if(currentMode === 'major') {
+                // Input is A -> Cari B & Total
+                A = val;
+                B = A / PHI;
+                Total = A + B;
+            } else {
+                // Input is B -> Cari A & Total
+                B = val;
+                A = B * PHI;
+                Total = A + B;
+            }
+
+            // Render Result (3 decimal precision)
+            document.getElementById('resA').innerText = A.toFixed(3);
+            document.getElementById('resB').innerText = B.toFixed(3);
+            if(currentMode !== 'total') {
+                document.getElementById('resTotal').innerText = Total.toFixed(3);
+            }
+
+            // Update Visualizer Width
+            // Persentase A terhadap Total selalu ~61.8%
+            // Tapi kalau input berubah, kita tetep keep rasio visual static (Golden Rectangle)
+            // Biar user paham konsepnya.
+            // document.getElementById('visA').style.width = '61.8%'; 
+        }
+
+        // Generate Fibonacci Generator
+        function generateFib() {
+            let list = document.getElementById('fibList');
+            let a = 1, b = 1;
+            let html = `<div class="stair-step"><strong>1</strong>Base</div>`;
+            
+            for(let i=0; i<15; i++) {
+                let temp = a + b;
+                a = b;
+                b = temp;
+                html += `<div class="stair-step"><strong>${b}</strong>Step ${i+2}</div>`;
+            }
+            list.innerHTML = html;
+        }
+
+        // Init
+        generateFib();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ether-Web: Potato Mode (5 FPS)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --cyan: #00f3ff;
+            --gold: #ffd700;
+            --red: #ff3333;
+            --text: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden; overflow-y: auto;
+        }
+
+        /* HEADER */
+        .header {
+            width: 100%; padding: 10px 20px;
+            background: #080808; border-bottom: 2px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 10;
+        }
+        .title { font-family: 'Orbitron'; font-size: 1.1rem; color: #fff; }
+        .subtitle { font-size: 0.7rem; color: #666; }
+
+        /* MAIN LAYOUT */
+        .main-container {
+            display: grid; 
+            grid-template-columns: 1fr 300px; 
+            width: 100%; height: calc(100vh - 50px);
+            min-height: 600px;
+        }
+
+        /* CANVAS AREA */
+        .canvas-wrapper {
+            position: relative; background: #000; overflow: hidden;
+            border-right: 1px solid #333;
+        }
+        canvas { display: block; width: 100%; height: 100%; }
+        
+        .overlay-info {
+            position: absolute; top: 10px; left: 10px; pointer-events: none;
+        }
+        .mode-badge {
+            background: rgba(0,0,0,0.8); padding: 5px 10px; border: 1px solid #555;
+            font-family: 'Orbitron'; font-size: 0.8rem; color: #fff; border-radius: 4px;
+        }
+
+        /* SIDEBAR PANEL */
+        .sidebar {
+            background: var(--panel); padding: 15px;
+            display: flex; flex-direction: column; gap: 15px;
+            overflow-y: auto;
+        }
+
+        /* CARDS */
+        .card {
+            background: #151515; border: 1px solid #333; padding: 10px; border-radius: 5px;
+        }
+        .card-title {
+            color: var(--gold); font-family: 'Orbitron'; font-size: 0.8rem;
+            border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px;
+        }
+
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-size: 0.8rem; }
+        .stat-val { font-family: monospace; font-weight: bold; }
+
+        /* DEVICE VISUAL */
+        .device-box { text-align: center; padding: 5px; background: rgba(0,0,0,0.3); border-radius: 5px; }
+        .dev-icon { font-size: 2rem; margin-bottom: 5px; display: block; }
+        .dev-name { font-weight: bold; color: #fff; font-size: 0.9rem; }
+        .dev-desc { font-size: 0.7rem; color: #888; margin-top: 5px; line-height: 1.3; }
+
+        /* CONTROLS */
+        .btn-group { display: flex; gap: 5px; }
+        button {
+            flex: 1; padding: 10px; border: none; cursor: pointer;
+            font-family: 'Orbitron'; font-weight: bold; font-size: 0.8rem; color: #fff;
+            transition: 0.2s; 
+        }
+        .btn-isp { background: #333; border: 1px solid #555; }
+        .btn-isp.active { background: var(--red); color: #fff; }
+        
+        .btn-ether { background: #333; border: 1px solid #555; }
+        .btn-ether.active { background: var(--cyan); color: #000; }
+
+        /* LOG */
+        .log-box {
+            background: #000; border: 1px solid #333; padding: 5px;
+            font-family: monospace; font-size: 0.7rem; color: #0f0;
+            height: 100px; overflow-y: auto; margin-top: auto;
+        }
+        .log-entry { margin-bottom: 2px; border-bottom: 1px dashed #222; }
+
+        /* RESPONSIVE MOBILE */
+        @media (max-width: 850px) {
+            .main-container { grid-template-columns: 1fr; grid-template-rows: 300px auto; height: auto; }
+            .canvas-wrapper { border-right: none; border-bottom: 1px solid #333; }
+            .sidebar { height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <div class="title">ETHER-WEB</div>
+            <div class="subtitle">5 FPS Optimized Mode</div>
+        </div>
+        <div style="text-align:right; font-size:0.7rem; color:#555;">Super Lite</div>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="canvas-wrapper" id="canvasWrap">
+            <canvas id="simCanvas"></canvas>
+            <div class="overlay-info">
+                <div class="mode-badge" id="modeBadge" style="border-color:var(--red); color:var(--red)">MODE: ISP (CENTRAL)</div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            
+            <div class="card">
+                <div class="card-title">NETWORK PROTOCOL</div>
+                <div class="btn-group">
+                    <button class="btn-isp active" id="btnISP" onclick="setMode('isp')">ISP MODE</button>
+                    <button class="btn-ether" id="btnEther" onclick="setMode('ether')">ETHER MESH</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">HARDWARE SPEC</div>
+                <div class="device-box">
+                    <div class="dev-icon" id="devIcon">📡</div>
+                    <div class="dev-name" id="devName">ROUTER MODEM</div>
+                    <div class="dev-desc" id="devDesc">
+                        Alat standar ISP. Bergantung kabel FO & Server Pusat. Mudah disadap.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">LIVE METRICS</div>
+                <div class="stat-row"><span>Topology:</span> <span class="stat-val" id="valTopo" style="color:var(--red)">CENTRALIZED</span></div>
+                <div class="stat-row"><span>Latency:</span> <span class="stat-val" id="valPing">124 ms</span></div>
+                <div class="stat-row"><span>Bandwidth:</span> <span class="stat-val" id="valSpeed">20 Mbps</span></div>
+                <div class="stat-row"><span>Censorship:</span> <span class="stat-val" id="valCensor" style="color:var(--red)">ACTIVE</span></div>
+            </div>
+
+            <div class="log-box" id="sysLog">
+                <div class="log-entry">> System Initialized (Lite).</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('canvasWrap');
+
+        let width, height;
+        let mode = 'isp';
+        let nodes = [];
+        let packets = [];
+        let centerNode; // Server ISP
+
+        // CONFIG (SUPER LITE)
+        const NODE_COUNT = 15; // Dikit aja
+        const CONNECT_DIST = 150; 
+        const SPEED_MULT = 2; // Kecepatan paket
+
+        function resize() {
+            width = wrapper.clientWidth;
+            height = wrapper.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            initNodes();
+        }
+        window.addEventListener('resize', resize);
+
+        function initNodes() {
+            nodes = [];
+            packets = [];
+            centerNode = { x: width/2, y: height/2 };
+
+            for(let i=0; i<NODE_COUNT; i++) {
+                nodes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 2, // Gerak lebih kasar karena FPS rendah
+                    vy: (Math.random() - 0.5) * 2
+                });
+            }
+        }
+
+        function update() {
+            // Update Posisi Node
+            nodes.forEach(n => {
+                n.x += n.vx;
+                n.y += n.vy;
+                if(n.x < 0 || n.x > width) n.vx *= -1;
+                if(n.y < 0 || n.y > height) n.vy *= -1;
+            });
+
+            // Kirim Paket Data (Lebih sering dikit biar kelihatan di 5 fps)
+            if(Math.random() < 0.3) spawnPacket();
+
+            // Gerakkan Paket (Lompatan besar karena FPS rendah)
+            for(let i=packets.length-1; i>=0; i--) {
+                let p = packets[i];
+                let dx = p.tx - p.x;
+                let dy = p.ty - p.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+
+                let moveStep = p.speed * 3; // Kompensasi low FPS
+
+                if(dist < moveStep) {
+                    packets.splice(i, 1);
+                } else {
+                    p.x += (dx/dist) * moveStep;
+                    p.y += (dy/dist) * moveStep;
+                }
+            }
+            
+            if(Math.random() < 0.2) updateStatsVisual();
+        }
+
+        function draw() {
+            // HAPUS CANVAS (Tanpa efek trail, langsung bersih)
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, width, height);
+
+            if(mode === 'isp') {
+                // JALUR ISP (Solid Red Line)
+                ctx.strokeStyle = '#500';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                nodes.forEach(n => {
+                    ctx.moveTo(n.x, n.y); ctx.lineTo(centerNode.x, centerNode.y);
+                });
+                ctx.stroke();
+
+                // Server Pusat
+                ctx.fillStyle = '#f00';
+                ctx.beginPath(); ctx.arc(centerNode.x, centerNode.y, 10, 0, Math.PI*2); ctx.fill();
+
+            } else {
+                // JALUR ETHER (Solid Cyan Line)
+                ctx.strokeStyle = '#055';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                for(let i=0; i<nodes.length; i++) {
+                    for(let j=i+1; j<nodes.length; j++) {
+                        let dx = nodes[i].x - nodes[j].x;
+                        let dy = nodes[i].y - nodes[j].y;
+                        if((dx*dx + dy*dy) < (CONNECT_DIST * CONNECT_DIST)) {
+                            ctx.moveTo(nodes[i].x, nodes[i].y); 
+                            ctx.lineTo(nodes[j].x, nodes[j].y); 
+                        }
+                    }
+                }
+                ctx.stroke();
+            }
+
+            // GAMBAR NODES (Solid Color)
+            ctx.fillStyle = mode === 'isp' ? '#555' : '#0ff';
+            nodes.forEach(n => {
+                ctx.beginPath(); ctx.arc(n.x, n.y, 4, 0, Math.PI*2); ctx.fill();
+            });
+
+            // GAMBAR PAKET DATA (Kotak Putih - Render Paling Ringan)
+            ctx.fillStyle = '#fff';
+            packets.forEach(p => {
+                ctx.fillRect(p.x-2, p.y-2, 4, 4);
+            });
+        }
+
+        function spawnPacket() {
+            let start = nodes[Math.floor(Math.random() * nodes.length)];
+            let end;
+            
+            if(mode === 'isp') {
+                end = centerNode;
+            } else {
+                end = nodes[Math.floor(Math.random() * nodes.length)];
+            }
+
+            if(start !== end) {
+                packets.push({
+                    x: start.x, y: start.y,
+                    tx: end.x, ty: end.y,
+                    speed: mode === 'isp' ? 5 : 12
+                });
+            }
+        }
+
+        function setMode(m) {
+            mode = m;
+            packets = [];
+            
+            const btnISP = document.getElementById('btnISP');
+            const btnEther = document.getElementById('btnEther');
+            const badge = document.getElementById('modeBadge');
+
+            btnISP.className = 'btn-isp';
+            btnEther.className = 'btn-ether';
+
+            if(mode === 'isp') {
+                btnISP.classList.add('active');
+                badge.innerText = "MODE: ISP (CENTRAL)";
+                badge.style.color = "var(--red)";
+                badge.style.borderColor = "var(--red)";
+                
+                document.getElementById('devIcon').innerText = "📡";
+                document.getElementById('devName').innerText = "ROUTER MODEM";
+                document.getElementById('devDesc').innerText = "Alat standar ISP. Pusat data sentral. Mudah blokir.";
+                
+                document.getElementById('valTopo').innerText = "CENTRALIZED";
+                document.getElementById('valTopo').style.color = "var(--red)";
+                document.getElementById('valCensor').innerText = "ACTIVE";
+                document.getElementById('valCensor').style.color = "var(--red)";
+                
+                log("Mode switched to ISP.");
+
+            } else {
+                btnEther.classList.add('active');
+                badge.innerText = "MODE: ETHER (MESH)";
+                badge.style.color = "var(--cyan)";
+                badge.style.borderColor = "var(--cyan)";
+
+                document.getElementById('devIcon').innerText = "💠";
+                document.getElementById('devName').innerText = "FRACTAL RESONATOR";
+                document.getElementById('devDesc').innerText = "Antena fraktal. Jaringan mandiri antar warga.";
+
+                document.getElementById('valTopo').innerText = "MESH P2P";
+                document.getElementById('valTopo').style.color = "var(--cyan)";
+                document.getElementById('valCensor').innerText = "BYPASSED";
+                document.getElementById('valCensor').style.color = "var(--cyan)";
+
+                log("Mode switched to Ether Mesh.");
+            }
+            updateStatsVisual();
+        }
+
+        function updateStatsVisual() {
+            if(mode === 'isp') {
+                document.getElementById('valPing').innerText = (100 + Math.random()*50).toFixed(0) + " ms";
+                document.getElementById('valPing').style.color = "#888";
+                document.getElementById('valSpeed').innerText = (10 + Math.random()*10).toFixed(0) + " Mbps";
+                document.getElementById('valSpeed').style.color = "#888";
+            } else {
+                document.getElementById('valPing').innerText = "1 ms";
+                document.getElementById('valPing').style.color = "var(--cyan)";
+                document.getElementById('valSpeed').innerText = (5 + Math.random()*2).toFixed(1) + " Gbps";
+                document.getElementById('valSpeed').style.color = "var(--cyan)";
+            }
+        }
+
+        function log(msg) {
+            const term = document.getElementById('sysLog');
+            const d = document.createElement('div');
+            d.className = 'log-entry'; d.innerText = `> ${msg}`;
+            term.appendChild(d);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        // === ENGINE INTI: 5 FPS ===
+        // Menggunakan setInterval 200ms = 5 Frame Per Detik
+        setTimeout(() => {
+            resize();
+            setMode('isp');
+            
+            setInterval(() => {
+                update();
+                draw();
+            }, 200); // 200ms delay = 5 FPS (Sangat Ringan)
+            
+        }, 100);
+
+    </script>
+</body>
+</html>

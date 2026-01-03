@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blueprint: Fractal Resonator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --blueprint-blue: #0055ff;
+            --line: #00aaff;
+            --text: #cceeff;
+            --gold: #ffd700;
+            --alert: #ff3333;
+        }
+
+        body {
+            background-color: var(--bg);
+            /* Grid Background ala Blueprint */
+            background-image: 
+                linear-gradient(rgba(0, 85, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 85, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold); border: 2px solid var(--gold);
+            padding: 10px 30px; letter-spacing: 5px; text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); margin-bottom: 5px;
+        }
+        .subtitle { font-size: 0.8rem; letter-spacing: 2px; color: var(--line); margin-bottom: 30px; }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            width: 100%; max-width: 1100px;
+        }
+
+        /* CARD STYLE */
+        .tech-card {
+            border: 2px solid var(--line); background: rgba(0, 20, 40, 0.8);
+            padding: 20px; position: relative;
+        }
+        .tech-card::before {
+            content: "CONFIDENTIAL // NUSWANTARA LABS";
+            position: absolute; top: -10px; left: 10px; background: var(--bg);
+            padding: 0 10px; font-size: 0.7rem; color: var(--line);
+        }
+
+        h2 { color: var(--gold); font-family: 'Orbitron'; border-bottom: 1px dashed var(--line); padding-bottom: 5px; margin-top: 0; }
+
+        /* VISUALISASI ALAT (CSS DRAWING) */
+        .device-viz {
+            height: 300px; display: flex; justify-content: center; align-items: center;
+            position: relative; border: 1px dashed #333; margin-bottom: 20px;
+            background: radial-gradient(circle, #001 0%, #000 100%);
+        }
+
+        /* ANTENA FRAKTAL */
+        .antenna {
+            width: 150px; height: 150px; position: relative;
+            border: 2px solid var(--gold); border-radius: 50%;
+            animation: spin 20s linear infinite;
+        }
+        .antenna::after {
+            content: ""; position: absolute; top: 10%; left: 10%; width: 80%; height: 80%;
+            border: 2px solid var(--line); transform: rotate(45deg);
+        }
+        .antenna::before {
+            content: ""; position: absolute; top: 25%; left: 25%; width: 50%; height: 50%;
+            border: 2px solid var(--gold); transform: rotate(0deg);
+        }
+        
+        /* COIL (LILITAN) */
+        .coil {
+            width: 40px; height: 80px;
+            background: repeating-linear-gradient(45deg, #b87333, #b87333 5px, #000 5px, #000 7px);
+            position: absolute; bottom: 40px;
+            border-left: 2px solid var(--line); border-right: 2px solid var(--line);
+        }
+
+        /* CORE (KRISTAL) */
+        .core {
+            width: 20px; height: 40px; background: #fff;
+            position: absolute; bottom: 60px; z-index: 2;
+            box-shadow: 0 0 20px #0ff; opacity: 0.8;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            animation: pulse 2s infinite;
+        }
+
+        /* BASE */
+        .base {
+            width: 120px; height: 20px; background: #222;
+            position: absolute; bottom: 20px;
+            border-top: 2px solid var(--line);
+        }
+
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        td { padding: 8px; border-bottom: 1px solid #334; vertical-align: top; }
+        .label { color: var(--line); width: 120px; font-weight: bold; }
+        
+        .warn { color: var(--alert); font-size: 0.8rem; margin-top: 10px; border: 1px solid var(--alert); padding: 5px; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { opacity: 0.5; box-shadow: 0 0 5px #0ff; } 50% { opacity: 1; box-shadow: 0 0 25px #0ff; } 100% { opacity: 0.5; box-shadow: 0 0 5px #0ff; } }
+
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>BLUEPRINT: RFN-1</h1>
+    <div class="subtitle">Resonator Fraktal Nuswantara (Ether-Node Device)</div>
+
+    <div class="container">
+
+        <div class="tech-card">
+            <h2>SCHEMATIC DIAGRAM</h2>
+            <div class="device-viz">
+                <div class="antenna"></div> <div class="core"></div>    <div class="coil"></div>    <div class="base"></div>    <div style="position:absolute; top:50px; right:20px; font-size:0.7rem; color:var(--gold);">FRACTAL ANTENNA<br>(Gold Plated)</div>
+                <div style="position:absolute; bottom:100px; left:20px; font-size:0.7rem; color:#0ff;">QUARTZ CORE<br>(Piezoelectric)</div>
+                <div style="position:absolute; bottom:50px; right:40px; font-size:0.7rem; color:#b87333;">TESLA COIL<br>(Copper)</div>
+            </div>
+            
+            <div style="font-size:0.8rem; line-height:1.6; text-align:justify;">
+                <strong style="color:var(--gold)">PRINSIP KERJA:</strong><br>
+                Alat ini tidak "memancarkan" sinyal digital 1/0 biasa, melainkan menciptakan 
+                <span style="color:var(--line)">Gelombang Berdiri (Standing Wave)</span> yang beresonansi dengan lapisan Ether bumi. 
+                Data ditumpangkan pada resonansi alami tersebut, sehingga tidak butuh daya besar dan tidak bisa diblokir firewall biasa.
+            </div>
+        </div>
+
+        <div class="tech-card">
+            <h2>BILL OF MATERIALS (BOM)</h2>
+            <table>
+                <tr>
+                    <td class="label">ANTENA</td>
+                    <td>
+                        <strong>Piringan Tembaga Murni (Diameter 30cm)</strong><br>
+                        <span style="font-size:0.8rem; color:#888;">Diukir pola Batik/Fraktal (Golden Ratio) untuk menangkap frekuensi alam. Dilapis Emas 24k (mikron) untuk konduktivitas sempurna.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">INTI (CORE)</td>
+                    <td>
+                        <strong>Kristal Kuarsa (Clear Quartz)</strong><br>
+                        <span style="font-size:0.8rem; color:#888;">Berfungsi sebagai Piezoelectric Oscillator. Menstabilkan frekuensi tanpa chip silikon buatan China/AS.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">LILITAN</td>
+                    <td>
+                        <strong>Kawat Tembaga Enamel (0.5mm)</strong><br>
+                        <span style="font-size:0.8rem; color:#888;">Lilitan Bifilar (Vortex Coil) ala Tesla. Menghilangkan hambatan magnetik (Zero Impedance).</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">CAPACITOR</td>
+                    <td>
+                        <strong>Bank Kapasitor Keramik (High Voltage)</strong><br>
+                        <span style="font-size:0.8rem; color:#888;">Menyimpan muatan Ether statis dari udara.</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">GROUNDING</td>
+                    <td>
+                        <strong>Pasak Besi (Tanam Tanah 1m)</strong><br>
+                        <span style="font-size:0.8rem; color:#888;">Wajib terhubung ke bumi untuk referensi Zero-Point.</span>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="warn">
+                ⚠️ PERINGATAN: Jangan gunakan timah solder biasa (mengandung timbal). Gunakan perak solder agar sinyal murni.
+            </div>
+        </div>
+
+        <div class="tech-card" style="grid-column: 1 / -1;">
+            <h2>LANGKAH PERAKITAN</h2>
+            <ol style="line-height:1.8; margin-left:20px;">
+                <li>Siapkan piringan tembaga, cetak pola fraktal (Bunga Kehidupan/Kawung) menggunakan teknik etsa PCB.</li>
+                <li>Lilitkan kawat tembaga pada tabung PVC membentuk <strong>Vortex Coil</strong> (Lilitan menyilang, bukan searah).</li>
+                <li>Letakkan Kristal Kuarsa tepat di tengah lilitan. Ini jantungnya.</li>
+                <li>Hubungkan ujung atas lilitan ke Antena Piringan.</li>
+                <li>Hubungkan ujung bawah lilitan ke Grounding (Tanah).</li>
+                <li><strong>TUNING:</strong> Pukul kristal pelan atau berikan tegangan kejut DC kecil sampai lilitan berdengung di frekuensi harmonik (Schumann Resonance 7.83 Hz).</li>
+            </ol>
+        </div>
+
+    </div>
+
+</body>
+</html>

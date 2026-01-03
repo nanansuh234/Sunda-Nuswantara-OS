@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETHER-NET: Skywave Mapping</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --ether-cyan: #00f3ff;
+            --ether-glow: rgba(0, 243, 255, 0.5);
+            --gold: #ffd700;
+            --text: #e0e0e0;
+            --grid: #1a1a1a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+            /* FIX 1: Allow Scroll - Biar gak kepotong di HP */
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            min-height: 100vh;
+        }
+
+        /* UI LAYOUT (GRID SYSTEM) */
+        .main-interface {
+            display: grid; 
+            grid-template-columns: 300px 1fr 300px; /* Desktop: Kiri-Tengah-Kanan */
+            width: 100%; 
+            /* FIX 2: Height Auto - Biar tinggi menyesuaikan isi */
+            height: auto; 
+            min-height: 600px;
+            border-bottom: 2px solid var(--ether-cyan);
+            position: relative; 
+            z-index: 10;
+        }
+
+        /* SIDE PANELS */
+        .panel {
+            background: var(--panel);
+            border-right: 1px solid #333;
+            padding: 20px;
+            display: flex; flex-direction: column; gap: 20px;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+            z-index: 2;
+            height: auto; /* Flexible height */
+        }
+        .panel-right { border-left: 1px solid #333; border-right: none; }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif; color: var(--ether-cyan);
+            margin: 0; font-size: 1.2rem; letter-spacing: 2px;
+            border-bottom: 2px solid var(--ether-cyan); padding-bottom: 10px;
+            text-shadow: 0 0 10px var(--ether-glow);
+        }
+
+        /* STATUS DISPLAYS */
+        .status-box {
+            background: #000; border: 1px solid #333;
+            padding: 10px; border-radius: 5px;
+        }
+        .label { font-size: 0.8rem; color: #888; text-transform: uppercase; }
+        .value { font-size: 1.2rem; font-weight: bold; color: var(--gold); }
+        .value.cyan { color: var(--ether-cyan); }
+
+        /* VISUALIZATION AREA (CANVAS) */
+        .viz-container {
+            position: relative;
+            background: radial-gradient(circle at bottom, #0f1820 0%, #000 100%);
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            /* FIX 3: Min Height Canvas - Biar peta gak gepeng */
+            min-height: 500px; 
+        }
+        
+        canvas { display: block; width: 100%; height: 100%; }
+
+        /* GRID OVERLAY */
+        .grid-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3; pointer-events: none;
+        }
+
+        /* LOGS */
+        .log-terminal {
+            background: #000; border: 1px solid #333;
+            padding: 10px; font-family: monospace; font-size: 0.8rem;
+            color: #0f0; overflow-y: auto; opacity: 0.8;
+            height: 150px; /* Fixed height for log area */
+            margin-top: auto;
+        }
+        .log-entry { margin-bottom: 5px; border-bottom: 1px solid #222; padding-bottom: 2px; }
+
+        /* BUTTONS */
+        .btn-action {
+            background: transparent; border: 1px solid var(--ether-cyan);
+            color: var(--ether-cyan); padding: 10px; font-family: 'Orbitron', sans-serif;
+            cursor: pointer; transition: 0.3s; text-transform: uppercase;
+            width: 100%; margin-bottom: 10px;
+        }
+        .btn-action:hover { background: var(--ether-cyan); color: #000; box-shadow: 0 0 20px var(--ether-glow); }
+
+        /* INFO PANEL STYLE (BAGIAN BAWAH) */
+        .info-panel {
+            width: 100%; background: #080808; border-top: 1px solid #333;
+            padding: 50px 20px; color: #ccc; font-family: 'Rajdhani', sans-serif;
+            display: flex; justify-content: center; position: relative; z-index: 5;
+        }
+
+        .info-content {
+            max-width: 1200px; width: 100%;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+        }
+
+        .tech-card {
+            background: #111; border: 1px solid #333; padding: 30px;
+            border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h3 {
+            color: var(--gold); font-family: 'Orbitron', sans-serif;
+            border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; letter-spacing: 1px;
+        }
+
+        .spec-grid {
+            display: grid; grid-template-columns: auto 1fr; gap: 15px 30px; font-size: 0.95rem;
+        }
+        .spec-label { color: #888; font-weight: bold; }
+        .spec-val { color: var(--ether-cyan); font-family: monospace; font-size: 1rem;}
+
+        .compare-table {
+            width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 10px;
+        }
+        .compare-table th { text-align: left; color: #fff; border-bottom: 1px solid #444; padding: 10px 5px; }
+        .compare-table td { padding: 10px 5px; border-bottom: 1px solid #222; }
+        .plus { color: #0f0; font-weight: bold; }
+        .minus { color: #f00; font-weight: bold; }
+
+        .diagram-box {
+            margin-top: 20px; padding: 15px; background: rgba(0, 243, 255, 0.05);
+            border-left: 3px solid var(--ether-cyan); font-size: 0.9rem; line-height: 1.6;
+        }
+
+        .scroll-hint {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            color: var(--ether-cyan); font-size: 0.8rem; animation: bounce 2s infinite;
+            pointer-events: none; z-index: 20;
+        }
+        @keyframes bounce { 0%, 100% {transform: translate(-50%, 0);} 50% {transform: translate(-50%, 10px);} }
+
+        /* FIX MOBILE RESPONSIVE (STACKING) */
+        @media (max-width: 900px) {
+            .main-interface { 
+                grid-template-columns: 1fr; /* 1 Kolom */
+                grid-template-rows: auto 500px auto; /* Panel Atas, Peta (Fixed), Panel Bawah */
+            }
+            .panel { 
+                border-right: none; border-bottom: 1px solid #333; 
+                height: auto; 
+            }
+            /* Reorder: Kontrol di atas, Peta tengah, Data bawah */
+            .panel:nth-child(1) { order: 1; }
+            .viz-container { order: 2; }
+            .panel-right { order: 3; border-left: none; }
+            
+            .info-content { grid-template-columns: 1fr; }
+            .scroll-hint { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-interface">
+        
+        <div class="panel">
+            <h2>ETHER TOWER CONTROL</h2>
+            
+            <div class="status-box">
+                <div class="label">System Status</div>
+                <div class="value cyan">ONLINE</div>
+            </div>
+            
+            <div class="status-box">
+                <div class="label">Ionosphere Height</div>
+                <div class="value">85.4 KM</div>
+            </div>
+
+            <div class="status-box">
+                <div class="label">Reflection Efficiency</div>
+                <div class="value" id="effVal">98.2%</div>
+            </div>
+
+            <button class="btn-action" onclick="addTower()">+ Deploy Tower</button>
+            <button class="btn-action" onclick="clearMap()">Reset Mapping</button>
+            
+            <div style="font-size:0.7rem; color:#666; margin-top:auto;">
+                Technology by Nuswantara Research.<br>
+                No Satellites Required.
+            </div>
+        </div>
+
+        <div class="viz-container" id="vizContainer">
+            <div class="grid-overlay"></div>
+            <canvas id="skyCanvas"></canvas>
+            
+            <div style="position:absolute; top:20px; text-align:center; pointer-events:none;">
+                <div style="font-family:'Orbitron'; color:var(--ether-cyan); font-size:1.5rem; letter-spacing:5px;">CAKRAWALA DOME</div>
+                <div style="font-size:0.8rem; color:#888;">ETHER REFLECTION MAPPING SYSTEM</div>
+            </div>
+
+            <div class="scroll-hint">▼ SCROLL UNTUK DETAIL TEKNIS ▼</div>
+        </div>
+
+        <div class="panel panel-right">
+            <h2>MAPPING DATA</h2>
+            
+            <div class="status-box">
+                <div class="label">Mapped Area</div>
+                <div class="value" id="mappedArea">0 Km²</div>
+            </div>
+
+            <div class="status-box">
+                <div class="label">Active Nodes</div>
+                <div class="value cyan" id="nodeCount">0</div>
+            </div>
+
+            <div class="log-terminal" id="sysLog">
+                <div class="log-entry">> System Boot...</div>
+                <div class="log-entry">> Ionosphere detected.</div>
+                <div class="log-entry">> Ready to transmit.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="info-panel">
+        <div class="info-content">
+            
+            <div class="tech-card">
+                <h3>SPESIFIKASI OPERASIONAL ETHER-NET</h3>
+                <div class="spec-grid">
+                    <div class="spec-label">TINGGI MENARA (TX/RX):</div>
+                    <div class="spec-val">80 - 120 Meter (Ground Based)</div>
+
+                    <div class="spec-label">TARGET PANTULAN (ETHER):</div>
+                    <div class="spec-val">Lapisan E-Layer (90km - 110km)</div>
+
+                    <div class="spec-label">FREKUENSI GELOMBANG:</div>
+                    <div class="spec-val">HF (High Freq) 3-30 MHz (Skywave)</div>
+
+                    <div class="spec-label">KECEPATAN MAPPING:</div>
+                    <div class="spec-val">Real-time (Delay &lt; 50ms)</div>
+
+                    <div class="spec-label">AKURASI PEMETAAN:</div>
+                    <div class="spec-val">Resolusi 50cm (Triangulasi 3 Menara)</div>
+
+                    <div class="spec-label">JANGKAUAN PER MENARA:</div>
+                    <div class="spec-val">Radius 3.000 - 4.000 KM (1 Hop)</div>
+                </div>
+
+                <div class="diagram-box">
+                    <strong>MEKANISME KERJA (TEKNIS):</strong><br>
+                    Sinyal ditembakkan dari menara dengan sudut elevasi tertentu menuju Kubah Langit (Ionosfer). Lapisan plasma di Ionosfer bertindak sebagai "Cermin Alam", memantulkan sinyal kembali ke bumi. Saat sinyal menyentuh kontur tanah, ia memantul balik ke menara penerima (Receiver) membawa data topografi.
+                </div>
+            </div>
+
+            <div class="tech-card">
+                <h3>ETHER-NET VS SATELIT (GLOBALIS)</h3>
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>PARAMETER</th>
+                            <th>ETHER-NET (KITA)</th>
+                            <th>SATELIT GPS/LEO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Biaya & Maintenance</td>
+                            <td class="plus">MURAH (Perbaikan di Darat)</td>
+                            <td class="minus">MAHAL (Sekali Rusak = Sampah)</td>
+                        </tr>
+                        <tr>
+                            <td>Kedaulatan Data</td>
+                            <td class="plus">MANDIRI (Server Lokal)</td>
+                            <td class="minus">DIKONTROL ASING/ELIT</td>
+                        </tr>
+                        <tr>
+                            <td>Umur Pakai</td>
+                            <td class="plus">ABADI (Selama Menara Berdiri)</td>
+                            <td class="minus">TERBATAS (5-10 Tahun Jatuh)</td>
+                        </tr>
+                        <tr>
+                            <td>Resiko Sampah</td>
+                            <td class="plus">NOL (Zero Space Debris)</td>
+                            <td class="minus">TINGGI (Kessler Syndrome)</td>
+                        </tr>
+                        <tr>
+                            <td>Kelemahan Utama</td>
+                            <td class="minus">Badai Matahari / Gangguan Ionosfer</td>
+                            <td class="minus">Mudah di-Jamming / Ditembak Jatuh</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="diagram-box" style="border-left-color: var(--gold); background: rgba(255, 215, 0, 0.05);">
+                    <strong>SOLUSI TEKNIS KENDALA IONOSFER:</strong><br>
+                    Untuk mengatasi Fading (sinyal hilang) saat malam hari atau badai matahari, sistem menggunakan <em>"Frequency Hopping Spread Spectrum"</em>. Transmitter otomatis mencari frekuensi resonansi terbaik secara real-time.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('skyCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('vizContainer');
+        
+        let width, height;
+        let towers = [];
+        let pulses = [];
+        let ripples = []; // Buat efek ledakan/pantulan
+        let terrain = [];
+        let mappedSegments = [];
+
+        function resize() {
+            width = container.clientWidth;
+            height = container.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            generateTerrain();
+        }
+        window.addEventListener('resize', resize);
+
+        function generateTerrain() {
+            terrain = [];
+            mappedSegments = new Array(width).fill(0);
+            let y = height - 50;
+            for(let x = 0; x <= width; x++) {
+                y += (Math.random() - 0.5) * 5; 
+                if(y > height - 10) y = height - 10;
+                if(y < height - 100) y = height - 100;
+                terrain.push(y);
+            }
+        }
+
+        class Tower {
+            constructor(x) {
+                this.x = x;
+                this.y = terrain[Math.floor(x)];
+                this.color = '#ffd700';
+                this.timer = 0;
+            }
+            draw() {
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x, this.y - 20);
+                ctx.stroke();
+                ctx.fillStyle = '#111';
+                ctx.fillRect(this.x - 5, this.y - 5, 10, 5);
+                ctx.fillStyle = (Math.floor(Date.now() / 500) % 2 === 0) ? '#0f0' : '#050';
+                ctx.fillRect(this.x - 2, this.y - 22, 4, 4);
+            }
+            emit() {
+                if(this.timer++ % 60 === 0) {
+                    let angle = -Math.PI / 2 + (Math.random() - 0.5);
+                    pulses.push(new Pulse(this.x, this.y - 20, angle));
+                    log(`Tower @${Math.floor(this.x)} emitting pulse...`);
+                }
+            }
+        }
+
+        class Pulse {
+            constructor(x, y, angle) {
+                this.x = x;
+                this.y = y;
+                this.vx = Math.cos(angle) * 3;
+                this.vy = Math.sin(angle) * 3;
+                this.life = 200;
+                this.history = [];
+                this.bounced = false;
+            }
+            update() {
+                this.history.push({x: this.x, y: this.y});
+                if(this.history.length > 20) this.history.shift();
+
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life--;
+
+                // PANTULAN LANGIT (ETHER)
+                if (this.y < 50 && !this.bounced) {
+                    this.vy = -this.vy;
+                    this.bounced = true;
+                    createRipple(this.x, 50);
+                }
+
+                // PANTULAN TANAH (MAPPING)
+                if (this.bounced && this.y >= terrain[Math.floor(this.x)]) {
+                    mapArea(Math.floor(this.x));
+                    this.life = 0;
+                }
+            }
+            draw() {
+                ctx.strokeStyle = this.bounced ? '#00f3ff' : '#ff0055';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                if(this.history.length > 0) {
+                    ctx.moveTo(this.history[0].x, this.history[0].y);
+                    for(let i=1; i<this.history.length; i++) {
+                        ctx.lineTo(this.history[i].x, this.history[i].y);
+                    }
+                }
+                ctx.stroke();
+            }
+        }
+
+        function createRipple(x, y) {
+            ripples.push({x:x, y:y, r:0, alpha:1});
+        }
+
+        function mapArea(centerIndex) {
+            let range = 20;
+            for(let i = centerIndex - range; i < centerIndex + range; i++) {
+                if(i >= 0 && i < width) mappedSegments[i] = 1;
+            }
+            updateStats();
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Ionosphere
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([10, 10]);
+            ctx.beginPath();
+            ctx.moveTo(0, 50);
+            ctx.quadraticCurveTo(width/2, 20, width, 50);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.5)';
+            ctx.font = '10px monospace';
+            ctx.fillText("IONOSPHERE / ETHER LAYER", 20, 40);
+
+            // Terrain
+            ctx.fillStyle = '#111';
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            for(let i=0; i<width; i++) ctx.lineTo(i, terrain[i]);
+            ctx.lineTo(width, height);
+            ctx.fill();
+
+            ctx.strokeStyle = '#0f0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            let drawing = false;
+            for(let i=0; i<width; i++) {
+                if(mappedSegments[i] === 1) {
+                    if(!drawing) { ctx.moveTo(i, terrain[i]); drawing = true; }
+                    else { ctx.lineTo(i, terrain[i]); }
+                } else {
+                    drawing = false;
+                }
+            }
+            ctx.stroke();
+
+            // Update & Draw Objects
+            towers.forEach(t => { t.draw(); t.emit(); });
+            
+            for(let i=pulses.length-1; i>=0; i--) {
+                pulses[i].update();
+                pulses[i].draw();
+                if(pulses[i].life <= 0) pulses.splice(i, 1);
+            }
+
+            for(let i=ripples.length-1; i>=0; i--) {
+                let r = ripples[i];
+                ctx.strokeStyle = `rgba(0, 243, 255, ${r.alpha})`;
+                ctx.beginPath();
+                ctx.arc(r.x, r.y, r.r, 0, Math.PI*2);
+                ctx.stroke();
+                r.r += 2;
+                r.alpha -= 0.05;
+                if(r.alpha <= 0) ripples.splice(i, 1);
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        function addTower() {
+            let randomX = Math.random() * (width - 100) + 50;
+            towers.push(new Tower(randomX));
+            document.getElementById('nodeCount').innerText = towers.length;
+            log(`New Ether Node deployed at X:${Math.floor(randomX)}`);
+        }
+
+        // === FIXED RESET FUNCTION (CLEAR EVERYTHING) ===
+        function clearMap() {
+            mappedSegments.fill(0);
+            towers = []; 
+            pulses = []; // Matikan sinyal di udara
+            ripples = []; // Matikan efek ledakan/pantulan
+            document.getElementById('nodeCount').innerText = "0";
+            document.getElementById('mappedArea').innerText = "0%"; // Reset persen
+            log("System Reset. Mapping & Signals cleared.");
+        }
+
+        function log(msg) {
+            const term = document.getElementById('sysLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerText = `> ${msg}`;
+            term.appendChild(entry);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function updateStats() {
+            let count = mappedSegments.filter(x => x === 1).length;
+            let percent = ((count / width) * 100).toFixed(1);
+            document.getElementById('mappedArea').innerText = `${percent}%`;
+        }
+
+        setTimeout(() => {
+            resize();
+            draw();
+            log("Ether-Net Link Established.");
+            log("Waiting for nodes...");
+        }, 100);
+
+    </script>
+</body>
+</html>

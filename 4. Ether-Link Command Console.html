@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Ether-Link Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #02050a;
+            --panel-bg: rgba(10, 20, 30, 0.8);
+            --cyan: #00f3ff;
+            --gold: #ffd700;
+            --red: #ff3333;
+            --text: #aaccff;
+        }
+
+        * { box-sizing: border-box; scrollbar-width: none; }
+        body {
+            margin: 0; padding: 0; background: var(--bg); color: var(--text);
+            font-family: 'Share Tech Mono', monospace; height: 100vh; overflow: hidden;
+            background-image: radial-gradient(circle at center, #051020 0%, #000 100%);
+        }
+
+        /* SCANLINE EFFECT OVERLAY */
+        body::after {
+            content: ""; position: pointer-events: none; absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px);
+            z-index: 100; opacity: 0.5;
+        }
+
+        /* LAYOUT GRID */
+        .console-grid {
+            display: grid; grid-template-columns: 250px 1fr 300px; grid-template-rows: 60px 1fr 40px;
+            height: 100vh; gap: 10px; padding: 10px;
+        }
+
+        /* PANELS */
+        .panel {
+            background: var(--panel-bg); border: 1px solid rgba(0, 243, 255, 0.2);
+            padding: 15px; position: relative; backdrop-filter: blur(5px);
+            box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.05);
+        }
+        .panel::before { /* Corner accents */
+            content: ""; position: absolute; top: -1px; left: -1px; width: 10px; height: 10px;
+            border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan);
+        }
+        .panel::after {
+            content: ""; position: absolute; bottom: -1px; right: -1px; width: 10px; height: 10px;
+            border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan);
+        }
+
+        h2, h3 { font-family: 'Orbitron'; margin: 0 0 15px 0; color: var(--cyan); letter-spacing: 2px; text-transform: uppercase; }
+        h3 { font-size: 0.9rem; color: var(--gold); border-bottom: 1px dashed rgba(255, 215, 0, 0.3); padding-bottom: 5px; }
+
+        /* HEADER */
+        .header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--cyan); }
+        .main-title { font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .status-indicator { display: flex; gap: 20px; font-family: 'Orbitron'; font-size: 0.9rem; }
+        .blink { animation: blinker 1s linear infinite; color: var(--red); }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* LEFT CONTROL PANEL */
+        .controls-panel { display: flex; flex-direction: column; gap: 20px; }
+        .control-group { display: flex; flex-direction: column; gap: 10px; }
+        
+        button.cyber-btn {
+            background: rgba(0, 243, 255, 0.1); border: 1px solid var(--cyan); color: var(--cyan);
+            padding: 12px; font-family: 'Orbitron'; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase; position: relative; overflow: hidden;
+        }
+        button.cyber-btn:hover { background: var(--cyan); color: #000; box-shadow: 0 0 25px var(--cyan); }
+        button.cyber-btn.active { background: var(--gold); color: #000; border-color: var(--gold); box-shadow: 0 0 25px var(--gold); }
+        button.cyber-btn::before { content: ""; position: absolute; top:0; left:-100%; width:100%; height:100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transition:0.5s; }
+        button.cyber-btn:hover::before { left:100%; }
+
+        input[type=range] { width: 100%; accent-color: var(--cyan); }
+
+        /* CENTER VISUALIZER (THE VEO CANDY) */
+        .main-display {
+            display: flex; justify-content: center; align-items: center;
+            position: relative; overflow: hidden; border: 2px solid var(--cyan);
+            background: radial-gradient(circle, #0a1a2a 0%, #000 80%);
+        }
+        
+        .scalar-core {
+            position: relative; width: 300px; height: 300px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .ring {
+            position: absolute; border-radius: 50%; border: 2px solid var(--cyan);
+            box-shadow: 0 0 20px var(--cyan), inset 0 0 20px var(--cyan);
+            animation: spin var(--speed, 10s) linear infinite;
+            opacity: 0.7;
+        }
+        .ring-1 { width: 100%; height: 100%; border-width: 5px; border-style: dashed; border-color: var(--gold); animation-direction: reverse; }
+        .ring-2 { width: 70%; height: 70%; border-width: 2px; }
+        .ring-3 { width: 40%; height: 40%; border-width: 8px; border-color: var(--cyan); border-style: dotted; }
+        .core-crystal {
+            width: 20%; height: 40%; background: #fff;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            box-shadow: 0 0 50px #fff, 0 0 100px var(--cyan);
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        .wave-emitter {
+            position: absolute; top:50%; left:50%; width: 10px; height: 10px; background: transparent;
+            border: 2px solid var(--cyan); border-radius: 50%; transform: translate(-50%, -50%);
+            animation: wavePing 3s infinite;
+        }
+        .wave-emitter:nth-child(2) { animation-delay: 1s; }
+        .wave-emitter:nth-child(3) { animation-delay: 2s; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.2); opacity: 1; filter: brightness(1.5); } }
+        @keyframes wavePing { 0% { width: 10px; height: 10px; opacity: 1; } 100% { width: 500px; height: 500px; opacity: 0; } }
+
+        /* RIGHT DATA PANEL */
+        .data-panel { display: flex; flex-direction: column; gap: 10px; }
+        .terminal-log {
+            flex: 1; background: #000; border: 1px solid #333; padding: 10px;
+            font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; color: var(--cyan);
+            overflow-y: hidden; /* Hidden scrollbar for aesthetics */
+            display: flex; flex-direction: column; justify-content: flex-end;
+        }
+        .log-entry { margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .log-entry span { color: #555; margin-right: 5px; }
+        .metric-row { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 5px 0; font-size: 0.9rem; }
+        .metric-val { font-weight: bold; color: var(--gold); }
+
+        /* FOOTER */
+        .footer { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #555; border-top: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+    <div class="console-grid">
+        
+        <header class="panel header">
+            <div class="main-title">
+                <span style="color:var(--cyan); font-size:2rem;">💠</span> ETHER-LINK COMMAND
+            </div>
+            <div class="status-indicator">
+                <div>GRID: <span style="color:var(--gold)">ACTIVE</span></div>
+                <div>SECURITY: <span style="color:var(--cyan)">ENCRYPTED (SCALAR)</span></div>
+                <div class="blink">ALERT: SATELLITE SCAN DETECTED</div>
+            </div>
+        </header>
+
+        <aside class="panel controls-panel">
+            <h2>SYSTEM OVERRIDE</h2>
+            
+            <div class="control-group">
+                <h3>RESONANCE FREQUENCY</h3>
+                <input type="range" min="1" max="100" value="50" class="cyber-slider" id="freqSlider" oninput="updateCoreSpeed(this.value)">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                    <span>7.83 Hz</span><span>TERAHERTZ MAX</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>INITIATE PROTOCOLS</h3>
+                <button class="cyber-btn" onclick="toggleBtn(this, 'MESH NETWORK ALIGNED')">ALIGN MESH NODES</button>
+                <button class="cyber-btn" onclick="toggleBtn(this, 'SCALAR WAVE AMPLIFIED')">AMPLIFY SCALAR</button>
+                <button class="cyber-btn active" style="border-color:var(--red); color:var(--red);" onclick="toggleBtn(this, 'SATELLITE JAMMER ENGAGED')">JAMMER (AUTO)</button>
+            </div>
+
+            <div style="margin-top:auto; font-size:0.8rem; text-align:center; color:#666;">
+                AUTHORIZATION: NUSWANTARA-PRIME<br>ACCESS LEVEL: KEEPER
+            </div>
+        </aside>
+
+        <section class="panel main-display">
+            <div class="scalar-core" id="scalarCore">
+                <div class="wave-emitter"></div>
+                <div class="wave-emitter"></div>
+                <div class="wave-emitter"></div>
+                <div class="ring ring-1" style="--speed: 20s"></div>
+                <div class="ring ring-2" style="--speed: 10s"></div>
+                <div class="ring ring-3" style="--speed: 5s"></div>
+                <div class="core-crystal"></div>
+            </div>
+            <div style="position:absolute; bottom: 20px; text-align:center; font-family:'Orbitron'; letter-spacing:2px;">
+                CORE RESONANCE STABLE<br>
+                <span style="font-size:1.5rem; color:var(--gold);" id="coreFreqDisplay">7.83 THz</span>
+            </div>
+        </section>
+
+        <aside class="panel data-panel">
+            <h2>DATA STREAMS</h2>
+            
+            <div>
+                <h3>LIVE METRICS</h3>
+                <div class="metric-row"><span>UPLINK SPEED:</span> <span class="metric-val">1.2 TB/s</span></div>
+                <div class="metric-row"><span>DOWNLINK SPEED:</span> <span class="metric-val">2.5 TB/s</span></div>
+                <div class="metric-row"><span>ACTIVE NODES:</span> <span class="metric-val" style="color:var(--cyan)">14,502</span></div>
+                <div class="metric-row"><span>IONOSPHERE STABILITY:</span> <span class="metric-val">98.5%</span></div>
+            </div>
+
+            <h3>SYSTEM LOGS</h3>
+            <div class="terminal-log" id="terminal">
+                </div>
+        </aside>
+
+        <footer class="panel footer">
+            <div>PROJECT ETHER-NET // BUILD 2024.05.20 // FOR INTERNAL USE ONLY</div>
+            <div>LOCATION: MT. PADANG UNDERGROUND FACILITY</div>
+        </footer>
+
+    </div>
+
+    <script>
+        // === SCRIPT BUAT BIKIN TERLIHAT CANGGIH ===
+
+        // 1. FUNGSI TOMBOL KLIK
+        function toggleBtn(btn, msg) {
+            btn.classList.toggle('active');
+            // Efek visual pas diklik: Inti makin terang sebentar
+            const core = document.querySelector('.core-crystal');
+            core.style.filter = btn.classList.contains('active') ? 'brightness(2) drop-shadow(0 0 50px #fff)' : '';
+            setTimeout(() => { core.style.filter = ''; }, 500);
+            
+            addLog("CMD EXEC: " + msg);
+        }
+
+        // 2. FUNGSI SLIDER FREKUENSI
+        function updateCoreSpeed(val) {
+            // Ubah kecepatan putaran ring berdasarkan slider
+            const rings = document.querySelectorAll('.ring');
+            let speedMult = 21 - (val / 5); // Semakin kanan, semakin kecil angkanya (makin cepat)
+            if(speedMult < 1) speedMult = 1;
+            
+            rings.forEach((ring, index) => {
+                let baseSpeed = (index + 1) * 5;
+                ring.style.animationDuration = (baseSpeed * speedMult / 10) + 's';
+            });
+
+            // Ubah angka display
+            let freq = (val * 0.1566).toFixed(2); // Angka acak biar kelihatan ilmiah
+            document.getElementById('coreFreqDisplay').innerText = freq + (val > 80 ? " PHz (DANGER)" : " THz");
+            document.getElementById('coreFreqDisplay').style.color = val > 80 ? 'var(--red)' : 'var(--gold)';
+
+            if(Math.random() > 0.5) addLog(`CORE ADJUST: Frequency set to ${freq} THz`);
+        }
+
+        // 3. FUNGSI LOG OTOMATIS (BIAR KELIHATAN SIBUK)
+        const terminal = document.getElementById('terminal');
+        const logMessages = [
+            "Pinging node cluster Alpha-7...",
+            "Scalar wave propagation normal.",
+            "Compensating for ionospheric drift.",
+            "WARNING: External scan attempt blocked.",
+            "Resonator temp stable at 30°C.",
+            "Syncing data with crystal matrix.",
+            "Packet re-routing via Ether path 4B.",
+            "Grounding check: OK.",
+            "Encryption key rotated automatically."
+        ];
+
+        function addLog(msg) {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            let time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            entry.innerHTML = `<span>[${time}]</span> ${msg}`;
+            terminal.appendChild(entry);
+            // Auto scroll ke bawah, tapi hapus yang lama biar gak berat
+            if(terminal.children.length > 20) terminal.removeChild(terminal.firstChild);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Jalanin log otomatis setiap detik
+        setInterval(() => {
+            addLog(logMessages[Math.floor(Math.random() * logMessages.length)]);
+            // Kadang update angka metrics biar gerak
+            if(Math.random() > 0.7) {
+                let nodes = 14500 + Math.floor(Math.random() * 100);
+                 document.querySelector('.metric-val[style*="cyan"]').innerText = nodes.toLocaleString();
+            }
+        }, 800);
+
+        // Init log awal
+        addLog("BOOT SEQUENCE INITIATED...");
+        addLog("CONNECTING TO NUSWANTARA CORE...");
+        addLog("ACCESS GRANTED.");
+        setTimeout(() => { updateCoreSpeed(50); }, 1000);
+
+    </script>
+</body>
+</html>

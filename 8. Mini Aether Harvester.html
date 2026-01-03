@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLUEPRINT: MINI AETHER CATCHER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #fdf6e3;
+            --ink: #2c3e50;
+            --grid: #e0dcd3;
+            --highlight: #d35400;
+            --copper: #d35400;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: 'Courier Prime', monospace;
+            margin: 0; padding: 20px;
+            /* Tampilan Kertas Grid Milimeter Blok */
+            background-image: 
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 20px 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        h1 {
+            border: 3px solid var(--ink); padding: 10px 20px; text-transform: uppercase;
+            background: #fff; margin-bottom: 5px; box-shadow: 5px 5px 0 rgba(0,0,0,0.2);
+        }
+
+        .container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            width: 100%; max-width: 1000px;
+        }
+
+        /* BOX STYLE */
+        .box {
+            background: #fff; border: 2px solid var(--ink); padding: 15px;
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.1); position: relative;
+        }
+        .box h3 { margin-top: 0; border-bottom: 2px dashed var(--ink); padding-bottom: 5px; color: var(--highlight); }
+
+        /* SKETCH AREA (CSS DRAWING) */
+        .sketch-area {
+            height: 300px; position: relative; border: 1px solid #ccc;
+            background: radial-gradient(circle, #fff 0%, #f9f9f9 100%);
+            overflow: hidden;
+        }
+
+        /* --- VISUALISASI ALAT --- */
+        
+        /* 1. ANTENA (Kabel Jemuran) */
+        .wire-long {
+            position: absolute; top: 20px; left: 0; width: 100%; height: 2px; background: #555;
+        }
+        .wire-drop {
+            position: absolute; top: 20px; left: 50%; width: 2px; height: 100px; background: #555;
+        }
+
+        /* 2. COIL (Lilitan di Botol) */
+        .bottle {
+            width: 60px; height: 100px; background: rgba(200,230,255,0.5);
+            border: 2px solid #889; border-radius: 5px;
+            position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
+        }
+        .copper-coil {
+            width: 62px; height: 60px; 
+            background: repeating-linear-gradient(0deg, var(--copper) 0px, var(--copper) 3px, #fff 3px, #fff 4px);
+            position: absolute; top: 20px; left: -1px;
+            border-left: 2px solid var(--ink); border-right: 2px solid var(--ink);
+        }
+
+        /* 3. DIODE & CAPACITOR (Komponen) */
+        .component-box {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 50px; border: 1px dashed var(--ink);
+            display: flex; justify-content: center; align-items: center; font-size: 0.7rem;
+        }
+        .diode {
+            width: 30px; height: 10px; background: #333; position: relative; margin-right: 10px;
+        }
+        .diode::after { content:""; position: absolute; right:0; width:5px; height:100%; background:#ccc; } /* Garis Katoda */
+        
+        .capacitor {
+            width: 15px; height: 30px; background: #33a; border-radius: 2px;
+        }
+
+        /* 4. GROUND */
+        .ground-line {
+            position: absolute; bottom: 0; left: 50%; width: 2px; height: 20px; background: var(--ink);
+        }
+        .ground-symbol {
+            position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 2px; background: var(--ink);
+            box-shadow: 0 4px 0 var(--ink), 0 8px 0 var(--ink);
+        }
+
+        /* LABELS */
+        .lbl { position: absolute; font-size: 0.7rem; background: #ffeb3b; padding: 2px; border: 1px solid #000; }
+        .lbl-ant { top: 30px; right: 20px; }
+        .lbl-coil { top: 150px; right: 35%; }
+        .lbl-avramenko { bottom: 30px; right: 10%; }
+
+        /* LIST HARGA */
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        td { padding: 5px; border-bottom: 1px solid #ddd; }
+        .price { font-weight: bold; color: green; text-align: right; }
+
+        @media (max-width: 700px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>PROTOTIPE: MINI AETHER-CATCHER</h1>
+    <div style="font-size:0.8rem; margin-bottom: 20px;">VERSI: LOW BUDGET // TARGET: 3V - 12V DC</div>
+
+    <div class="container">
+
+        <div class="box">
+            <h3>SKEMA RAKITAN</h3>
+            <div class="sketch-area">
+                <div class="wire-long"></div>
+                <div class="wire-drop"></div>
+                <div class="lbl lbl-ant">ANTENA (Kabel Jemuran 10m+)</div>
+
+                <div class="bottle">
+                    <div class="copper-coil"></div>
+                </div>
+                <div class="lbl lbl-coil">LILITAN (Botol Bekas)</div>
+
+                <div class="component-box">
+                    <div class="diode" title="Germanium Diode"></div>
+                    <div class="capacitor" title="Elco"></div>
+                </div>
+                <div class="lbl lbl-avramenko">DIODA + ELCO</div>
+
+                <div class="ground-line"></div>
+                <div class="ground-symbol"></div>
+                
+                <div style="position:absolute; bottom:10px; left:10px; font-weight:bold; color:red;">OUT: DC VOLT</div>
+            </div>
+            <p style="font-size:0.8rem; margin-top:10px; text-align:justify;">
+                Prinsip kerja mirip "Radio Kristal". Antena menangkap gelombang elektromagnetik liar (RF) & listrik statis. 
+                Lilitan memperkuat resonansi. Dioda mengubah sinyal AC (bolak-balik) dari udara menjadi DC (searah) untuk disimpan di Kapasitor.
+            </p>
+        </div>
+
+        <div class="box">
+            <h3>BAHAN "MURAH MERIAH"</h3>
+            <table>
+                <tr>
+                    <td><strong>1. Kawat Tembaga (Email)</strong><br>Bekas trafo atau beli 1 ons (0.5mm).</td>
+                    <td class="price">Rp 15.000</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Dioda Germanium (1N34A / 1N60)</strong><br>Wajib tipe ini (Low Voltage Drop). Jangan silikon biasa.</td>
+                    <td class="price">Rp 2.000</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Kapasitor Elco</strong><br>Ukuran 100uF / 16V - 50V (Bekas rongsok TV).</td>
+                    <td class="price">Rp 1.000</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Kabel Antena</strong><br>Kabel listrik serabut biasa. Makin panjang makin bagus.</td>
+                    <td class="price">Rp 10.000</td>
+                </tr>
+                <tr>
+                    <td><strong>5. Grounding</strong><br>Paku besar atau batang besi bekas.</td>
+                    <td class="price">Rp 2.000</td>
+                </tr>
+                <tr>
+                    <td><strong>6. Botol Plastik / Pipa PVC</strong><br>Bekas Aqua/Paralon buat tempat lilitan.</td>
+                    <td class="price">GRATIS</td>
+                </tr>
+                <tr style="background:#eee;">
+                    <td><strong>TOTAL ESTIMASI</strong></td>
+                    <td class="price">Rp 30.000</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="box" style="grid-column: 1 / -1;">
+            <h3>CARA RAKIT (5 LANGKAH MUDAH)</h3>
+            <ol style="font-size:0.9rem; line-height:1.5;">
+                <li><strong>Buat Induktor:</strong> Ambil botol plastik. Lilitkan kawat tembaga sebanyak 50-100 lilitan dengan rapi. Kerok ujung kawat biar lapisan emailnya hilang (biar nyambung).</li>
+                <li><strong>Pasang Antena:</strong> Sambungkan ujung ATAS lilitan ke kabel antena. Bentangkan kabel antena setinggi mungkin (di atap/pohon). Minimal panjang 10-20 meter.</li>
+                <li><strong>Pasang Ground:</strong> Sambungkan ujung BAWAH lilitan ke paku besi/pasak, lalu tancapkan ke tanah yang lembab.</li>
+                <li><strong>Pasang Penyearah (Avramenko Plug):</strong>
+                    <ul>
+                        <li>Ambil 2 Dioda. Sambungkan secara seri (Kaki Anoda ketemu Katoda).</li>
+                        <li>Ambil Kapasitor Elco. Sambungkan kaki Positif (+) dan Negatif (-) di ujung rangkaian dioda.</li>
+                        <li>Hubungkan rangkaian ini PARALEL dengan Lilitan tadi.</li>
+                    </ul>
+                </li>
+                <li><strong>Tes Nyala:</strong> Sambungkan LED kecil (Joule Thief) ke kaki Kapasitor. Jika berhasil, LED akan menyala redup abadi tanpa baterai!</li>
+            </ol>
+            <div style="background:#ffebee; padding:5px; border:1px solid red; font-size:0.8rem; color:red;">
+                ⚠️ CATATAN: Daya yang dihasilkan kecil (Milliwatt). Cukup untuk nyalain LED atau ngecas HP (kalau antenanya super besar). Jangan harap langsung bisa nyalain Kulkas pakai versi mini ini.
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
