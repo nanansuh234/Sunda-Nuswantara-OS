@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigasi Taktis - Nuswantara OS</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: #00ff88;
+            font-family: 'Consolas', 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* Warning Box untuk PC user */
+        #pc-warning {
+            display: none;
+            background: #330000;
+            border: 1px solid red;
+            color: #ffcccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+        }
+
+        #start-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: transparent;
+            color: #00ff88;
+            border: 2px solid #00ff88;
+            border-radius: 0;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+        #start-btn:hover { background: #00ff88; color: black; }
+
+        .compass-ui { display: none; width: 100%; max-width: 400px; }
+
+        .compass-ring {
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+            border: 2px solid #333;
+            border-radius: 50%;
+            position: relative;
+            background: radial-gradient(circle, #1a1a1a 60%, #000 100%);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+        }
+
+        /* Piringan Angka */
+        .dial {
+            width: 100%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Compass_Card.png/600px-Compass_Card.png') no-repeat center;
+            background-size: 90%;
+            transition: transform 0.1s ease-out;
+            opacity: 0.8;
+            filter: invert(1) hue-rotate(90deg) brightness(1.5); /* Biar warnanya ijo techy */
+        }
+
+        .needle {
+            position: absolute; top: 50%; left: 50%;
+            width: 4px; height: 100%;
+            background: transparent;
+            transform: translate(-50%, -50%);
+        }
+        .needle::after {
+            content: ''; position: absolute; top: 10px; left: -8px;
+            border-bottom: 20px solid #ff3333;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+        }
+
+        .hud-data { margin-top: 20px; border-top: 1px solid #333; padding-top: 10px; width: 90%; margin-left: auto; margin-right: auto; }
+        .big-deg { font-size: 3rem; font-weight: bold; text-shadow: 0 0 10px #00ff88; margin: 0; }
+        .cardinal { font-size: 1.2rem; color: #888; margin-bottom: 10px; }
+        
+        .gps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.8rem;
+            text-align: left;
+            background: #111;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+        .gps-label { color: #666; font-size: 0.7rem; }
+        
+        .back-btn {
+            margin-top: 20px;
+            text-decoration: none;
+            color: #555;
+            font-size: 0.8rem;
+            border: 1px solid #333;
+            padding: 5px 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pc-warning">⚠️ WARNING: Sensor Magnetometer (Kompas) tidak terdeteksi. Fitur ini HANYA JALAN DI HP/TABLET.</div>
+
+    <button id="start-btn" onclick="initSystem()">AKTIFKAN SENSOR</button>
+
+    <div class="compass-ui" id="ui-panel">
+        <div class="compass-ring">
+            <div class="dial" id="dial"></div>
+            <div class="needle"></div>
+        </div>
+
+        <div class="hud-data">
+            <div class="big-deg" id="degree-display">0°</div>
+            <div class="cardinal" id="cardinal-display">UTARA</div>
+
+            <div class="gps-grid">
+                <div>
+                    <span class="gps-label">LATITUDE (GARIS LINTANG)</span><br>
+                    <span id="lat-val">mencari...</span>
+                </div>
+                <div>
+                    <span class="gps-label">LONGITUDE (GARIS BUJUR)</span><br>
+                    <span id="lon-val">mencari...</span>
+                </div>
+                <div>
+                    <span class="gps-label">ALTITUDE (TINGGI)</span><br>
+                    <span id="alt-val">--</span>
+                </div>
+                <div>
+                    <span class="gps-label">AKURASI GPS</span><br>
+                    <span id="acc-val">--</span>
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        <a href="index.html" class="back-btn"><< KEMBALI KE OS</a>
+    </div>
+
+    <script>
+        // Cek PC atau HP
+        if (!window.DeviceOrientationEvent) {
+            document.getElementById('pc-warning').style.display = 'block';
+        }
+
+        function initSystem() {
+            // 1. Izin Kompas (iOS)
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(res => {
+                        if (res === 'granted') startSensors();
+                        else alert("Izin sensor ditolak!");
+                    })
+                    .catch(console.error);
+            } else {
+                startSensors();
+            }
+        }
+
+        function startSensors() {
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('ui-panel').style.display = 'block';
+
+            // Start Kompas
+            window.addEventListener('deviceorientation', (e) => {
+                let alpha = e.alpha; // Rotasi Z
+                if(e.webkitCompassHeading) {
+                    // Fix untuk iOS biar utara-nya bener
+                    alpha = e.webkitCompassHeading; 
+                    updateDisplay(alpha, true);
+                } else {
+                    // Android standard (perlu inversi kadang tergantung device)
+                    updateDisplay(alpha, false);
+                }
+            });
+
+            // Start GPS
+            if ("geolocation" in navigator) {
+                navigator.geolocation.watchPosition(updateGPS, gpsError, {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                });
+            } else {
+                document.getElementById('lat-val').innerText = "Tidak Support";
+            }
+        }
+
+        function updateDisplay(deg, isIOS) {
+            if (deg === null) return;
+            
+            // Putar dial
+            // Kalau iOS rotasinya searah jarum jam, Android default counter-clockwise
+            let rotateVal = isIOS ? -deg : -deg; 
+            document.getElementById('dial').style.transform = `rotate(${rotateVal}deg)`;
+
+            let degree = Math.round(deg);
+            document.getElementById('degree-display').innerText = `${degree}°`;
+            document.getElementById('cardinal-display').innerText = getCardinal(degree);
+        }
+
+        function updateGPS(pos) {
+            document.getElementById('lat-val').innerText = pos.coords.latitude.toFixed(6);
+            document.getElementById('lon-val').innerText = pos.coords.longitude.toFixed(6);
+            
+            let alt = pos.coords.altitude ? pos.coords.altitude.toFixed(1) + "m" : "N/A";
+            document.getElementById('alt-val').innerText = alt;
+            
+            let acc = pos.coords.accuracy ? "±" + Math.round(pos.coords.accuracy) + "m" : "--";
+            document.getElementById('acc-val').innerText = acc;
+        }
+
+        function gpsError(err) {
+            console.warn("GPS Error: " + err.message);
+            document.getElementById('lat-val').innerText = "No Signal";
+        }
+
+        function getCardinal(deg) {
+            if (deg >= 337.5 || deg < 22.5) return "UTARA";
+            if (deg >= 22.5 && deg < 67.5) return "TIMUR LAUT";
+            if (deg >= 67.5 && deg < 112.5) return "TIMUR";
+            if (deg >= 112.5 && deg < 157.5) return "TENGGARA";
+            if (deg >= 157.5 && deg < 202.5) return "SELATAN";
+            if (deg >= 202.5 && deg < 247.5) return "BARAT DAYA";
+            if (deg >= 247.5 && deg < 292.5) return "BARAT";
+            if (deg >= 292.5 && deg < 337.5) return "BARAT LAUT";
+            return "";
+        }
+    </script>
+</body>
+</html>
+
