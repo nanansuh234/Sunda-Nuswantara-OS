@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ND-ID High Res</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+            --primary: #00ff88;
+            --secondary: #00ccff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        * { box-sizing: border-box; outline: none; }
+
+        body {
+            margin: 0; background-color: var(--bg); color: #fff;
+            font-family: 'Rajdhani', sans-serif; display: flex; flex-direction: column; align-items: center;
+            padding-bottom: 50px;
+        }
+
+        .container { width: 100%; max-width: 500px; padding: 15px; }
+
+        h2 { color: var(--primary); text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px; font-family: 'Share Tech Mono'; letter-spacing: 2px; }
+        
+        /* TABS */
+        .nav-tabs { display: flex; margin-bottom: 20px; border: 1px solid #333; border-radius: 5px; overflow: hidden; }
+        .tab-btn { flex: 1; padding: 12px; background: #111; color: #666; cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary); color: #000; }
+
+        /* FORM INPUTS */
+        .form-grid { display: grid; gap: 8px; }
+        .input-group { margin-bottom: 2px; }
+        label { color: var(--secondary); font-size: 0.7rem; display: block; }
+        input, select {
+            width: 100%; background: var(--glass); border: 1px solid #333;
+            color: #fff; padding: 8px; font-family: 'Share Tech Mono'; font-size: 0.9rem;
+            border-radius: 4px;
+        }
+        input:focus { border-color: var(--primary); }
+        .half { display: flex; gap: 10px; }
+        .half > div { flex: 1; }
+
+        .btn-action {
+            width: 100%; background: var(--secondary); color: #000; border: none;
+            padding: 15px; font-weight: bold; font-size: 1rem; cursor: pointer;
+            margin-top: 20px; border-radius: 5px;
+        }
+
+        /* CARD PREVIEW (GENERATOR) */
+        .id-card-preview {
+            display: none; margin-top: 30px; background: #111; border: 2px solid var(--primary);
+            padding: 25px; border-radius: 10px; text-align: center;
+            position: relative;
+        }
+        
+        /* FIX: Area QR Code dikasih padding putih tebal & ukuran fix */
+        #qr-code { 
+            background: #fff; 
+            padding: 15px; /* Quiet Zone Lebar */
+            width: 250px; 
+            height: 250px; 
+            margin: 0 auto; 
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* SAVE BUTTON */
+        .btn-save {
+            width: 100%; background: #222; border: 1px solid var(--primary); color: var(--primary);
+            padding: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1rem;
+        }
+        .btn-save:hover { background: var(--primary); color: #000; }
+
+        /* VERIFY UI */
+        .verify-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .v-btn {
+            border: 2px dashed #444; padding: 20px; text-align: center; cursor: pointer; border-radius: 10px;
+            color: #888; transition: 0.3s;
+        }
+        .v-btn:hover { border-color: var(--secondary); color: var(--secondary); }
+        #reader { width: 100%; border-radius: 10px; overflow: hidden; display: none; border: 2px solid var(--primary); }
+
+        /* MODAL KTP STYLE */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 100; display: none;
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            width: 95%; max-width: 480px; background: #000; border: 2px solid var(--primary);
+            padding: 10px; border-radius: 15px; position: relative;
+        }
+
+        .ktp-box {
+            background-image: linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px; padding: 15px; border-radius: 10px;
+        }
+        .ktp-header { text-align: center; border-bottom: 2px solid #fff; padding-bottom: 5px; margin-bottom: 10px; }
+        .ktp-title { font-size: 1.1rem; font-weight: bold; letter-spacing: 2px; color: #fff; }
+        
+        .ktp-grid {
+            display: grid; grid-template-columns: 90px 1fr; gap: 2px;
+            font-family: Arial, sans-serif; font-size: 0.8rem; color: #fff; line-height: 1.4;
+        }
+        .k-lbl { text-transform: uppercase; color: var(--primary); font-weight: bold; }
+        .k-val { text-transform: uppercase; font-weight: bold; }
+        .indent { padding-left: 15px; }
+
+        .verified-stamp {
+            position: absolute; right: 20px; top: 60px;
+            border: 2px solid var(--secondary); color: var(--secondary);
+            padding: 5px 10px; font-weight: bold; font-family: 'Share Tech Mono';
+            transform: rotate(-10deg); font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--secondary); background: rgba(0,0,0,0.8);
+        }
+
+        /* PIN PAD */
+        .pin-display { font-size: 2rem; letter-spacing: 10px; text-align: center; color: var(--primary); margin: 20px 0; border-bottom: 1px solid #333; }
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .num-key { background: #222; padding: 15px; text-align: center; font-size: 1.2rem; cursor: pointer; border-radius: 5px; border: 1px solid #333; }
+        .num-key:active { background: var(--primary); color: #000; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('create')">BUAT ID BARU</button>
+            <button class="tab-btn" onclick="switchTab('verify')">SCAN / VERIFIKASI</button>
+        </div>
+
+        <div id="sec-create">
+            <div class="form-grid">
+                <div class="input-group"><label>NIK (Nomor Induk)</label><input type="number" id="c_nik"></div>
+                <div class="input-group"><label>NAMA LENGKAP</label><input type="text" id="c_nama"></div>
+                
+                <div class="half">
+                    <div class="input-group"><label>TEMPAT LAHIR</label><input type="text" id="c_tmp_lahir"></div>
+                    <div class="input-group"><label>TGL LAHIR</label><input type="date" id="c_tgl_lahir"></div>
+                </div>
+
+                <div class="half">
+                    <div class="input-group"><label>JENIS KELAMIN</label>
+                        <select id="c_jk"><option value="L">LAKI-LAKI</option><option value="P">PEREMPUAN</option></select>
+                    </div>
+                    <div class="input-group"><label>AGAMA</label>
+                        <select id="c_agama">
+                            <option value="ISLAM">ISLAM</option><option value="KRISTEN">KRISTEN</option>
+                            <option value="KATOLIK">KATOLIK</option><option value="HINDU">HINDU</option>
+                            <option value="BUDDHA">BUDDHA</option><option value="KHONGHUCU">KHONGHUCU</option>
+                            <option value="LAINNYA">LAINNYA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group"><label>ALAMAT</label><input type="text" id="c_alamat"></div>
+                
+                <div class="half">
+                    <div class="input-group"><label>RT / RW</label><input type="text" id="c_rtrw"></div>
+                    <div class="input-group"><label>DESA/KELURAHAN</label><input type="text" id="c_desa"></div>
+                </div>
+                
+                <div class="input-group"><label>KECAMATAN</label><input type="text" id="c_kec"></div>
+
+                <div class="half">
+                    <div class="input-group"><label>STATUS</label>
+                        <select id="c_status"><option value="BK">BELUM KAWIN</option><option value="K">KAWIN</option><option value="C">CERAI</option></select>
+                    </div>
+                    <div class="input-group"><label>PEKERJAAN</label><input type="text" id="c_kerja"></div>
+                </div>
+            </div>
+
+            <div style="background: rgba(0,255,136,0.1); padding: 15px; border: 1px dashed var(--primary); border-radius: 5px; margin-top: 15px;">
+                <label style="text-align:center; color:var(--primary); font-weight:bold; font-size:1rem;">PIN KEAMANAN (6 ANGKA)</label>
+                <input type="password" id="c_pin" maxlength="6" inputmode="numeric" placeholder="******" style="text-align:center; letter-spacing:5px; font-size:1.5rem; margin-top:5px;">
+            </div>
+
+            <button class="btn-action" onclick="generateID()">GENERATE DIGITAL ID</button>
+
+            <div id="card-wrapper" style="display:none;">
+                <div class="id-card-preview" id="res_card">
+                    <div class="card-header">
+                        <span style="color:var(--primary); font-weight:bold;">ND-ID PRO</span>
+                        <span style="font-size:0.8rem; border:1px solid #555; padding:2px 5px;">SECURE</span>
+                    </div>
+                    <div id="qr-code"></div>
+                    
+                    <h3 id="res_nama_disp" style="margin:15px 0 0 0;">NAMA</h3>
+                    <div id="res_nik_disp" style="color:#888; font-size:0.9rem;">NIK</div>
+                    <div style="margin-top:15px; font-size:0.7rem; color:#555;">DATA COMPRESSED & ENCRYPTED</div>
+                </div>
+
+                <button class="btn-save" onclick="saveCardImage()">
+                    💾 DOWNLOAD GAMBAR HD
+                </button>
+            </div>
+        </div>
+
+        <div id="sec-verify" style="display:none;">
+            <div class="verify-options">
+                <div class="v-btn" onclick="startCameraScan()">
+                    <div style="font-size:2rem;">📷</div>
+                    <div>SCAN KAMERA</div>
+                </div>
+                <label class="v-btn" for="fileInput">
+                    <div style="font-size:2rem;">📂</div>
+                    <div>UPLOAD FILE</div>
+                </label>
+                <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileScan(this)">
+            </div>
+            <div id="reader"></div>
+            <div id="scanStatus" style="text-align:center; margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="pinModal">
+        <div class="modal-content" style="text-align:center; max-width:350px;">
+            <h3 style="color:var(--secondary);">MASUKKAN PIN</h3>
+            <div class="pin-display" id="pinDisplay"></div>
+            <div class="numpad">
+                <div class="num-key" onclick="kp(1)">1</div><div class="num-key" onclick="kp(2)">2</div><div class="num-key" onclick="kp(3)">3</div>
+                <div class="num-key" onclick="kp(4)">4</div><div class="num-key" onclick="kp(5)">5</div><div class="num-key" onclick="kp(6)">6</div>
+                <div class="num-key" onclick="kp(7)">7</div><div class="num-key" onclick="kp(8)">8</div><div class="num-key" onclick="kp(9)">9</div>
+                <div class="num-key" onclick="kp('c')" style="color:red;">C</div><div class="num-key" onclick="kp(0)">0</div>
+                <div class="num-key" onclick="verifyPin()" style="background:var(--secondary); color:black;">OK</div>
+            </div>
+            <button onclick="closeModal('pinModal')" style="margin-top:20px; background:transparent; border:none; color:#666;">BATAL</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="dataModal">
+        <div class="modal-content">
+            <div class="ktp-box">
+                <div class="verified-stamp">TERVERIFIKASI</div>
+                <div class="ktp-header"><div class="ktp-title">NUSWANTARA ID</div></div>
+                <div class="ktp-grid">
+                    <div class="k-lbl">NIK</div><div class="k-val" id="d_nik"></div>
+                    <div class="k-lbl">Nama</div><div class="k-val" id="d_nama"></div>
+                    <div class="k-lbl">Tempat/Tgl Lahir</div><div class="k-val" id="d_ttl"></div>
+                    <div class="k-lbl">Jenis Kelamin</div><div class="k-val" id="d_jk"></div>
+                    <div class="k-lbl">Alamat</div><div class="k-val" id="d_alamat"></div>
+                    <div class="k-lbl indent">RT/RW</div><div class="k-val" id="d_rtrw"></div>
+                    <div class="k-lbl indent">Kel/Desa</div><div class="k-val" id="d_desa"></div>
+                    <div class="k-lbl indent">Kecamatan</div><div class="k-val" id="d_kec"></div>
+                    <div class="k-lbl">Agama</div><div class="k-val" id="d_agama"></div>
+                    <div class="k-lbl">Status</div><div class="k-val" id="d_status"></div>
+                    <div class="k-lbl">Pekerjaan</div><div class="k-val" id="d_kerja"></div>
+                </div>
+            </div>
+            <button class="btn-action" style="margin-top:10px; padding:10px;" onclick="closeModal('dataModal')">TUTUP</button>
+        </div>
+    </div>
+
+    <script>
+        let tempPin = "";
+        let pendingDataRaw = [];
+        let html5QrCode = null;
+        const dictStatus = { "BK": "BELUM KAWIN", "K": "KAWIN", "C": "CERAI HIDUP/MATI" };
+        const dictJK = { "L": "LAKI-LAKI", "P": "PEREMPUAN" };
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('sec-create').style.display = t === 'create' ? 'block' : 'none';
+            document.getElementById('sec-verify').style.display = t === 'verify' ? 'block' : 'none';
+            if(t !== 'verify' && html5QrCode) { html5QrCode.stop().then(() => { html5QrCode = null; document.getElementById('reader').style.display='none'; }); }
+        }
+
+        function generateID() {
+            const v = (id) => document.getElementById(id).value;
+            if(!v('c_nik') || !v('c_nama') || !v('c_pin') || v('c_pin').length !== 6) return alert("Lengkapi Data & PIN!");
+
+            const dataArray = [
+                v('c_nik'), v('c_nama'), v('c_tmp_lahir')+", "+v('c_tgl_lahir'),
+                v('c_jk'), v('c_agama'), v('c_alamat'), v('c_rtrw'),
+                v('c_desa'), v('c_kec'), v('c_status'), v('c_kerja'),
+                v('c_pin')
+            ];
+            const compressedString = dataArray.join('|');
+
+            document.getElementById('res_nama_disp').innerText = v('c_nama').toUpperCase();
+            document.getElementById('res_nik_disp').innerText = v('c_nik');
+            
+            const qrEl = document.getElementById('qr-code');
+            qrEl.innerHTML = "";
+            
+            // FIX 1: UKURAN QR DIPERBESAR (width 220)
+            new QRCode(qrEl, { text: compressedString, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.L });
+            
+            document.getElementById('res_card').style.display = 'block';
+            document.getElementById('card-wrapper').style.display = 'block';
+        }
+
+        // FIX 2: SAVE DENGAN SKALA TINGGI (HD)
+        function saveCardImage() {
+            const cardElement = document.getElementById('res_card');
+            
+            html2canvas(cardElement, {
+                backgroundColor: "#111", // Background aman
+                scale: 4, // 4x RESOLUSI (Sangat Tajam)
+                logging: false
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'ND-ID_' + document.getElementById('res_nama_disp').innerText + '.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+
+        function startCameraScan() {
+            const reader = document.getElementById('reader');
+            reader.style.display = 'block';
+            document.getElementById('scanStatus').innerText = "Menyiapkan Kamera...";
+            if(!html5QrCode) html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } },
+                (txt) => { html5QrCode.stop(); reader.style.display = 'none'; processData(txt); }, (err) => {}
+            ).catch(err => { alert("Gagal buka kamera"); reader.style.display = 'none'; });
+        }
+
+        function handleFileScan(input) {
+            if (input.files.length === 0) return;
+            const tempReader = new Html5Qrcode("reader-temp");
+            tempReader.scanFile(input.files[0], true).then(txt => processData(txt)).catch(err => alert("QR Tidak Terbaca."));
+            input.value = "";
+        }
+
+        function processData(text) {
+            if(text.includes('|')) {
+                pendingDataRaw = text.split('|');
+                if(pendingDataRaw.length >= 12) {
+                    tempPin = ""; updatePinDisp();
+                    document.getElementById('pinModal').style.display = 'flex';
+                } else { alert("Data QR Rusak!"); }
+            } else { alert("Format QR Salah!"); }
+        }
+
+        function kp(key) { if(key === 'c') tempPin=""; else if(tempPin.length < 6) tempPin += key; updatePinDisp(); }
+        function updatePinDisp() { document.getElementById('pinDisplay').innerText = "*".repeat(tempPin.length); }
+
+        function verifyPin() {
+            if(tempPin === pendingDataRaw[11]) {
+                closeModal('pinModal');
+                const rawJK = pendingDataRaw[3]; const rawStatus = pendingDataRaw[9];
+                document.getElementById('d_nik').innerText = ": " + pendingDataRaw[0];
+                document.getElementById('d_nama').innerText = ": " + pendingDataRaw[1].toUpperCase();
+                document.getElementById('d_ttl').innerText = ": " + pendingDataRaw[2].toUpperCase();
+                document.getElementById('d_jk').innerText = ": " + (dictJK[rawJK] || rawJK);
+                document.getElementById('d_alamat').innerText = ": " + pendingDataRaw[5].toUpperCase();
+                document.getElementById('d_rtrw').innerText = ": " + pendingDataRaw[6];
+                document.getElementById('d_desa').innerText = ": " + pendingDataRaw[7].toUpperCase();
+                document.getElementById('d_kec').innerText = ": " + pendingDataRaw[8].toUpperCase();
+                document.getElementById('d_agama').innerText = ": " + pendingDataRaw[4].toUpperCase();
+                document.getElementById('d_status').innerText = ": " + (dictStatus[rawStatus] || rawStatus);
+                document.getElementById('d_kerja').innerText = ": " + pendingDataRaw[10].toUpperCase();
+                document.getElementById('dataModal').style.display = 'flex';
+            } else { alert("PIN SALAH!"); tempPin = ""; updatePinDisp(); }
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    </script>
+    <div id="reader-temp" style="display:none;"></div>
+</body>
+</html>
