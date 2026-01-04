@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morsenigma - Tactical Reader</title>
+    <style>
+        /* STYLE MILITER / HACKER */
+        body {
+            background-color: #1a1a1a;
+            color: #ffb84d; /* Warna Amber/Kuning Khas Monitor Jadul */
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-shadow: 0 0 10px #ffb84d;
+            letter-spacing: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle { font-size: 0.8rem; opacity: 0.7; margin-bottom: 30px; }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #2b2b2b;
+            padding: 20px;
+            border: 2px solid #59401f;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(255, 184, 77, 0.1);
+        }
+
+        .screen {
+            background: #000;
+            border: 1px solid #59401f;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 3px;
+        }
+
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #cc8800; }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: transparent;
+            color: #ffb84d;
+            border: none;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1.1rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: inherit;
+            text-transform: uppercase;
+            transition: 0.2s;
+            color: #1a1a1a;
+        }
+
+        .btn-encode { background: #ffb84d; }
+        .btn-encode:hover { background: #ffcc80; box-shadow: 0 0 15px #ffcc80; }
+
+        .btn-decode { background: #4d94ff; color: white;}
+        .btn-decode:hover { background: #80b3ff; box-shadow: 0 0 15px #80b3ff; }
+
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-audio { background: #28a745; color: white; flex: 2; }
+        .btn-copy { background: #6c757d; color: white; flex: 1; }
+        .btn-clear { background: #dc3545; color: white; flex: 1; }
+
+        button:active { transform: scale(0.98); }
+
+    </style>
+</head>
+<body>
+
+    <h1>MORSENIGMA</h1>
+    <div class="subtitle">TACTICAL TELEGRAPH TRANSMITTER</div>
+
+    <div class="container">
+        
+        <div class="screen">
+            <label>INPUT (TEXT / MORSE):</label>
+            <textarea id="inputArea" placeholder="Ketik teks di sini untuk jadi Morse... ATAU paste sandi Morse di sini..."></textarea>
+        </div>
+
+        <div class="controls">
+            <button class="btn-encode" onclick="translateToMorse()">⬇️ TEXT KE MORSE</button>
+            <button class="btn-decode" onclick="translateToText()">⬆️ MORSE KE TEXT</button>
+        </div>
+
+        <div class="screen">
+            <label>OUTPUT:</label>
+            <textarea id="outputArea" readonly placeholder="Hasil muncul di sini..."></textarea>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn-audio" onclick="playMorse()">🔊 PLAY AUDIO</button>
+            <button class="btn-copy" onclick="copyResult()">📋 COPY</button>
+            <button class="btn-clear" onclick="clearAll()">🗑️ CLR</button>
+        </div>
+        
+        <p style="text-align: center; font-size: 0.7rem; color: #555; margin-top: 10px;">
+            Gunakan tanda "/" sebagai spasi antar kata.
+        </p>
+
+    </div>
+
+    <script>
+        // KAMUS MORSE LENGKAP
+        const morseCode = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+            'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+            'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+            'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+            'Y': '-.--', 'Z': '--..', '1': '.----', '2': '..---', '3': '...--',
+            '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..',
+            '9': '----.', '0': '-----', ' ': '/', '.': '.-.-.-', ',': '--..--',
+            '?': '..--..', '!': '-.-.--', '/': '-..-.'
+        };
+
+        // Bikin Kamus Kebalikannya (Buat Decode)
+        const textCode = {};
+        for (let key in morseCode) {
+            textCode[morseCode[key]] = key;
+        }
+
+        const inputArea = document.getElementById('inputArea');
+        const outputArea = document.getElementById('outputArea');
+
+        // --- FUNGSI TRANSLATE ---
+        
+        function translateToMorse() {
+            const text = inputArea.value.toUpperCase();
+            let result = "";
+            
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                if (morseCode[char]) {
+                    result += morseCode[char] + " "; // Tambah spasi antar huruf
+                } else {
+                    result += "? "; // Karakter gak dikenal
+                }
+            }
+            outputArea.value = result.trim();
+        }
+
+        function translateToText() {
+            const morse = inputArea.value.trim();
+            // Pisahkan berdasarkan spasi
+            const codes = morse.split(/\s+/); 
+            let result = "";
+
+            codes.forEach(code => {
+                if (textCode[code]) {
+                    if (textCode[code] === '/') {
+                        result += " "; // Slash jadi spasi
+                    } else {
+                        result += textCode[code];
+                    }
+                } else {
+                    result += "?";
+                }
+            });
+            outputArea.value = result;
+        }
+
+        // --- FUNGSI AUDIO (TELEGRAPH SOUND) ---
+        
+        let audioCtx = null;
+
+        function playMorse() {
+            const morseStr = outputArea.value || inputArea.value;
+            if (!morseStr) return;
+
+            // Inisialisasi Audio Context (Browser butuh interaksi user dulu)
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            const dotDuration = 0.08; // Kecepatan (makin kecil makin ngebut)
+            let currentTime = audioCtx.currentTime;
+
+            // Oscillator (Pembangkit Suara)
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 600; // Frekuensi 600Hz (Nada Bip Militer)
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            // Set volume awal 0 (diam)
+            gainNode.gain.setValueAtTime(0, currentTime);
+
+            // Loop parsing string Morse
+            for (let char of morseStr) {
+                if (char === '.') {
+                    gainNode.gain.setValueAtTime(1, currentTime);
+                    currentTime += dotDuration;
+                    gainNode.gain.setValueAtTime(0, currentTime);
+                    currentTime += dotDuration; // Jeda antar bagian huruf
+                } else if (char === '-') {
+                    gainNode.gain.setValueAtTime(1, currentTime);
+                    currentTime += (dotDuration * 3);
+                    gainNode.gain.setValueAtTime(0, currentTime);
+                    currentTime += dotDuration;
+                } else if (char === ' ') {
+                    currentTime += (dotDuration * 3); // Jeda antar huruf
+                } else if (char === '/') {
+                    currentTime += (dotDuration * 7); // Jeda antar kata
+                }
+            }
+
+            oscillator.start();
+            oscillator.stop(currentTime);
+        }
+
+        // --- UTILS ---
+        function copyResult() {
+            outputArea.select();
+            document.execCommand('copy');
+            alert("✅ Tersalin!");
+        }
+
+        function clearAll() {
+            inputArea.value = "";
+            outputArea.value = "";
+        }
+    </script>
+</body>
+</html>
