@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Auto Tracker - Nuswantara OS</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ff88;
+            font-family: 'Consolas', monospace;
+            margin: 0;
+            overflow: hidden; /* No Scroll */
+        }
+
+        /* HUD Atas */
+        .hud-top {
+            position: absolute; top: 0; left: 0; width: 100%;
+            background: rgba(0, 20, 0, 0.8);
+            padding: 10px;
+            display: flex; justify-content: space-between;
+            z-index: 10;
+            border-bottom: 1px solid #00ff88;
+        }
+
+        .status-box { font-size: 0.8rem; }
+        .val { font-weight: bold; color: #fff; }
+
+        /* HUD Bawah (Tombol) */
+        .hud-bottom {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: rgba(0, 20, 0, 0.9);
+            padding: 10px;
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;
+            z-index: 10;
+            border-top: 1px solid #00ff88;
+        }
+
+        button {
+            background: #003311; color: #00ff88; border: 1px solid #00ff88;
+            padding: 10px; font-family: inherit; font-weight: bold;
+            cursor: pointer; text-transform: uppercase;
+        }
+        button:active { background: #00ff88; color: #000; }
+        
+        .btn-record { background: #330000; color: #ff5555; border-color: #ff5555; }
+        .recording { background: #ff0000 !important; color: white !important; animation: pulse 1s infinite; }
+
+        @keyframes pulse { 0% {opacity:1;} 50% {opacity:0.5;} 100% {opacity:1;} }
+
+        /* Layar Utama */
+        #canvas-container {
+            width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px; /* Grid Background */
+            position: relative;
+        }
+        
+        /* Marker Player (Segitiga Tengah) */
+        #player-marker {
+            position: absolute; top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #fff;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            filter: drop-shadow(0 0 5px #00ff88);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="hud-top">
+        <div class="status-box">
+            JARAK: <span id="dist-val" class="val">0m</span><br>
+            SPEED: <span id="spd-val" class="val">0</span> km/j
+        </div>
+        <div class="status-box" style="text-align:right;">
+            GPS: <span id="gps-acc" class="val">--</span><br>
+            REC: <span id="rec-status">OFF</span>
+        </div>
+    </div>
+
+    <div id="canvas-container">
+        <div id="player-marker"></div>
+        <canvas id="trackCanvas"></canvas>
+    </div>
+
+    <div class="hud-bottom">
+        <button id="btn-start" class="btn-record" onclick="toggleTracking()">REC START</button>
+        <button onclick="addMarker('🏠')">MARKAS</button>
+        <button onclick="addMarker('🚩')">TARGET</button>
+        <button onclick="addMarker('💧')">AIR</button>
+        <button onclick="addMarker('💀')">BAHAYA</button>
+        <button onclick="saveMap()">SIMPAN</button>
+    </div>
+
+    <script>
+        // --- KONFIGURASI ---
+        const SCALE = 3; // 1 Meter = 3 Pixel di layar (Makin besar makin zoom in)
+        const MIN_DIST = 2; // Minimal gerak 2 meter baru digambar (biar gak keriting pas diam)
+        
+        // --- VARIABLE ---
+        let isTracking = false;
+        let watchId = null;
+        let path = []; // Nyimpen history koordinat
+        let markers = []; // Nyimpen icon
+        let startPos = null;
+        let lastPos = null;
+        let totalDist = 0;
+
+        const canvas = document.getElementById('trackCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Setup Canvas Fullscreen
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            redraw();
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Titik tengah layar (Player Position)
+        const CX = window.innerWidth / 2;
+        const CY = window.innerHeight / 2;
+
+        // --- CORE TRACKING LOGIC ---
+        function toggleTracking() {
+            const btn = document.getElementById('btn-start');
+            if (!isTracking) {
+                // START
+                if (!navigator.geolocation) return alert("Browser gak support GPS");
+                
+                isTracking = true;
+                btn.innerText = "REC STOP";
+                btn.classList.add('recording');
+                document.getElementById('rec-status').innerText = "ON";
+
+                // Opsi GPS High Accuracy
+                const options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
+                
+                watchId = navigator.geolocation.watchPosition(processPosition, handleError, options);
+                
+            } else {
+                // STOP
+                isTracking = false;
+                btn.innerText = "REC START";
+                btn.classList.remove('recording');
+                document.getElementById('rec-status').innerText = "PAUSED";
+                navigator.geolocation.clearWatch(watchId);
+            }
+        }
+
+        function processPosition(pos) {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            const acc = pos.coords.accuracy;
+            const speed = pos.coords.speed ? (pos.coords.speed * 3.6).toFixed(1) : 0; // m/s ke km/h
+
+            // Update HUD
+            document.getElementById('gps-acc').innerText = "±" + Math.round(acc) + "m";
+            document.getElementById('spd-val').innerText = speed;
+
+            // Jangan simpan kalau akurasi jelek banget (>50m) kecuali awal
+            if (acc > 50 && path.length > 0) return;
+
+            // Titik Awal
+            if (!startPos) {
+                startPos = { lat, lon };
+                lastPos = { lat, lon };
+                path.push({ x: 0, y: 0 }); // Titik 0,0 relatif terhadap start
+                return;
+            }
+
+            // Hitung Jarak dari titik terakhir (Haversine simple)
+            const d = getDistanceFromLatLonInMeters(lastPos.lat, lastPos.lon, lat, lon);
+
+            // Kalau gerak > MIN_DIST, baru gambar
+            if (d >= MIN_DIST) {
+                totalDist += d;
+                document.getElementById('dist-val').innerText = Math.round(totalDist) + "m";
+
+                // Hitung koordinat X,Y baru relatif terhadap Start
+                // Rumus konversi LatLon ke Meter (Approximation)
+                const x_meter = getDistanceFromLatLonInMeters(startPos.lat, startPos.lon, startPos.lat, lon);
+                const y_meter = getDistanceFromLatLonInMeters(startPos.lat, startPos.lon, lat, startPos.lon);
+
+                // Tentukan arah positif/negatif
+                const x_dir = (lon > startPos.lon) ? 1 : -1;
+                const y_dir = (lat > startPos.lat) ? -1 : 1; // Y di layar kebalik (atas minus)
+
+                const pixelX = x_meter * x_dir * SCALE;
+                const pixelY = y_meter * y_dir * SCALE;
+
+                path.push({ x: pixelX, y: pixelY });
+                lastPos = { lat, lon };
+                redraw();
+            }
+            
+            // Putar arah panah player sesuai heading GPS (kalau ada)
+            if (pos.coords.heading) {
+                document.getElementById('player-marker').style.transform = `translate(-50%, -50%) rotate(${pos.coords.heading}deg)`;
+            }
+        }
+
+        function handleError(err) {
+            console.warn('GPS Error(' + err.code + '): ' + err.message);
+            document.getElementById('gps-acc').innerText = "NO SIGNAL";
+        }
+
+        // --- DRAWING LOGIC ---
+        function redraw() {
+            // Bersihkan layar
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (path.length < 2) return;
+
+            // Kita harus geser "Dunia" (Path) supaya titik terakhir (Player) ada di tengah layar (CX, CY)
+            const playerX = path[path.length-1].x;
+            const playerY = path[path.length-1].y;
+            
+            const offsetX = CX - playerX;
+            const offsetY = CY - playerY;
+
+            // 1. Gambar Jalur
+            ctx.beginPath();
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 4;
+            ctx.lineJoin = 'round';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#00ff88';
+
+            // Pindahkan titik awal
+            ctx.moveTo(path[0].x + offsetX, path[0].y + offsetY);
+
+            // Hubungkan titik-titik sisa
+            for (let i = 1; i < path.length; i++) {
+                ctx.lineTo(path[i].x + offsetX, path[i].y + offsetY);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0; // Reset shadow biar gak berat
+
+            // 2. Gambar Marker
+            ctx.font = "24px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            
+            for (let m of markers) {
+                // Marker posisinya relatif terhadap path, jadi kena offset juga
+                ctx.fillText(m.icon, m.x + offsetX, m.y + offsetY);
+            }
+        }
+
+        // --- FITUR TAMBAHAN ---
+        function addMarker(icon) {
+            if (path.length === 0) return alert("Mulai tracking dulu!");
+            
+            // Taruh marker di posisi pemain saat ini
+            const currentP = path[path.length - 1];
+            markers.push({ x: currentP.x, y: currentP.y, icon: icon });
+            redraw();
+        }
+
+        function saveMap() {
+            if (path.length === 0) return alert("Belum ada jalur!");
+            
+            // Pas save, kita render ulang tanpa offset biar kelihatan semua
+            // (Fitur save sederhana: screenshot apa yang ada di layar)
+            const link = document.createElement('a');
+            link.download = 'Jejak_Nuswantara.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // --- RUMUS MATEMATIKA ---
+        function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
+            var R = 6371e3; // Radius bumi (meter)
+            var dLat = deg2rad(lat2-lat1);
+            var dLon = deg2rad(lon2-lon1); 
+            var a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            var d = R * c;
+            return d;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI/180);
+        }
+    </script>
+</body>
+</html>
