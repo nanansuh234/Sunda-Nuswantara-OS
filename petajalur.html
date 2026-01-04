@@ -3,295 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Auto Tracker - Nuswantara OS</title>
+    <title>Tactical Tracker v2 - Nuswantara</title>
     <style>
         body {
             background-color: #000;
             color: #00ff88;
-            font-family: 'Consolas', monospace;
+            font-family: 'Courier New', monospace;
             margin: 0;
-            overflow: hidden; /* No Scroll */
+            overflow: hidden; /* Wajib biar gak bounce pas geser peta */
+            touch-action: none; /* Matikan zoom browser bawaan */
         }
 
-        /* HUD Atas */
+        /* HUD ATAS (INFO) */
         .hud-top {
             position: absolute; top: 0; left: 0; width: 100%;
-            background: rgba(0, 20, 0, 0.8);
+            background: rgba(0, 20, 0, 0.85);
             padding: 10px;
-            display: flex; justify-content: space-between;
-            z-index: 10;
-            border-bottom: 1px solid #00ff88;
+            display: grid; grid-template-columns: 1fr 1fr;
+            border-bottom: 2px solid #00ff88;
+            z-index: 20;
+            box-sizing: border-box;
         }
+        .hud-val { font-size: 1.2rem; font-weight: bold; color: #fff; }
+        .hud-label { font-size: 0.7rem; color: #aaa; }
 
-        .status-box { font-size: 0.8rem; }
-        .val { font-weight: bold; color: #fff; }
-
-        /* HUD Bawah (Tombol) */
+        /* HUD BAWAH (TOMBOL) */
         .hud-bottom {
             position: absolute; bottom: 0; left: 0; width: 100%;
             background: rgba(0, 20, 0, 0.9);
-            padding: 10px;
-            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px;
-            z-index: 10;
+            padding: 8px;
+            display: flex; gap: 5px; overflow-x: auto;
             border-top: 1px solid #00ff88;
+            z-index: 20;
+            box-sizing: border-box;
         }
 
         button {
-            background: #003311; color: #00ff88; border: 1px solid #00ff88;
-            padding: 10px; font-family: inherit; font-weight: bold;
-            cursor: pointer; text-transform: uppercase;
+            background: #002211; color: #00ff88; border: 1px solid #00ff88;
+            padding: 10px 15px; font-weight: bold; white-space: nowrap;
+            font-family: inherit; font-size: 0.8rem; border-radius: 4px;
         }
         button:active { background: #00ff88; color: #000; }
-        
-        .btn-record { background: #330000; color: #ff5555; border-color: #ff5555; }
-        .recording { background: #ff0000 !important; color: white !important; animation: pulse 1s infinite; }
 
-        @keyframes pulse { 0% {opacity:1;} 50% {opacity:0.5;} 100% {opacity:1;} }
-
-        /* Layar Utama */
-        #canvas-container {
-            width: 100vw; height: 100vh;
-            background-image: 
-                linear-gradient(rgba(0, 255, 136, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 136, 0.1) 1px, transparent 1px);
-            background-size: 50px 50px; /* Grid Background */
-            position: relative;
-        }
+        /* Tombol Record Spesial */
+        #btn-rec { background: #330000; border-color: #ff3333; color: #ff3333; min-width: 80px; }
+        #btn-rec.recording { background: #ff0000; color: white; animation: blink 1s infinite; }
         
-        /* Marker Player (Segitiga Tengah) */
-        #player-marker {
-            position: absolute; top: 50%; left: 50%;
-            width: 0; height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 20px solid #fff;
-            transform: translate(-50%, -50%);
-            z-index: 5;
-            filter: drop-shadow(0 0 5px #00ff88);
+        /* Tombol Camera Lock */
+        #btn-cam { background: #004455; color: #00ccff; border-color: #00ccff; }
+        #btn-cam.locked { background: #00ccff; color: #000; }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        /* LAYAR UTAMA */
+        #canvas-wrapper {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505;
+            /* Grid Pattern Background */
+            background-image: radial-gradient(#112211 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
+        /* Notifikasi */
+        #status-msg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8); padding: 20px; border: 1px solid #555;
+            text-align: center; display: none; z-index: 30;
+        }
     </style>
 </head>
 <body>
 
     <div class="hud-top">
-        <div class="status-box">
-            JARAK: <span id="dist-val" class="val">0m</span><br>
-            SPEED: <span id="spd-val" class="val">0</span> km/j
+        <div>
+            <div class="hud-label">JARAK TEMPUH</div>
+            <span id="dist-display" class="hud-val">0</span> <span style="font-size:0.8rem">Meter</span>
         </div>
-        <div class="status-box" style="text-align:right;">
-            GPS: <span id="gps-acc" class="val">--</span><br>
-            REC: <span id="rec-status">OFF</span>
+        <div style="text-align: right;">
+            <div class="hud-label">ESTIMASI LANGKAH</div>
+            <span id="step-display" class="hud-val">0</span> <span style="font-size:0.8rem">Langkah</span>
         </div>
     </div>
 
-    <div id="canvas-container">
-        <div id="player-marker"></div>
-        <canvas id="trackCanvas"></canvas>
+    <div id="canvas-wrapper">
+        <canvas id="mapCanvas"></canvas>
     </div>
+
+    <div id="status-msg">GPS SEARCHING...<br><small>Pastikan di luar ruangan</small></div>
 
     <div class="hud-bottom">
-        <button id="btn-start" class="btn-record" onclick="toggleTracking()">REC START</button>
-        <button onclick="addMarker('🏠')">MARKAS</button>
-        <button onclick="addMarker('🚩')">TARGET</button>
-        <button onclick="addMarker('💧')">AIR</button>
-        <button onclick="addMarker('💀')">BAHAYA</button>
-        <button onclick="saveMap()">SIMPAN</button>
+        <button id="btn-rec" onclick="toggleRecord()">REC</button>
+        <button id="btn-cam" class="locked" onclick="toggleCamera()">🔒 KUNCI</button>
+        <button onclick="addMarker('🏠','Markas')">🏠</button>
+        <button onclick="addMarker('💧','Air')">💧</button>
+        <button onclick="addMarker('💀','Bahaya')">💀</button>
+        <button onclick="addMarker('🚩','Target')">🚩</button>
+        <button onclick="saveImage()" style="margin-left:auto; background:#00ff88; color:black;">💾 SIMPAN</button>
     </div>
 
     <script>
         // --- KONFIGURASI ---
-        const SCALE = 3; // 1 Meter = 3 Pixel di layar (Makin besar makin zoom in)
-        const MIN_DIST = 2; // Minimal gerak 2 meter baru digambar (biar gak keriting pas diam)
-        
-        // --- VARIABLE ---
-        let isTracking = false;
-        let watchId = null;
-        let path = []; // Nyimpen history koordinat
-        let markers = []; // Nyimpen icon
-        let startPos = null;
-        let lastPos = null;
-        let totalDist = 0;
+        const METER_TO_PIXEL = 4; // Zoom level (1 meter = 4 pixel)
+        const MIN_MOVE = 3; // Filter: Gerak minimal 3 meter baru digambar (anti-keriting)
+        const STEP_LENGTH = 0.75; // Panjang langkah rata-rata (0.75 meter)
 
-        const canvas = document.getElementById('trackCanvas');
+        // --- STATE VARIABLES ---
+        let isRecording = false;
+        let isCameraLocked = true; // True = Kamera ngikutin player
+        let watchId = null;
+        
+        let path = []; // Array koordinat {x, y}
+        let markers = []; // Array icon {x, y, icon, label}
+        
+        // Posisi Global
+        let startGeo = null; // LatLon awal
+        let lastGeo = null;
+        let playerX = 0;
+        let playerY = 0;
+        
+        // Camera Offset (Buat geser-geser peta)
+        let camX = 0;
+        let camY = 0;
+        
+        let totalDistance = 0;
+
+        // --- SETUP CANVAS ---
+        const canvas = document.getElementById('mapCanvas');
         const ctx = canvas.getContext('2d');
         
-        // Setup Canvas Fullscreen
-        function resizeCanvas() {
+        function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             redraw();
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        window.addEventListener('resize', resize);
+        resize();
 
-        // Titik tengah layar (Player Position)
-        const CX = window.innerWidth / 2;
-        const CY = window.innerHeight / 2;
-
-        // --- CORE TRACKING LOGIC ---
-        function toggleTracking() {
-            const btn = document.getElementById('btn-start');
-            if (!isTracking) {
+        // --- GPS LOGIC ---
+        function toggleRecord() {
+            const btn = document.getElementById('btn-rec');
+            if (!isRecording) {
                 // START
-                if (!navigator.geolocation) return alert("Browser gak support GPS");
-                
-                isTracking = true;
-                btn.innerText = "REC STOP";
+                if (!navigator.geolocation) return alert("HP tidak support GPS");
+                isRecording = true;
                 btn.classList.add('recording');
-                document.getElementById('rec-status').innerText = "ON";
+                btn.innerText = "STOP";
+                document.getElementById('status-msg').style.display = 'block';
+                
+                // Lock camera pas mulai record
+                isCameraLocked = true;
+                updateCamBtn();
 
-                // Opsi GPS High Accuracy
-                const options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
-                
-                watchId = navigator.geolocation.watchPosition(processPosition, handleError, options);
-                
+                watchId = navigator.geolocation.watchPosition(
+                    updatePosition, 
+                    err => alert("GPS Error: " + err.message),
+                    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+                );
             } else {
                 // STOP
-                isTracking = false;
-                btn.innerText = "REC START";
+                isRecording = false;
                 btn.classList.remove('recording');
-                document.getElementById('rec-status').innerText = "PAUSED";
+                btn.innerText = "REC";
                 navigator.geolocation.clearWatch(watchId);
+                document.getElementById('status-msg').style.display = 'none';
+                
+                // Otomatis buka kunci kamera biar user bisa geser-geser liat hasil
+                isCameraLocked = false;
+                updateCamBtn();
+                alert("Tracking Selesai. Silakan geser layar untuk melihat peta jalur.");
             }
         }
 
-        function processPosition(pos) {
+        function updatePosition(pos) {
+            document.getElementById('status-msg').style.display = 'none'; // Sembunyikan loading
+            
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             const acc = pos.coords.accuracy;
-            const speed = pos.coords.speed ? (pos.coords.speed * 3.6).toFixed(1) : 0; // m/s ke km/h
 
-            // Update HUD
-            document.getElementById('gps-acc').innerText = "±" + Math.round(acc) + "m";
-            document.getElementById('spd-val').innerText = speed;
-
-            // Jangan simpan kalau akurasi jelek banget (>50m) kecuali awal
-            if (acc > 50 && path.length > 0) return;
-
-            // Titik Awal
-            if (!startPos) {
-                startPos = { lat, lon };
-                lastPos = { lat, lon };
-                path.push({ x: 0, y: 0 }); // Titik 0,0 relatif terhadap start
+            // Inisialisasi Titik Awal
+            if (!startGeo) {
+                startGeo = { lat, lon };
+                lastGeo = { lat, lon };
+                path.push({x: 0, y: 0});
                 return;
             }
 
-            // Hitung Jarak dari titik terakhir (Haversine simple)
-            const d = getDistanceFromLatLonInMeters(lastPos.lat, lastPos.lon, lat, lon);
+            // Hitung Jarak dari titik terakhir
+            const dist = getDist(lastGeo.lat, lastGeo.lon, lat, lon);
 
-            // Kalau gerak > MIN_DIST, baru gambar
-            if (d >= MIN_DIST) {
-                totalDist += d;
-                document.getElementById('dist-val').innerText = Math.round(totalDist) + "m";
+            // Filter Noise (Cuma update kalau gerak > MIN_MOVE)
+            if (dist >= MIN_MOVE) {
+                totalDistance += dist;
+                updateStats();
 
-                // Hitung koordinat X,Y baru relatif terhadap Start
-                // Rumus konversi LatLon ke Meter (Approximation)
-                const x_meter = getDistanceFromLatLonInMeters(startPos.lat, startPos.lon, startPos.lat, lon);
-                const y_meter = getDistanceFromLatLonInMeters(startPos.lat, startPos.lon, lat, startPos.lon);
+                // Konversi LatLon ke X,Y Pixel (Relatif ke Start)
+                // Kita anggap Bumi datar lokal (Flat Earth approximation for small area) is enough
+                const dLat = lat - startGeo.lat;
+                const dLon = lon - startGeo.lon;
+                
+                // 1 Derajat Lat ~= 111,320 meter
+                // 1 Derajat Lon ~= 111,320 meter * cos(lat)
+                const metersY = dLat * 111320; 
+                const metersX = dLon * 111320 * Math.cos(startGeo.lat * (Math.PI/180));
 
-                // Tentukan arah positif/negatif
-                const x_dir = (lon > startPos.lon) ? 1 : -1;
-                const y_dir = (lat > startPos.lat) ? -1 : 1; // Y di layar kebalik (atas minus)
+                playerX = metersX * METER_TO_PIXEL;
+                playerY = -metersY * METER_TO_PIXEL; // Y browser kebalik (atas negatif)
 
-                const pixelX = x_meter * x_dir * SCALE;
-                const pixelY = y_meter * y_dir * SCALE;
-
-                path.push({ x: pixelX, y: pixelY });
-                lastPos = { lat, lon };
+                path.push({x: playerX, y: playerY});
+                lastGeo = { lat, lon };
+                
                 redraw();
             }
-            
-            // Putar arah panah player sesuai heading GPS (kalau ada)
-            if (pos.coords.heading) {
-                document.getElementById('player-marker').style.transform = `translate(-50%, -50%) rotate(${pos.coords.heading}deg)`;
+        }
+
+        // --- VISUAL & CAMERA ---
+        function toggleCamera() {
+            isCameraLocked = !isCameraLocked;
+            updateCamBtn();
+            redraw();
+        }
+        
+        function updateCamBtn() {
+            const btn = document.getElementById('btn-cam');
+            if (isCameraLocked) {
+                btn.classList.add('locked');
+                btn.innerText = "🔒 KUNCI";
+            } else {
+                btn.classList.remove('locked');
+                btn.innerText = "✋ GESER";
             }
         }
 
-        function handleError(err) {
-            console.warn('GPS Error(' + err.code + '): ' + err.message);
-            document.getElementById('gps-acc').innerText = "NO SIGNAL";
-        }
-
-        // --- DRAWING LOGIC ---
         function redraw() {
-            // Bersihkan layar
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (path.length < 2) return;
-
-            // Kita harus geser "Dunia" (Path) supaya titik terakhir (Player) ada di tengah layar (CX, CY)
-            const playerX = path[path.length-1].x;
-            const playerY = path[path.length-1].y;
+            // Hitung posisi Kamera
+            let renderOffsetX, renderOffsetY;
             
-            const offsetX = CX - playerX;
-            const offsetY = CY - playerY;
-
-            // 1. Gambar Jalur
-            ctx.beginPath();
-            ctx.strokeStyle = '#00ff88';
-            ctx.lineWidth = 4;
-            ctx.lineJoin = 'round';
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#00ff88';
-
-            // Pindahkan titik awal
-            ctx.moveTo(path[0].x + offsetX, path[0].y + offsetY);
-
-            // Hubungkan titik-titik sisa
-            for (let i = 1; i < path.length; i++) {
-                ctx.lineTo(path[i].x + offsetX, path[i].y + offsetY);
+            if (isCameraLocked) {
+                // Kamera fokus ke Player (Tengah Layar)
+                camX = playerX;
+                camY = playerY;
             }
-            ctx.stroke();
-            ctx.shadowBlur = 0; // Reset shadow biar gak berat
+            
+            // Posisi tengah layar
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // Semua objek digambar relatif terhadap camX, camY
+            renderOffsetX = centerX - camX;
+            renderOffsetY = centerY - camY;
 
-            // 2. Gambar Marker
+            // 1. Gambar Grid (Biar kelihatan gerak)
+            drawGridBackground(renderOffsetX, renderOffsetY);
+
+            // 2. Gambar Jalur
+            if (path.length > 1) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#00ff88';
+                ctx.lineWidth = 4;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                
+                ctx.moveTo(path[0].x + renderOffsetX, path[0].y + renderOffsetY);
+                for (let i = 1; i < path.length; i++) {
+                    ctx.lineTo(path[i].x + renderOffsetX, path[i].y + renderOffsetY);
+                }
+                ctx.stroke();
+            }
+
+            // 3. Gambar Marker
             ctx.font = "24px Arial";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
+            markers.forEach(m => {
+                ctx.fillText(m.icon, m.x + renderOffsetX, m.y + renderOffsetY);
+                // Label kecil di bawah icon
+                ctx.fillStyle = "#aaa";
+                ctx.font = "10px sans-serif";
+                ctx.fillText(m.label, m.x + renderOffsetX, m.y + renderOffsetY + 15);
+                ctx.fillStyle = "#000"; // Reset
+            });
+
+            // 4. Gambar Player (Segitiga)
+            // Player selalu ada di koordinat aslinya + offset kamera
+            const px = playerX + renderOffsetX;
+            const py = playerY + renderOffsetY;
             
-            for (let m of markers) {
-                // Marker posisinya relatif terhadap path, jadi kena offset juga
-                ctx.fillText(m.icon, m.x + offsetX, m.y + offsetY);
-            }
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.arc(px, py, 6, 0, Math.PI * 2);
+            ctx.fill();
+            // Efek Pulse
+            ctx.strokeStyle = "rgba(255,255,255,0.5)";
+            ctx.beginPath();
+            ctx.arc(px, py, 12, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // 5. Gambar Legend (Pojok Kiri Atas Canvas)
+            drawLegend();
         }
 
-        // --- FITUR TAMBAHAN ---
-        function addMarker(icon) {
-            if (path.length === 0) return alert("Mulai tracking dulu!");
+        function drawGridBackground(ox, oy) {
+            // Grid sederhana biar gak pusing liat layar hitam
+            // Logic: Grid statis yang geser sesuai offset, dimodulo biar looping
+            const gridSize = 50;
+            const offsetX = ox % gridSize;
+            const offsetY = oy % gridSize;
             
-            // Taruh marker di posisi pemain saat ini
-            const currentP = path[path.length - 1];
-            markers.push({ x: currentP.x, y: currentP.y, icon: icon });
+            ctx.fillStyle = "#111";
+            for (let x = offsetX; x < canvas.width; x += gridSize) {
+                ctx.fillRect(x, 0, 1, canvas.height);
+            }
+            for (let y = offsetY; y < canvas.height; y += gridSize) {
+                ctx.fillRect(0, y, canvas.width, 1);
+            }
+        }
+        
+        function drawLegend() {
+            // Kotak background legend
+            const boxW = 160;
+            const boxH = 90;
+            const pad = 10;
+            const startY = canvas.height - 180; // Di atas tombol
+            
+            // Gambar di canvas biar ikut ke-save
+            ctx.fillStyle = "rgba(0, 20, 0, 0.7)";
+            ctx.strokeStyle = "#00ff88";
+            ctx.lineWidth = 1;
+            ctx.fillRect(pad, startY, boxW, boxH);
+            ctx.strokeRect(pad, startY, boxW, boxH);
+            
+            // Isi Teks Legend
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 12px Courier New";
+            ctx.textAlign = "left";
+            ctx.fillText("LEGENDA PETA:", pad + 10, startY + 20);
+            
+            ctx.font = "11px Courier New";
+            ctx.fillStyle = "#aaa";
+            ctx.fillText("━━━  Jalur Gerak", pad + 10, startY + 40);
+            ctx.fillText("🏠   Posisi Markas", pad + 10, startY + 55);
+            ctx.fillText("💀   Area Bahaya", pad + 10, startY + 70);
+        }
+
+        // --- INTERAKSI TOUCH (GESER PETA) ---
+        let isDragging = false;
+        let startDragX, startDragY;
+        let startCamX, startCamY;
+
+        canvas.addEventListener('touchstart', e => {
+            if (isCameraLocked) return; // Gak bisa geser kalau dikunci
+            isDragging = true;
+            startDragX = e.touches[0].clientX;
+            startDragY = e.touches[0].clientY;
+            startCamX = camX;
+            startCamY = camY;
+        });
+
+        canvas.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            const dx = e.touches[0].clientX - startDragX;
+            const dy = e.touches[0].clientY - startDragY;
+            
+            // Geser kamera berlawanan arah jari
+            camX = startCamX - dx;
+            camY = startCamY - dy;
+            redraw();
+        });
+
+        canvas.addEventListener('touchend', () => { isDragging = false; });
+
+        // --- UTILS ---
+        function addMarker(icon, label) {
+            if (!isRecording && path.length === 0) return alert("Belum ada jalur!");
+            // Simpan posisi marker di posisi player saat ini
+            markers.push({ x: playerX, y: playerY, icon: icon, label: label });
             redraw();
         }
 
-        function saveMap() {
-            if (path.length === 0) return alert("Belum ada jalur!");
-            
-            // Pas save, kita render ulang tanpa offset biar kelihatan semua
-            // (Fitur save sederhana: screenshot apa yang ada di layar)
+        function updateStats() {
+            document.getElementById('dist-display').innerText = Math.round(totalDistance);
+            // Rumus: Jarak / 0.75m
+            document.getElementById('step-display').innerText = Math.floor(totalDistance / STEP_LENGTH);
+        }
+
+        function getDist(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; 
+            const dLat = (lat2 - lat1) * Math.PI/180;
+            const dLon = (lon2 - lon1) * Math.PI/180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        function saveImage() {
+            // Render ulang sekali untuk memastikan legend bersih
+            redraw();
             const link = document.createElement('a');
-            link.download = 'Jejak_Nuswantara.png';
+            link.download = 'Peta_Nuswantara_V2.png';
             link.href = canvas.toDataURL();
             link.click();
-        }
-
-        // --- RUMUS MATEMATIKA ---
-        function getDistanceFromLatLonInMeters(lat1, lon1, lat2, lon2) {
-            var R = 6371e3; // Radius bumi (meter)
-            var dLat = deg2rad(lat2-lat1);
-            var dLon = deg2rad(lon2-lon1); 
-            var a = 
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-            var d = R * c;
-            return d;
-        }
-
-        function deg2rad(deg) {
-            return deg * (Math.PI/180);
         }
     </script>
 </body>
