@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WAmigma - Image Vault</title>
+    <title>WAmigma - Image Vault v3.1</title>
     <style>
         /* TAMPILAN CYBERPUNK / INTEL */
         body {
@@ -33,17 +33,36 @@
             text-align: center;
         }
 
-        /* INPUT FILE YANG KEREN */
-        .file-upload {
+        /* --- FIX LAYOUT UPLOAD BOX --- */
+        .file-upload-container {
             border: 2px dashed #333;
-            padding: 30px;
             border-radius: 10px;
+            padding: 20px;
             margin-bottom: 20px;
-            cursor: pointer;
             transition: 0.3s;
+            background: #0a0a0a;
         }
-        .file-upload:hover { border-color: #00ff41; background: #0a0a0a; }
+        .file-upload-container:hover {
+            border-color: #00ff41;
+        }
+        .file-upload-label {
+            display: block;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00ff41;
+            font-size: 1.1rem;
+        }
+        .file-name-display {
+            font-size: 0.9rem;
+            color: #888;
+            white-space: nowrap;      /* Mencegah teks turun ke baris baru */
+            overflow: hidden;         /* Menyembunyikan teks yang kepanjangan */
+            text-overflow: ellipsis;  /* Menambahkan '...' di akhir teks yang kepotong */
+            padding: 0 10px;
+        }
         input[type="file"] { display: none; }
+        /* --------------------------- */
         
         input[type="password"] {
             width: 80%;
@@ -82,6 +101,7 @@
             max-width: 100%;
             border-radius: 5px;
             border: 1px solid #00ff41;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
         }
         
         .status { margin-top: 15px; font-size: 0.8rem; color: #666; }
@@ -90,25 +110,29 @@
 <body>
 
     <h1>WAmigma Image</h1>
-    <div class="subtitle">SECURE IMAGE TRANSMISSION PROTOCOL</div>
+    <div class="subtitle">SECURE IMAGE TRANSMISSION PROTOCOL v3.1</div>
 
     <div class="container">
         
-        <label for="fileInput" class="file-upload" id="dropZone">
-            <div id="fileLabel">📁 KLIK PILIH GAMBAR / FILE RAHASIA</div>
-        </label>
+        <div class="file-upload-container">
+            <label for="fileInput" class="file-upload-label">
+                📁 KLIK DISINI UNTUK PILIH FILE
+            </label>
+            <div id="fileNameDisplay" class="file-name-display">Belum ada file yang dipilih.</div>
+        </div>
         <input type="file" id="fileInput">
 
         <input type="password" id="password" placeholder="Masukan Password Kunci">
 
         <div class="btn-group">
-            <button class="btn-enc" onclick="processFile('encrypt')">🔒 ENCRYPT & DOWNLOAD</button>
-            <button class="btn-dec" onclick="processFile('decrypt')">🔓 DECRYPT & VIEW</button>
+            <button class="btn-enc" onclick="processFile('encrypt')">🔒 ENCRYPT & SAVE</button>
+            <button class="btn-dec" onclick="processFile('decrypt')">🔓 DECRYPT & SAVE</button>
         </div>
 
         <div id="previewArea">
-            <p>HASIL DEKRIPSI:</p>
+            <p style="color: #00ff41;">GAMBAR BERHASIL DIBUKA:</p>
             <img id="resultImage" src="" alt="Decrypted Image">
+            <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">(File gambar juga sudah otomatis tersimpan)</p>
         </div>
 
         <div class="status" id="status">Ready for operation.</div>
@@ -116,15 +140,16 @@
 
     <script>
         const fileInput = document.getElementById('fileInput');
-        const fileLabel = document.getElementById('fileLabel');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
         const status = document.getElementById('status');
         let selectedFile = null;
 
-        // Handle File Selection
+        // Handle File Selection (Update Tampilan Nama File)
         fileInput.addEventListener('change', (e) => {
             if(e.target.files.length > 0) {
                 selectedFile = e.target.files[0];
-                fileLabel.innerText = "✅ File terpilih: " + selectedFile.name;
+                fileNameDisplay.innerText = "✅ " + selectedFile.name;
+                fileNameDisplay.style.color = "#00ff41";
             }
         });
 
@@ -140,8 +165,21 @@
             );
         }
 
+        // Fungsi untuk download otomatis
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            // Jangan revoke URL dulu kalau dipake buat preview
+        }
+
         async function processFile(mode) {
             const password = document.getElementById('password').value;
+            document.getElementById('previewArea').style.display = 'none';
             
             if (!selectedFile) { status.innerText = "⚠️ Pilih file dulu bro!"; return; }
             if (!password) { status.innerText = "⚠️ Password wajib diisi!"; return; }
@@ -167,18 +205,13 @@
                     combined.set(iv, salt.length);
                     combined.set(new Uint8Array(encryptedContent), salt.length + iv.length);
 
-                    // Bikin Blob dan Auto Download
+                    // Bikin Blob
                     const blob = new Blob([combined], { type: "application/octet-stream" });
-                    const url = URL.createObjectURL(blob);
                     
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = "RAHASIA_" + Date.now() + ".wmg"; // Ekstensi .wmg (WaMigma)
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
+                    // --- AUTO DOWNLOAD ENCRYPTED FILE ---
+                    downloadBlob(blob, "RAHASIA_" + Date.now() + ".wmg");
                     
-                    status.innerText = "✅ File berhasil dienkripsi & didownload!";
+                    status.innerText = "✅ File berhasil dienkripsi & tersimpan otomatis!";
 
                 } else {
                     // --- DEKRIPSI ---
@@ -195,20 +228,28 @@
                         { name: "AES-GCM", iv: iv }, key, ciphertext
                     );
 
-                    // Tampilkan Gambar
-                    const blob = new Blob([decryptedContent]); // Browser pinter, bakal nebak mime type
+                    // --- HASIL DEKRIPSI ---
+                    const blob = new Blob([decryptedContent]); // Browser akan coba menebak tipe gambarnya
                     const url = URL.createObjectURL(blob);
                     
+                    // 1. Tampilkan Preview Gambar
                     const img = document.getElementById('resultImage');
                     img.src = url;
                     document.getElementById('previewArea').style.display = 'block';
                     
-                    status.innerText = "✅ Gambar terbuka!";
+                    status.innerText = "✅ Gambar terbuka & sedang didownload...";
+
+                    // 2. --- AUTO DOWNLOAD DECRYPTED IMAGE ---
+                    // Kita kasih nama generik karena kita gak tau ekstensi aslinya (.jpg/.png)
+                    // Browser biasanya pinter nambahin ekstensi sendiri pas di-save.
+                    downloadBlob(blob, "DECRYPTED_IMAGE_" + Date.now());
+                    
+                    status.innerText = "✅ Selesai! Gambar telah ditampilkan dan disimpan.";
                 }
             } catch (e) {
                 console.error(e);
-                status.innerText = "❌ GAGAL! Password salah atau file bukan format WAmigma.";
-                alert("Gagal Decrypt! Cek password atau file.");
+                status.innerText = "❌ GAGAL! Password salah atau file korup.";
+                alert("Gagal Decrypt! Cek password atau pastikan file benar.");
             }
         }
     </script>
