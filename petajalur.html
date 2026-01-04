@@ -27,19 +27,26 @@
         .hud-val { font-size: 1.2rem; font-weight: bold; color: #fff; }
         .hud-label { font-size: 0.7rem; color: #aaa; }
 
-        /* HUD BAWAH (TOMBOL - VERSI ANTI KETIMPAH) */
+/* HUD BAWAH (DANGAK KE ATAS BIAR GAK KETABRAK TASKBAR JAM) */
         .hud-bottom {
             position: absolute; 
-            bottom: 20px; /* Naik 20px dari bawah biar gak ketutupan */
+            bottom: 110px; /* INI KUNCINYA: Angkat tinggi biar di atas jam */
             left: 50%;
-            transform: translateX(-50%); /* Posisi tengah */
-            width: 95%; /* Lebar 95% biar ada sisa kiri kanan */
+            transform: translateX(-50%);
+            width: 90%; 
             
-            background: rgba(0, 20, 0, 0.9);
+            background: rgba(0, 30, 10, 0.95); /* Gelapin dikit biar kontras */
             border: 1px solid #00ff88;
-            border-radius: 15px; /* Sudut tumpul biar manis */
+            border-radius: 50px; /* Lebih bulet biar kayak kapsul canggih */
             
             padding: 10px;
+            display: flex; gap: 10px; overflow-x: auto;
+            z-index: 9999; /* Pastikan dia paling depan */
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Styling scrollbar biar rapi */
+        .hud-bottom::-webkit-scrollbar { height: 0px; background: transparent; }
             
             /* Support buat iPhone poni/island biar gak kena garis home */
             padding-bottom: env(safe-area-inset-bottom); 
@@ -418,4 +425,5 @@
     </script>
 </body>
 </html>
+
 
