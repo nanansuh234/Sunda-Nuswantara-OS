@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ND-ID High Res</title>
+    <title>ND-ID Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -62,17 +62,14 @@
             position: relative;
         }
         
-        /* FIX: Area QR Code dikasih padding putih tebal & ukuran fix */
         #qr-code { 
             background: #fff; 
-            padding: 15px; /* Quiet Zone Lebar */
+            padding: 15px;
             width: 250px; 
             height: 250px; 
             margin: 0 auto; 
             border-radius: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
         }
         
         /* SAVE BUTTON */
@@ -132,6 +129,27 @@
         .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .num-key { background: #222; padding: 15px; text-align: center; font-size: 1.2rem; cursor: pointer; border-radius: 5px; border: 1px solid #333; }
         .num-key:active { background: var(--primary); color: #000; }
+
+        /* TOGGLE SWITCH STYLE */
+        .toggle-container {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin-bottom: 10px; color: #fff; font-size: 0.9rem;
+        }
+        .toggle-switch {
+            position: relative; display: inline-block; width: 50px; height: 24px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333; transition: .4s; border-radius: 34px; border: 1px solid #555;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 3px;
+            background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(26px); background-color: #000; }
+
     </style>
 </head>
 <body>
@@ -184,8 +202,21 @@
             </div>
 
             <div style="background: rgba(0,255,136,0.1); padding: 15px; border: 1px dashed var(--primary); border-radius: 5px; margin-top: 15px;">
-                <label style="text-align:center; color:var(--primary); font-weight:bold; font-size:1rem;">PIN KEAMANAN (6 ANGKA)</label>
-                <input type="password" id="c_pin" maxlength="6" inputmode="numeric" placeholder="******" style="text-align:center; letter-spacing:5px; font-size:1.5rem; margin-top:5px;">
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="check_use_pin" checked onchange="togglePinInput()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>GUNAKAN PIN KEAMANAN</span>
+                </div>
+                
+                <div id="pin-input-wrapper">
+                    <label style="text-align:center; color:#888; font-size:0.7rem;">MASUKKAN 6 ANGKA</label>
+                    <input type="password" id="c_pin" maxlength="6" inputmode="numeric" placeholder="******" style="text-align:center; letter-spacing:5px; font-size:1.5rem; margin-top:5px;">
+                </div>
+                <div id="pin-disabled-msg" style="display:none; text-align:center; color:#666; font-style:italic;">
+                    Mode Tanpa PIN (Langsung Terbuka)
+                </div>
             </div>
 
             <button class="btn-action" onclick="generateID()">GENERATE DIGITAL ID</button>
@@ -194,7 +225,7 @@
                 <div class="id-card-preview" id="res_card">
                     <div class="card-header">
                         <span style="color:var(--primary); font-weight:bold;">ND-ID PRO</span>
-                        <span style="font-size:0.8rem; border:1px solid #555; padding:2px 5px;">SECURE</span>
+                        <span id="badge-mode" style="font-size:0.8rem; border:1px solid #555; padding:2px 5px;">SECURE</span>
                     </div>
                     <div id="qr-code"></div>
                     
@@ -228,7 +259,8 @@
 
     <div class="modal-overlay" id="pinModal">
         <div class="modal-content" style="text-align:center; max-width:350px;">
-            <h3 style="color:var(--secondary);">MASUKKAN PIN</h3>
+            <h3 style="color:var(--secondary);">ID TERKUNCI</h3>
+            <p style="color:#888; font-size:0.8rem;">Masukkan PIN Pemilik untuk membuka</p>
             <div class="pin-display" id="pinDisplay"></div>
             <div class="numpad">
                 <div class="num-key" onclick="kp(1)">1</div><div class="num-key" onclick="kp(2)">2</div><div class="num-key" onclick="kp(3)">3</div>
@@ -279,38 +311,64 @@
             if(t !== 'verify' && html5QrCode) { html5QrCode.stop().then(() => { html5QrCode = null; document.getElementById('reader').style.display='none'; }); }
         }
 
+        // FITUR BARU: Toggle Tampilan Input PIN
+        function togglePinInput() {
+            const isChecked = document.getElementById('check_use_pin').checked;
+            if(isChecked) {
+                document.getElementById('pin-input-wrapper').style.display = 'block';
+                document.getElementById('pin-disabled-msg').style.display = 'none';
+            } else {
+                document.getElementById('pin-input-wrapper').style.display = 'none';
+                document.getElementById('pin-disabled-msg').style.display = 'block';
+            }
+        }
+
         function generateID() {
             const v = (id) => document.getElementById(id).value;
-            if(!v('c_nik') || !v('c_nama') || !v('c_pin') || v('c_pin').length !== 6) return alert("Lengkapi Data & PIN!");
+            const usePin = document.getElementById('check_use_pin').checked;
+            
+            // Validasi Dasar
+            if(!v('c_nik') || !v('c_nama')) return alert("Lengkapi Data Utama!");
+            
+            // Logika PIN
+            let finalPin = "NOPIN";
+            if (usePin) {
+                if(!v('c_pin') || v('c_pin').length !== 6) return alert("PIN harus 6 angka!");
+                finalPin = v('c_pin');
+                document.getElementById('badge-mode').innerText = "SECURE";
+                document.getElementById('badge-mode').style.borderColor = "#00ff88";
+            } else {
+                document.getElementById('badge-mode').innerText = "OPEN DATA";
+                document.getElementById('badge-mode').style.borderColor = "#ffffff";
+            }
 
             const dataArray = [
                 v('c_nik'), v('c_nama'), v('c_tmp_lahir')+", "+v('c_tgl_lahir'),
                 v('c_jk'), v('c_agama'), v('c_alamat'), v('c_rtrw'),
                 v('c_desa'), v('c_kec'), v('c_status'), v('c_kerja'),
-                v('c_pin')
+                finalPin 
             ];
+            
+            // Gabung data jadi string
             const compressedString = dataArray.join('|');
 
+            // Tampilkan Preview
             document.getElementById('res_nama_disp').innerText = v('c_nama').toUpperCase();
             document.getElementById('res_nik_disp').innerText = v('c_nik');
             
             const qrEl = document.getElementById('qr-code');
             qrEl.innerHTML = "";
-            
-            // FIX 1: UKURAN QR DIPERBESAR (width 220)
             new QRCode(qrEl, { text: compressedString, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.L });
             
             document.getElementById('res_card').style.display = 'block';
             document.getElementById('card-wrapper').style.display = 'block';
         }
 
-        // FIX 2: SAVE DENGAN SKALA TINGGI (HD)
         function saveCardImage() {
             const cardElement = document.getElementById('res_card');
-            
             html2canvas(cardElement, {
-                backgroundColor: "#111", // Background aman
-                scale: 4, // 4x RESOLUSI (Sangat Tajam)
+                backgroundColor: "#111",
+                scale: 4, 
                 logging: false
             }).then(canvas => {
                 const link = document.createElement('a');
@@ -341,8 +399,17 @@
             if(text.includes('|')) {
                 pendingDataRaw = text.split('|');
                 if(pendingDataRaw.length >= 12) {
-                    tempPin = ""; updatePinDisp();
-                    document.getElementById('pinModal').style.display = 'flex';
+                    const securityKey = pendingDataRaw[11];
+                    
+                    // FITUR BARU: Cek apakah pakai PIN atau Tidak
+                    if(securityKey === "NOPIN") {
+                        // Bypass PIN Modal -> Langsung Tampilkan Data
+                        showDataResult();
+                    } else {
+                        // Butuh PIN -> Tampilkan Modal PIN
+                        tempPin = ""; updatePinDisp();
+                        document.getElementById('pinModal').style.display = 'flex';
+                    }
                 } else { alert("Data QR Rusak!"); }
             } else { alert("Format QR Salah!"); }
         }
@@ -353,20 +420,24 @@
         function verifyPin() {
             if(tempPin === pendingDataRaw[11]) {
                 closeModal('pinModal');
-                const rawJK = pendingDataRaw[3]; const rawStatus = pendingDataRaw[9];
-                document.getElementById('d_nik').innerText = ": " + pendingDataRaw[0];
-                document.getElementById('d_nama').innerText = ": " + pendingDataRaw[1].toUpperCase();
-                document.getElementById('d_ttl').innerText = ": " + pendingDataRaw[2].toUpperCase();
-                document.getElementById('d_jk').innerText = ": " + (dictJK[rawJK] || rawJK);
-                document.getElementById('d_alamat').innerText = ": " + pendingDataRaw[5].toUpperCase();
-                document.getElementById('d_rtrw').innerText = ": " + pendingDataRaw[6];
-                document.getElementById('d_desa').innerText = ": " + pendingDataRaw[7].toUpperCase();
-                document.getElementById('d_kec').innerText = ": " + pendingDataRaw[8].toUpperCase();
-                document.getElementById('d_agama').innerText = ": " + pendingDataRaw[4].toUpperCase();
-                document.getElementById('d_status').innerText = ": " + (dictStatus[rawStatus] || rawStatus);
-                document.getElementById('d_kerja').innerText = ": " + pendingDataRaw[10].toUpperCase();
-                document.getElementById('dataModal').style.display = 'flex';
+                showDataResult();
             } else { alert("PIN SALAH!"); tempPin = ""; updatePinDisp(); }
+        }
+
+        function showDataResult() {
+            const rawJK = pendingDataRaw[3]; const rawStatus = pendingDataRaw[9];
+            document.getElementById('d_nik').innerText = ": " + pendingDataRaw[0];
+            document.getElementById('d_nama').innerText = ": " + pendingDataRaw[1].toUpperCase();
+            document.getElementById('d_ttl').innerText = ": " + pendingDataRaw[2].toUpperCase();
+            document.getElementById('d_jk').innerText = ": " + (dictJK[rawJK] || rawJK);
+            document.getElementById('d_alamat').innerText = ": " + pendingDataRaw[5].toUpperCase();
+            document.getElementById('d_rtrw').innerText = ": " + pendingDataRaw[6];
+            document.getElementById('d_desa').innerText = ": " + pendingDataRaw[7].toUpperCase();
+            document.getElementById('d_kec').innerText = ": " + pendingDataRaw[8].toUpperCase();
+            document.getElementById('d_agama').innerText = ": " + pendingDataRaw[4].toUpperCase();
+            document.getElementById('d_status').innerText = ": " + (dictStatus[rawStatus] || rawStatus);
+            document.getElementById('d_kerja').innerText = ": " + pendingDataRaw[10].toUpperCase();
+            document.getElementById('dataModal').style.display = 'flex';
         }
 
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
