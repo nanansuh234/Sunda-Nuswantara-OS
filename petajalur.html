@@ -27,24 +27,33 @@
         .hud-val { font-size: 1.2rem; font-weight: bold; color: #fff; }
         .hud-label { font-size: 0.7rem; color: #aaa; }
 
-        /* HUD BAWAH (TOMBOL) */
+        /* HUD BAWAH (TOMBOL - VERSI ANTI KETIMPAH) */
         .hud-bottom {
-            position: absolute; bottom: 0; left: 0; width: 100%;
+            position: absolute; 
+            bottom: 20px; /* Naik 20px dari bawah biar gak ketutupan */
+            left: 50%;
+            transform: translateX(-50%); /* Posisi tengah */
+            width: 95%; /* Lebar 95% biar ada sisa kiri kanan */
+            
             background: rgba(0, 20, 0, 0.9);
-            padding: 8px;
-            display: flex; gap: 5px; overflow-x: auto;
-            border-top: 1px solid #00ff88;
-            z-index: 20;
-            box-sizing: border-box;
+            border: 1px solid #00ff88;
+            border-radius: 15px; /* Sudut tumpul biar manis */
+            
+            padding: 10px;
+            
+            /* Support buat iPhone poni/island biar gak kena garis home */
+            padding-bottom: env(safe-area-inset-bottom); 
+            
+            display: flex; gap: 8px; overflow-x: auto; /* Scroll samping kalau tombol kebanyakan */
+            z-index: 50; /* Z-index tinggi biar di atas segalanya */
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
         }
 
-        button {
-            background: #002211; color: #00ff88; border: 1px solid #00ff88;
-            padding: 10px 15px; font-weight: bold; white-space: nowrap;
-            font-family: inherit; font-size: 0.8rem; border-radius: 4px;
+        /* Biar scrollbar di menu bawah gak nongol (estetika) */
+        .hud-bottom::-webkit-scrollbar {
+            display: none;
         }
-        button:active { background: #00ff88; color: #000; }
-
+        
         /* Tombol Record Spesial */
         #btn-rec { background: #330000; border-color: #ff3333; color: #ff3333; min-width: 80px; }
         #btn-rec.recording { background: #ff0000; color: white; animation: blink 1s infinite; }
@@ -409,3 +418,4 @@
     </script>
 </body>
 </html>
+
