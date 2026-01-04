@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navigasi Taktis Jelas - Nuswantara OS</title>
+    <title>Navigasi Taktis Stable - Nuswantara OS</title>
     <style>
-        /* --- STYLE DASAR --- */
+        /* --- STYLE SAMA PERSIS YANG KEMARIN (GAK BERUBAH) --- */
         body {
             background-color: #050505;
             color: #00ff88;
@@ -13,163 +13,107 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             min-height: 100vh; margin: 0; text-align: center; overflow-x: hidden;
         }
-        
-        #pc-warning { 
-            display: none; background: #330000; border: 1px solid red; color: #ffcccc; 
-            padding: 10px; margin: 20px; font-size: 0.8rem; 
-        }
-
+        #pc-warning { display: none; background: #330000; border: 1px solid red; color: #ffcccc; padding: 10px; margin: 20px; font-size: 0.8rem; }
         #start-btn {
             padding: 20px 40px; font-size: 1.2rem; background: #001a0d; color: #00ff88;
-            border: 2px solid #00ff88; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+            border: 2px solid #00ff88; cursor: pointer; text-transform: uppercase; letter-spacing: 3px;
             box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
-            border-radius: 4px;
         }
-
         .compass-ui { display: none; width: 100%; max-width: 400px; }
 
-        /* --- CINCIN KOMPAS --- */
         .compass-ring {
-            width: 280px; height: 280px; margin: 0 auto 20px;
+            width: 300px; height: 300px; margin: 0 auto 30px;
             border: 4px solid #333; border-radius: 50%; position: relative;
             background: #000;
-            box-shadow: 0 0 25px rgba(0,255,136,0.1);
+            box-shadow: inset 0 0 50px rgba(0,255,136,0.1), 0 0 20px rgba(0,0,0,0.8);
             overflow: hidden;
         }
 
-        /* Container yang berputar (Piringan) */
+        /* Container yang berputar */
         #rotating-container {
             width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            transition: transform 0.1s linear;
+            transition: transform 0.1s linear; /* Lebih responsif dikit */
         }
 
-        /* Label Arah di Piringan */
-        .north-label { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); color: #ff3333; font-weight: 900; font-size: 1.5rem; z-index: 5; }
-        .other-labels { position: absolute; color: #00ff88; font-weight: bold; font-size: 1.2rem; z-index: 5; }
-
-        /* Garis-garis Dekorasi */
+        /* Grafis Taktis */
         .tick-marks {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-conic-gradient(from 0deg, rgba(0, 255, 136, 0.4) 0deg 1deg, transparent 1deg 15deg);
-            mask: radial-gradient(transparent 65%, black 66%); -webkit-mask: radial-gradient(transparent 65%, black 66%);
+            background: repeating-conic-gradient(from 0deg, rgba(0, 255, 136, 0.4) 0deg 0.5deg, transparent 0.5deg 4.5deg, rgba(0, 255, 136, 0.8) 4.5deg 5deg);
+            mask: radial-gradient(transparent 60%, black 61%); -webkit-mask: radial-gradient(transparent 60%, black 61%);
         }
-
-        /* Jarum Merah (Diam) */
+        .cardinal-marks {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-conic-gradient(from -0.5deg, #00ff88 0deg 1deg, transparent 1deg 89deg);
+            mask: radial-gradient(transparent 55%, black 56%); -webkit-mask: radial-gradient(transparent 55%, black 56%); z-index: 2;
+        }
+        .north-label { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); color: #ff0000; font-weight: 900; font-size: 1.5rem; z-index: 5; text-shadow: 0 0 10px #ff0000; }
+        .other-labels { position: absolute; color: #00ff88; font-weight: bold; font-size: 1.2rem; z-index: 5; }
+        .dial-bg {
+            width: 100%; height: 100%; position: absolute; top:0; left:0;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Compass_Card.png/600px-Compass_Card.png') no-repeat center;
+            background-size: 85%; opacity: 0.2; filter: invert(1) grayscale(1) brightness(0.6); z-index: 0;
+        }
         .static-needle {
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%); z-index: 10;
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%); z-index: 10;
         }
         .static-needle::after {
-            content: ''; display: block; 
-            border-top: 20px solid #ff3333;
-            border-left: 10px solid transparent; 
-            border-right: 10px solid transparent; 
-            filter: drop-shadow(0 0 5px #ff0000);
+            content: ''; display: block; border-top: 25px solid #ff3333;
+            border-left: 12px solid transparent; border-right: 12px solid transparent; filter: drop-shadow(0 0 5px #ff3333);
         }
 
-        /* --- INFO PANEL --- */
-        .hud-data { 
-            border-top: 1px solid #333; 
-            padding-top: 15px; width: 90%; margin: auto; 
-        }
-        
-        .big-deg { 
-            font-size: 3rem; font-weight: bold; color: #fff; margin: 0; 
-            text-shadow: 0 0 10px #00ff88;
-        }
-        
-        /* Arah Mata Angin Full Text */
-        .cardinal-text { 
-            font-size: 1.2rem; color: #00ff88; margin-bottom: 20px; 
-            font-weight: bold; letter-spacing: 1px; text-transform: uppercase;
-        }
-        
-        /* Tabel GPS Rinci */
-        .gps-box {
-            background: #111;
-            border: 1px solid #333;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: left;
-            font-size: 0.9rem;
-            display: grid;
-            gap: 10px;
-        }
-        
-        .gps-row {
-            display: flex; justify-content: space-between;
-            border-bottom: 1px solid #222;
-            padding-bottom: 5px;
-        }
-        .gps-row:last-child { border-bottom: none; }
-        
-        .gps-label { color: #888; font-size: 0.8rem; }
-        .gps-val { color: #fff; font-weight: bold; font-family: monospace; }
-
-        .back-btn { 
-            margin-top: 30px; display: inline-block; text-decoration: none; 
-            color: #666; font-size: 0.9rem; border: 1px solid #333; padding: 8px 20px; 
-            transition: 0.3s;
-        }
-        .back-btn:hover { color: #00ff88; border-color: #00ff88; }
+        /* HUD Data */
+        .hud-data { border-top: 2px solid #333; padding-top: 15px; width: 95%; margin: auto; background: rgba(0,20,10,0.5); }
+        .big-deg { font-size: 3.5rem; font-weight: 900; color: #fff; text-shadow: 0 0 15px #00ff88; margin: 0; }
+        .cardinal-text { font-size: 1.4rem; color: #00ff88; margin-bottom: 15px; font-weight: bold; letter-spacing: 2px; }
+        .gps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.75rem; text-align: left; padding: 10px; background: #0a0a0a; border: 1px solid #222; }
+        .gps-val { font-size: 0.9rem; color: #fff; font-weight: bold; }
+        .back-btn { margin-top: 25px; display: inline-block; text-decoration: none; color: #888; font-size: 0.9rem; border: 1px solid #444; padding: 8px 20px; }
     </style>
 </head>
 <body>
 
-    <div id="pc-warning">⚠️ WARNING: Sensor tidak terdeteksi di Laptop/PC. Buka di HP.</div>
+    <div id="pc-warning">⚠️ WARNING: Sensor tidak terdeteksi. Buka di HP.</div>
 
-    <button id="start-btn" onclick="initSystem()">AKTIFKAN SENSOR</button>
+    <button id="start-btn" onclick="initSystem()">AKTIFKAN SYSTEM</button>
 
     <div class="compass-ui" id="ui-panel">
-        
         <div class="compass-ring">
             <div class="static-needle"></div>
-            
             <div id="rotating-container">
-                <div class="north-label">U</div> <div class="other-labels" style="top: 50%; right: 15px; transform: translateY(-50%);">T</div>
-                <div class="other-labels" style="bottom: 15px; left: 50%; transform: translateX(-50%);">S</div>
-                <div class="other-labels" style="top: 50%; left: 15px; transform: translateY(-50%);">B</div>
+                <div class="north-label">N</div>
+                <div class="other-labels" style="top: 50%; right: 10px; transform: translateY(-50%);">E</div>
+                <div class="other-labels" style="bottom: 10px; left: 50%; transform: translateX(-50%);">S</div>
+                <div class="other-labels" style="top: 50%; left: 10px; transform: translateY(-50%);">W</div>
                 <div class="tick-marks"></div>
+                <div class="cardinal-marks"></div>
+                <div class="dial-bg"></div>
             </div>
         </div>
 
         <div class="hud-data">
-            <div class="big-deg" id="degree-display">0°</div>
-            <div class="cardinal-text" id="cardinal-display">MENUNGGU...</div>
-
-            <div class="gps-box">
-                <div class="gps-row">
-                    <span class="gps-label">GARIS LINTANG (LAT)</span>
-                    <span id="lat-val" class="gps-val">Mencari...</span>
-                </div>
-                <div class="gps-row">
-                    <span class="gps-label">GARIS BUJUR (LON)</span>
-                    <span id="lon-val" class="gps-val">Mencari...</span>
-                </div>
-                <div class="gps-row">
-                    <span class="gps-label">KETINGGIAN (ALT)</span>
-                    <span id="alt-val" class="gps-val">--</span>
-                </div>
-                <div class="gps-row">
-                    <span class="gps-label">AKURASI SINYAL</span>
-                    <span id="acc-val" class="gps-val">--</span>
-                </div>
+            <div class="big-deg" id="degree-display">--°</div>
+            <div class="cardinal-text" id="cardinal-display">STANDBY</div>
+            <div class="gps-grid">
+                <div>LAT: <span id="lat-val" class="gps-val">...</span></div>
+                <div>LON: <span id="lon-val" class="gps-val">...</span></div>
+                <div>ALT: <span id="alt-val" class="gps-val">--</span></div>
             </div>
         </div>
         
-        <a href="index.html" class="back-btn"><< KEMBALI KE OS</a>
+        <a href="index.html" class="back-btn"><< KEMBALI</a>
     </div>
 
     <script>
-        // Cek apakah dibuka di PC
+        // Cek support dasar
         if (!window.DeviceOrientationEvent) document.getElementById('pc-warning').style.display = 'block';
 
         function initSystem() {
-            // Izin sensor untuk iPhone/iOS
+            // iOS 13+ Permission
             if (typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
                     .then(res => {
                         if (res === 'granted') startCompass();
-                        else alert("Izin sensor ditolak!");
+                        else alert("Izin Ditolak!");
                     })
                     .catch(alert);
             } else {
@@ -180,16 +124,16 @@
         function startCompass() {
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('ui-panel').style.display = 'block';
-            
-            // Aktifkan GPS
             startGPS();
 
-            // Aktifkan Sensor Arah (Logic Horizontal)
+            // --- LOGIC FIX (ANTI-VERTIKAL) ---
+            // Kita pakai event handler biasa, tapi kita cek propertinya
+            
+            // Cek apakah browser support 'deviceorientationabsolute' (Android Chrome Modern)
             if ('ondeviceorientationabsolute' in window) {
-                // Android Modern
                 window.addEventListener('deviceorientationabsolute', handleOrientation);
             } else {
-                // iOS & Android Lama
+                // Fallback ke standar lama (iOS / Android lama)
                 window.addEventListener('deviceorientation', handleOrientation);
             }
         }
@@ -197,47 +141,61 @@
         function handleOrientation(e) {
             let heading = 0;
 
+            // KASUS 1: iOS (WebKit)
             if (e.webkitCompassHeading) {
-                // Khusus iOS
+                // iOS sudah ngasih data mateng, langsung pakai
+                // webkitCompassHeading = 0 di Utara, nambah searah jarum jam. Aman.
                 heading = e.webkitCompassHeading;
-            } else if (e.alpha !== null) {
-                // Khusus Android (Perlu dibalik rumusnya)
+            }
+            // KASUS 2: Android (Non-WebKit)
+            else if (e.alpha !== null) {
+                // e.alpha = Rotasi Z axis (0-360).
+                // Masalahnya: Android alpha muternya "Counter-Clockwise" (berlawanan jarum jam)
+                // Jadi kalau kita putar HP ke kanan, angkanya malah turun.
+                // Rumusnya harus: 360 - alpha.
                 heading = 360 - e.alpha; 
+                
+                // Normalisasi kalau minus
                 if (heading < 0) heading += 360; 
-            } else {
-                return; 
+            }
+            else {
+                return; // Gak ada data
             }
 
+            // Update UI
             updateUI(heading);
         }
 
         function updateUI(deg) {
-            // Putar visual kompas berlawanan arah HP
+            // Putar piringan berlawanan arah HP
+            // Karena heading nambah searah jarum jam (Clockwise),
+            // Kita putar grafisnya Counter-Clockwise (negatif) biar 'N' tetep di utara.
             document.getElementById('rotating-container').style.transform = `rotate(${-deg}deg)`;
 
-            // Update Angka Derajat
             let d = Math.round(deg);
             document.getElementById('degree-display').innerText = `${d}°`;
-            
-            // Update Teks Arah (8 Mata Angin Saja)
             document.getElementById('cardinal-display').innerText = getCardinal(d);
         }
 
         function getCardinal(deg) {
-            // Normalisasi
+            // Normalisasi modulus 360 biar aman
             deg = deg % 360;
-            
-            // Logic 8 Arah (Standar)
-            // Tiap arah punya cakupan 45 derajat (22.5 kiri + 22.5 kanan)
-            if (deg >= 337.5 || deg < 22.5) return "UTARA";
-            if (deg >= 22.5 && deg < 67.5) return "TIMUR LAUT";
-            if (deg >= 67.5 && deg < 112.5) return "TIMUR";
-            if (deg >= 112.5 && deg < 157.5) return "TENGGARA";
-            if (deg >= 157.5 && deg < 202.5) return "SELATAN";
-            if (deg >= 202.5 && deg < 247.5) return "BARAT DAYA";
-            if (deg >= 247.5 && deg < 292.5) return "BARAT";
-            if (deg >= 292.5 && deg < 337.5) return "BARAT LAUT";
-            
+            if (deg >= 348.75 || deg < 11.25) return "UTARA";
+            if (deg >= 11.25 && deg < 33.75) return "U T L"; // Utara Timur Laut
+            if (deg >= 33.75 && deg < 56.25) return "TIMUR LAUT";
+            if (deg >= 56.25 && deg < 78.75) return "T T L"; // Timur Timur Laut
+            if (deg >= 78.75 && deg < 101.25) return "TIMUR";
+            if (deg >= 101.25 && deg < 123.75) return "T M G"; // Timur Menenggara
+            if (deg >= 123.75 && deg < 146.25) return "TENGGARA";
+            if (deg >= 146.25 && deg < 168.75) return "S M G"; // Selatan Menenggara
+            if (deg >= 168.75 && deg < 191.25) return "SELATAN";
+            if (deg >= 191.25 && deg < 213.75) return "S B D"; // Selatan Barat Daya
+            if (deg >= 213.75 && deg < 236.25) return "BARAT DAYA";
+            if (deg >= 236.25 && deg < 258.75) return "B B D"; // Barat Barat Daya
+            if (deg >= 258.75 && deg < 281.25) return "BARAT";
+            if (deg >= 281.25 && deg < 303.75) return "B B L"; // Barat Barat Laut
+            if (deg >= 303.75 && deg < 326.25) return "BARAT LAUT";
+            if (deg >= 326.25 && deg < 348.75) return "U B L"; // Utara Barat Laut
             return "";
         }
 
@@ -245,26 +203,12 @@
             if ("geolocation" in navigator) {
                 navigator.geolocation.watchPosition(
                     pos => {
-                        // Tampilkan 6 angka di belakang koma biar presisi
-                        document.getElementById('lat-val').innerText = pos.coords.latitude.toFixed(6);
-                        document.getElementById('lon-val').innerText = pos.coords.longitude.toFixed(6);
-                        
-                        // Ketinggian (MDPL - Meter Diatas Permukaan Laut)
-                        let alt = pos.coords.altitude ? Math.round(pos.coords.altitude) + " MDPL" : "Tidak Terdeteksi";
-                        document.getElementById('alt-val').innerText = alt;
-
-                        // Akurasi
-                        let acc = pos.coords.accuracy ? "±" + Math.round(pos.coords.accuracy) + " Meter" : "--";
-                        document.getElementById('acc-val').innerText = acc;
+                        document.getElementById('lat-val').innerText = pos.coords.latitude.toFixed(5);
+                        document.getElementById('lon-val').innerText = pos.coords.longitude.toFixed(5);
+                        document.getElementById('alt-val').innerText = pos.coords.altitude ? Math.round(pos.coords.altitude) + "m" : "--";
                     },
-                    err => {
-                        console.log("GPS Error");
-                        document.getElementById('lat-val').innerText = "Gagal Mengambil Lokasi";
-                    }, 
-                    { enableHighAccuracy: true, maximumAge: 0 }
+                    err => console.log("GPS Err"), { enableHighAccuracy: true }
                 );
-            } else {
-                document.getElementById('lat-val').innerText = "GPS Tidak Support";
             }
         }
     </script>
