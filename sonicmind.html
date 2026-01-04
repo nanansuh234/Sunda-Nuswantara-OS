@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonicMind - Digital Telepathy</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00ffcc; /* Cyan Sci-Fi */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        h1 { text-shadow: 0 0 15px #00ffcc; margin-bottom: 5px; letter-spacing: 3px; text-transform: uppercase;}
+        .sub { color: #008877; font-size: 0.8rem; margin-bottom: 30px; }
+
+        .container {
+            width: 100%; max-width: 500px;
+            background: #0a0a0a; border: 1px solid #005544;
+            padding: 20px; border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.1);
+            position: relative;
+        }
+
+        /* TAB SWITCH */
+        .mode-switch {
+            display: flex; margin-bottom: 20px; border: 1px solid #005544; border-radius: 8px; overflow: hidden;
+        }
+        .mode-btn {
+            flex: 1; padding: 12px; border: none; background: #050505; color: #008877;
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .mode-btn.active { background: #005544; color: #fff; box-shadow: inset 0 0 10px #000; }
+
+        /* INPUTS */
+        textarea {
+            width: 100%; height: 80px; background: #001111; color: #00ffcc;
+            border: 1px solid #005544; border-radius: 5px; padding: 10px;
+            font-family: monospace; resize: none; box-sizing: border-box;
+        }
+        textarea:focus { outline: none; border-color: #00ffcc; }
+
+        /* CONTROLS */
+        .controls { margin-top: 15px; display: flex; gap: 10px; align-items: center; justify-content: center;}
+        
+        button.action {
+            padding: 15px 30px; border: none; border-radius: 50px;
+            background: #00ffcc; color: #000; font-weight: 900;
+            font-size: 1rem; cursor: pointer; box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+            transition: 0.2s;
+        }
+        button.action:active { transform: scale(0.95); }
+        button.action.stop { background: #ff3333; color: white; box-shadow: 0 0 20px rgba(255, 51, 51, 0.4); display: none;}
+
+        .freq-select {
+            font-size: 0.8rem; color: #aaa; margin-top: 10px; text-align: center;
+        }
+
+        /* VISUALIZER */
+        canvas {
+            width: 100%; height: 100px; background: #000;
+            border: 1px solid #333; margin-top: 20px; border-radius: 5px;
+        }
+
+        /* LOG */
+        #log {
+            margin-top: 15px; font-family: monospace; color: #fff;
+            background: #111; padding: 10px; border-radius: 5px;
+            height: 100px; overflow-y: auto; border: 1px solid #333;
+            white-space: pre-wrap; word-wrap: break-word; font-size: 1.2rem;
+            text-align: center; letter-spacing: 2px;
+        }
+
+        .status-led {
+            width: 10px; height: 10px; border-radius: 50%; background: #333;
+            display: inline-block; margin-right: 5px;
+        }
+        .status-led.on { background: #00ffcc; box-shadow: 0 0 10px #00ffcc; }
+        .status-led.listening { background: #ff3333; box-shadow: 0 0 10px #ff3333; animation: pulse 1s infinite; }
+
+        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
+
+    </style>
+</head>
+<body>
+
+    <h1>SONIC MIND</h1>
+    <div class="sub">DATA OVER SOUND (ULTRASONIC)</div>
+
+    <div class="container">
+        <div class="mode-switch">
+            <button class="mode-btn active" onclick="setMode('send')">TRANSMIT (KIRIM)</button>
+            <button class="mode-btn" onclick="setMode('receive')">RECEIVE (TERIMA)</button>
+        </div>
+
+        <div id="senderUI">
+            <textarea id="msgInput" placeholder="Ketik pesan singkat (Huruf A-Z & Angka)..."></textarea>
+            
+            <div class="freq-select">
+                Mode: 
+                <select id="freqMode">
+                    <option value="19000">🕵️ Stealth (19kHz - Sunyi)</option>
+                    <option value="600">🔊 Test (600Hz - Bunyi)</option>
+                </select>
+            </div>
+
+            <div class="controls">
+                <button class="action" id="btnSend" onclick="transmitMessage()">🧠 TELEPATHY SEND</button>
+                <button class="action stop" id="btnStop" onclick="stopTransmit()">⏹ STOP</button>
+            </div>
+            <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">Pastikan Volume HP MAX!</p>
+        </div>
+
+        <div id="receiverUI" style="display:none;">
+            <div style="text-align: center; margin-bottom: 10px;">
+                <span class="status-led" id="rxLed"></span> Status: <span id="rxStatus">Standby</span>
+            </div>
+            
+            <button class="action" id="btnListen" onclick="startListening()" style="width:100%">👂 AKTIFKAN MIC</button>
+            
+            <canvas id="visualizer"></canvas>
+            
+            <div style="margin-top:10px; font-size:0.8rem; color:#aaa;">DECODED MESSAGE:</div>
+            <div id="log">...</div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const DOT_DURATION = 100; // ms (Kecepatan Transmisi)
+        // Morse Code Dictionary
+        const MORSE = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+            'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+            'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+            'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+            'Y': '-.--', 'Z': '--..', '1': '.----', '2': '..---', '3': '...--',
+            '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..',
+            '9': '----.', '0': '-----', ' ': '/'
+        };
+        const REVERSE_MORSE = Object.fromEntries(Object.entries(MORSE).map(([k, v]) => [v, k]));
+
+        let audioCtx;
+        let oscillator;
+        let isTransmitting = false;
+        let analyser, microphone, javascriptNode;
+        let isListening = false;
+
+        // --- UI SWITCHING ---
+        function setMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            if(mode === 'send') {
+                document.querySelector('.mode-btn:nth-child(1)').classList.add('active');
+                document.getElementById('senderUI').style.display = 'block';
+                document.getElementById('receiverUI').style.display = 'none';
+                if(isListening) stopListening();
+            } else {
+                document.querySelector('.mode-btn:nth-child(2)').classList.add('active');
+                document.getElementById('senderUI').style.display = 'none';
+                document.getElementById('receiverUI').style.display = 'block';
+            }
+        }
+
+        // --- TRANSMITTER (SENDER) ---
+        async function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+        }
+
+        function playTone(freq, duration) {
+            return new Promise(resolve => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                // Anti-click (fade in/out super cepat)
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.01);
+                gain.gain.setValueAtTime(1, audioCtx.currentTime + (duration/1000) - 0.01);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + (duration/1000));
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + (duration/1000));
+                
+                setTimeout(resolve, duration);
+            });
+        }
+
+        async function transmitMessage() {
+            const text = document.getElementById('msgInput').value.toUpperCase().trim();
+            const freq = parseInt(document.getElementById('freqMode').value);
+            
+            if(!text) return alert("Isi pesan dulu bro!");
+            
+            await initAudio();
+            isTransmitting = true;
+            document.getElementById('btnSend').style.display = 'none';
+            document.getElementById('btnStop').style.display = 'inline-block';
+
+            // Convert Text to Morse String
+            let morseStream = "";
+            for(let char of text) {
+                if(MORSE[char]) morseStream += MORSE[char] + " ";
+            }
+
+            // Play Morse Stream
+            for (let symbol of morseStream) {
+                if(!isTransmitting) break;
+
+                if (symbol === '.') {
+                    await playTone(freq, DOT_DURATION);
+                } else if (symbol === '-') {
+                    await playTone(freq, DOT_DURATION * 3);
+                } else if (symbol === ' ') {
+                    await new Promise(r => setTimeout(r, DOT_DURATION * 3)); // Jeda antar huruf
+                } else if (symbol === '/') {
+                    await new Promise(r => setTimeout(r, DOT_DURATION * 7)); // Jeda antar kata
+                }
+                
+                // Jeda kecil antar simbol (biar gak nempel)
+                await new Promise(r => setTimeout(r, DOT_DURATION));
+            }
+
+            stopTransmit();
+        }
+
+        function stopTransmit() {
+            isTransmitting = false;
+            document.getElementById('btnSend').style.display = 'inline-block';
+            document.getElementById('btnStop').style.display = 'none';
+        }
+
+        // --- RECEIVER (LISTENER) ---
+        async function startListening() {
+            document.getElementById('btnListen').style.display = 'none';
+            document.getElementById('rxStatus').innerText = "Mendengarkan frekuensi...";
+            document.getElementById('rxLed').classList.add('listening');
+            
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                microphone = audioCtx.createMediaStreamSource(stream);
+                analyser = audioCtx.createAnalyser();
+                
+                // Setup FFT for high precision frequency detection
+                analyser.fftSize = 2048; 
+                microphone.connect(analyser);
+
+                isListening = true;
+                drawVisualizer();
+                decodeSignal(); // Mulai loop decoding
+                
+            } catch (err) {
+                alert("Gagal akses Mic! Izinkan browser mengakses microphone.");
+                console.error(err);
+                document.getElementById('btnListen').style.display = 'block';
+            }
+        }
+
+        function stopListening() {
+            isListening = false;
+            // Stop logic here if needed
+        }
+
+        // Visualizer (Biar kelihatan keren kayak sci-fi)
+        function drawVisualizer() {
+            if(!isListening) return;
+            requestAnimationFrame(drawVisualizer);
+
+            const canvas = document.getElementById('visualizer');
+            const ctx = canvas.getContext('2d');
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            analyser.getByteFrequencyData(dataArray);
+
+            ctx.fillStyle = 'rgb(0, 0, 0)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            for(let i = 0; i < bufferLength; i++) {
+                barHeight = dataArray[i] / 2;
+                ctx.fillStyle = 'rgb(0, ' + (barHeight + 100) + ', 204)';
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+
+        // --- LOGIC DECODER SEDERHANA ---
+        // Catatan: Decoding audio lewat browser JS murni itu susah banget karena noise.
+        // Ini versi simplified logic deteksi energi.
+        
+        let signalHistory = [];
+        let silenceStart = 0;
+        let lastChar = "";
+
+        function decodeSignal() {
+            if(!isListening) return;
+            
+            // Loop Analisis
+            const interval = 20; // Check every 20ms
+            
+            const processLoop = () => {
+                if(!isListening) return;
+
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+                analyser.getByteFrequencyData(dataArray);
+
+                // Kita cari energi di frekuensi target (19kHz atau 600Hz)
+                // Sample Rate biasanya 44100Hz atau 48000Hz.
+                // Bin Index = Frequency * FFTSize / SampleRate
+                
+                // Deteksi energi MAX di spektrum
+                let maxVal = 0;
+                let maxIndex = 0;
+                for(let i=0; i<bufferLength; i++) {
+                    if(dataArray[i] > maxVal) {
+                        maxVal = dataArray[i];
+                        maxIndex = i;
+                    }
+                }
+
+                // Ambang batas suara (Threshold)
+                const THRESHOLD = 150; // Sensitivitas (0-255)
+                const now = Date.now();
+
+                // Logic Deteksi Sinyal ON/OFF
+                if(maxVal > THRESHOLD) {
+                    // Ada sinyal masuk!
+                    document.getElementById('rxLed').classList.add('on');
+                    if(signalHistory.length === 0 || signalHistory[signalHistory.length-1].state === 0) {
+                        signalHistory.push({state: 1, start: now});
+                    }
+                } else {
+                    // Sunyi
+                    document.getElementById('rxLed').classList.remove('on');
+                    if(signalHistory.length > 0 && signalHistory[signalHistory.length-1].state === 1) {
+                        // Sinyal baru aja berhenti, catat durasinya
+                        const lastSignal = signalHistory[signalHistory.length-1];
+                        lastSignal.end = now;
+                        lastSignal.duration = lastSignal.end - lastSignal.start;
+                        lastSignal.state = 0; // Tandai selesai
+                        
+                        interpretSignal(lastSignal.duration);
+                    }
+                }
+                
+                setTimeout(processLoop, interval);
+            };
+            processLoop();
+        }
+
+        let currentMorseChar = "";
+
+        function interpretSignal(duration) {
+            // Kalibrasi durasi (perlu testing tergantung HP)
+            // Dot ~ 100ms, Dash ~ 300ms
+            // Tapi realitanya di browser bisa ngaret.
+            
+            let symbol = "";
+            if(duration > 50 && duration < 200) symbol = ".";
+            else if(duration >= 200 && duration < 600) symbol = "-";
+            
+            if(symbol) {
+                currentMorseChar += symbol;
+                document.getElementById('log').innerText = "Signal: " + currentMorseChar;
+                
+                // Reset timer untuk mendeteksi akhir huruf
+                clearTimeout(charTimeout);
+                charTimeout = setTimeout(finalizeChar, 800); // Kalau diam 800ms, berarti huruf selesai
+            }
+        }
+
+        let charTimeout;
+        
+        function finalizeChar() {
+            if(REVERSE_MORSE[currentMorseChar]) {
+                const letter = REVERSE_MORSE[currentMorseChar];
+                const logDiv = document.getElementById('log');
+                if(logDiv.innerText.includes("Signal:")) logDiv.innerText = ""; // Clear buffer text
+                logDiv.innerText += letter;
+            }
+            currentMorseChar = "";
+        }
+
+    </script>
+</body>
+</html>

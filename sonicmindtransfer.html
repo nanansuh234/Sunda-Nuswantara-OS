@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonicMind v2.0 - Audio Payload</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ffcc;
+            font-family: 'Segoe UI', monospace;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px;
+        }
+
+        h1 { text-shadow: 0 0 15px #00ffcc; margin-bottom: 5px; letter-spacing: 3px; }
+        .sub { color: #008877; font-size: 0.8rem; margin-bottom: 25px; }
+
+        .container {
+            width: 100%; max-width: 550px;
+            background: #0f0f0f; border: 1px solid #005544;
+            padding: 25px; border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.1);
+        }
+
+        /* TABS */
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 2px solid #005544; }
+        .tab-btn {
+            flex: 1; padding: 15px; background: #0a0a0a; border: none;
+            color: #008877; cursor: pointer; font-weight: bold; font-family: inherit;
+            transition: 0.3s;
+        }
+        .tab-btn.active { background: #005544; color: #fff; box-shadow: inset 0 -3px 0 #00ffcc; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        textarea, input[type="file"] {
+            width: 100%; background: #001111; color: #00ffcc;
+            border: 1px solid #005544; padding: 10px; border-radius: 5px;
+            margin-bottom: 15px; box-sizing: border-box; font-family: monospace;
+        }
+        
+        button.action {
+            width: 100%; padding: 15px; border: none; border-radius: 5px;
+            background: #00ffcc; color: #000; font-weight: 900;
+            font-size: 1rem; cursor: pointer; box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+            margin-bottom: 10px; transition: 0.2s;
+        }
+        button.action:hover { background: #ccfffa; }
+        button.secondary { background: #005544; color: #fff; }
+
+        canvas {
+            width: 100%; height: 80px; background: #000;
+            border: 1px solid #333; margin-top: 15px; border-radius: 5px;
+        }
+
+        #log {
+            margin-top: 15px; background: #000; padding: 10px;
+            border: 1px solid #333; min-height: 50px; font-size: 1.2rem;
+            text-align: center; color: #fff; letter-spacing: 2px;
+        }
+
+        .status { font-size: 0.8rem; color: #aaa; text-align: center; margin-top: 10px;}
+    </style>
+</head>
+<body>
+
+    <h1>SONIC MIND v2.0</h1>
+    <div class="sub">AUDIO PAYLOAD GENERATOR & DECODER</div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('gen')">GENERATOR (KIRIM)</button>
+            <button class="tab-btn" onclick="switchTab('dec')">DECODER (TERIMA)</button>
+        </div>
+
+        <div id="genTab" class="tab-content active">
+            <label>PESAN (HURUF A-Z & ANGKA):</label>
+            <textarea id="msgInput" placeholder="Ketik pesan rahasia..."></textarea>
+            
+            <label>FREKUENSI:</label>
+            <select id="freqMode" style="background:#000; color:#fff; padding:5px; border:1px solid #333; margin-bottom:15px;">
+                <option value="19000">🕵️ Stealth (19kHz - Sunyi)</option>
+                <option value="800">🔊 Audible (800Hz - Bunyi)</option>
+            </select>
+
+            <button class="action" onclick="generateAudioFile()">💾 DOWNLOAD AUDIO (.WAV)</button>
+            <button class="action secondary" onclick="playLive()">▶️ PLAY LIVE (TEST)</button>
+            
+            <div class="status" id="genStatus">Ready to generate.</div>
+        </div>
+
+        <div id="decTab" class="tab-content">
+            <label>UPLOAD FILE AUDIO (.WAV/.MP3):</label>
+            <input type="file" id="audioInput" accept="audio/*">
+            
+            <button class="action" onclick="decodeFromFile()">🔓 DECODE FILE</button>
+            
+            <canvas id="visualizer"></canvas>
+            <div id="log">...</div>
+            <div class="status" id="decStatus">Upload file SonicMind untuk membaca pesan.</div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIG ---
+        const DOT_TIME = 0.08; // 80ms per dot (Kecepatan)
+        const MORSE = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+            'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+            'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+            'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+            'Y': '-.--', 'Z': '--..', '1': '.----', '2': '..---', '3': '...--',
+            '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..',
+            '9': '----.', '0': '-----', ' ': '/'
+        };
+        const REVERSE_MORSE = Object.fromEntries(Object.entries(MORSE).map(([k, v]) => [v, k]));
+        
+        let audioCtx;
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if(t==='gen') {
+                document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+                document.getElementById('genTab').classList.add('active');
+            } else {
+                document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                document.getElementById('decTab').classList.add('active');
+            }
+        }
+
+        // --- GENERATOR LOGIC (FILE & LIVE) ---
+        
+        function textToMorseTime(text) {
+            let sequence = []; // Array of durations: [on, off, on, off...]
+            // Start with some silence
+            sequence.push({on: false, dur: 0.5});
+
+            for (let char of text.toUpperCase()) {
+                if(MORSE[char]) {
+                    let code = MORSE[char];
+                    for(let symbol of code) {
+                        if(symbol === '.') {
+                            sequence.push({on: true, dur: DOT_TIME});
+                        } else if (symbol === '-') {
+                            sequence.push({on: true, dur: DOT_TIME * 3});
+                        }
+                        // Inter-symbol gap
+                        sequence.push({on: false, dur: DOT_TIME}); 
+                    }
+                    // Inter-char gap (minus the inter-symbol gap already added = 2 units)
+                    sequence.push({on: false, dur: DOT_TIME * 2});
+                } else if (char === ' ') {
+                    // Inter-word gap
+                    sequence.push({on: false, dur: DOT_TIME * 4});
+                }
+            }
+            return sequence;
+        }
+
+        async function generateAudioFile() {
+            const text = document.getElementById('msgInput').value;
+            const freq = parseInt(document.getElementById('freqMode').value);
+            const status = document.getElementById('genStatus');
+            
+            if(!text) { alert("Isi pesan dulu!"); return; }
+            status.innerText = "Rendering audio...";
+
+            // Setup Offline Context untuk rendering cepat
+            const sampleRate = 44100;
+            const seq = textToMorseTime(text);
+            const totalDuration = seq.reduce((acc, s) => acc + s.dur, 0) + 1.0; // Buffer extra
+            
+            const offlineCtx = new OfflineAudioContext(1, sampleRate * totalDuration, sampleRate);
+            
+            const osc = offlineCtx.createOscillator();
+            const gain = offlineCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            
+            let time = 0;
+            gain.gain.setValueAtTime(0, 0);
+
+            seq.forEach(s => {
+                if(s.on) {
+                    // Fade in/out to avoid clicking
+                    gain.gain.setValueAtTime(0, time);
+                    gain.gain.linearRampToValueAtTime(1, time + 0.005);
+                    gain.gain.setValueAtTime(1, time + s.dur - 0.005);
+                    gain.gain.linearRampToValueAtTime(0, time + s.dur);
+                } else {
+                    gain.gain.setValueAtTime(0, time);
+                }
+                time += s.dur;
+            });
+
+            osc.connect(gain);
+            gain.connect(offlineCtx.destination);
+            osc.start();
+            
+            // Render
+            const renderedBuffer = await offlineCtx.startRendering();
+            
+            // Convert to WAV
+            const wavBlob = bufferToWave(renderedBuffer, renderedBuffer.length);
+            const url = URL.createObjectURL(wavBlob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SONIC_MSG_${Date.now()}.wav`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            status.innerText = "✅ Audio file downloaded!";
+        }
+
+        function playLive() {
+            const text = document.getElementById('msgInput').value;
+            const freq = parseInt(document.getElementById('freqMode').value);
+            if(!text) return;
+            
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.value = freq;
+            
+            const seq = textToMorseTime(text);
+            let time = audioCtx.currentTime + 0.1;
+            gain.gain.setValueAtTime(0, time);
+
+            seq.forEach(s => {
+                if(s.on) {
+                    gain.gain.setValueAtTime(0, time);
+                    gain.gain.linearRampToValueAtTime(1, time + 0.005);
+                    gain.gain.setValueAtTime(1, time + s.dur - 0.005);
+                    gain.gain.linearRampToValueAtTime(0, time + s.dur);
+                }
+                time += s.dur;
+            });
+
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(time + 0.5);
+        }
+
+        // --- DECODER LOGIC ---
+        
+        async function decodeFromFile() {
+            const fileInput = document.getElementById('audioInput');
+            const status = document.getElementById('decStatus');
+            const log = document.getElementById('log');
+            
+            if(fileInput.files.length === 0) { alert("Pilih file dulu!"); return; }
+            
+            status.innerText = "Analyzing file...";
+            log.innerText = "";
+            
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const file = fileInput.files[0];
+            const arrayBuffer = await file.arrayBuffer();
+            const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+            
+            // Analyze raw PCM data
+            const rawData = audioBuffer.getChannelData(0);
+            const sampleRate = audioBuffer.sampleRate;
+            
+            // Kita harus cari "Energy Bursts"
+            // Simple approach: Sliding window RMS (Root Mean Square)
+            
+            const windowSize = Math.floor(sampleRate * 0.01); // 10ms window
+            let energyProfile = [];
+            
+            for(let i=0; i<rawData.length; i+=windowSize) {
+                let sum = 0;
+                for(let j=0; j<windowSize && (i+j)<rawData.length; j++) {
+                    sum += rawData[i+j] * rawData[i+j];
+                }
+                let rms = Math.sqrt(sum / windowSize);
+                energyProfile.push(rms > 0.05 ? 1 : 0); // Threshold 0.05
+            }
+            
+            // Translate 1s and 0s to Morse
+            let resultMorse = "";
+            let currentRun = 0;
+            let currentState = 0;
+            const unit = DOT_TIME / 0.01; // berapa window dalam 1 unit (approx 8)
+            const margin = 2; // toleransi
+
+            energyProfile.forEach(val => {
+                if(val === currentState) {
+                    currentRun++;
+                } else {
+                    // State changed, process previous run
+                    if(currentState === 1) { // ON (Sinyal)
+                        if(currentRun > (unit * 2.5)) resultMorse += "-"; // Panjang
+                        else if(currentRun > 1) resultMorse += "."; // Pendek
+                    } else { // OFF (Jeda)
+                        if(currentRun > (unit * 5)) resultMorse += " / "; // Spasi Kata
+                        else if(currentRun > (unit * 2)) resultMorse += " "; // Spasi Huruf
+                    }
+                    currentState = val;
+                    currentRun = 1;
+                }
+            });
+
+            // Final Translation
+            const codes = resultMorse.trim().split(/\s+/);
+            let finalText = "";
+            
+            codes.forEach(c => {
+                if(c === '/') finalText += " ";
+                else if(REVERSE_MORSE[c]) finalText += REVERSE_MORSE[c];
+                else finalText += "?";
+            });
+            
+            log.innerText = finalText;
+            status.innerText = "✅ Decoding selesai!";
+            
+            // Visualization (Optional replay)
+            playVisualizer(audioBuffer);
+        }
+
+        function playVisualizer(buffer) {
+            const source = audioCtx.createBufferSource();
+            source.buffer = buffer;
+            const analyser = audioCtx.createAnalyser();
+            source.connect(analyser);
+            analyser.connect(audioCtx.destination); // Biar kedengeran juga pas decode
+            source.start();
+            
+            const canvas = document.getElementById('visualizer');
+            const ctx = canvas.getContext('2d');
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function draw() {
+                requestAnimationFrame(draw);
+                analyser.getByteTimeDomainData(dataArray);
+                ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.lineWidth = 2; ctx.strokeStyle = '#00ffcc'; ctx.beginPath();
+                
+                let sliceWidth = canvas.width * 1.0 / bufferLength;
+                let x = 0;
+                for(let i = 0; i < bufferLength; i++) {
+                    let v = dataArray[i] / 128.0;
+                    let y = v * canvas.height/2;
+                    if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                    x += sliceWidth;
+                }
+                ctx.lineTo(canvas.width, canvas.height/2); ctx.stroke();
+            }
+            draw();
+        }
+
+        // --- HELPER: WAV ENCODER ---
+        function bufferToWave(abuffer, len) {
+            let numOfChan = abuffer.numberOfChannels,
+                length = len * numOfChan * 2 + 44,
+                buffer = new ArrayBuffer(length),
+                view = new DataView(buffer),
+                channels = [], i, sample,
+                offset = 0,
+                pos = 0;
+
+            // write WAVE header
+            setUint32(0x46464952); // "RIFF"
+            setUint32(length - 8); // file length - 8
+            setUint32(0x45564157); // "WAVE"
+            setUint32(0x20746d66); // "fmt " chunk
+            setUint32(16); // length = 16
+            setUint16(1); // PCM (uncompressed)
+            setUint16(numOfChan);
+            setUint32(abuffer.sampleRate);
+            setUint32(abuffer.sampleRate * 2 * numOfChan); // avg. bytes/sec
+            setUint16(numOfChan * 2); // block-align
+            setUint16(16); // 16-bit (hardcoded in this example)
+            setUint32(0x61746164); // "data" - chunk
+            setUint32(length - pos - 4); // chunk length
+
+            // write interleaved data
+            for(i = 0; i < abuffer.numberOfChannels; i++)
+                channels.push(abuffer.getChannelData(i));
+
+            while(pos < len) {
+                for(i = 0; i < numOfChan; i++) {
+                    sample = Math.max(-1, Math.min(1, channels[i][pos])); // clamp
+                    sample = (0.5 + sample < 0 ? sample * 32768 : sample * 32767)|0; // scale to 16-bit
+                    view.setInt16(offset, sample, true); // write 16-bit sample
+                    offset += 2;
+                }
+                pos++;
+            }
+
+            return new Blob([buffer], {type: "audio/wav"});
+
+            function setUint16(data) { view.setUint16(offset, data, true); offset += 2; }
+            function setUint32(data) { view.setUint32(offset, data, true); offset += 4; }
+        }
+    </script>
+</body>
+</html>
