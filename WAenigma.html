@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAmigma v2.0 - Encrypted</title>
+    <style>
+        /* TAMPILAN ALA HACKER / DARK MODE */
+        body {
+            background-color: #0d1117;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 { text-shadow: 0 0 10px #00ff41; margin-bottom: 5px; }
+        .version { font-size: 0.8em; color: #8b949e; margin-bottom: 20px; }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #161b22;
+            padding: 20px;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        textarea, input[type="text"], input[type="password"] {
+            width: 100%;
+            background: #0d1117;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: inherit;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        textarea { height: 120px; resize: vertical; }
+        textarea:focus, input:focus { outline: none; border-color: #00ff41; }
+
+        .password-group {
+            border: 1px solid #da3633;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            background: rgba(218, 54, 51, 0.1);
+        }
+
+        .controls { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+
+        button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: inherit;
+            flex: 1;
+            transition: 0.2s;
+        }
+
+        button:hover { filter: brightness(1.2); }
+        button.decode { background: #1f6feb; }
+        button.copy { background: #6e7681; flex: 0 0 auto; }
+        button.reset { background: #da3633; flex: 0 0 auto; }
+
+        .status {
+            font-size: 0.9rem;
+            color: #8b949e;
+            margin-top: 10px;
+            text-align: center;
+            min-height: 1.2em;
+        }
+        
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #8b949e; font-size: 0.8rem;}
+        .section-title { color: #fff; margin-top: 0; }
+    </style>
+</head>
+<body>
+
+    <h1>WAmigma</h1>
+    <div class="version">v2.0 Secure Edition (AES-GCM)</div>
+
+    <div class="container">
+        <label>1. PESAN / KODE:</label>
+        <textarea id="inputText" placeholder="Ketik pesan rahasia di sini... ATAU paste kode terenkripsi..."></textarea>
+
+        <div class="password-group">
+            <label style="color: #ff7b72;">2. KUNCI RAHASIA (WAJIB):</label>
+            <input type="password" id="password" placeholder="Masukan password (contoh: nanan2026)">
+        </div>
+
+        <div class="controls">
+            <button onclick="process('encrypt')">🔒 ENCRYPT (Kunci)</button>
+            <button onclick="process('decrypt')" class="decode">🔓 DECRYPT (Buka)</button>
+        </div>
+
+        <div style="margin-top: 20px; border-top: 1px solid #30363d; padding-top: 20px;">
+            <label>3. HASIL:</label>
+            <textarea id="outputText" readonly placeholder="Hasil muncul di sini..."></textarea>
+            
+            <div class="controls">
+                <button onclick="copyToClipboard()" class="copy">📋 COPY</button>
+                <button onclick="clearAll()" class="reset">🗑️ RESET</button>
+            </div>
+            <div id="statusMsg" class="status">System Ready.</div>
+        </div>
+    </div>
+
+    <script>
+        // --- CORE CRYPTO FUNCTIONS ---
+        
+        async function getKey(password, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await window.crypto.subtle.importKey(
+                "raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveKey"]
+            );
+            return window.crypto.subtle.deriveKey(
+                { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+                keyMaterial, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+            );
+        }
+
+        async function process(mode) {
+            const input = document.getElementById('inputText').value;
+            const password = document.getElementById('password').value;
+            const status = document.getElementById('statusMsg');
+            const output = document.getElementById('outputText');
+
+            if (!input) { status.innerText = "⚠️ Input kosong!"; return; }
+            if (!password) { status.innerText = "⚠️ Password WAJIB diisi!"; return; }
+
+            status.innerText = "Processing...";
+            output.value = "";
+
+            try {
+                if (mode === 'encrypt') {
+                    // 1. COMPRESS (GZIP)
+                    const stream = new Blob([input]).stream();
+                    const compressedReadable = stream.pipeThrough(new CompressionStream("gzip"));
+                    const compressedBlob = await new Response(compressedReadable).blob();
+                    const compressedBuffer = await compressedBlob.arrayBuffer();
+
+                    // 2. ENCRYPT (AES-GCM)
+                    const salt = window.crypto.getRandomValues(new Uint8Array(16));
+                    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+                    const key = await getKey(password, salt);
+                    
+                    const encryptedBuffer = await window.crypto.subtle.encrypt(
+                        { name: "AES-GCM", iv: iv }, key, compressedBuffer
+                    );
+
+                    // 3. PACKAGING (Salt + IV + Data) -> Base64
+                    const combined = new Uint8Array(salt.length + iv.length + encryptedBuffer.byteLength);
+                    combined.set(salt, 0);
+                    combined.set(iv, salt.length);
+                    combined.set(new Uint8Array(encryptedBuffer), salt.length + iv.length);
+
+                    const result = btoa(String.fromCharCode(...combined));
+                    output.value = result;
+                    status.innerText = `✅ SUKSES! Terkunci & Terkompresi (${result.length} chars)`;
+
+                } else {
+                    // DECRYPT MODE
+                    // 1. UNPACK Base64
+                    const combinedString = atob(input);
+                    const combined = new Uint8Array(combinedString.length);
+                    for(let i=0; i<combinedString.length; i++) combined[i] = combinedString.charCodeAt(i);
+
+                    // Extract parts
+                    const salt = combined.slice(0, 16);
+                    const iv = combined.slice(16, 28);
+                    const data = combined.slice(28);
+
+                    // 2. DECRYPT
+                    const key = await getKey(password, salt);
+                    const decryptedBuffer = await window.crypto.subtle.decrypt(
+                        { name: "AES-GCM", iv: iv }, key, data
+                    );
+
+                    // 3. DECOMPRESS
+                    const decompressedStream = new Blob([decryptedBuffer]).stream();
+                    const decompressedReadable = decompressedStream.pipeThrough(new DecompressionStream("gzip"));
+                    const text = await new Response(decompressedReadable).text();
+
+                    output.value = text;
+                    status.innerText = "✅ SUKSES! Pesan terbuka.";
+                }
+            } catch (e) {
+                console.error(e);
+                output.value = "GAGAL DECRYPT!\n\nKemungkinan:\n1. Password SALAH.\n2. Kode tidak lengkap.\n3. Kode rusak.";
+                status.innerText = "❌ Akses Ditolak / Gagal.";
+            }
+        }
+
+        function copyToClipboard() {
+            const copyText = document.getElementById("outputText");
+            copyText.select();
+            document.execCommand("copy");
+            document.getElementById('statusMsg').innerText = "📋 Copied!";
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('outputText').value = '';
+            document.getElementById('statusMsg').innerText = 'System Ready.';
+        }
+    </script>
+</body>
+</html>
