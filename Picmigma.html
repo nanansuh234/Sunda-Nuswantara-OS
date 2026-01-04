@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAmigma - Image Vault</title>
+    <style>
+        /* TAMPILAN CYBERPUNK / INTEL */
+        body {
+            background-color: #050505;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 { margin-bottom: 5px; text-shadow: 0 0 10px #00ff41; }
+        .subtitle { color: #888; font-size: 0.8rem; margin-bottom: 30px; }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: #111;
+            padding: 25px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
+            text-align: center;
+        }
+
+        /* INPUT FILE YANG KEREN */
+        .file-upload {
+            border: 2px dashed #333;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .file-upload:hover { border-color: #00ff41; background: #0a0a0a; }
+        input[type="file"] { display: none; }
+        
+        input[type="password"] {
+            width: 80%;
+            background: #000;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .btn-group { display: flex; gap: 10px; justify-content: center; }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #fff;
+            font-family: inherit;
+        }
+        .btn-enc { background: #b30000; } /* Merah buat Encrypt */
+        .btn-dec { background: #005cc5; } /* Biru buat Decrypt */
+        button:hover { opacity: 0.8; }
+
+        #previewArea {
+            margin-top: 20px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            display: none;
+        }
+        
+        img {
+            max-width: 100%;
+            border-radius: 5px;
+            border: 1px solid #00ff41;
+        }
+        
+        .status { margin-top: 15px; font-size: 0.8rem; color: #666; }
+    </style>
+</head>
+<body>
+
+    <h1>WAmigma Image</h1>
+    <div class="subtitle">SECURE IMAGE TRANSMISSION PROTOCOL</div>
+
+    <div class="container">
+        
+        <label for="fileInput" class="file-upload" id="dropZone">
+            <div id="fileLabel">📁 KLIK PILIH GAMBAR / FILE RAHASIA</div>
+        </label>
+        <input type="file" id="fileInput">
+
+        <input type="password" id="password" placeholder="Masukan Password Kunci">
+
+        <div class="btn-group">
+            <button class="btn-enc" onclick="processFile('encrypt')">🔒 ENCRYPT & DOWNLOAD</button>
+            <button class="btn-dec" onclick="processFile('decrypt')">🔓 DECRYPT & VIEW</button>
+        </div>
+
+        <div id="previewArea">
+            <p>HASIL DEKRIPSI:</p>
+            <img id="resultImage" src="" alt="Decrypted Image">
+        </div>
+
+        <div class="status" id="status">Ready for operation.</div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileLabel = document.getElementById('fileLabel');
+        const status = document.getElementById('status');
+        let selectedFile = null;
+
+        // Handle File Selection
+        fileInput.addEventListener('change', (e) => {
+            if(e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                fileLabel.innerText = "✅ File terpilih: " + selectedFile.name;
+            }
+        });
+
+        // Generate Key dari Password
+        async function getKey(password, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await window.crypto.subtle.importKey(
+                "raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveKey"]
+            );
+            return window.crypto.subtle.deriveKey(
+                { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+                keyMaterial, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+            );
+        }
+
+        async function processFile(mode) {
+            const password = document.getElementById('password').value;
+            
+            if (!selectedFile) { status.innerText = "⚠️ Pilih file dulu bro!"; return; }
+            if (!password) { status.innerText = "⚠️ Password wajib diisi!"; return; }
+
+            status.innerText = "Processing... sabar...";
+
+            try {
+                const fileBuffer = await selectedFile.arrayBuffer();
+
+                if (mode === 'encrypt') {
+                    // --- ENKRIPSI ---
+                    const salt = window.crypto.getRandomValues(new Uint8Array(16));
+                    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+                    const key = await getKey(password, salt);
+
+                    const encryptedContent = await window.crypto.subtle.encrypt(
+                        { name: "AES-GCM", iv: iv }, key, fileBuffer
+                    );
+
+                    // Gabung Salt + IV + Encrypted Data
+                    const combined = new Uint8Array(salt.length + iv.length + encryptedContent.byteLength);
+                    combined.set(salt, 0);
+                    combined.set(iv, salt.length);
+                    combined.set(new Uint8Array(encryptedContent), salt.length + iv.length);
+
+                    // Bikin Blob dan Auto Download
+                    const blob = new Blob([combined], { type: "application/octet-stream" });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "RAHASIA_" + Date.now() + ".wmg"; // Ekstensi .wmg (WaMigma)
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    status.innerText = "✅ File berhasil dienkripsi & didownload!";
+
+                } else {
+                    // --- DEKRIPSI ---
+                    const data = new Uint8Array(fileBuffer);
+                    
+                    // Ambil Salt, IV, dan Isi
+                    const salt = data.slice(0, 16);
+                    const iv = data.slice(16, 28);
+                    const ciphertext = data.slice(28);
+
+                    const key = await getKey(password, salt);
+                    
+                    const decryptedContent = await window.crypto.subtle.decrypt(
+                        { name: "AES-GCM", iv: iv }, key, ciphertext
+                    );
+
+                    // Tampilkan Gambar
+                    const blob = new Blob([decryptedContent]); // Browser pinter, bakal nebak mime type
+                    const url = URL.createObjectURL(blob);
+                    
+                    const img = document.getElementById('resultImage');
+                    img.src = url;
+                    document.getElementById('previewArea').style.display = 'block';
+                    
+                    status.innerText = "✅ Gambar terbuka!";
+                }
+            } catch (e) {
+                console.error(e);
+                status.innerText = "❌ GAGAL! Password salah atau file bukan format WAmigma.";
+                alert("Gagal Decrypt! Cek password atau file.");
+            }
+        }
+    </script>
+</body>
+</html>
