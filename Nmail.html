@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Mail</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1a73e8; /* Google Blue */
+            --bg-body: #f6f8fc;
+            --bg-panel: #ffffff;
+            --text-main: #202124;
+            --text-muted: #5f6368;
+            --border: #e0e0e0;
+            --gold: #d4af37; /* Sentuhan Nuswantara */
+            --sidebar-width: 250px;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            margin: 0; padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            background: var(--bg-panel);
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 20px;
+            justify-content: space-between;
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; color: var(--text-muted); }
+        .logo-icon { color: var(--gold); font-size: 1.5rem; font-weight: bold; }
+        .nuswantara-clock {
+            font-size: 0.9rem; color: var(--primary); font-weight: 500;
+            background: #e8f0fe; padding: 5px 15px; border-radius: 20px;
+        }
+
+        /* --- LAYOUT UTAMA --- */
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-panel);
+            padding: 20px 10px;
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 5px;
+        }
+        .compose-btn {
+            background: var(--bg-panel);
+            color: var(--text-main);
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+            border: none; padding: 15px 25px; border-radius: 24px;
+            font-size: 1rem; font-weight: 500; cursor: pointer;
+            margin-bottom: 20px; width: fit-content;
+            display: flex; align-items: center; gap: 10px;
+            transition: 0.2s;
+        }
+        .compose-btn:hover { background: #fafafb; box-shadow: 0 4px 12px rgba(60,64,67,0.25); }
+        .compose-btn span { font-size: 1.5rem; color: var(--gold); } /* Simbol Plus */
+
+        .nav-item {
+            padding: 10px 20px; border-radius: 0 20px 20px 0;
+            cursor: pointer; font-weight: 500; color: var(--text-muted);
+            display: flex; justify-content: space-between;
+        }
+        .nav-item:hover { background: #f1f3f4; }
+        .nav-item.active { background: #e8f0fe; color: var(--primary); font-weight: bold; }
+
+        /* CONTENT AREA */
+        .content { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
+
+        /* FORM COMPONENT (GMAIL STYLE) */
+        .mail-card {
+            background: #fff; border-radius: 8px;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
+            max-width: 800px; margin: 0 auto; overflow: hidden;
+            display: none; /* Hidden by default */
+        }
+        .mail-card.active { display: block; }
+        
+        .mail-header { 
+            background: #404040; color: #fff; padding: 10px 20px; 
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .mail-body { padding: 20px; }
+
+        input, textarea {
+            width: 100%; border: none; border-bottom: 1px solid var(--border);
+            padding: 10px 0; margin-bottom: 10px; font-family: inherit; font-size: 1rem;
+            outline: none; transition: 0.3s;
+        }
+        input:focus, textarea:focus { border-bottom-color: var(--primary); }
+        textarea { resize: vertical; min-height: 200px; border-bottom: none; }
+
+        .toolbar {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+        }
+        .btn-primary {
+            background: var(--primary); color: #fff; border: none;
+            padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer;
+        }
+        .btn-primary:hover { background: #1765cc; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        
+        .pass-input { 
+            background: #fce8e6; padding: 5px 10px; border-radius: 4px; 
+            border: 1px solid #fab1a0; width: 50%;
+        }
+
+        /* VIEW MODE (READING PANE) */
+        .read-view {
+            background: #fff; padding: 30px; border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            max-width: 800px; margin: 0 auto;
+        }
+        .read-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px;
+        }
+        .attachment-box {
+            margin-top: 20px; padding: 10px; background: #f1f3f4; 
+            border-radius: 4px; display: inline-block; font-size: 0.9rem;
+        }
+        .attachment-box img { max-width: 100%; margin-top: 10px; display: block; border-radius: 4px; }
+
+        /* PRINT STYLE */
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { 
+                position: absolute; left: 0; top: 0; width: 100%; 
+                padding: 40px; background: white; color: black; z-index: 9999;
+            }
+            /* Hilangkan tombol saat print */
+            button { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-area">
+            <span class="logo-icon">☰</span>
+            <span style="font-weight: bold; color: #444;">Nuswantara</span><span style="color:var(--primary)">Mail</span>
+        </div>
+        <div class="nuswantara-clock" id="nuswantaraTimeDisplay">
+            Memuat Waktu...
+        </div>
+        <div class="logo-area">
+            <div style="width:32px; height:32px; background:var(--gold); border-radius:50%; text-align:center; line-height:32px; color:#fff; font-weight:bold;">N</div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <button class="compose-btn" onclick="showSection('compose')">
+                <span>+</span> Tulis Pesan
+            </button>
+            <div class="nav-item active" onclick="showSection('compose')" id="nav-compose">
+                <span>Kotak Keluar (Enkripsi)</span>
+            </div>
+            <div class="nav-item" onclick="showSection('read')" id="nav-read">
+                <span>Kotak Masuk (Dekripsi)</span>
+                <span style="background:var(--primary); color:#fff; padding:0 6px; border-radius:10px; font-size:0.75rem;">1</span>
+            </div>
+        </div>
+
+        <div class="content">
+            
+            <div id="section-compose" class="mail-card active">
+                <div class="mail-header">
+                    <span>Pesan Baru (Mode Aman)</span>
+                    <span style="cursor:pointer;" onclick="clearForm()">x</span>
+                </div>
+                <div class="mail-body">
+                    <input type="text" id="inSubject" placeholder="Subjek">
+                    <textarea id="inBody" placeholder="Tulis sesuatu yang rahasia..."></textarea>
+                    
+                    <div style="background:#f8f9fa; padding:10px; border-radius:4px; margin-bottom:10px;">
+                        <label style="font-size:0.8rem; color:#666; display:block; margin-bottom:5px;">Lampiran (Max 2MB):</label>
+                        <input type="file" id="inFile" onchange="convertFileToBase64()" style="border:none;">
+                        <input type="hidden" id="base64String">
+                    </div>
+
+                    <div class="toolbar">
+                        <input type="password" id="inPassEncrypt" class="pass-input" placeholder="Password Kunci (Wajib Diingat)">
+                        <div>
+                            <button class="btn-primary" onclick="encryptProcess()">Unduh File (.secret)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-read" class="mail-card">
+                <div class="mail-header" style="background: var(--primary);">
+                    <span>Buka Amplop Digital</span>
+                </div>
+                <div class="mail-body">
+                    <div style="text-align:center; padding: 40px; border: 2px dashed #ddd; border-radius: 8px;">
+                        <label for="fileEncrypted" style="cursor:pointer; color:var(--primary); font-weight:bold;">
+                            Klik untuk Upload File (.secret)
+                        </label>
+                        <input type="file" id="fileEncrypted" style="display:none;" onchange="document.getElementById('fileNameDisp').innerText = this.files[0].name">
+                        <div id="fileNameDisp" style="margin-top:10px; color:#666;">Belum ada file dipilih</div>
+                    </div>
+
+                    <div class="toolbar" style="margin-top:20px;">
+                        <input type="password" id="inPassDecrypt" class="pass-input" placeholder="Masukkan Password Pembuka">
+                        <button class="btn-primary" onclick="decryptProcess()">Buka Segel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-view" style="display:none;">
+                <button onclick="showSection('read')" style="margin-bottom:15px; cursor:pointer; background:none; border:none; color:var(--text-muted); font-size:1rem;">← Kembali</button>
+                
+                <div class="read-view">
+                    <div class="read-header">
+                        <div>
+                            <h2 style="margin:0 0 5px 0;" id="viewSubject">Subject</h2>
+                            <div style="color:green; font-size:0.85rem;">✔ Segel Terverifikasi (Aman)</div>
+                        </div>
+                        <button class="btn-primary" style="background: #333;" onclick="printDecryptedEmail()">🖨️ Cetak Dokumen</button>
+                    </div>
+
+                    <div class="meta-info">
+                        <strong>Waktu Kirim:</strong> <span id="viewTime"></span>
+                    </div>
+                    
+                    <div id="viewBody" style="white-space: pre-wrap; line-height:1.6; min-height:150px;"></div>
+                    <div id="viewAttachment"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="print-area" style="display:none;">
+        <div style="text-align:center; border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 10px;">
+            <h1 style="margin:0;">DOKUMEN RAHASIA NUSWANTARA</h1>
+            <small style="letter-spacing: 2px;">SECURE DECRYPTED DOCUMENT</small>
+        </div>
+        
+        <table style="width:100%; margin-bottom: 20px; border-collapse: collapse;">
+            <tr>
+                <td style="width:100px; font-weight:bold;">WAKTU</td>
+                <td>: <span id="print-time"></span></td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">SUBJEK</td>
+                <td>: <span id="print-subject"></span></td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">STATUS</td>
+                <td>: TERVERIFIKASI (Segel Utuh)</td>
+            </tr>
+        </table>
+        
+        <hr style="border-top:1px dashed #000;">
+        
+        <div id="print-body" style="white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 1rem; line-height: 1.5; margin: 20px 0;">
+            </div>
+
+        <div id="print-attachment" style="margin-top: 30px; border: 1px solid #ccc; padding: 10px; display:none;">
+            <strong>[LAMPIRAN TERSEDIA DALAM FILE DIGITAL]</strong>
+        </div>
+
+        <div style="margin-top: 50px; text-align: center; font-size: 0.8rem; color: #555;">
+            <p>Dokumen ini telah didekripsi menggunakan Kunci Privat Nuswantara Mail.<br>
+            Harap jaga kerahasiaan fisik dokumen ini.</p>
+        </div>
+    </div>
+
+<script>
+    // DATA GLOBAL UNTUK PRINT
+    let currentDecryptedData = null;
+
+    /* =========================================
+       1. LOGIKA WAKTU NUSWANTARA
+       ========================================= */
+    const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    
+    function getNuswantaraString() {
+        let now = new Date();
+        let h = now.getHours();
+        let m = now.getMinutes();
+
+        let phaseName = "";
+        if(h < 3) phaseName = "Hening";
+        else if(h < 6) phaseName = "Fajar";
+        else if(h < 9) phaseName = "Duha";
+        else if(h < 12) phaseName = "Karya";
+        else if(h < 15) phaseName = "Istiwa";
+        else if(h < 18) phaseName = "Asar";
+        else if(h < 21) phaseName = "Sandikala";
+        else phaseName = "Sirepan";
+
+        let anchorYear = now.getFullYear();
+        let anchorDate = new Date(anchorYear, 2, 21);
+        
+        if (now < anchorDate) {
+            anchorYear -= 1;
+            anchorDate = new Date(anchorYear, 2, 21);
+        }
+        
+        let currentYearNus = (anchorYear - 2025) + 1;
+        if(currentYearNus < 1) currentYearNus = 1;
+
+        let diffTime = Math.abs(now - anchorDate);
+        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        let monthIndex = Math.floor(diffDays / 28);
+        if(monthIndex > 12) monthIndex = 12;
+        let dayNus = (diffDays % 28) + 1;
+        let totalDaysFromStart = ((anchorYear - 2025) * 365) + diffDays;
+        let pasaranIndex = (2 + totalDaysFromStart) % 5;
+
+        return `Tahun ${currentYearNus} ${months[monthIndex]}, Tgl ${dayNus} (${pasarans[pasaranIndex]}) | Waktu ${phaseName}`;
+    }
+
+    setInterval(() => {
+        document.getElementById('nuswantaraTimeDisplay').innerText = getNuswantaraString();
+    }, 1000);
+
+
+    /* =========================================
+       2. LOGIKA EMAIL & KRIPTOGRAFI
+       ========================================= */
+
+    function showSection(sec) {
+        document.querySelectorAll('.mail-card').forEach(el => el.classList.remove('active'));
+        document.getElementById('section-view').style.display = 'none';
+        
+        document.getElementById('nav-compose').classList.remove('active');
+        document.getElementById('nav-read').classList.remove('active');
+
+        if(sec === 'compose') {
+            document.getElementById('section-compose').classList.add('active');
+            document.getElementById('nav-compose').classList.add('active');
+        } else if (sec === 'read') {
+            document.getElementById('section-read').classList.add('active');
+            document.getElementById('nav-read').classList.add('active');
+        }
+    }
+
+    function convertFileToBase64() {
+        const file = document.getElementById('inFile').files[0];
+        if (file) {
+            if(file.size > 2000000) {
+                alert("File terlalu besar (Maks 2MB)!");
+                document.getElementById('inFile').value = "";
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('base64String').value = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // PROSES ENKRIPSI (TULIS)
+    function encryptProcess() {
+        const subject = document.getElementById('inSubject').value;
+        const body = document.getElementById('inBody').value;
+        const attachment = document.getElementById('base64String').value;
+        const password = document.getElementById('inPassEncrypt').value;
+        const timeNus = getNuswantaraString();
+
+        if (!password || !subject) {
+            alert("Harap isi Subjek dan Password!");
+            return;
+        }
+
+        const emailData = {
+            timestamp: timeNus,
+            subject: subject,
+            body: body,
+            attachment: attachment
+        };
+
+        const jsonString = JSON.stringify(emailData);
+        const encrypted = CryptoJS.AES.encrypt(jsonString, password).toString();
+        const integrityHash = CryptoJS.SHA256(encrypted).toString();
+
+        const finalPacket = {
+            ver: "NuswantaraV1",
+            hash: integrityHash,
+            payload: encrypted
+        };
+
+        const finalString = JSON.stringify(finalPacket);
+
+        // DOWNLOAD FILE SAJA
+        const blob = new Blob([finalString], {type: "text/plain"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Pesan_Rahasia_${Date.now()}.secret`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        alert("File .secret berhasil diunduh! Kirim file ini ke penerima.");
+        clearForm();
+    }
+
+    // PROSES DEKRIPSI (BACA)
+    function decryptProcess() {
+        const fileInput = document.getElementById('fileEncrypted').files[0];
+        const password = document.getElementById('inPassDecrypt').value;
+        
+        if (!fileInput || !password) {
+            alert("Pilih file dan masukkan password!");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const packet = JSON.parse(e.target.result);
+                
+                // Cek Hash
+                const currentHash = CryptoJS.SHA256(packet.payload).toString();
+                if (currentHash !== packet.hash) {
+                    alert("DATA RUSAK! Hash tidak cocok. File mungkin telah dimodifikasi.");
+                    return;
+                }
+
+                // Dekripsi
+                const bytes = CryptoJS.AES.decrypt(packet.payload, password);
+                const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
+
+                if (!decryptedString) {
+                    alert("Password Salah! Gagal membuka segel.");
+                    return;
+                }
+
+                const data = JSON.parse(decryptedString);
+                renderEmail(data);
+
+            } catch (err) {
+                console.error(err);
+                alert("Gagal membaca file. Pastikan format benar.");
+            }
+        };
+        reader.readAsText(fileInput);
+    }
+
+    // RENDER EMAIL (TAMPILKAN)
+    function renderEmail(data) {
+        // Simpan ke variable global buat diprint
+        currentDecryptedData = data;
+
+        document.getElementById('section-read').classList.remove('active');
+        document.getElementById('section-view').style.display = 'block';
+
+        // Tampilan Layar
+        document.getElementById('viewSubject').innerText = data.subject;
+        document.getElementById('viewTime').innerText = data.timestamp;
+        document.getElementById('viewBody').innerText = data.body;
+
+        const attachDiv = document.getElementById('viewAttachment');
+        attachDiv.innerHTML = "";
+        
+        if(data.attachment) {
+            if(data.attachment.startsWith("data:image")) {
+                attachDiv.innerHTML = `<div class="attachment-box"><strong>Lampiran Gambar:</strong><br><img src="${data.attachment}"></div>`;
+            } else {
+                attachDiv.innerHTML = `<div class="attachment-box">📎 <a href="${data.attachment}" download="lampiran">Download Lampiran</a></div>`;
+            }
+        }
+    }
+
+    // FUNGSI CETAK (PRINT)
+    function printDecryptedEmail() {
+        if(!currentDecryptedData) return;
+
+        // Isi Area Print dengan Data Global
+        document.getElementById('print-time').innerText = currentDecryptedData.timestamp;
+        document.getElementById('print-subject').innerText = currentDecryptedData.subject;
+        document.getElementById('print-body').innerText = currentDecryptedData.body;
+        
+        const attachPrint = document.getElementById('print-attachment');
+        if(currentDecryptedData.attachment) {
+            attachPrint.style.display = 'block';
+            if(currentDecryptedData.attachment.startsWith("data:image")) {
+                 attachPrint.innerHTML = `<strong>LAMPIRAN GAMBAR:</strong><br><img src="${currentDecryptedData.attachment}" style="max-width:100%; border:1px solid #000;">`;
+            } else {
+                 attachPrint.innerHTML = `<strong>[TERDAPAT LAMPIRAN FILE NON-GAMBAR]</strong>`;
+            }
+        } else {
+            attachPrint.style.display = 'none';
+        }
+
+        window.print();
+    }
+
+    function clearForm() {
+        document.getElementById('inSubject').value = "";
+        document.getElementById('inBody').value = "";
+        document.getElementById('inFile').value = "";
+        document.getElementById('inPassEncrypt').value = "";
+        document.getElementById('base64String').value = "";
+    }
+
+</script>
+
+</body>
+</html>
