@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeri dengan Popup</title>
+    <title>Galeri Dokumentasi</title>
     <style>
         /* --- RESET & BASIC --- */
         body {
@@ -32,6 +32,7 @@
             cursor: pointer;
             aspect-ratio: 1 / 1;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            background: #222; /* Placeholder warna kalau gambar loading */
         }
 
         .gallery-item img {
@@ -104,6 +105,7 @@
             font-weight: bold;
             transition: 0.3s;
             cursor: pointer;
+            z-index: 1000;
         }
 
         .close:hover, .close:focus {
@@ -130,74 +132,36 @@
 
     <div class="gallery-container">
         
-  <body>
-
-    <h2>GALERI DOKUMENTASI</h2>
-
-    <div class="gallery-container">
-        
         <div class="gallery-item" onclick="openModal(this)">
-            <img src="https://drive.google.com/uc?export=view&id=1_Cc5mWfXsgBpa5tub6qwCmp9-dK-pxAt" alt="pic1">
-            <div class="overlay">pic1</div>
+            <img src="https://drive.google.com/thumbnail?id=1_Cc5mWfXsgBpa5tub6qwCmp9-dK-pxAt&sz=w1000" alt="Foto Dokumentasi 1">
+            <div class="overlay">Lihat Detail</div>
         </div>
 
         <div class="gallery-item" onclick="openModal(this)">
-            <img src="https://drive.google.com/uc?export=view&id=1UOB_jCZH1MgqnwU86ysdUaKqNyBn2_EH" alt="pic2">
-            <div class="overlay">pic2</div>
+            <img src="https://drive.google.com/thumbnail?id=1UOB_jCZH1MgqnwU86ysdUaKqNyBn2_EH&sz=w1000" alt="Foto Dokumentasi 2">
+            <div class="overlay">Lihat Detail</div>
         </div>
 
         <div class="gallery-item" onclick="openModal(this)">
-            <img src="https://drive.google.com/uc?export=view&id=1eSnHNLgoAf67wQ0NkorwxyRpJ8zkbKVj" alt="Pic3">
-            <div class="overlay">pic3</div>
+            <img src="https://drive.google.com/thumbnail?id=1eSnHNLgoAf67wQ0NkorwxyRpJ8zkbKVj&sz=w1000" alt="Foto Dokumentasi 3">
+            <div class="overlay">Lihat Detail</div>
         </div>
 
         <div class="gallery-item" onclick="openModal(this)">
-            <img src="https://drive.google.com/uc?export=view&id=1PlARZnOovnZ4e17nOTjk6XQVAVs3U5eo" alt="pic4">
-            <div class="overlay">pic4</div>
+            <img src="https://drive.google.com/thumbnail?id=1PlARZnOovnZ4e17nOTjk6XQVAVs3U5eo&sz=w1000" alt="Foto Dokumentasi 4">
+            <div class="overlay">Lihat Detail</div>
         </div>
 
         <div class="gallery-item" onclick="openModal(this)">
-            <img src="https://drive.google.com/uc?export=view&id=17nrnBZmt0Fofbno21VWL9Vm3kvnQGCv5" alt="pic5">
-            <div class="overlay">pic5</div>
+            <img src="https://drive.google.com/thumbnail?id=17nrnBZmt0Fofbno21VWL9Vm3kvnQGCv5&sz=w1000" alt="Foto Dokumentasi 5">
+            <div class="overlay">Lihat Detail</div>
         </div>
 
         <div class="gallery-item" onclick="openModal(this)">
-            <img src="https://drive.google.com/uc?export=view&id=1jeM4KBNCTt3ZDy85kjbvirQA-oOQPeVv" alt="pic6">
-            <div class="overlay">pic6</div>
+            <img src="https://drive.google.com/thumbnail?id=1jeM4KBNCTt3ZDy85kjbvirQA-oOQPeVv&sz=w1000" alt="Foto Dokumentasi 6">
+            <div class="overlay">Lihat Detail</div>
         </div>
 
-    </div>
-
-    <div id="myModal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <img class="modal-content" id="img01">
-        <div id="caption"></div>
-    </div>
-
-    <script>
-        var modal = document.getElementById("myModal");
-        var modalImg = document.getElementById("img01");
-        var captionText = document.getElementById("caption");
-
-        function openModal(element) {
-            var img = element.querySelector('img'); 
-            modal.style.display = "block";
-            modalImg.src = img.src; 
-            captionText.innerHTML = img.alt; 
-        }
-
-        function closeModal() {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-    </script>
-
-</body>
     </div>
 
     <div id="myModal" class="modal">
@@ -212,12 +176,12 @@
         var modalImg = document.getElementById("img01");
         var captionText = document.getElementById("caption");
 
-        // Fungsi buka modal (dipanggil saat gambar diklik)
+        // Fungsi buka modal
         function openModal(element) {
-            var img = element.querySelector('img'); // Ambil tag img di dalam div
+            var img = element.querySelector('img'); 
             modal.style.display = "block";
-            modalImg.src = img.src; // Pindahin URL gambar ke modal
-            captionText.innerHTML = img.alt; // Pindahin Text Alt ke caption
+            modalImg.src = img.src; 
+            captionText.innerHTML = img.alt; 
         }
 
         // Fungsi tutup modal
@@ -225,7 +189,7 @@
             modal.style.display = "none";
         }
 
-        // Fitur Tambahan: Klik area gelap (di luar gambar) buat nutup modal
+        // Klik area luar gambar untuk tutup
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
@@ -234,6 +198,4 @@
     </script>
 
 </body>
-
 </html>
-
