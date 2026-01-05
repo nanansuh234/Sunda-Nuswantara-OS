@@ -9,13 +9,13 @@
     
     <style>
         :root {
-            --primary: #1a73e8; /* Google Blue */
+            --primary: #1a73e8;
             --bg-body: #f6f8fc;
             --bg-panel: #ffffff;
             --text-main: #202124;
             --text-muted: #5f6368;
             --border: #e0e0e0;
-            --gold: #d4af37; /* Sentuhan Nuswantara */
+            --gold: #d4af37;
             --sidebar-width: 250px;
         }
 
@@ -67,7 +67,7 @@
             transition: 0.2s;
         }
         .compose-btn:hover { background: #fafafb; box-shadow: 0 4px 12px rgba(60,64,67,0.25); }
-        .compose-btn span { font-size: 1.5rem; color: var(--gold); } /* Simbol Plus */
+        .compose-btn span { font-size: 1.5rem; color: var(--gold); }
 
         .nav-item {
             padding: 10px 20px; border-radius: 0 20px 20px 0;
@@ -80,12 +80,12 @@
         /* CONTENT AREA */
         .content { flex: 1; padding: 20px; overflow-y: auto; position: relative; }
 
-        /* FORM COMPONENT (GMAIL STYLE) */
+        /* FORM COMPONENT */
         .mail-card {
             background: #fff; border-radius: 8px;
             box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
             max-width: 800px; margin: 0 auto; overflow: hidden;
-            display: none; /* Hidden by default */
+            display: none; 
         }
         .mail-card.active { display: block; }
         
@@ -112,38 +112,61 @@
             background: var(--primary); color: #fff; border: none;
             padding: 10px 24px; border-radius: 4px; font-weight: bold; cursor: pointer;
         }
-        .btn-primary:hover { background: #1765cc; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        
         .pass-input { 
             background: #fce8e6; padding: 5px 10px; border-radius: 4px; 
             border: 1px solid #fab1a0; width: 50%;
         }
 
-        /* VIEW MODE (READING PANE) */
+        /* --- TAMPILAN BACA (LAYOUT BARU) --- */
         .read-view {
             background: #fff; padding: 30px; border-radius: 8px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            max-width: 800px; margin: 0 auto;
+            max-width: 900px; margin: 0 auto; /* Wadah luar tetap lebar */
         }
         .read-header {
             display: flex; justify-content: space-between; align-items: flex-start;
             border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px;
         }
+
+        /* INI CSS AGAR TEKS DI TENGAH (FIX LAYOUT) */
+        .email-text-container {
+            max-width: 680px; /* Lebar ideal untuk membaca (seperti kertas A4/Gmail) */
+            margin: 0 auto;   /* Posisi Tengah */
+            padding: 10px 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #222;
+        }
+
         .attachment-box {
             margin-top: 20px; padding: 10px; background: #f1f3f4; 
             border-radius: 4px; display: inline-block; font-size: 0.9rem;
         }
         .attachment-box img { max-width: 100%; margin-top: 10px; display: block; border-radius: 4px; }
 
-        /* PRINT STYLE */
+        /* --- PRINT STYLE (FIX PRINTING) --- */
         @media print {
-            body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
+            body * { visibility: hidden; } /* Sembunyikan semua Body */
+            
+            /* Tampilkan Area Print dan paksa Display Block */
             #print-area { 
-                position: absolute; left: 0; top: 0; width: 100%; 
-                padding: 40px; background: white; color: black; z-index: 9999;
+                display: block !important; 
+                visibility: visible !important;
+                position: absolute; 
+                left: 0; top: 0; width: 100%; 
+                padding: 40px; 
+                background: white; color: black; z-index: 9999;
             }
-            /* Hilangkan tombol saat print */
+            
+            #print-area * { visibility: visible !important; }
+            
+            /* Layout Print juga ditarik ke tengah biar rapi */
+            .print-container-inner {
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            /* Hilangkan tombol/UI browser */
             button { display: none !important; }
         }
     </style>
@@ -155,9 +178,7 @@
             <span class="logo-icon">☰</span>
             <span style="font-weight: bold; color: #444;">Nuswantara</span><span style="color:var(--primary)">Mail</span>
         </div>
-        <div class="nuswantara-clock" id="nuswantaraTimeDisplay">
-            Memuat Waktu...
-        </div>
+        <div class="nuswantara-clock" id="nuswantaraTimeDisplay">Memuat Waktu...</div>
         <div class="logo-area">
             <div style="width:32px; height:32px; background:var(--gold); border-radius:50%; text-align:center; line-height:32px; color:#fff; font-weight:bold;">N</div>
         </div>
@@ -169,10 +190,10 @@
                 <span>+</span> Tulis Pesan
             </button>
             <div class="nav-item active" onclick="showSection('compose')" id="nav-compose">
-                <span>Kotak Keluar (Enkripsi)</span>
+                <span>Kotak Keluar</span>
             </div>
             <div class="nav-item" onclick="showSection('read')" id="nav-read">
-                <span>Kotak Masuk (Dekripsi)</span>
+                <span>Kotak Masuk</span>
                 <span style="background:var(--primary); color:#fff; padding:0 6px; border-radius:10px; font-size:0.75rem;">1</span>
             </div>
         </div>
@@ -196,9 +217,7 @@
 
                     <div class="toolbar">
                         <input type="password" id="inPassEncrypt" class="pass-input" placeholder="Password Kunci (Wajib Diingat)">
-                        <div>
-                            <button class="btn-primary" onclick="encryptProcess()">Unduh File (.secret)</button>
-                        </div>
+                        <button class="btn-primary" onclick="encryptProcess()">Unduh File (.secret)</button>
                     </div>
                 </div>
             </div>
@@ -228,19 +247,27 @@
                 
                 <div class="read-view">
                     <div class="read-header">
-                        <div>
-                            <h2 style="margin:0 0 5px 0;" id="viewSubject">Subject</h2>
-                            <div style="color:green; font-size:0.85rem;">✔ Segel Terverifikasi (Aman)</div>
+                        <div style="width: 100%;">
+                            <h2 style="margin:0 0 10px 0; font-size: 1.5rem;" id="viewSubject">Subject</h2>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="meta-info">
+                                    <span style="font-weight:bold; color:#444;">Admin</span> <span style="color:#777;">&lt;nuswantara@secure.net&gt;</span><br>
+                                    <span style="font-size:0.85rem; color:#777;" id="viewTime">Waktu</span>
+                                </div>
+                                <div style="color:green; font-size:0.85rem; background:#e6f4ea; padding:5px 10px; border-radius:15px;">✔ Segel Aman</div>
+                            </div>
                         </div>
-                        <button class="btn-primary" style="background: #333;" onclick="printDecryptedEmail()">🖨️ Cetak Dokumen</button>
                     </div>
 
-                    <div class="meta-info">
-                        <strong>Waktu Kirim:</strong> <span id="viewTime"></span>
+                    <div class="email-text-container">
+                        <div id="viewBody" style="white-space: pre-wrap;"></div>
+                        
+                        <div id="viewAttachment"></div>
                     </div>
                     
-                    <div id="viewBody" style="white-space: pre-wrap; line-height:1.6; min-height:150px;"></div>
-                    <div id="viewAttachment"></div>
+                    <div style="text-align:right; margin-top:30px; border-top:1px solid #eee; padding-top:20px;">
+                        <button class="btn-primary" style="background: #333;" onclick="printDecryptedEmail()">🖨️ Cetak Dokumen</button>
+                    </div>
                 </div>
             </div>
 
@@ -248,73 +275,62 @@
     </div>
 
     <div id="print-area" style="display:none;">
-        <div style="text-align:center; border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 10px;">
-            <h1 style="margin:0;">DOKUMEN RAHASIA NUSWANTARA</h1>
-            <small style="letter-spacing: 2px;">SECURE DECRYPTED DOCUMENT</small>
-        </div>
-        
-        <table style="width:100%; margin-bottom: 20px; border-collapse: collapse;">
-            <tr>
-                <td style="width:100px; font-weight:bold;">WAKTU</td>
-                <td>: <span id="print-time"></span></td>
-            </tr>
-            <tr>
-                <td style="font-weight:bold;">SUBJEK</td>
-                <td>: <span id="print-subject"></span></td>
-            </tr>
-            <tr>
-                <td style="font-weight:bold;">STATUS</td>
-                <td>: TERVERIFIKASI (Segel Utuh)</td>
-            </tr>
-        </table>
-        
-        <hr style="border-top:1px dashed #000;">
-        
-        <div id="print-body" style="white-space: pre-wrap; font-family: 'Courier New', monospace; font-size: 1rem; line-height: 1.5; margin: 20px 0;">
+        <div class="print-container-inner">
+            <div style="text-align:center; border-bottom: 2px solid #000; margin-bottom: 30px; padding-bottom: 15px;">
+                <h2 style="margin:0; letter-spacing: 2px;">DOKUMEN RAHASIA NUSWANTARA</h2>
+                <small>SECURE DECRYPTED HARDCOPY</small>
             </div>
+            
+            <table style="width:100%; margin-bottom: 30px; border-collapse: collapse; font-family: monospace;">
+                <tr>
+                    <td style="width:100px; font-weight:bold;">WAKTU</td>
+                    <td>: <span id="print-time"></span></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;">SUBJEK</td>
+                    <td>: <span id="print-subject"></span></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold;">ID SEGEL</td>
+                    <td>: VERIFIED (SHA-256)</td>
+                </tr>
+            </table>
+            
+            <hr style="border-top:1px dashed #999;">
+            
+            <div id="print-body" style="white-space: pre-wrap; font-family: 'Times New Roman', serif; font-size: 12pt; line-height: 1.6; margin: 30px 0; text-align: justify;">
+                </div>
 
-        <div id="print-attachment" style="margin-top: 30px; border: 1px solid #ccc; padding: 10px; display:none;">
-            <strong>[LAMPIRAN TERSEDIA DALAM FILE DIGITAL]</strong>
-        </div>
+            <div id="print-attachment" style="margin-top: 30px; border: 1px solid #ccc; padding: 15px; display:none; text-align:center;">
+                </div>
 
-        <div style="margin-top: 50px; text-align: center; font-size: 0.8rem; color: #555;">
-            <p>Dokumen ini telah didekripsi menggunakan Kunci Privat Nuswantara Mail.<br>
-            Harap jaga kerahasiaan fisik dokumen ini.</p>
+            <div style="margin-top: 80px; text-align: center; font-size: 0.8rem; color: #555; border-top: 1px solid #ccc; padding-top:10px;">
+                <p>Dokumen ini didekripsi dari jaringan Nuswantara Secure Mail.<br>
+                Harap simpan atau musnahkan fisik dokumen ini setelah dibaca.</p>
+            </div>
         </div>
     </div>
 
 <script>
-    // DATA GLOBAL UNTUK PRINT
+    // DATA GLOBAL
     let currentDecryptedData = null;
 
-    /* =========================================
-       1. LOGIKA WAKTU NUSWANTARA
-       ========================================= */
+    // --- WAKTU NUSWANTARA ---
     const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
     const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
     
     function getNuswantaraString() {
         let now = new Date();
         let h = now.getHours();
-        let m = now.getMinutes();
-
         let phaseName = "";
-        if(h < 3) phaseName = "Hening";
-        else if(h < 6) phaseName = "Fajar";
-        else if(h < 9) phaseName = "Duha";
-        else if(h < 12) phaseName = "Karya";
-        else if(h < 15) phaseName = "Istiwa";
-        else if(h < 18) phaseName = "Asar";
-        else if(h < 21) phaseName = "Sandikala";
-        else phaseName = "Sirepan";
+        if(h < 3) phaseName = "Hening"; else if(h < 6) phaseName = "Fajar";
+        else if(h < 9) phaseName = "Duha"; else if(h < 12) phaseName = "Karya";
+        else if(h < 15) phaseName = "Istiwa"; else if(h < 18) phaseName = "Asar";
+        else if(h < 21) phaseName = "Sandikala"; else phaseName = "Sirepan";
 
         let anchorYear = now.getFullYear();
         let anchorDate = new Date(anchorYear, 2, 21);
-        
-        if (now < anchorDate) {
-            anchorYear -= 1;
-            anchorDate = new Date(anchorYear, 2, 21);
-        }
+        if (now < anchorDate) { anchorYear -= 1; anchorDate = new Date(anchorYear, 2, 21); }
         
         let currentYearNus = (anchorYear - 2025) + 1;
         if(currentYearNus < 1) currentYearNus = 1;
@@ -329,20 +345,12 @@
 
         return `Tahun ${currentYearNus} ${months[monthIndex]}, Tgl ${dayNus} (${pasarans[pasaranIndex]}) | Waktu ${phaseName}`;
     }
+    setInterval(() => { document.getElementById('nuswantaraTimeDisplay').innerText = getNuswantaraString(); }, 1000);
 
-    setInterval(() => {
-        document.getElementById('nuswantaraTimeDisplay').innerText = getNuswantaraString();
-    }, 1000);
-
-
-    /* =========================================
-       2. LOGIKA EMAIL & KRIPTOGRAFI
-       ========================================= */
-
+    // --- LOGIC UI ---
     function showSection(sec) {
         document.querySelectorAll('.mail-card').forEach(el => el.classList.remove('active'));
         document.getElementById('section-view').style.display = 'none';
-        
         document.getElementById('nav-compose').classList.remove('active');
         document.getElementById('nav-read').classList.remove('active');
 
@@ -355,23 +363,28 @@
         }
     }
 
+    function clearForm() {
+        document.getElementById('inSubject').value = "";
+        document.getElementById('inBody').value = "";
+        document.getElementById('inFile').value = "";
+        document.getElementById('inPassEncrypt').value = "";
+        document.getElementById('base64String').value = "";
+    }
+
     function convertFileToBase64() {
         const file = document.getElementById('inFile').files[0];
         if (file) {
             if(file.size > 2000000) {
                 alert("File terlalu besar (Maks 2MB)!");
-                document.getElementById('inFile').value = "";
-                return;
+                document.getElementById('inFile').value = ""; return;
             }
             const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('base64String').value = e.target.result;
-            };
+            reader.onload = function(e) { document.getElementById('base64String').value = e.target.result; };
             reader.readAsDataURL(file);
         }
     }
 
-    // PROSES ENKRIPSI (TULIS)
+    // --- ENKRIPSI ---
     function encryptProcess() {
         const subject = document.getElementById('inSubject').value;
         const body = document.getElementById('inBody').value;
@@ -379,31 +392,16 @@
         const password = document.getElementById('inPassEncrypt').value;
         const timeNus = getNuswantaraString();
 
-        if (!password || !subject) {
-            alert("Harap isi Subjek dan Password!");
-            return;
-        }
+        if (!password || !subject) { alert("Harap isi Subjek dan Password!"); return; }
 
-        const emailData = {
-            timestamp: timeNus,
-            subject: subject,
-            body: body,
-            attachment: attachment
-        };
-
+        const emailData = { timestamp: timeNus, subject: subject, body: body, attachment: attachment };
         const jsonString = JSON.stringify(emailData);
         const encrypted = CryptoJS.AES.encrypt(jsonString, password).toString();
         const integrityHash = CryptoJS.SHA256(encrypted).toString();
 
-        const finalPacket = {
-            ver: "NuswantaraV1",
-            hash: integrityHash,
-            payload: encrypted
-        };
-
+        const finalPacket = { ver: "NuswantaraV1", hash: integrityHash, payload: encrypted };
         const finalString = JSON.stringify(finalPacket);
 
-        // DOWNLOAD FILE SAJA
         const blob = new Blob([finalString], {type: "text/plain"});
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -413,64 +411,46 @@
         a.click();
         document.body.removeChild(a);
         
-        alert("File .secret berhasil diunduh! Kirim file ini ke penerima.");
+        alert("File .secret berhasil diunduh!");
         clearForm();
     }
 
-    // PROSES DEKRIPSI (BACA)
+    // --- DEKRIPSI ---
     function decryptProcess() {
         const fileInput = document.getElementById('fileEncrypted').files[0];
         const password = document.getElementById('inPassDecrypt').value;
         
-        if (!fileInput || !password) {
-            alert("Pilih file dan masukkan password!");
-            return;
-        }
+        if (!fileInput || !password) { alert("Pilih file dan masukkan password!"); return; }
 
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
                 const packet = JSON.parse(e.target.result);
-                
-                // Cek Hash
                 const currentHash = CryptoJS.SHA256(packet.payload).toString();
-                if (currentHash !== packet.hash) {
-                    alert("DATA RUSAK! Hash tidak cocok. File mungkin telah dimodifikasi.");
-                    return;
-                }
+                if (currentHash !== packet.hash) { alert("DATA RUSAK! Hash tidak cocok."); return; }
 
-                // Dekripsi
                 const bytes = CryptoJS.AES.decrypt(packet.payload, password);
                 const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
 
-                if (!decryptedString) {
-                    alert("Password Salah! Gagal membuka segel.");
-                    return;
-                }
+                if (!decryptedString) { alert("Password Salah!"); return; }
 
                 const data = JSON.parse(decryptedString);
                 renderEmail(data);
 
-            } catch (err) {
-                console.error(err);
-                alert("Gagal membaca file. Pastikan format benar.");
-            }
+            } catch (err) { console.error(err); alert("Gagal membaca file."); }
         };
         reader.readAsText(fileInput);
     }
 
-    // RENDER EMAIL (TAMPILKAN)
+    // --- RENDER ---
     function renderEmail(data) {
-        // Simpan ke variable global buat diprint
-        currentDecryptedData = data;
-
+        currentDecryptedData = data; // Simpan global
         document.getElementById('section-read').classList.remove('active');
         document.getElementById('section-view').style.display = 'block';
 
-        // Tampilan Layar
         document.getElementById('viewSubject').innerText = data.subject;
         document.getElementById('viewTime').innerText = data.timestamp;
-        document.getElementById('viewBody').innerText = data.body;
+        document.getElementById('viewBody').innerText = data.body; // Isi body
 
         const attachDiv = document.getElementById('viewAttachment');
         attachDiv.innerHTML = "";
@@ -484,11 +464,11 @@
         }
     }
 
-    // FUNGSI CETAK (PRINT)
+    // --- PRINTING FUNCTION (FIXED) ---
     function printDecryptedEmail() {
         if(!currentDecryptedData) return;
 
-        // Isi Area Print dengan Data Global
+        // Populate Print Area
         document.getElementById('print-time').innerText = currentDecryptedData.timestamp;
         document.getElementById('print-subject').innerText = currentDecryptedData.subject;
         document.getElementById('print-body').innerText = currentDecryptedData.body;
@@ -497,7 +477,7 @@
         if(currentDecryptedData.attachment) {
             attachPrint.style.display = 'block';
             if(currentDecryptedData.attachment.startsWith("data:image")) {
-                 attachPrint.innerHTML = `<strong>LAMPIRAN GAMBAR:</strong><br><img src="${currentDecryptedData.attachment}" style="max-width:100%; border:1px solid #000;">`;
+                 attachPrint.innerHTML = `<strong>LAMPIRAN GAMBAR:</strong><br><img src="${currentDecryptedData.attachment}" style="max-width:300px; margin:0 auto;">`;
             } else {
                  attachPrint.innerHTML = `<strong>[TERDAPAT LAMPIRAN FILE NON-GAMBAR]</strong>`;
             }
@@ -505,17 +485,9 @@
             attachPrint.style.display = 'none';
         }
 
+        // Jalankan Print (Browser akan baca CSS @media print)
         window.print();
     }
-
-    function clearForm() {
-        document.getElementById('inSubject').value = "";
-        document.getElementById('inBody').value = "";
-        document.getElementById('inFile').value = "";
-        document.getElementById('inPassEncrypt').value = "";
-        document.getElementById('base64String').value = "";
-    }
-
 </script>
 
 </body>
