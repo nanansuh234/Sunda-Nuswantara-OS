@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RES-01 FREQUENCY SCANNER</title>
+    <style>
+        :root { --main: #00ff88; --alert: #ff3333; --bg: #050505; --panel: #111; }
+        body { 
+            background: var(--bg); color: var(--main); 
+            font-family: 'Consolas', monospace; 
+            margin: 0; padding: 20px; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh;
+        }
+
+        .hud {
+            width: 100%; max-width: 800px;
+            border: 2px solid #333;
+            background: var(--panel);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+        }
+
+        h2 { margin: 0 0 20px 0; border-bottom: 1px solid #333; padding-bottom: 10px; letter-spacing: 2px; }
+
+        /* AREA VISUALIZER */
+        canvas {
+            width: 100%;
+            height: 250px;
+            background: #000;
+            border: 1px solid #333;
+            margin-bottom: 15px;
+        }
+
+        /* PANEL INFO */
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+        }
+        .box {
+            background: #001100; border: 1px solid #004400; padding: 10px;
+        }
+        .label { font-size: 0.8rem; color: #555; margin-bottom: 5px; }
+        .value { font-size: 1.5rem; font-weight: bold; }
+        
+        .meaning-box {
+            grid-column: 1 / -1;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: center;
+            border: 1px dashed #555;
+            transition: 0.2s;
+        }
+
+        /* TOMBOL START */
+        button {
+            width: 100%; padding: 15px;
+            background: var(--main); color: #000;
+            font-weight: bold; border: none; cursor: pointer;
+            margin-top: 20px; font-size: 1rem;
+        }
+        button:hover { background: #fff; }
+
+        /* INDIKATOR BAHAYA */
+        .danger-mode {
+            background: #300 !important;
+            border-color: var(--alert) !important;
+            color: var(--alert) !important;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+<div class="hud">
+    <h2>SONIC RESONANCE SCANNER</h2>
+    
+    <canvas id="visualizer"></canvas>
+
+    <div class="info-grid">
+        <div class="box">
+            <div class="label">DOMINANT FREQ (HZ)</div>
+            <div class="value" id="freqDisplay">0 Hz</div>
+        </div>
+        <div class="box">
+            <div class="label">AMPLITUDE (dB)</div>
+            <div class="value" id="dbDisplay">0</div>
+        </div>
+        
+        <div class="box meaning-box" id="meaningDisplay">
+            STATUS: STANDBY
+        </div>
+    </div>
+
+    <button id="btnStart" onclick="startMic()">AKTIFKAN MICROPHONE</button>
+</div>
+
+<script>
+    let audioCtx, analyser, source, bufferLength, dataArray;
+    let canvas, ctx;
+    let isRunning = false;
+
+    function startMic() {
+        if(isRunning) return;
+        
+        // MINTA IZIN MIC
+        navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioCtx.createAnalyser();
+            
+            // FFT SIZE: Semakin besar, semakin detail resolusi frekuensinya
+            // 2048 cukup untuk deteksi bass
+            analyser.fftSize = 2048; 
+            
+            source = audioCtx.createMediaStreamSource(stream);
+            source.connect(analyser);
+            
+            bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            
+            canvas = document.getElementById('visualizer');
+            ctx = canvas.getContext('2d');
+            
+            // Set ukuran canvas
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            document.getElementById('btnStart').innerText = "SCANNING BERJALAN...";
+            document.getElementById('btnStart').style.background = "#333";
+            document.getElementById('btnStart').style.color = "#fff";
+            
+            isRunning = true;
+            draw();
+        })
+        .catch(err => alert("Gagal akses Mic: " + err));
+    }
+
+    function draw() {
+        requestAnimationFrame(draw);
+        
+        // Ambil data frekuensi
+        analyser.getByteFrequencyData(dataArray);
+
+        // CLEAR CANVAS
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        let barWidth = (canvas.width / bufferLength) * 2.5;
+        let barHeight;
+        let x = 0;
+        
+        let maxVal = 0;
+        let maxIndex = 0;
+        let totalVol = 0;
+
+        // LOOP GAMBAR GRAFIK BAR
+        for(let i = 0; i < bufferLength; i++) {
+            barHeight = dataArray[i];
+            
+            // Cari Peak (Frekuensi terkuat)
+            if(barHeight > maxVal) {
+                maxVal = barHeight;
+                maxIndex = i;
+            }
+            totalVol += barHeight;
+
+            // Warna Bar
+            ctx.fillStyle = `rgb(0, ${barHeight + 100}, 80)`;
+            ctx.fillRect(x, canvas.height - barHeight/1.5, barWidth, barHeight/1.5);
+
+            x += barWidth + 1;
+        }
+
+        // --- ANALISA MATEMATIKA ---
+        // 1. Hitung Frekuensi Dominan
+        // Rumus: Index * SampleRate / FFTSize
+        let dominantFreq = Math.round(maxIndex * audioCtx.sampleRate / analyser.fftSize);
+        
+        // 2. Tampilkan Data
+        document.getElementById('freqDisplay').innerText = dominantFreq + " Hz";
+        document.getElementById('dbDisplay').innerText = Math.round(totalVol / bufferLength);
+
+        // 3. TERJEMAHAN ARTI GELOMBANG
+        interpretFreq(dominantFreq, maxVal);
+    }
+
+    function interpretFreq(hz, volume) {
+        const box = document.getElementById('meaningDisplay');
+        const body = document.body;
+
+        if (volume < 10) { 
+            // Hening
+            box.innerText = "SILENCE / BACKGROUND NOISE";
+            box.className = "box meaning-box";
+            return;
+        }
+
+        if (hz < 60) {
+            // LOW BASS / RUMBLE
+            if (volume > 200) {
+                box.innerText = "⚠️ BAHAYA: RESONANSI RENDAH / GETARAN STRUKTUR!";
+                box.className = "box meaning-box danger-mode";
+            } else {
+                box.innerText = "LOW FREQ: Getaran Mesin / Gemuruh Jauh";
+                box.className = "box meaning-box";
+            }
+        } 
+        else if (hz >= 60 && hz < 300) {
+            // MID BASS
+            box.innerText = "MID BASS: Suara Pria / Musik Bass / Kendaraan";
+            box.className = "box meaning-box";
+        }
+        else if (hz >= 300 && hz < 3000) {
+            // MID RANGE (Suara Manusia)
+            box.innerText = "MID RANGE: Percakapan Manusia / Aktivitas Normal";
+            box.className = "box meaning-box";
+        }
+        else if (hz >= 3000) {
+            // HIGH PITCH
+            box.innerText = "HIGH PITCH: Desisan / Logam / Alarm / Sinyal Elektronik";
+            box.className = "box meaning-box";
+        }
+    }
+</script>
+
+</body>
+</html>

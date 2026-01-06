@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSWANTARA HACKING HUB</title>
+    <style>
+        :root { --neon: #00ff88; --dark: #0a0a0a; --panel: #111; --text: #ccc; }
+        
+        body {
+            background: var(--dark);
+            color: var(--text);
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: var(--neon);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-bottom: 2px solid var(--neon);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .subtitle { font-size: 0.8rem; color: #555; margin-bottom: 30px; }
+
+        /* GRID MENU */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* KARTU MENU */
+        .card {
+            background: var(--panel);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            border-color: var(--neon);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .card-icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--neon); }
+        .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
+        .card-desc { font-size: 0.9rem; line-height: 1.5; color: #888; flex: 1; }
+        
+        .status-dot {
+            position: absolute; top: 15px; right: 15px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #333;
+        }
+        .card:hover .status-dot { background: var(--neon); box-shadow: 0 0 10px var(--neon); }
+
+        /* FOOTER */
+        .footer { margin-top: 50px; font-size: 0.7rem; color: #444; }
+
+    </style>
+</head>
+<body>
+
+    <h1>NUSWANTARA HUB</h1>
+    <div class="subtitle">PROJECT: COMMUNICATION & TOOLS</div>
+
+    <div class="grid-container">
+
+        <a href="Pemahaman Bahasa Ai.html" class="card"> <div class="status-dot"></div>
+            <div class="card-icon">💰</div>
+            <div class="card-title">Pemahaman Bahasa Ai</div>
+            <div class="card-desc">
+                Panel pembelajaran dibalik bagaimana Ai merespon Bahasa Manusia dan Meresponnya kembali menjadi Bahasa.
+            </div>
+        </a>
+
+        <a href="Sonic Resonance Scanner.html" class="card"> <div class="status-dot"></div>
+            <div class="card-icon">🖨️</div>
+            <div class="card-title">Panel Deteksi Resonansi Suara</div>
+            <div class="card-desc">
+                Alat ini mendeteksi suara berdasarkan Prequensi, tidak semua perangkat memiliki Mic yang sensitif untuk merekap suara prequensi tinggi.
+            </div>
+        </a>

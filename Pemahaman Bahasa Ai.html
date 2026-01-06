@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI THOUGHT VISUALIZER</title>
+    <style>
+        body { 
+            background: #000; 
+            color: #0f0; 
+            font-family: 'Consolas', 'Monaco', monospace; 
+            margin: 0; 
+            padding: 20px;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER HUD */
+        .hud {
+            border-bottom: 2px solid #0f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .hud-title { font-size: 1.5rem; font-weight: bold; letter-spacing: 3px; }
+        .hud-status { animation: blink 1s infinite; }
+
+        /* INPUT AREA */
+        .input-box {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid #0f0;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1.2rem;
+            width: 100%;
+            padding: 15px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+        .input-box::placeholder { color: #005500; }
+
+        /* LAYAR VISUALISASI */
+        .display-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .panel {
+            border: 1px solid #004400;
+            background: #001100;
+            padding: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .panel-title {
+            position: absolute;
+            top: 0; right: 0;
+            background: #0f0;
+            color: #000;
+            padding: 2px 5px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* TIPE-TIPE TEKS */
+        .binary-text { color: #005500; font-size: 0.8rem; word-break: break-all; }
+        .tensor-text { color: #00ccff; font-size: 0.8rem; word-break: break-all; }
+        .final-text { 
+            font-size: 2rem; 
+            color: #fff; 
+            text-shadow: 0 0 10px #0f0; 
+            white-space: pre-wrap;
+        }
+
+        /* GLITCH CHARACTER */
+        .glitch { display: inline-block; min-width: 10px; }
+
+        /* ANIMASI */
+        @keyframes blink { 50% { opacity: 0; } }
+        
+        /* SCANLINE EFEK TV */
+        .scanline {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none; z-index: 99;
+        }
+    </style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<div class="hud">
+    <div class="hud-title">CORE.AI_SYS</div>
+    <div class="hud-status">● PROCESSING</div>
+</div>
+
+<input type="text" class="input-box" id="humanInput" placeholder="KETIK SESUATU (BAHASA MANUSIA)..." onkeyup="processInput(this.value)">
+
+<div class="display-grid">
+    <div class="panel">
+        <div class="panel-title">LAYER 1: MACHINE CODE</div>
+        <div id="binaryOutput" class="binary-text"></div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">LAYER 2: TENSOR DATA (MATH)</div>
+        <div id="tensorOutput" class="tensor-text"></div>
+    </div>
+</div>
+
+<div class="panel" style="margin-top:20px; height: 150px;">
+    <div class="panel-title">LAYER 3: HUMAN DECODING</div>
+    <div id="finalOutput" class="final-text">_</div>
+</div>
+
+<script>
+    // KARAKTER ACAK BUAT EFEK GLITCH
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+-=[]{}|;':,./<>?";
+
+    function processInput(text) {
+        if (!text) {
+            clearScreens();
+            return;
+        }
+
+        // 1. GENERATE BINARY (Mesin)
+        let binary = "";
+        for (let i = 0; i < text.length; i++) {
+            binary += text[i].charCodeAt(0).toString(2) + " ";
+        }
+        document.getElementById('binaryOutput').innerText = binary;
+
+        // 2. GENERATE TENSOR (Matematika AI)
+        // AI melihat kata sebagai koordinat angka (Vector)
+        let tensor = "[";
+        for (let i = 0; i < text.length; i++) {
+            // Simulasi angka float acak
+            let val = (Math.random() * 2 - 1).toFixed(4); 
+            tensor += val + ", ";
+        }
+        tensor += "]";
+        document.getElementById('tensorOutput').innerText = tensor;
+
+        // 3. GENERATE GLITCH DECODING
+        // Kita tidak langsung menampilkan teks, tapi "mengacak" dulu
+        const finalEl = document.getElementById('finalOutput');
+        
+        // Hentikan interval lama kalau user ngetik cepet
+        if (finalEl.dataset.interval) clearInterval(finalEl.dataset.interval);
+
+        let iteration = 0;
+        finalEl.dataset.interval = setInterval(() => {
+            finalEl.innerText = text
+                .split("")
+                .map((letter, index) => {
+                    if (index < iteration) {
+                        return text[index]; // Huruf sudah ketemu
+                    }
+                    return chars[Math.floor(Math.random() * 26)]; // Huruf masih acak
+                })
+                .join("");
+
+            if (iteration >= text.length) {
+                clearInterval(finalEl.dataset.interval);
+            }
+
+            iteration += 1 / 3; // Kecepatan decoding
+        }, 30);
+    }
+
+    function clearScreens() {
+        document.getElementById('binaryOutput').innerText = "";
+        document.getElementById('tensorOutput').innerText = "";
+        document.getElementById('finalOutput').innerText = "_";
+    }
+
+    // EFEK BACKGROUND NOISE (Biar kayak komputer hidup)
+    setInterval(() => {
+        const bin = document.getElementById('binaryOutput');
+        if(bin.innerText.length > 0) {
+            // Tambah sedikit kedipan binary di belakang
+            bin.innerText = bin.innerText.substring(0, bin.innerText.length-1) + (Math.random() > 0.5 ? "1" : "0");
+        }
+    }, 100);
+
+</script>
+
+</body>
+</html>
