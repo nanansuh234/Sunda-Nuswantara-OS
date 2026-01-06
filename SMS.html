@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SECURE COMMUNICATOR V3</title>
+    <title>SECURE COMMUNICATOR V4</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 
@@ -14,108 +14,49 @@
             min-height: 100vh; margin: 0; font-family: 'VT323', monospace; 
         }
 
-        /* BODY COMMUNICATOR */
         .device-body {
-            background: #2a2a2a;
-            width: 720px; /* Sedikit dilebarkan */
-            max-width: 98%;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 
-                0 20px 50px rgba(0,0,0,0.5),
-                inset 0 2px 5px rgba(255,255,255,0.1);
-            border: 4px solid #111;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            background: #2a2a2a; width: 720px; max-width: 98%; border-radius: 20px; padding: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.1);
+            border: 4px solid #111; display: flex; flex-direction: column; gap: 15px;
         }
 
-        /* LAYAR LCD */
-        .screen-frame {
-            background: #111;
-            padding: 15px 20px;
-            border-radius: 10px;
-            border-bottom: 2px solid #444;
-        }
+        .screen-frame { background: #111; padding: 15px 20px; border-radius: 10px; border-bottom: 2px solid #444; }
 
         .lcd {
-            background: #9ea792;
-            color: #111;
-            height: 240px; /* LEBIH TINGGI BIAR PUAS */
-            width: 100%;
-            border: 3px inset #666;
-            padding: 10px;
-            font-size: 1.3rem;
-            position: relative;
+            background: #9ea792; color: #111; height: 240px; width: 100%; border: 3px inset #666;
+            padding: 10px; font-size: 1.3rem; position: relative;
             background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
-            background-size: 100% 3px;
-            overflow: hidden; 
-            display: flex;
-            flex-direction: column;
+            background-size: 100% 3px; overflow: hidden; display: flex; flex-direction: column;
         }
 
-        /* INPUT AREA & TEXT DISPLAY */
         .lcd-input, #disp_msg {
-            width: 100%; 
-            flex: 1; 
-            background: transparent; 
-            border: none;
-            font-family: 'VT323', monospace;
-            font-size: 1.3rem; 
-            outline: none; 
-            resize: none;
-            overflow-y: auto;
-            min-height: 0; /* PENTING BIAR GAK MENTOK */
-            word-wrap: break-word; /* Biar teks panjang turun ke bawah */
-            padding-right: 5px;
+            width: 100%; flex: 1; background: transparent; border: none;
+            font-family: 'VT323', monospace; font-size: 1.3rem; outline: none; resize: none;
+            overflow-y: auto; min-height: 0; word-wrap: break-word; padding-right: 5px;
         }
 
-        /* CUSTOM SCROLLBAR (GAYA RETRO HITAM) */
-        .lcd-input::-webkit-scrollbar, #disp_msg::-webkit-scrollbar {
-            width: 8px;
-        }
-        .lcd-input::-webkit-scrollbar-track, #disp_msg::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1); 
-        }
-        .lcd-input::-webkit-scrollbar-thumb, #disp_msg::-webkit-scrollbar-thumb {
-            background: #111; 
-            border-radius: 4px;
-        }
-        .lcd-input::-webkit-scrollbar-thumb:hover, #disp_msg::-webkit-scrollbar-thumb:hover {
-            background: #000; 
-        }
+        /* SCROLLBAR HITAM */
+        .lcd-input::-webkit-scrollbar, #disp_msg::-webkit-scrollbar { width: 8px; }
+        .lcd-input::-webkit-scrollbar-track, #disp_msg::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        .lcd-input::-webkit-scrollbar-thumb, #disp_msg::-webkit-scrollbar-thumb { background: #111; border-radius: 4px; }
 
-        /* Padding bawah ekstra untuk mode baca biar gak kepotong */
-        #disp_msg {
-            margin-top: 5px;
-            border-top: 1px dashed #444;
-            padding-top: 5px;
-            padding-bottom: 30px; /* SPACE EXTRA DI BAWAH */
-        }
+        #disp_msg { margin-top: 5px; border-top: 1px dashed #444; padding-top: 5px; padding-bottom: 30px; }
 
         .status-bar {
-            display: flex; justify-content: space-between;
-            border-bottom: 2px solid #111; margin-bottom: 5px;
+            display: flex; justify-content: space-between; border-bottom: 2px solid #111; margin-bottom: 5px;
             font-size: 0.9rem; font-weight: bold; padding-bottom: 2px; flex-shrink: 0;
         }
 
-        /* AMPLOP TOMBOL COPY */
-        .envelope-btn {
-            cursor: pointer;
-            border: 2px dashed #000;
-            padding: 20px;
-            margin-top: 20px;
-            transition: 0.1s;
-        }
+        .envelope-btn { cursor: pointer; border: 2px dashed #000; padding: 20px; margin-top: 20px; transition: 0.1s; }
         .envelope-btn:active { background: #000; color: #9ea792; }
 
-        /* KEYBOARD AREA */
+        /* KEYBOARD */
         .keyboard-area { background: #222; padding: 10px; border-radius: 5px; }
         .row { display: flex; justify-content: center; gap: 5px; margin-bottom: 5px; }
         .key {
-            background: #111; color: #ddd; border: 1px solid #444; border-radius: 4px;
-            height: 45px; min-width: 35px; display: flex; justify-content: center; align-items: center;
-            font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 0 #000; flex: 1;
+            background: #111; color: #ddd; border: 1px solid #444; border-radius: 4px; height: 45px;
+            min-width: 35px; display: flex; justify-content: center; align-items: center; font-size: 1.1rem;
+            cursor: pointer; box-shadow: 0 4px 0 #000; flex: 1;
         }
         .key:active { transform: translateY(4px); box-shadow: none; background: #000; color: #fff; }
         .key.wide { flex: 2; background: #333; }
@@ -126,18 +67,16 @@
         .view.active { display: flex; }
         .blink { animation: blinker 1s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
-
     </style>
 </head>
 <body>
 
 <div class="device-body">
-    
     <div class="screen-frame">
         <div class="lcd">
             <div class="status-bar">
                 <span>ENCRYPTED MSG SYSTEM</span>
-                <span>V3.0 STABLE</span>
+                <span>V4.0 ANTI-LOG</span>
                 <span>[||||]</span>
             </div>
 
@@ -151,12 +90,10 @@
 
             <div id="view-link" class="view" style="align-items:center; justify-content:center; text-align:center;">
                 <div style="font-weight:bold;">DATA TERENKRIPSI.</div>
-                
                 <div class="envelope-btn" onclick="copyLink()">
                     <div style="font-size:4rem; line-height:3rem;">✉️</div>
                     <div style="font-size:1.2rem; font-weight:bold; margin-top:10px;">SALIN LINK PESAN</div>
                 </div>
-                
                 <input type="hidden" id="resultUrl"> 
                 <div id="copyStatus" class="blink" style="margin-top:15px; display:none; font-weight:bold;">LINK TERSALIN! SIAP TEMPEL.</div>
             </div>
@@ -169,10 +106,14 @@
 
             <div id="view-read" class="view">
                 <div style="font-weight:bold; flex-shrink: 0;">DARI: <span id="disp_name"></span></div>
-                
                 <div id="disp_msg"></div>
-                
                 <div style="background:#000; color:#9ea792; text-align:center; font-size:0.9rem; margin-top:auto; flex-shrink: 0;">TEKAN [DEL] UNTUK MEMBAKAR</div>
+            </div>
+
+            <div id="view-burned" class="view" style="align-items:center; justify-content:center; text-align:center;">
+                <div style="font-size:4rem;">🔥</div>
+                <div style="font-size:1.5rem; font-weight:bold; margin-top:10px;">PESAN HANGUS!</div>
+                <div style="font-size:1rem;">Pesan ini sudah dibaca dan dihancurkan.</div>
             </div>
 
         </div>
@@ -205,7 +146,6 @@
             <div class="key wide" onclick="location.reload()">MENU</div>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -214,11 +154,29 @@
     let currentView = 'compose';
     let focusedInput = document.getElementById('s_msg'); 
 
+    // --- CEK APAKAH PESAN SUDAH DIBAKAR DI HP INI? ---
+    function isBurned(dataStr) {
+        let burnedList = JSON.parse(localStorage.getItem('BURNED_MSGS')) || [];
+        return burnedList.includes(dataStr);
+    }
+
+    function burnIt(dataStr) {
+        let burnedList = JSON.parse(localStorage.getItem('BURNED_MSGS')) || [];
+        burnedList.push(dataStr);
+        localStorage.setItem('BURNED_MSGS', JSON.stringify(burnedList));
+    }
+
     // INITIALIZE
     if (encryptedData) {
-        switchView('unlock');
-        focusedInput = document.getElementById('r_pin');
-        document.getElementById('btnEnter').innerText = "OPEN";
+        // CEK STATUS HANGUS SEBELUM BUKA
+        if(isBurned(encryptedData)) {
+            switchView('burned');
+            document.getElementById('btnEnter').innerText = "-";
+        } else {
+            switchView('unlock');
+            focusedInput = document.getElementById('r_pin');
+            document.getElementById('btnEnter').innerText = "OPEN";
+        }
     } else {
         document.querySelectorAll('input, textarea').forEach(el => {
             el.addEventListener('focus', () => focusedInput = el);
@@ -265,7 +223,6 @@
                 
                 switchView('read');
                 document.getElementById('btnEnter').innerText = "-";
-                // RESET SCROLL KE ATAS
                 document.getElementById('disp_msg').scrollTop = 0;
                 
             } catch(e) {
@@ -285,7 +242,10 @@
 
     function handleBackspace() {
         if (currentView === 'read') {
-            if(confirm("BAKAR PESAN INI?")) {
+            if(confirm("BAKAR PESAN INI? (TIDAK BISA DIBUKA LAGI DI SINI)")) {
+                // PROSES BAKAR LOKAL
+                burnIt(encryptedData);
+
                 document.querySelector('.lcd').innerHTML = "<div style='display:flex;height:100%;justify-content:center;align-items:center;font-size:2rem;'>🔥🔥🔥</div>";
                 setTimeout(() => {
                     window.history.replaceState({}, document.title, window.location.pathname);
