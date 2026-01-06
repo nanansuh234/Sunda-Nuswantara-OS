@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVIET TEXT GENERATOR</title>
+    <style>
+        :root { --red: #d90429; --gold: #ffd700; --dark: #121212; --gray: #2b2d42; }
+        body { 
+            background: var(--dark); 
+            color: #eee; 
+            font-family: 'Courier New', monospace; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            border: 4px solid var(--red);
+            background: var(--gray);
+            padding: 20px;
+            box-shadow: 10px 10px 0 var(--red);
+        }
+
+        h1 {
+            color: var(--gold);
+            text-align: center;
+            text-transform: uppercase;
+            border-bottom: 2px dashed var(--gold);
+            padding-bottom: 10px;
+            margin-top: 0;
+            letter-spacing: 2px;
+        }
+
+        .input-group { margin-bottom: 20px; }
+        
+        label { display: block; margin-bottom: 5px; color: var(--gold); font-weight: bold; }
+        
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 10px;
+            font-size: 1.2rem;
+            font-family: 'Courier New', monospace;
+            box-sizing: border-box;
+            resize: none;
+        }
+
+        textarea:focus { outline: 1px solid var(--red); }
+
+        #output {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        .btn-group { display: flex; gap: 10px; }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: var(--red);
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+
+        button:hover { background: #ef233c; transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+        
+        .hammer-sickle { font-size: 3rem; text-align: center; margin-bottom: 10px; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="hammer-sickle"></div>
+    <h1>RUSSIAN FONT GENERATE</h1>
+
+    <div class="input-group">
+        <label>INPUT TEKS (LATIN):</label>
+        <textarea id="inputText" placeholder="Ketik disini comrade..." oninput="convert()"></textarea>
+    </div>
+
+    <div class="input-group">
+        <label>HASIL (SOVIET STYLE):</label>
+        <textarea id="output" readonly></textarea>
+    </div>
+
+    <div class="btn-group">
+        <button onclick="copyText()">SALIN / COPY</button>
+        <button onclick="document.getElementById('inputText').value=''; convert();" style="background:#555;">RESET</button>
+    </div>
+</div>
+
+<script>
+    // KAMUS HURUF KEBALIK (MAPPING)
+    const dictionary = {
+        'A': 'Д', 'a': 'д',
+        'B': 'Б', 'b': 'Ь',
+        'C': 'Ҫ', 'c': 'с',
+        'D': 'D', 'd': 'd',
+        'E': 'З', 'e': 'з', // E jadi Ze
+        'F': 'Ф', 'f': 'ф',
+        'G': 'G', 'g': 'g',
+        'H': 'H', 'h': 'h',
+        'I': 'И', 'i': 'и', // I jadi N kebalik
+        'J': 'J', 'j': 'j',
+        'K': 'К', 'k': 'к',
+        'L': 'Л', 'l': 'л',
+        'M': 'М', 'm': 'м',
+        'N': 'И', 'n': 'и', // N jadi I Rusia
+        'O': 'Ф', 'o': 'ф',
+        'P': 'П', 'p': 'п',
+        'Q': 'Q', 'q': 'q',
+        'R': 'Я', 'r': 'я', // R jadi Ya (R kebalik)
+        'S': 'S', 's': 's',
+        'T': 'T', 't': 'т',
+        'U': 'Ц', 'u': 'ц',
+        'V': 'В', 'v': 'в',
+        'W': 'Ш', 'w': 'ш',
+        'X': 'Ж', 'x': 'ж',
+        'Y': 'Ч', 'y': 'ч',
+        'Z': 'Z', 'z': 'z',
+        // Angka & Simbol dikit
+        '3': 'З',
+        '6': 'б',
+        '9': 'Р' 
+    };
+
+    function convert() {
+        const input = document.getElementById('inputText').value;
+        let result = "";
+
+        // Loop setiap huruf dan ganti kalau ada di kamus
+        for (let i = 0; i < input.length; i++) {
+            const char = input[i];
+            // Cek apakah huruf ada di kamus?
+            if (dictionary[char]) {
+                result += dictionary[char];
+            } else {
+                result += char; // Kalau gak ada, biarin aslinya
+            }
+        }
+
+        document.getElementById('output').value = result;
+    }
+
+    function copyText() {
+        const copyText = document.getElementById("output");
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value);
+        alert("ТEKS TERSALIN, COMRADE!");
+    }
+</script>
+
+</body>
+</html>

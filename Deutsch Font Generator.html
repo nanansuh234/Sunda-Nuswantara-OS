@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GERMAN FRAKTUR GENERATOR</title>
+    <style>
+        /* WARNA BENDERA JERMAN: HITAM, MERAH, EMAS */
+        :root { --black: #000000; --red: #DD0000; --gold: #FFCE00; --bg: #1a1a1a; }
+        
+        body { 
+            background: var(--bg); 
+            color: #eee; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            border-top: 5px solid var(--black);
+            border-right: 5px solid var(--red);
+            border-bottom: 5px solid var(--gold);
+            border-left: 5px solid var(--black);
+            background: #222;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-radius: 10px;
+        }
+
+        h1 {
+            color: var(--gold);
+            text-align: center;
+            font-family: 'Courier New', serif;
+            letter-spacing: 2px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .input-group { margin-bottom: 20px; }
+        
+        label { display: block; margin-bottom: 8px; color: var(--red); font-weight: bold; font-size: 0.9rem; }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            background: #111;
+            color: #fff;
+            border: 2px solid #444;
+            padding: 15px;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            resize: none;
+            border-radius: 5px;
+        }
+
+        textarea:focus { outline: none; border-color: var(--gold); }
+
+        /* HASIL OUTPUT PAKE FONT GAYA JERMAN (DEFAULT SYSTEM) */
+        #output {
+            font-size: 1.5rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 5px;
+            transition: 0.2s;
+        }
+
+        .btn-primary { background: var(--red); color: white; }
+        .btn-primary:hover { background: #b30000; }
+        
+        .btn-secondary { background: #444; color: #ccc; }
+        .btn-secondary:hover { background: #555; }
+
+        .eagle { font-size: 3rem; text-align: center; margin-bottom: 10px; }
+
+        /* TOGGLE UMLAUT */
+        .option-box { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--gold); }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="eagle"></div>
+    <h1>DEUTSCH GENERATOR</h1>
+
+    <div class="input-group">
+        <label>INPUT TEXT (NORMAL):</label>
+        <textarea id="inputText" placeholder="Ketik disini bro..." oninput="convert()"></textarea>
+    </div>
+
+    <div class="option-box">
+        <input type="checkbox" id="useUmlaut" onchange="convert()" checked>
+        <label style="margin:0; color:#ccc;">Pakai Umlaut (Ä, Ö, Ü) & Gothic Style</label>
+    </div>
+
+    <div class="input-group">
+        <label>HASIL (FRAKTUR STYLE):</label>
+        <textarea id="output" readonly></textarea>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-primary" onclick="copyText()">SALIN / KOPIEREN</button>
+        <button class="btn-secondary" onclick="reset()">RESET</button>
+    </div>
+</div>
+
+<script>
+    // MAPPING HURUF BIASA KE HURUF FRAKTUR (GOTHIC UNICODE)
+    // Ini bukan font installan, tapi karakter Unicode matematika
+    const frakturMap = {
+        'A': '𝔄', 'B': '𝔅', 'C': 'ℭ', 'D': '𝔇', 'E': '𝔈', 'F': '𝔉', 'G': '𝔊',
+        'H': 'ℌ', 'I': 'ℑ', 'J': '𝔍', 'K': '𝔎', 'L': '𝔏', 'M': '𝔐', 'N': '𝔑',
+        'O': '𝔒', 'P': '𝔓', 'Q': '𝔔', 'R': 'ℜ', 'S': '𝔖', 'T': '𝔗', 'U': '𝔘',
+        'V': '𝔙', 'W': '𝔚', 'X': '𝔛', 'Y': '𝔜', 'Z': 'ℨ',
+        'a': '𝔞', 'b': '𝔟', 'c': '𝔠', 'd': '𝔡', 'e': '𝔢', 'f': '𝔣', 'g': '𝔤',
+        'h': '𝔥', 'i': '𝔦', 'j': '𝔧', 'k': '𝔨', 'l': '𝔩', 'm': '𝔪', 'n': '𝔫',
+        'o': '𝔬', 'p': '𝔭', 'q': '𝔮', 'r': '𝔯', 's': '𝔰', 't': '𝔱', 'u': '𝔲',
+        'v': '𝔳', 'w': '𝔴', 'x': '𝔵', 'y': '𝔶', 'z': '𝔷'
+    };
+
+    // MAPPING KHUSUS UMLAUT (BIAR LEBIH JERMAN)
+    const umlautMap = {
+        'A': 'Ä', 'a': 'ä',
+        'O': 'Ö', 'o': 'ö',
+        'U': 'Ü', 'u': 'ü',
+        'ss': 'ß' // Double S jadi Eszett
+    };
+
+    function convert() {
+        let input = document.getElementById('inputText').value;
+        const useUmlaut = document.getElementById('useUmlaut').checked;
+        let result = "";
+
+        // 1. PROSES GANTI 'ss' jadi 'ß' dulu (Kalau mode jerman aktif)
+        if (useUmlaut) {
+            input = input.replace(/ss/g, 'ß');
+        }
+
+        // 2. LOOP SETIAP HURUF
+        for (let i = 0; i < input.length; i++) {
+            let char = input[i];
+
+            // Cek Umlaut Vokal (Kalau mode aktif)
+            if (useUmlaut && umlautMap[char]) {
+                // Jangan convert ke Fraktur, biarkan jadi Umlaut biasa biar kebaca
+                result += umlautMap[char];
+                continue;
+            }
+
+            // Convert ke Fraktur Gothic
+            if (frakturMap[char]) {
+                result += frakturMap[char];
+            } else {
+                result += char;
+            }
+        }
+
+        document.getElementById('output').value = result;
+    }
+
+    function copyText() {
+        const copyText = document.getElementById("output");
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value);
+        alert("TEXT KOPIERT! (Tersalin)");
+    }
+
+    function reset() {
+        document.getElementById('inputText').value = '';
+        convert();
+    }
+</script>
+
+</body>
+</html>
