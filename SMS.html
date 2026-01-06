@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURE COMMUNICATOR V3</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; user-select: none; }
+        body { 
+            background: #555; display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; margin: 0; font-family: 'VT323', monospace; 
+        }
+
+        /* BODY COMMUNICATOR */
+        .device-body {
+            background: #2a2a2a;
+            width: 720px; /* Sedikit dilebarkan */
+            max-width: 98%;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.5),
+                inset 0 2px 5px rgba(255,255,255,0.1);
+            border: 4px solid #111;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* LAYAR LCD */
+        .screen-frame {
+            background: #111;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-bottom: 2px solid #444;
+        }
+
+        .lcd {
+            background: #9ea792;
+            color: #111;
+            height: 240px; /* LEBIH TINGGI BIAR PUAS */
+            width: 100%;
+            border: 3px inset #666;
+            padding: 10px;
+            font-size: 1.3rem;
+            position: relative;
+            background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 100% 3px;
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* INPUT AREA & TEXT DISPLAY */
+        .lcd-input, #disp_msg {
+            width: 100%; 
+            flex: 1; 
+            background: transparent; 
+            border: none;
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem; 
+            outline: none; 
+            resize: none;
+            overflow-y: auto;
+            min-height: 0; /* PENTING BIAR GAK MENTOK */
+            word-wrap: break-word; /* Biar teks panjang turun ke bawah */
+            padding-right: 5px;
+        }
+
+        /* CUSTOM SCROLLBAR (GAYA RETRO HITAM) */
+        .lcd-input::-webkit-scrollbar, #disp_msg::-webkit-scrollbar {
+            width: 8px;
+        }
+        .lcd-input::-webkit-scrollbar-track, #disp_msg::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1); 
+        }
+        .lcd-input::-webkit-scrollbar-thumb, #disp_msg::-webkit-scrollbar-thumb {
+            background: #111; 
+            border-radius: 4px;
+        }
+        .lcd-input::-webkit-scrollbar-thumb:hover, #disp_msg::-webkit-scrollbar-thumb:hover {
+            background: #000; 
+        }
+
+        /* Padding bawah ekstra untuk mode baca biar gak kepotong */
+        #disp_msg {
+            margin-top: 5px;
+            border-top: 1px dashed #444;
+            padding-top: 5px;
+            padding-bottom: 30px; /* SPACE EXTRA DI BAWAH */
+        }
+
+        .status-bar {
+            display: flex; justify-content: space-between;
+            border-bottom: 2px solid #111; margin-bottom: 5px;
+            font-size: 0.9rem; font-weight: bold; padding-bottom: 2px; flex-shrink: 0;
+        }
+
+        /* AMPLOP TOMBOL COPY */
+        .envelope-btn {
+            cursor: pointer;
+            border: 2px dashed #000;
+            padding: 20px;
+            margin-top: 20px;
+            transition: 0.1s;
+        }
+        .envelope-btn:active { background: #000; color: #9ea792; }
+
+        /* KEYBOARD AREA */
+        .keyboard-area { background: #222; padding: 10px; border-radius: 5px; }
+        .row { display: flex; justify-content: center; gap: 5px; margin-bottom: 5px; }
+        .key {
+            background: #111; color: #ddd; border: 1px solid #444; border-radius: 4px;
+            height: 45px; min-width: 35px; display: flex; justify-content: center; align-items: center;
+            font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 0 #000; flex: 1;
+        }
+        .key:active { transform: translateY(4px); box-shadow: none; background: #000; color: #fff; }
+        .key.wide { flex: 2; background: #333; }
+        .key.space { flex: 6; }
+        .key.action { background: #d35400; color: #fff; border-color: #a04000; }
+        
+        .view { display: none; height: 100%; flex-direction: column; }
+        .view.active { display: flex; }
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+    </style>
+</head>
+<body>
+
+<div class="device-body">
+    
+    <div class="screen-frame">
+        <div class="lcd">
+            <div class="status-bar">
+                <span>ENCRYPTED MSG SYSTEM</span>
+                <span>V3.0 STABLE</span>
+                <span>[||||]</span>
+            </div>
+
+            <div id="view-compose" class="view active">
+                <div style="display:flex; border-bottom:1px dashed #000; padding-bottom:5px; flex-shrink: 0;">
+                    To: <input type="text" id="s_name" placeholder="Nama.." style="background:none; border:none; font-family:inherit; font-size:inherit; width:40%; font-weight:bold;">
+                    PIN: <input type="number" id="s_pin" placeholder="1234" style="background:none; border:none; font-family:inherit; font-size:inherit; width:30%; font-weight:bold;">
+                </div>
+                <textarea id="s_msg" class="lcd-input" placeholder="Ketik pesan rahasia..."></textarea>
+            </div>
+
+            <div id="view-link" class="view" style="align-items:center; justify-content:center; text-align:center;">
+                <div style="font-weight:bold;">DATA TERENKRIPSI.</div>
+                
+                <div class="envelope-btn" onclick="copyLink()">
+                    <div style="font-size:4rem; line-height:3rem;">✉️</div>
+                    <div style="font-size:1.2rem; font-weight:bold; margin-top:10px;">SALIN LINK PESAN</div>
+                </div>
+                
+                <input type="hidden" id="resultUrl"> 
+                <div id="copyStatus" class="blink" style="margin-top:15px; display:none; font-weight:bold;">LINK TERSALIN! SIAP TEMPEL.</div>
+            </div>
+
+            <div id="view-unlock" class="view" style="align-items:center; justify-content:center;">
+                <div style="font-size:2rem; margin-bottom:10px;">🔒 PESAN RAHASIA</div>
+                <div>MASUKKAN PIN AKSES:</div>
+                <input type="password" id="r_pin" style="background:none; border:none; border-bottom:4px solid #000; font-family:inherit; font-size:2.5rem; text-align:center; width:140px; margin-top:10px; letter-spacing: 5px;" maxlength="6">
+            </div>
+
+            <div id="view-read" class="view">
+                <div style="font-weight:bold; flex-shrink: 0;">DARI: <span id="disp_name"></span></div>
+                
+                <div id="disp_msg"></div>
+                
+                <div style="background:#000; color:#9ea792; text-align:center; font-size:0.9rem; margin-top:auto; flex-shrink: 0;">TEKAN [DEL] UNTUK MEMBAKAR</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="keyboard-area">
+        <div class="row">
+            <div class="key" onclick="typeKey('1')">1</div><div class="key" onclick="typeKey('2')">2</div><div class="key" onclick="typeKey('3')">3</div>
+            <div class="key" onclick="typeKey('4')">4</div><div class="key" onclick="typeKey('5')">5</div><div class="key" onclick="typeKey('6')">6</div>
+            <div class="key" onclick="typeKey('7')">7</div><div class="key" onclick="typeKey('8')">8</div><div class="key" onclick="typeKey('9')">9</div>
+            <div class="key" onclick="typeKey('0')">0</div>
+            <div class="key wide action" style="background:#800;" onclick="handleBackspace()">DEL</div>
+        </div>
+        <div class="row">
+            <div class="key" onclick="typeKey('Q')">Q</div><div class="key" onclick="typeKey('W')">W</div><div class="key" onclick="typeKey('E')">E</div>
+            <div class="key" onclick="typeKey('R')">R</div><div class="key" onclick="typeKey('T')">T</div><div class="key" onclick="typeKey('Y')">Y</div>
+            <div class="key" onclick="typeKey('U')">U</div><div class="key" onclick="typeKey('I')">I</div><div class="key" onclick="typeKey('O')">O</div>
+            <div class="key" onclick="typeKey('P')">P</div>
+        </div>
+        <div class="row">
+            <div class="key" onclick="typeKey('A')">A</div><div class="key" onclick="typeKey('S')">S</div><div class="key" onclick="typeKey('D')">D</div>
+            <div class="key" onclick="typeKey('F')">F</div><div class="key" onclick="typeKey('G')">G</div><div class="key" onclick="typeKey('H')">H</div>
+            <div class="key" onclick="typeKey('J')">J</div><div class="key" onclick="typeKey('K')">K</div><div class="key" onclick="typeKey('L')">L</div>
+            <div class="key wide action" id="btnEnter" onclick="handleEnter()">ENTER</div>
+        </div>
+        <div class="row">
+            <div class="key" onclick="typeKey('Z')">Z</div><div class="key" onclick="typeKey('X')">X</div><div class="key" onclick="typeKey('C')">C</div>
+            <div class="key" onclick="typeKey('V')">V</div><div class="key space" onclick="typeKey(' ')">SPACE</div>
+            <div class="key" onclick="typeKey('B')">B</div><div class="key" onclick="typeKey('N')">N</div><div class="key" onclick="typeKey('M')">M</div>
+            <div class="key wide" onclick="location.reload()">MENU</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const encryptedData = urlParams.get('m');
+    let currentView = 'compose';
+    let focusedInput = document.getElementById('s_msg'); 
+
+    // INITIALIZE
+    if (encryptedData) {
+        switchView('unlock');
+        focusedInput = document.getElementById('r_pin');
+        document.getElementById('btnEnter').innerText = "OPEN";
+    } else {
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.addEventListener('focus', () => focusedInput = el);
+        });
+    }
+
+    function switchView(id) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-'+id).classList.add('active');
+        currentView = id;
+    }
+
+    // --- LOGIC ENTER ---
+    function handleEnter() {
+        if (currentView === 'compose') {
+            const name = document.getElementById('s_name').value;
+            const pin = document.getElementById('s_pin').value;
+            const msg = document.getElementById('s_msg').value;
+
+            if(!name || !pin || !msg) return alert("DATA TIDAK LENGKAP");
+
+            const data = JSON.stringify({ n: name, t: msg });
+            try {
+                const encrypted = CryptoJS.AES.encrypt(data, pin).toString();
+                const link = window.location.href.split('?')[0] + "?m=" + encodeURIComponent(encrypted);
+                document.getElementById('resultUrl').value = link;
+                switchView('link');
+            } catch(e) { alert("Error Encrypt"); }
+
+        } else if (currentView === 'link') {
+            copyLink();
+
+        } else if (currentView === 'unlock') {
+            const pin = document.getElementById('r_pin').value;
+            try {
+                const bytes = CryptoJS.AES.decrypt(decodeURIComponent(encryptedData), pin);
+                const decryptedStr = bytes.toString(CryptoJS.enc.Utf8);
+                
+                if(!decryptedStr) throw "FAIL";
+                
+                const data = JSON.parse(decryptedStr);
+                document.getElementById('disp_name').innerText = data.n;
+                document.getElementById('disp_msg').innerText = data.t;
+                
+                switchView('read');
+                document.getElementById('btnEnter').innerText = "-";
+                // RESET SCROLL KE ATAS
+                document.getElementById('disp_msg').scrollTop = 0;
+                
+            } catch(e) {
+                alert("PIN SALAH / PESAN RUSAK");
+                document.getElementById('r_pin').value = "";
+            }
+        }
+    }
+
+    function copyLink() {
+        const copyText = document.getElementById("resultUrl");
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value);
+        document.getElementById('copyStatus').style.display = 'block';
+        setTimeout(() => { alert("LINK TERSALIN!"); }, 100);
+    }
+
+    function handleBackspace() {
+        if (currentView === 'read') {
+            if(confirm("BAKAR PESAN INI?")) {
+                document.querySelector('.lcd').innerHTML = "<div style='display:flex;height:100%;justify-content:center;align-items:center;font-size:2rem;'>🔥🔥🔥</div>";
+                setTimeout(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    location.reload();
+                }, 1500);
+            }
+            return;
+        }
+        if (!focusedInput) return;
+        const start = focusedInput.selectionStart;
+        if (start > 0) {
+            const val = focusedInput.value;
+            focusedInput.value = val.substring(0, start - 1) + val.substring(start);
+            focusedInput.selectionStart = focusedInput.selectionEnd = start - 1;
+            focusedInput.focus();
+        }
+    }
+
+    function typeKey(char) {
+        if (!focusedInput) return;
+        const start = focusedInput.selectionStart;
+        const end = focusedInput.selectionEnd;
+        const val = focusedInput.value;
+        focusedInput.value = val.substring(0, start) + char + val.substring(end);
+        focusedInput.selectionStart = focusedInput.selectionEnd = start + 1;
+        focusedInput.focus();
+    }
+</script>
+
+</body>
+</html>
