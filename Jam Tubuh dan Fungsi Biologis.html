@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Master Clock v9.2 (JUMBO)</title>
+    <style>
+        :root { 
+            --neon: #d4af37;        /* Emas */
+            --organ-alert: #ff3366; /* Merah */
+            --organ-safe: #00ff88;  /* Hijau */
+            --bg: #000000; 
+            --tick: #ffffff;
+            /* Zona Warna */
+            --color-8-2: rgba(255, 215, 0, 0.25);
+            --color-2-4: rgba(255, 69, 0, 0.25);
+            --color-4-6: rgba(0, 255, 127, 0.25);
+            --color-6-8: rgba(30, 144, 255, 0.25);
+        }
+        
+        * { box-sizing: border-box; }
+        body { 
+            background: var(--bg); color: var(--neon); 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 10px;
+        }
+        
+        /* HEADER - Compact biar gak makan tempat */
+        .system-header { text-align: center; margin-bottom: 10px; }
+        .system-header h2 { letter-spacing: 3px; margin: 0; font-size: 1.2rem; color: #666; }
+
+        /* JAM FRAME */
+        .clock-frame {
+            position: relative;
+            width: 280px; height: 280px; /* Sedikit dikecilin biar dashboard muat */
+            aspect-ratio: 1 / 1;
+            border: 4px solid var(--neon);
+            border-radius: 50%;
+            background: #050505;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .zones-bg {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--color-8-2) 0deg 90deg, 
+                var(--color-2-4) 90deg 180deg, 
+                var(--color-4-6) 180deg 270deg, 
+                var(--color-6-8) 270deg 360deg
+            );
+            opacity: 0.8;
+        }
+
+        .tick { position: absolute; width: 100%; height: 100%; z-index: 5; }
+        .tick::after { 
+            content: ''; position: absolute; top: 0; left: 50%; 
+            width: 2px; height: 10px; background: var(--tick); transform: translateX(-50%); opacity: 0.3;
+        }
+        .tick-main::after { height: 15px; background: #fff; width: 3px; opacity: 0.9; }
+        
+        .number {
+            position: absolute; width: 100%; height: 100%;
+            text-align: center; font-size: 1.5rem; font-weight: bold;
+            padding-top: 20px; z-index: 6; color: #fff; text-shadow: 0 0 5px #000;
+        }
+
+        .hand { 
+            position: absolute; bottom: 50%; left: 50%; 
+            transform-origin: bottom; border-radius: 10px; background: var(--neon); z-index: 10;
+        }
+        .hour-hand { width: 8px; height: 70px; }
+        .min-hand { width: 4px; height: 110px; background: #fff; opacity: 0.8; }
+        .center-dot { 
+            position: absolute; top: 50%; left: 50%; width: 16px; height: 16px; 
+            background: var(--neon); border-radius: 50%; transform: translate(-50%, -50%); 
+            z-index: 11; border: 3px solid #000;
+        }
+
+        /* --- DASHBOARD JUMBO --- */
+        .dashboard {
+            background: #111; border: 2px solid #333; border-radius: 15px;
+            padding: 0; width: 100%; max-width: 500px; text-align: left;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        /* PANEL 1: WAKTU DIGITAL */
+        .phase-panel { padding: 20px; border-bottom: 2px solid #333; }
+        
+        .digital-wrapper {
+            background: #000;
+            border: 2px solid var(--neon);
+            padding: 15px 5px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .digital-main {
+            font-size: 4.5rem; /* JUMBO SIZE */
+            font-weight: 900;
+            color: var(--neon);
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+        }
+        
+        .digital-sub {
+            font-size: 1.1rem; /* Subtitle Gede */
+            color: #888;
+            margin-top: 5px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        /* FASE & WANCI */
+        .fase-info {
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 5px solid var(--neon);
+            padding-left: 15px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px 15px;
+        }
+        .fase-big { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: 1px; }
+        .wanci-sub { 
+            font-size: 1.1rem; color: #000; font-weight: bold; 
+            background: var(--organ-safe); padding: 5px 10px; border-radius: 4px;
+        }
+        .desc-text { 
+            color: #ccc; font-size: 1rem; line-height: 1.4; margin-top: 15px; 
+            font-weight: bold; padding: 0 5px;
+        }
+
+        /* PANEL 2: ORGAN MONITOR (BIG DATA STYLE) */
+        .organ-panel {
+            padding: 20px; background: rgba(30, 30, 30, 1);
+            border-top: 4px solid #444;
+        }
+        
+        .organ-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        
+        .organ-icon { 
+            width: 20px; height: 20px; border-radius: 50%; background: var(--organ-safe); 
+            margin-right: 15px; box-shadow: 0 0 15px var(--organ-safe);
+            animation: pulse 1s infinite; /* Detak lebih cepat */
+        }
+        
+        .organ-name { 
+            font-size: 2.5rem; /* NAMA ORGAN RAKSASA */
+            font-weight: 900; color: #fff; 
+            text-transform: uppercase;
+            line-height: 1;
+        }
+        
+        .organ-action { 
+            font-size: 1rem; background: #fff; color: #000; 
+            padding: 5px 12px; border-radius: 6px; font-weight: bold; 
+        }
+        
+        .organ-forbid { 
+            color: var(--organ-alert); 
+            font-size: 1.2rem; /* WARNING RAKSASA */
+            font-weight: 900; 
+            margin-top: 10px;
+            background: rgba(255, 51, 102, 0.1);
+            padding: 10px;
+            border: 1px solid var(--organ-alert);
+            text-align: center;
+        }
+
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="system-header">
+        <h2>JAM TUBUH KSATRIA ANTI SAKIT</h2>
+    </div>
+
+    <div class="clock-frame" id="clock">
+        <div class="zones-bg"></div>
+        <div class="center-dot"></div>
+        <div class="hand hour-hand" id="hrHand"></div>
+        <div class="hand min-hand" id="minHand"></div>
+    </div>
+
+    <div class="dashboard">
+        
+        <div class="phase-panel">
+            <div class="digital-wrapper">
+                <div class="digital-main" id="nusDigital">08:00</div>
+                <div class="digital-sub" id="nusCycle">SIANG - MENIT 90</div>
+            </div>
+            
+            <div class="fase-info">
+                <div class="fase-big" id="fase-name">ISTIWA</div>
+                <div class="wanci-sub" id="wanci-name">MANCERAN</div>
+            </div>
+            <div class="desc-text" id="fase-desc">Matahari puncak. Wajib Power Nap.</div>
+        </div>
+
+        <div class="organ-panel" id="organPanel">
+            <div class="organ-row">
+                <div style="display:flex; align-items:center;">
+                    <div class="organ-icon" id="organIcon"></div>
+                    <div class="organ-name" id="organName">JANTUNG</div>
+                </div>
+                <div class="organ-action" id="organAction">MODE</div>
+            </div>
+            <div class="organ-forbid" id="organForbid">JANGAN: STRESS / MARAH</div>
+        </div>
+
+    </div>
+
+<script>
+    const clock = document.getElementById('clock');
+    const organIcon = document.getElementById('organIcon');
+    const organPanel = document.getElementById('organPanel');
+
+    // DB FASE (v8)
+    const phaseDB = [
+        { id: 7, name: "ISTIWA", wanci: "MANCERAN", desc: "Matahari di puncak (Zenith). Wajib Tidur Qailulah (Nap) 15 Menit.", range: "8-2 SIANG" },
+        { id: 8, name: "ASAR", wanci: "LINGSIR", desc: "Evaluasi kerjaan hari ini. Mulai santai sore.", range: "2-4 SIANG" },
+        { id: 1, name: "SANDIKALA", wanci: "SAREUPNA", desc: "Dimensi ghaib terbuka. Masuk rumah, stop aktivitas fisik.", range: "4-6 MALAM" },
+        { id: 2, name: "SIREPAN", wanci: "SAREUREUH", desc: "Deep Sleep. Detoks racun tubuh dimulai.", range: "6-8 MALAM" },
+        { id: 3, name: "HENING", wanci: "JANARI GEDE", desc: "Alam bawah sadar aktif. Download ilham semesta.", range: "8-2 MALAM" },
+        { id: 4, name: "FAJAR", wanci: "HALEUANG", desc: "Golden Hour. Bangun untuk Meditasi/Suujud.", range: "2-4 MALAM" },
+        { id: 5, name: "DUHA", wanci: "CARANGCANG", desc: "Start Engine. Olahraga ringan & Jemput Rezeki.", range: "4-6 SIANG" },
+        { id: 6, name: "KARYA", wanci: "RUMANGSANG", desc: "High Performance. Fokus kerja keras monotasking.", range: "6-8 SIANG" }
+    ];
+
+    // DB ORGAN (TCM)
+    const organSchedule = [
+        { start: 1, end: 3, name: "LIVER (HATI)", action: "DEEP DETOX", 
+          advice: "Fase buang racun darah paling kritis. Anda HARUS TIDUR NYENYAK (Deep Sleep).", 
+          forbid: "JANGAN: Begadang, Alkohol, Marah-marah.", theme: "danger" },
+          
+        { start: 3, end: 5, name: "PARU-PARU", action: "OXYGENATION", 
+          advice: "Suplai oksigen ke sel baru. Bagus untuk bangun & meditasi nafas (ibadah malam).", 
+          forbid: "JANGAN: Merokok, udara kotor.", theme: "primary" },
+          
+        { start: 5, end: 7, name: "USUS BESAR", action: "EVACUATION", 
+          advice: "Waktunya buang sampah (BAB). Minum air hangat biar lancar.", 
+          forbid: "JANGAN: Menahan BAB, tidur lagi.", theme: "warning" },
+          
+        { start: 7, end: 9, name: "LAMBUNG", action: "NUTRITION", 
+          advice: "Enzim pencernaan lagi puncak. WAJIB SARAPAN bergizi sekarang.", 
+          forbid: "JANGAN: Minum dingin, perut kosong.", theme: "warning" },
+          
+        { start: 9, end: 11, name: "LIMPA (SPLEEN)", action: "CONVERSION", 
+          advice: "Konversi makanan jadi energi & darah. Waktu terbaik buat KERJA & MIKIR (Otak encer).", 
+          forbid: "JANGAN: Makan manis berlebihan, malas-malasan.", theme: "primary" },
+          
+        { start: 11, end: 13, name: "JANTUNG", action: "CIRCULATION", 
+          advice: "Jantung lagi kerja keras pompa nutrisi. Santai sejenak, makan siang ringan.", 
+          forbid: "JANGAN: Olahraga berat, stress tinggi, panas-panasan.", theme: "danger" },
+          
+        { start: 13, end: 15, name: "USUS KECIL", action: "ABSORPTION", 
+          advice: "Penyortiran sari makanan. Bagus buat selesaikan tugas detail.", 
+          forbid: "JANGAN: Dehidrasi, makan berat (bikin ngantuk).", theme: "warning" },
+          
+        { start: 15, end: 17, name: "KANDUNG KEMIH", action: "HYDRATION", 
+          advice: "Metabolisme membuang sisa cair. MINUM AIR yang banyak (Tea time).", 
+          forbid: "JANGAN: Tahan pipis, kurang minum.", theme: "primary" },
+          
+        { start: 17, end: 19, name: "GINJAL", action: "STORAGE", 
+          advice: "Ginjal menyimpan energi inti. Makan malam ringan, mulai kurangi aktivitas.", 
+          forbid: "JANGAN: Kerja lembur berlebihan, seks berlebihan.", theme: "danger" },
+          
+        { start: 19, end: 21, name: "PERICARDIUM", action: "PROTECTION", 
+          advice: "Selaput jantung aktif. Waktu keluarga, baca buku, relaksasi (Mode Santai).", 
+          forbid: "JANGAN: Debat panas, makan berat (bikin gerd).", theme: "primary" },
+          
+        { start: 21, end: 23, name: "TRIPLE BURNER", action: "ENDOCRINE", 
+          advice: "Penyeimbangan hormon & suhu. Persiapan tidur. Matikan gadget/lampu.", 
+          forbid: "JANGAN: Makan (bakal jadi lemak jahat), main HP.", theme: "danger" },
+          
+        { start: 23, end: 1, name: "EMPEDU", action: "REGENERATION", 
+          advice: "Produksi cairan empedu buat besok. Tidur sekarang atau pencernaan besok kacau.", 
+          forbid: "JANGAN: Masih melek, makan lemak.", theme: "danger" },
+          
+        { start: 0, end: 1, name: "EMPEDU", action: "REGENERATION", 
+          advice: "Produksi cairan empedu buat besok. Tidur sekarang atau pencernaan besok kacau.", 
+          forbid: "JANGAN: Masih melek, makan lemak.", theme: "danger" } // Handle midnight crossover
+    ];
+
+    // Build Clock Face
+    for(let i=0; i<48; i++) {
+        let t = document.createElement('div');
+        t.className = (i % 6 === 0) ? 'tick tick-main' : 'tick';
+        t.style.transform = `rotate(${i * 7.5}deg)`;
+        clock.appendChild(t);
+    }
+    [8, 1, 2, 3, 4, 5, 6, 7].forEach((num, i) => {
+        let n = document.createElement('div');
+        n.className = 'number';
+        n.style.transform = `rotate(${i * 45}deg)`;
+        n.innerHTML = `<div style="transform: rotate(-${i * 45}deg)">${num}</div>`;
+        clock.appendChild(n);
+    });
+
+    function update() {
+        const now = new Date();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        const s = now.getSeconds();
+
+        // 1. JAM DIGITAL NUSWANTARA
+        let mTotalMin = ((h % 12) * 60) + m + (s/60);
+        let nTotalHoursRaw = mTotalMin / 90; 
+        
+        let nHour = Math.floor(nTotalHoursRaw);
+        let displayHour = nHour === 0 ? 8 : nHour;
+        let nMinute = Math.floor((nTotalHoursRaw % 1) * 90);
+        let cycle = (h >= 6 && h < 18) ? "SIANG" : "MALAM";
+
+        const pad = n => n < 10 ? '0'+n : n;
+        document.getElementById('nusDigital').innerText = `${pad(displayHour)}:${pad(nMinute)}`;
+        document.getElementById('nusCycle').innerText = `${cycle} (MENIT KE-${nMinute}/90)`;
+
+        // 2. JARUM
+        document.getElementById('hrHand').style.transform = `translateX(-50%) rotate(${nTotalHoursRaw * 45}deg)`;
+        document.getElementById('minHand').style.transform = `translateX(-50%) rotate(${(nTotalHoursRaw % 1) * 360}deg)`;
+
+        // 3. FASE
+        const phaseSequence = [3, 4, 5, 6, 7, 8, 1, 2];
+        let seqIdx = Math.floor(h / 3);
+        let currentID = phaseSequence[seqIdx];
+        let p = phaseDB.find(item => item.id === currentID);
+
+        document.getElementById('fase-name').innerText = p.name;
+        document.getElementById('wanci-name').innerText = p.wanci;
+        document.getElementById('fase-desc').innerText = p.desc;
+
+        // 4. ORGAN
+        let activeOrgan = organSchedule.find(o => {
+            if (h >= 23 || h < 1) return o.name === "EMPEDU";
+            return h >= o.start && h < o.end;
+        });
+        if(!activeOrgan && h===0) activeOrgan = organSchedule.find(o => o.name === "EMPEDU");
+
+        if(activeOrgan) {
+            document.getElementById('organName').innerText = activeOrgan.name;
+            document.getElementById('organAction').innerText = activeOrgan.action;
+            document.getElementById('organForbid').innerText = activeOrgan.forbid;
+            
+            let color = '#fff';
+            if(activeOrgan.theme === 'danger') color = '#ff3366';
+            else if(activeOrgan.theme === 'safe') color = '#00ff88';
+            else color = '#ffcc00';
+
+            organIcon.style.backgroundColor = color;
+            organIcon.style.boxShadow = `0 0 20px ${color}`;
+            document.getElementById('organForbid').style.color = color;
+            document.getElementById('organForbid').style.borderColor = color;
+            document.getElementById('organForbid').style.backgroundColor = activeOrgan.theme === 'danger' ? 'rgba(255, 51, 102, 0.15)' : 'rgba(0,0,0,0.5)';
+            organPanel.style.borderTopColor = color;
+        }
+    }
+
+    setInterval(update, 1000);
+    update();
+</script>
+</body>
+</html>

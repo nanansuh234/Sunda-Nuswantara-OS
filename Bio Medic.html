@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Bio-Medic Command Center</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --card-bg: #141414;
+            --text: #e0e0e0;
+            --gold: #d4af37;
+            --cyan: #00f3ff;
+            --purple: #bf80ff;
+            --red: #ff3366;
+            --green: #00ff88;
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center; margin-bottom: 40px; border-bottom: 1px solid #333;
+            width: 100%; max-width: 1000px; padding-bottom: 20px;
+        }
+        h1 { margin: 0; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; }
+        .subtitle { color: #666; font-size: 0.8rem; margin-top: 5px; }
+
+        /* GRID LAYOUT */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%; max-width: 1000px;
+        }
+
+        /* SECTOR TITLE */
+        .sector-title {
+            grid-column: 1 / -1;
+            margin-top: 20px; margin-bottom: 10px;
+            font-size: 0.9rem; color: #555; border-left: 3px solid var(--gold);
+            padding-left: 10px; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+            height: 180px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-color: var(--active-color, #fff);
+        }
+
+        .card:hover .card-icon { opacity: 0.2; transform: scale(1.2); }
+
+        .card-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            z-index: 2;
+        }
+        
+        .card-title {
+            font-size: 1.2rem; font-weight: bold; color: var(--active-color);
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .card-freq {
+            font-size: 0.7rem; background: #000; padding: 2px 6px;
+            border: 1px solid var(--active-color); border-radius: 4px;
+            color: var(--active-color);
+        }
+
+        .card-desc {
+            font-size: 0.8rem; color: #888; margin-top: 10px; line-height: 1.4;
+            z-index: 2;
+        }
+
+        .card-status {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+            margin-top: auto; padding-top: 15px; color: #444; font-weight: bold;
+        }
+        
+        /* BACKGROUND ICONS (Visual Abstract) */
+        .card-icon {
+            position: absolute; bottom: -20px; right: -20px;
+            font-size: 6rem; opacity: 0.05; font-weight: bold;
+            color: var(--active-color); pointer-events: none;
+        }
+
+        /* SPECIFIC COLORS */
+        .alpha { --active-color: var(--gold); }
+        .gamma { --active-color: var(--cyan); }
+        .theta { --active-color: var(--purple); }
+        .delta { --active-color: #ffffff; }
+        .bio { --active-color: var(--green); }
+        .matrix { --active-color: var(--red); }
+        .soul { --active-color: #ff9900; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Nuswantara Bio-Medic</h1>
+        <div class="subtitle">SYSTEM INTERFACE v1.0 | WELCOME, NANAN</div>
+    </header>
+
+    <div class="grid-container">
+
+        <div class="sector-title">NEURAL ENGINE (BRAINWAVES)</div>
+
+        <a href="Alpha Super Learning atau The Zone.html" class="card alpha">
+            <div class="card-header">
+                <div class="card-title">ALPHA ZONE</div>
+                <div class="card-freq">10Hz</div>
+            </div>
+            <div class="card-desc">
+                Mode belajar cepat (Super Learning). Menyelaraskan otak ke frekuensi tenang tapi waspada. Ideal untuk menyerap informasi baru.
+            </div>
+            <div class="card-status">>> ACCESS MODULE</div>
+            <div class="card-icon">α</div>
+        </a>
+
+        <a href="GAMMA WAVES untuk focus dan overclock otak.html" class="card gamma">
+            <div class="card-header">
+                <div class="card-title">GAMMA CORE</div>
+                <div class="card-freq">40Hz</div>
+            </div>
+            <div class="card-desc">
+                Overclock otak. Fokus tingkat tinggi, problem solving kompleks, dan penyatuan informasi (binding problem).
+            </div>
+            <div class="card-status">>> ACCESS MODULE</div>
+            <div class="card-icon">γ</div>
+        </a>
+
+        <a href="The Sweet Spot. THETA (4-8Hz) Untuk Relaksasi & Kreatifitas.html" class="card theta">
+            <div class="card-header">
+                <div class="card-title">THETA REALM</div>
+                <div class="card-freq">6Hz</div>
+            </div>
+            <div class="card-desc">
+                Pintu gerbang bawah sadar. Akses intuisi, kreativitas murni, dan ide-ide "Eureka". Jembatan mimpi dan realita.
+            </div>
+            <div class="card-status">>> ACCESS MODULE</div>
+            <div class="card-icon">θ</div>
+        </a>
+
+        <a href="void delta prequensi deep sleep.html" class="card delta">
+            <div class="card-header">
+                <div class="card-title">DELTA VOID</div>
+                <div class="card-freq">4Hz</div>
+            </div>
+            <div class="card-desc">
+                Deep Sleep & Healing. Regenerasi sel fisik dan pemulihan trauma. Masuk ke ketiadaan (The Void) untuk reset total.
+            </div>
+            <div class="card-status">>> ACCESS MODULE</div>
+            <div class="card-icon">δ</div>
+        </a>
+
+
+        <div class="sector-title">BIOLOGICAL & TEMPORAL ENGINE</div>
+
+        <a href="Jam Tubuh dan Fungsi Biologis.html" class="card bio">
+            <div class="card-header">
+                <div class="card-title">MASTER CLOCK</div>
+                <div class="card-freq">ORGANS</div>
+            </div>
+            <div class="card-desc">
+                Jadwal piket organ tubuh manusia (TCM). Panduan kapan harus makan, tidur, dan bekerja agar fisik anti-sakit.
+            </div>
+            <div class="card-status">>> CHECK STATUS</div>
+            <div class="card-icon">✚</div>
+        </a>
+        
+            <a href="bio clock konsep.html" class="card matrix">
+            <div class="card-header">
+                <div class="card-title">Bio Clock Konsep</div>
+                <div class="card-freq">EDUKASI</div>
+            </div>
+            <div class="card-desc">
+                Memahami konsep Jam Biologis, Jam Bukan tentang Pergantian siang dan malam, tapi Kesadaran.
+            </div>
+            <div class="card-status">>> OVERRIDE SYSTEM</div>
+            <div class="card-icon">⏳</div>
+        </a>
+        
+            <a href="bio clock simulation.html" class="card matrix">
+            <div class="card-header">
+                <div class="card-title">Bio Clock Simulation</div>
+                <div class="card-freq">SIMULASI</div>
+            </div>
+            <div class="card-desc">
+                Simulator percepatan waktu biologis.
+            </div>
+            <div class="card-status">>> OVERRIDE SYSTEM</div>
+            <div class="card-icon">⏳</div>
+        </a>
+
+        <a href="logoff matrix.html" class="card matrix">
+            <div class="card-header">
+                <div class="card-title">TIME MATRIX</div>
+                <div class="card-freq">RELATIVITY</div>
+            </div>
+            <div class="card-desc">
+                Simulator percepatan waktu biologis (Hukum Paul Janet). Tools untuk "Logoff" dari autopilot dan memperlambat persepsi waktu.
+            </div>
+            <div class="card-status">>> OVERRIDE SYSTEM</div>
+            <div class="card-icon">⏳</div>
+        </a>
+
+
+        <div class="sector-title">PHILOSOPHICAL METRICS</div>
+
+        <a href="Mandala Laksana.html" class="card soul">
+            <div class="card-header">
+                <div class="card-title">PAMOR METER</div>
+                <div class="card-freq">AUDIT</div>
+            </div>
+            <div class="card-desc">
+                Mandala Laksana. Ukur 5 pilar kemuliaan: Cipta, Rasa, Karsa, Karya, dan Weweh. Ketahui posisi spiritual & sosialmu.
+            </div>
+            <div class="card-status">>> OPEN MANDALA</div>
+            <div class="card-icon">⚛</div>
+        </a>
+
+    </div>
+
+    <footer style="margin-top: 50px; color: #444; font-size: 0.7rem;">
+        NUSWANTARA BIO-SYSTEM | GARUT BASE
+    </footer>
+
+</body>
+</html>

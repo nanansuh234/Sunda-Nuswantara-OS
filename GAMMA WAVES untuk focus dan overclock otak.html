@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Gamma: Neural Accelerator</title>
+    <style>
+        :root {
+            --bg: #050510; /* Dark Blue/Black */
+            --cyan: #00f3ff; /* Electric Cyan */
+            --cyan-dim: rgba(0, 243, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--cyan);
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* HUD VISUAL - THE RETICLE */
+        .hud-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Ring Luar (Rotasi Lambat) */
+        .ring-outer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 1px dashed var(--cyan-dim);
+            border-radius: 50%;
+            animation: rotateRight 20s linear infinite;
+        }
+
+        /* Ring Dalam (Rotasi Cepat - Indikator Gamma) */
+        .ring-inner {
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            border-top: 2px solid var(--cyan);
+            border-bottom: 2px solid var(--cyan);
+            border-left: 2px solid transparent;
+            border-right: 2px solid transparent;
+            border-radius: 50%;
+            opacity: 0.5;
+            transition: all 0.5s;
+        }
+
+        /* Core (Titik Fokus) */
+        .core-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--cyan);
+            z-index: 10;
+        }
+
+        /* TEXT UI */
+        .status-text {
+            margin-top: 40px;
+            letter-spacing: 3px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .sub-text {
+            font-size: 0.7rem;
+            color: #557;
+            margin-top: 5px;
+        }
+
+        /* BUTTON */
+        .btn-toggle {
+            margin-top: 30px;
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            padding: 10px 40px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle:hover {
+            background: var(--cyan);
+            color: #000;
+            box-shadow: 0 0 20px var(--cyan);
+        }
+
+        /* ANIMASI SAAT AKTIF */
+        body.active .ring-inner {
+            animation: spinGamma 0.5s linear infinite; /* Putaran Cepat 40Hz simulation (visual) */
+            border-color: #fff;
+            opacity: 1;
+            box-shadow: 0 0 30px var(--cyan-dim);
+        }
+
+        body.active .core-dot {
+            box-shadow: 0 0 20px #fff;
+            background: #fff;
+        }
+
+        @keyframes rotateRight {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spinGamma {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(0.95); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="hud-container">
+        <div class="ring-outer"></div>
+        <div class="ring-inner"></div>
+        <div class="core-dot"></div>
+    </div>
+
+    <div class="status-text">
+        <span id="systemStatus">SYSTEM STANDBY</span>
+        <div class="sub-text">GAMMA PROTOCOL [40Hz]</div>
+    </div>
+
+    <button class="btn-toggle" onclick="toggleGamma()">ACTIVATE</button>
+
+<script>
+    let audioCtx;
+    let osc1, osc2;
+    let gainNode;
+    let isRunning = false;
+    const btn = document.querySelector('.btn-toggle');
+    const statusLabel = document.getElementById('systemStatus');
+
+    async function toggleGamma() {
+        if (!isRunning) {
+            // --- START ---
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                
+                // Volume Control
+                gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.1; // Volume awal (Jaga telinga, frekuensi tinggi tajam)
+                gainNode.connect(audioCtx.destination);
+
+                // Oscillator 1 (Left Ear - 400Hz)
+                osc1 = audioCtx.createOscillator();
+                osc1.type = 'sine';
+                osc1.frequency.value = 400; // Nada dasar solid
+
+                // Oscillator 2 (Right Ear - 440Hz)
+                osc2 = audioCtx.createOscillator();
+                osc2.type = 'sine';
+                osc2.frequency.value = 440; // Selisih 40Hz (Target Gamma)
+
+                // Stereo Panning
+                const merger = audioCtx.createChannelMerger(2);
+                osc1.connect(merger, 0, 0); // Left
+                osc2.connect(merger, 0, 1); // Right
+                
+                merger.connect(gainNode);
+
+                osc1.start();
+                osc2.start();
+
+                // Visual Update
+                document.body.classList.add('active');
+                btn.innerText = "DISENGAGE";
+                statusLabel.innerText = "NEURAL LINK ESTABLISHED";
+                statusLabel.style.color = "#fff";
+                
+                isRunning = true;
+
+            } catch (e) {
+                alert("Browser tidak support Web Audio API.");
+            }
+        } else {
+            // --- STOP ---
+            if(gainNode) {
+                // Fade out biar gak kaget
+                gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.5);
+            }
+            
+            setTimeout(() => {
+                if(osc1) osc1.stop();
+                if(osc2) osc2.stop();
+                if(audioCtx) audioCtx.close();
+                
+                document.body.classList.remove('active');
+                btn.innerText = "ACTIVATE";
+                statusLabel.innerText = "SYSTEM STANDBY";
+                statusLabel.style.color = "var(--cyan)";
+                
+                isRunning = false;
+            }, 500);
+        }
+    }
+</script>
+</body>
+</html>

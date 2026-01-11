@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Bio-Clock (Spiral Prototype)</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #e0e0e0;
+            --accent-color: #00ff88; /* Cyberpunk Green / Energy */
+            --alert-color: #ff3333;
+            --spiral-color: #2a2a2a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace; /* Kesan raw data/terminal */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+            z-index: 10;
+            text-align: center;
+        }
+
+        label {
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 5px;
+            color: #888;
+        }
+
+        input[type="date"] {
+            background: #111;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 5px 10px;
+            font-family: inherit;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .data-display {
+            font-size: 0.8rem;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+
+        .val {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        /* Container Canvas */
+        .clock-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Breath Indicator di Tengah */
+        .breath-core {
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent-color);
+            z-index: 5;
+            animation: breathe 19s infinite ease-in-out; /* Pola 4-7-8 (Total 19s) dipercepat dikit buat demo */
+        }
+
+        @keyframes breathe {
+            0%, 20% { transform: scale(1); opacity: 0.5; } /* Tarik (4s) */
+            20%, 55% { transform: scale(4); opacity: 0.2; } /* Tahan (7s - visual hold) */
+            55%, 100% { transform: scale(1); opacity: 0.5; } /* Buang (8s) */
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: #555;
+            max-width: 300px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Nuswantara Bio-Clock</h1>
+
+    <div class="controls">
+        <label>INPUT TANGGAL LAHIR (Set Titik Nol)</label>
+        <input type="date" id="birthDate" value="1995-01-01">
+        
+        <div class="data-display">
+            <div class="data-row">
+                <span>Usia Real:</span>
+                <span id="ageVal" class="val">0 Thn</span>
+            </div>
+            <div class="data-row">
+                <span>Faktor Percepatan:</span>
+                <span id="speedVal" class="val">1x</span>
+            </div>
+            <div class="data-row" style="color: #888; font-size: 0.7em; margin-top:5px;">
+                *Makin tua, waktu terasa makin cepat.
+            </div>
+        </div>
+    </div>
+
+    <div class="clock-container">
+        <canvas id="spiralCanvas" width="350" height="350"></canvas>
+        <div class="breath-core"></div>
+    </div>
+
+    <div class="note">
+        "Waktu bukan garis lurus. Itu spiral kesadaran."<br>
+        Lingkaran tengah = Nafas (Anchor). Titik hijau = Posisi Kesadaranmu.
+    </div>
+
+<script>
+    const canvas = document.getElementById('spiralCanvas');
+    const ctx = canvas.getContext('2d');
+    const birthInput = document.getElementById('birthDate');
+    const ageVal = document.getElementById('ageVal');
+    const speedVal = document.getElementById('speedVal');
+
+    let centerX = canvas.width / 2;
+    let centerY = canvas.height / 2;
+    
+    // Variabel Waktu
+    let bioTime = 0; // Waktu akumulatif
+    let perceptionFactor = 1; // Faktor Paul Janet
+    
+    // Config Spiral
+    const maxLoops = 6;
+    const spacing = 4; // Jarak antar spiral
+    
+    function calculateAge(dateString) {
+        const today = new Date();
+        const birthDate = new Date(dateString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age < 0 ? 0 : age;
+    }
+
+    function updateParams() {
+        const age = calculateAge(birthInput.value);
+        ageVal.innerText = age + " Thn";
+
+        // LOGIKA UTAMA: Paul Janet's Theory (Simplifikasi)
+        // Umur 5 tahun = Speed 1 (Baseline anak kecil)
+        // Umur 50 tahun = Speed akan jauh lebih cepat
+        // Kita pakai rumus: Factor = Age / 5. (Minimal 1)
+        
+        let rawFactor = age / 5; 
+        perceptionFactor = rawFactor < 1 ? 1 : rawFactor;
+        
+        speedVal.innerText = perceptionFactor.toFixed(2) + "x";
+    }
+
+    function drawSpiral() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Gambar Jalur Spiral (Background Static)
+        ctx.beginPath();
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 2;
+        
+        // Logarithmic / Archimedean hybrid spiral drawing
+        for (let i = 0; i < 1000; i++) {
+            const angle = 0.1 * i;
+            const x = centerX + (spacing * angle) * Math.cos(angle);
+            const y = centerY + (spacing * angle) * Math.sin(angle);
+            
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Gambar "Jarum" Kesadaran (Titik yang bergerak)
+        // Kecepatan gerak titik ini dipengaruhi oleh perceptionFactor
+        
+        // Kita simulasikan gerakan:
+        // BioTime terus bertambah. 
+        // Modulo biar dia ngulang visualnya (looping di spiral biar gak ilang)
+        // Tapi kuncinya di kecepatan tambahnya.
+        
+        // baseSpeed: kecepatan dasar detik
+        const baseSpeed = 0.05; 
+        
+        // Speed aktual = baseSpeed * perceptionFactor
+        // Jadi kalau tua, titik ini lari ngebut banget, bikin efek anxiety "waktu habis"
+        bioTime += baseSpeed * perceptionFactor; 
+        
+        // Visualisasi posisi di spiral berdasarkan bioTime
+        // Kita bikin dia bergerak keluar (Outward)
+        const currentPos = bioTime % 1000; // Loop visual
+        
+        const angle = 0.1 * currentPos;
+        const x = centerX + (spacing * angle) * Math.cos(angle);
+        const y = centerY + (spacing * angle) * Math.sin(angle);
+
+        // Draw Particle
+        ctx.beginPath();
+        ctx.fillStyle = '#00ff88';
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#00ff88';
+        ctx.arc(x, y, 4, 0, Math.PI * 2); // Ukuran partikel
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        // Draw Trail (Ekor)
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+        ctx.lineWidth = 2;
+        // Gambar ekor pendek di belakangnya
+        for(let j=0; j<20; j++) {
+            let trailPos = currentPos - j;
+            if(trailPos < 0) trailPos += 1000;
+            const tAngle = 0.1 * trailPos;
+            const tx = centerX + (spacing * tAngle) * Math.cos(tAngle);
+            const ty = centerY + (spacing * tAngle) * Math.sin(tAngle);
+            if (j===0) ctx.moveTo(x,y);
+            ctx.lineTo(tx, ty);
+        }
+        ctx.stroke();
+
+        requestAnimationFrame(drawSpiral);
+    }
+
+    // Init
+    birthInput.addEventListener('change', updateParams);
+    updateParams();
+    drawSpiral();
+
+</script>
+</body>
+</html>

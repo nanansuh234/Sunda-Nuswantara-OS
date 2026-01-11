@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Theta: Natural High</title>
+    <style>
+        body {
+            background-color: #050011; /* Deep Purple/Black */
+            color: #bfaee3;
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* CONTAINER VISUAL (AURORA) */
+        .dream-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            filter: blur(40px); /* Bikin efek mimpi/kabut */
+            opacity: 0.6;
+            transition: opacity 2s;
+        }
+
+        /* BLOB CAIR */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: screen; /* Biar warna nyampur */
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .blob-1 {
+            width: 300px; height: 300px;
+            background: #4b0082; /* Indigo */
+            left: 30%; top: 30%;
+            animation-delay: 0s;
+        }
+        .blob-2 {
+            width: 400px; height: 400px;
+            background: #8a2be2; /* Blue Violet */
+            right: 30%; bottom: 20%;
+            animation-delay: -2s;
+        }
+        .blob-3 {
+            width: 250px; height: 250px;
+            background: #9400d3; /* Dark Violet */
+            left: 45%; top: 40%;
+            animation-delay: -5s;
+        }
+
+        /* UI TEXT */
+        .ui-layer {
+            position: absolute;
+            z-index: 10;
+            text-align: center;
+            pointer-events: none; /* Biar klik tembus ke body */
+        }
+
+        h2 { letter-spacing: 5px; font-weight: normal; margin-bottom: 5px; }
+        p { font-size: 0.8rem; opacity: 0.7; }
+
+        /* BUTTON */
+        .btn-trip {
+            pointer-events: auto;
+            margin-top: 30px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid #8a2be2;
+            color: #d8bfd8;
+            padding: 12px 35px;
+            border-radius: 30px;
+            font-family: inherit;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.5s ease;
+        }
+
+        .btn-trip:hover {
+            background: #8a2be2;
+            color: #fff;
+            box-shadow: 0 0 30px #8a2be2;
+        }
+
+        /* ANIMASI */
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.2); }
+            66% { transform: translate(-20px, 20px) scale(0.8); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* MODUS AKTIF (PULSING) */
+        body.active .dream-container {
+            opacity: 1;
+            /* Animasi denyut halus sinkron dgn 6Hz (simulasi) */
+            animation: breathe 5s infinite ease-in-out; 
+        }
+
+        @keyframes breathe {
+            0%, 100% { filter: blur(40px) brightness(1); }
+            50% { filter: blur(50px) brightness(1.3); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="dream-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="ui-layer">
+        <h2>THETA REALM</h2>
+        <p>CREATIVITY | INTUITION | 6Hz</p>
+        <button class="btn-trip" onclick="toggleTheta()">ENTER THE STREAM</button>
+    </div>
+
+<script>
+    let audioCtx;
+    let oscL, oscR;
+    let gainNode;
+    let isRunning = false;
+    const btn = document.querySelector('.btn-trip');
+
+    async function toggleTheta() {
+        if (!isRunning) {
+            // --- MULAI PERJALANAN ---
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                
+                // Volume lembut, jangan kaget
+                gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0; 
+                gainNode.connect(audioCtx.destination);
+
+                // Kiri: 200 Hz (Basis hangat)
+                oscL = audioCtx.createOscillator();
+                oscL.type = 'sine';
+                oscL.frequency.value = 200;
+
+                // Kanan: 206 Hz (Selisih 6Hz = Theta)
+                oscR = audioCtx.createOscillator();
+                oscR.type = 'sine';
+                oscR.frequency.value = 206;
+
+                // Stereo Split
+                const merger = audioCtx.createChannelMerger(2);
+                oscL.connect(merger, 0, 0);
+                oscR.connect(merger, 0, 1);
+                merger.connect(gainNode);
+
+                oscL.start();
+                oscR.start();
+
+                // Fade In Smooth (3 detik)
+                gainNode.gain.setTargetAtTime(0.4, audioCtx.currentTime, 3);
+
+                // Visual Update
+                document.body.classList.add('active');
+                btn.innerText = "WAKE UP";
+                
+                isRunning = true;
+
+            } catch (e) {
+                alert("Browser error. Coba Chrome/Edge terbaru.");
+            }
+        } else {
+            // --- BANGUN ---
+            if(gainNode) {
+                // Fade out pelan (2 detik)
+                gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 2);
+            }
+            
+            setTimeout(() => {
+                if(oscL) oscL.stop();
+                if(oscR) oscR.stop();
+                if(audioCtx) audioCtx.close();
+                
+                document.body.classList.remove('active');
+                btn.innerText = "ENTER THE STREAM";
+                
+                isRunning = false;
+            }, 2100);
+        }
+    }
+</script>
+</body>
+</html>

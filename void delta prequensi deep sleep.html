@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Zero Chamber (Delta Protocol)</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #444;
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: all 2s ease;
+        }
+
+        /* TITIK FOKUS (ANCHOR) */
+        .void-circle {
+            width: 20px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: pulseDelta 10s infinite ease-in-out; /* Super Slow Pulse */
+            transition: opacity 5s ease;
+        }
+
+        /* TEKS INSTRUKSI */
+        .instruction {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            transition: opacity 2s ease;
+        }
+
+        .btn-start {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: transparent;
+            border: 1px solid #333;
+            color: #666;
+            font-family: inherit;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.5s;
+        }
+
+        .btn-start:hover {
+            border-color: #fff;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        /* MODUS AKTIF (GELAP TOTAL) */
+        body.active .instruction, 
+        body.active .btn-start {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        body.active .void-circle {
+            animation: fadeIntoVoid 60s forwards; /* Menghilang perlahan dlm 1 menit */
+        }
+
+        @keyframes pulseDelta {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.1; }
+        }
+
+        @keyframes fadeIntoVoid {
+            0% { opacity: 0.5; }
+            50% { opacity: 0.1; }
+            100% { opacity: 0; } /* Hilang Total */
+        }
+        
+        .warning {
+            position: absolute;
+            bottom: 20px;
+            color: #222;
+            font-size: 0.6rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="void-circle" id="visualAnchor"></div>
+
+    <div class="instruction" id="uiPanel">
+        <h2 style="color:#888;">ZERO CHAMBER</h2>
+        <p>PROTOCOL: DELTA WAVES (4Hz)</p>
+        <p style="color:#555; font-size:0.7rem;">WAJIB PAKAI HEADPHONE STEREO.<br>JANGAN DIGUNAKAN SAAT MENGEMUDI.</p>
+        
+        <button class="btn-start" onclick="initiateVoid()">INITIATE SEQUENCE</button>
+    </div>
+
+    <div class="warning">*Klik layar untuk membatalkan/kembali.</div>
+
+<script>
+    let audioContext;
+    let oscillatorL, oscillatorR;
+    let gainNode;
+    let isRunning = false;
+
+    async function initiateVoid() {
+        if (isRunning) return;
+        
+        // 1. Setup Audio Context
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioContext = new AudioContext();
+            
+            // Gain (Volume) - Fade In
+            gainNode = audioContext.createGain();
+            gainNode.gain.value = 0; // Mulai dari silent
+            gainNode.connect(audioContext.destination);
+
+            // 2. Binaural Beats Generator
+            // Kiri: 100 Hz (Base)
+            oscillatorL = audioContext.createOscillator();
+            oscillatorL.type = 'sine';
+            oscillatorL.frequency.value = 100;
+            
+            // Kanan: 104 Hz (Target Delta = 4Hz difference)
+            oscillatorR = audioContext.createOscillator();
+            oscillatorR.type = 'sine';
+            oscillatorR.frequency.value = 104;
+
+            // Panasaran Stereo (Pemisahan Kiri/Kanan)
+            const merger = audioContext.createChannelMerger(2);
+            
+            // Connect Left
+            oscillatorL.connect(merger, 0, 0);
+            // Connect Right
+            oscillatorR.connect(merger, 0, 1);
+
+            merger.connect(gainNode);
+
+            // Start Audio
+            oscillatorL.start();
+            oscillatorR.start();
+
+            // Fade In Volume (5 detik)
+            gainNode.gain.setTargetAtTime(0.3, audioContext.currentTime, 5); 
+
+            // 3. UI Changes
+            document.body.classList.add('active');
+            isRunning = true;
+
+            console.log("Delta Waves Initiated: 100Hz (L) vs 104Hz (R)");
+
+        } catch (e) {
+            alert("Audio Error: Browser tidak mendukung Web Audio API.");
+        }
+    }
+
+    function stopVoid() {
+        if (!isRunning) return;
+        
+        // Fade Out Audio
+        if(gainNode) {
+            gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 1);
+        }
+        
+        setTimeout(() => {
+            if(oscillatorL) oscillatorL.stop();
+            if(oscillatorR) oscillatorR.stop();
+            if(audioContext) audioContext.close();
+            
+            document.body.classList.remove('active');
+            isRunning = false;
+            
+            // Reset Animation
+            const circle = document.getElementById('visualAnchor');
+            circle.style.animation = 'none';
+            circle.offsetHeight; /* trigger reflow */
+            circle.style.animation = null; 
+            
+        }, 1500);
+    }
+
+    // Klik layar buat stop/keluar darurat
+    document.body.addEventListener('click', (e) => {
+        if(isRunning && e.target.tagName !== 'BUTTON') {
+            stopVoid();
+        }
+    });
+
+</script>
+</body>
+</html>

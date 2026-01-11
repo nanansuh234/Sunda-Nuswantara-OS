@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Time Relativity</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --panel-bg: #111;
+            --text-main: #ccc;
+            --highlight: #00ff88; /* Hijau Cyber (Anak Kecil/Slow) */
+            --danger: #ff3366;    /* Merah Warning (Dewasa/Cepat) */
+            --dim: #333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        h1 {
+            color: var(--highlight);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--highlight);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        /* LAYOUT UTAMA */
+        .dashboard {
+            max-width: 600px;
+            width: 100%;
+            display: grid;
+            gap: 20px;
+        }
+
+        /* KOTAK KONTAINER (CARD) */
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--dim);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .card-title {
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            border-left: 3px solid var(--highlight);
+            padding-left: 10px;
+        }
+
+        /* TEKS PENJELASAN */
+        .theory-text {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #aaa;
+            text-align: justify;
+        }
+        .theory-text strong { color: var(--highlight); }
+
+        /* INPUT SLIDER */
+        .input-group {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .age-display {
+            font-size: 2.5rem;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 8px;
+            background: var(--dim);
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            background: var(--highlight);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--highlight);
+        }
+
+        /* BAR VISUALIZATION */
+        .bar-container { margin-bottom: 15px; }
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+        }
+        .track {
+            width: 100%;
+            height: 25px;
+            background: #222;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .fill {
+            height: 100%;
+            width: 0%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 5px;
+            font-size: 0.7rem;
+            color: #000;
+            font-weight: bold;
+            transition: width 0.3s ease;
+        }
+        .fill.child { background: var(--highlight); width: 20%; }
+        .fill.adult { background: var(--danger); }
+
+        /* CIRCLE SPINNER VISUALIZATION */
+        .visual-comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .clock-wrapper { width: 45%; }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--dim);
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            position: relative;
+        }
+        .spinner::after { /* Titik tengah */
+            content: ''; position: absolute;
+            top: 50%; left: 50%;
+            width: 6px; height: 6px; background: #fff;
+            border-radius: 50%; transform: translate(-50%, -50%);
+        }
+
+        /* Spinner Anak (Fixed) */
+        .spinner.child {
+            border-top: 3px solid var(--highlight);
+            animation: spin 5s linear infinite; /* Base Speed */
+        }
+        /* Spinner Dewasa (Dynamic) */
+        .spinner.adult {
+            border-top: 3px solid var(--danger);
+            animation: spin 1s linear infinite; /* Init speed, changed by JS */
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
+        }
+
+        @keyframes spin { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
+
+        .speed-val { font-size: 1.2rem; font-weight: bold; color: #fff; }
+        .speed-sub { font-size: 0.7rem; color: #777; }
+
+        /* PHANTOM HOURS (NEW FEATURE) */
+        .phantom-panel {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--dim);
+        }
+        .phantom-title { font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+        .phantom-value {
+            font-size: 2rem;
+            color: var(--danger);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 51, 102, 0.4);
+        }
+        .phantom-note { font-size: 0.7rem; color: #666; }
+
+    </style>
+</head>
+<body>
+
+    <h1>Nuswantara<br><span style="font-size:0.6em; color:#fff;">Time Relativity Engine</span></h1>
+
+    <div class="dashboard">
+        
+        <div class="card">
+            <div class="card-title">LOGIKA WAKTU BIOLOGIS</div>
+            <div class="theory-text">
+                <p>Kenapa waktu terasa makin cepat? Karena otak mengukur durasi berdasarkan <strong>persentase memori</strong> yang sudah ada (Hukum Paul Janet).</p>
+                <ul>
+                    <li>Umur <strong>5 Thn</strong>: 1 Tahun = 20% Hidup (Sangat Lama).</li>
+                    <li>Umur <strong>50 Thn</strong>: 1 Tahun = 2% Hidup (Sangat Cepat).</li>
+                </ul>
+                <p>Gunakan simulator di bawah untuk melihat seberapa banyak "waktu murni" yang hilang karena mode autopilot otak Anda.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">SIMULATOR KESADARAN</div>
+            
+            <div class="input-group">
+                <label style="font-size: 0.8rem; color:#888;">GESER USIA ANDA</label>
+                <div class="age-display"><span id="displayAge">30</span> <span style="font-size:1rem; color:#888;">Tahun</span></div>
+                <input type="range" id="ageSlider" min="5" max="80" value="30">
+            </div>
+
+            <div class="bar-container">
+                <div class="bar-label"><span>Anak (5 Thn)</span><span>20% dari Hidup</span></div>
+                <div class="track"><div class="fill child">1 Thn</div></div>
+            </div>
+            <div class="bar-container">
+                <div class="bar-label"><span>Anda (<span id="txtAge">30</span> Thn)</span><span id="txtPercent">3.3% dari Hidup</span></div>
+                <div class="track"><div class="fill adult" id="barAdult" style="width: 3.3%;">1 Thn</div></div>
+            </div>
+
+            <div class="visual-comparison">
+                <div class="clock-wrapper">
+                    <div class="spinner child"></div>
+                    <div class="speed-val" style="color:var(--highlight)">1x</div>
+                    <div class="speed-sub">Normal Speed</div>
+                </div>
+                <div class="clock-wrapper">
+                    <div class="spinner adult" id="spinnerAdult"></div>
+                    <div class="speed-val" id="speedVal">6.0x</div>
+                    <div class="speed-sub">Lebih Cepat</div>
+                </div>
+            </div>
+
+            <div class="phantom-panel">
+                <div class="phantom-title">KUALITAS WAKTU 24 JAM ANDA HARI INI HANYA SETARA:</div>
+                <div class="phantom-value" id="phantomHours">4 Jam 0 Menit</div>
+                <div class="phantom-note">DIBANDINGKAN DURASI YANG DIRASAKAN SAAT KECIL</div>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; font-size: 0.7rem; color: #444;">
+            <p>"Waktu adalah ilusi memori." - Nuswantara System</p>
+        </div>
+
+    </div>
+
+<script>
+    // --- VARIABLES ---
+    const slider = document.getElementById('ageSlider');
+    const displayAge = document.getElementById('displayAge');
+    const txtAge = document.getElementById('txtAge');
+    const txtPercent = document.getElementById('txtPercent');
+    const barAdult = document.getElementById('barAdult');
+    const spinnerAdult = document.getElementById('spinnerAdult');
+    const speedVal = document.getElementById('speedVal');
+    const phantomHours = document.getElementById('phantomHours');
+
+    // --- CONSTANTS ---
+    const BASE_AGE = 5;      // Patokan anak kecil
+    const BASE_SPEED = 5;    // Detik per rotasi untuk anak kecil (Makin besar makin lambat)
+
+    // --- MAIN FUNCTION ---
+    function updateSimulation() {
+        let currentAge = parseInt(slider.value);
+        
+        // 1. Update Label Umur
+        displayAge.innerText = currentAge;
+        txtAge.innerText = currentAge;
+
+        // 2. Hitung Persentase (Paul Janet Theory)
+        // Rumus: (1 / Umur) * 100
+        let percentage = (1 / currentAge) * 100;
+        let percentStr = percentage.toFixed(2) + "%";
+        
+        // Update Visual Bar
+        barAdult.style.width = percentage + "%"; // Panjang bar berubah
+        txtPercent.innerText = percentStr + " dari Hidup";
+
+        // 3. Hitung Kecepatan Relatif (Speed Multiplier)
+        // Jika umur 30, rasio = 30 / 5 = 6x lebih cepat
+        let ratio = currentAge / BASE_AGE;
+        speedVal.innerText = ratio.toFixed(1) + "x";
+
+        // Update Animasi CSS Spinner
+        // Durasi animasi = Base Speed / Rasio
+        // Contoh: 5 detik / 6 = 0.8 detik per putaran (Ngebut)
+        let newDuration = BASE_SPEED / ratio;
+        spinnerAdult.style.animationDuration = newDuration + "s";
+
+        // 4. Hitung "Phantom Hours" (Waktu Semu)
+        // 24 Jam dibagi Rasio percepatan
+        let realFeelHours = 24 / ratio;
+        
+        // Konversi desimal ke Jam & Menit
+        let hours = Math.floor(realFeelHours);
+        let minutes = Math.round((realFeelHours - hours) * 60);
+        
+        phantomHours.innerText = hours + " Jam " + minutes + " Menit";
+    }
+
+    // --- INITIALIZATION ---
+    slider.addEventListener('input', updateSimulation); // Dengar perubahan slider
+    updateSimulation(); // Jalankan sekali saat load
+
+</script>
+</body>
+</html>

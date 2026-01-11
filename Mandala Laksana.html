@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Pamor Meter</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg: #1a150e;
+            --panel: #2b2218;
+            --gold: #d4af37;
+            --text: #e0dacc;
+            --accent: #8b5a2b;
+            --highlight: #ffdd99;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Georgia, serif;
+            display: flex; flex-direction: column; align-items: center;
+            margin: 0; padding: 20px;
+        }
+
+        .container {
+            width: 100%; max-width: 800px;
+            background: var(--panel);
+            border: 2px solid var(--gold);
+            border-radius: 12px; padding: 25px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+
+        h1 {
+            text-align: center; color: var(--gold); letter-spacing: 3px;
+            text-transform: uppercase; margin-bottom: 5px; font-weight: normal;
+            border-bottom: 1px solid var(--accent); padding-bottom: 15px;
+        }
+        
+        .sub-title {
+            text-align: center; font-style: italic; color: #aaa; margin-bottom: 25px; font-size: 0.9rem;
+        }
+
+        /* INPUT SECTIONS */
+        .pillar-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;
+        }
+        
+        .pillar-card {
+            background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px solid #443322;
+            transition: border-color 0.3s;
+        }
+
+        .pillar-card:hover {
+            border-color: var(--gold);
+        }
+        
+        label { display: block; color: var(--gold); font-weight: bold; margin-bottom: 5px; }
+        
+        /* Dynamic Description Style */
+        .desc { 
+            font-size: 0.85rem; color: var(--highlight); margin-bottom: 12px; 
+            min-height: 40px; /* Biar gak lompat2 */
+            font-style: italic;
+            border-left: 2px solid var(--accent);
+            padding-left: 10px;
+            display: flex; align-items: center;
+        }
+        
+        input[type="range"] {
+            width: 100%; accent-color: var(--gold); cursor: pointer;
+        }
+        
+        .val-disp { float: right; color: #fff; font-family: monospace; }
+
+        /* RESULT AREA */
+        .result-section {
+            margin-top: 30px; border-top: 1px solid var(--accent); padding-top: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .status-badge {
+            font-size: 1.5rem; color: var(--gold); font-weight: bold; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 10px; text-align: center;
+        }
+        
+        .philosophy-text {
+            background: rgba(212, 175, 55, 0.05); padding: 15px; border-radius: 8px;
+            text-align: center; font-size: 0.95rem; line-height: 1.6; border: 1px dashed var(--gold);
+            margin-bottom: 20px; width: 100%; box-sizing: border-box;
+        }
+
+        .chart-container {
+            position: relative; height: 350px; width: 100%; max-width: 500px;
+        }
+
+        .ornament { text-align: center; margin: 10px 0; color: var(--accent); font-size: 1.2rem; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Nuswantara Pamor Meter</h1>
+    <div class="sub-title">"Sugih Tanpo Bondo, Digdaya Tanpo Aji"</div>
+
+    <div class="pillar-grid">
+        <div class="pillar-card">
+            <label>1. CIPTA (Wawasan) <span id="v-cipta" class="val-disp">0%</span></label>
+            <div class="desc" id="desc-cipta">Geser tuas untuk melihat level...</div>
+            <input type="range" id="cipta" min="0" max="100" value="0" oninput="updatePamor()">
+        </div>
+
+        <div class="pillar-card">
+            <label>2. RASA (Jejaring) <span id="v-rasa" class="val-disp">0%</span></label>
+            <div class="desc" id="desc-rasa">Geser tuas untuk melihat level...</div>
+            <input type="range" id="rasa" min="0" max="100" value="0" oninput="updatePamor()">
+        </div>
+
+        <div class="pillar-card">
+            <label>3. KARSA (Tekad) <span id="v-karsa" class="val-disp">0%</span></label>
+            <div class="desc" id="desc-karsa">Geser tuas untuk melihat level...</div>
+            <input type="range" id="karsa" min="0" max="100" value="0" oninput="updatePamor()">
+        </div>
+
+        <div class="pillar-card">
+            <label>4. KARYA (Aset/Output) <span id="v-karya" class="val-disp">0%</span></label>
+            <div class="desc" id="desc-karya">Geser tuas untuk melihat level...</div>
+            <input type="range" id="karya" min="0" max="100" value="0" oninput="updatePamor()">
+        </div>
+
+        <div class="pillar-card" style="grid-column: 1 / -1;">
+            <label>5. WEWEH (Berbagi) <span id="v-weweh" class="val-disp">0%</span></label>
+            <div class="desc" id="desc-weweh">Geser tuas untuk melihat level...</div>
+            <input type="range" id="weweh" min="0" max="100" value="0" oninput="updatePamor()">
+        </div>
+    </div>
+
+    <div class="result-section">
+        <div class="ornament">ꦫꦲYXꦸ</div>
+        <div class="status-badge" id="status-title">MENUNGGU TITAH...</div>
+        
+        <div class="chart-container">
+            <canvas id="pamorChart"></canvas>
+        </div>
+
+        <div class="philosophy-text" id="philosophy-result">
+            Geser tuas di atas untuk melihat tingkatan "Kamulyan" (Kemuliaan) hidupmu.
+        </div>
+    </div>
+</div>
+
+<script>
+    // DATA TAHAPAN (DATABASE)
+    const dbPamor = {
+        cipta: [
+            "Buta (0-10%): Hidup hanya bereaksi. Tidak paham cara kerja sistem. Bergantung total pada orang lain.",
+            "Sadar (10-20%): Mulai 'melek'. Sadar butuh ilmu, mulai nonton tutorial, tapi belum menguasai.",
+            "Cantrik (20-30%): Magang. Punya satu skill dasar. Bisa kerja kalau ada instruksi jelas.",
+            "Juru (30-40%): Tukang. Bisa memecahkan masalah standar tanpa bantuan. Kompetensi teknis aman.",
+            "Ahli (40-50%): Spesialis. Lebih jago dari rata-rata di satu bidang. Orang bayar untuk keahlian spesifikmu.",
+            "Punggawa (50-60%): Strategis. Tidak cuma kerja 'di dalam' sistem, tapi paham 'cara kerja' sistem. Melihat pola.",
+            "Empu (60-70%): Inovator. Bisa memperbaiki sistem. Menemukan cara yang lebih murah/cepat/efisien.",
+            "Senopati (70-80%): Arsitek. Merancang sistem baru. Bukan cuma solusi masalah, tapi mencegah masalah.",
+            "Wicaksana (80-90%): Visioner. Melihat tren 5-10 tahun ke depan. Intuisi tajam berbasis data.",
+            "Waskita (90-100%): Sang Bijaksana. Paham akar segala masalah. Tidak perlu mikir, Anda sudah 'tahu'."
+        ],
+        rasa: [
+            "Terisolasi (0-10%): Anti-sosial atau egois. Melihat orang lain sebagai ancaman atau alat belaka.",
+            "Transaksional (10-20%): Menghubungi orang hanya kalau ada maunya (butuh duit/bantuan). Hubungan kering.",
+            "Kelompok (20-30%): Hanya percaya lingkaran kecil (keluarga/geng). Takut sama orang luar.",
+            "Profesional (30-40%): Hubungan kerja sopan tapi kaku. Anda bisa diandalkan, tapi tidak dicintai.",
+            "Kolaborator (40-50%): Paham kerjasama tim. Bisa menekan ego demi tujuan bersama.",
+            "Penghubung (50-60%): Punya kenalan untuk segala hal. Jembatan antar kelompok berbeda.",
+            "Pengaruh (60-70%): Persuader. Orang mendengarkan saat Anda bicara. Paham psikologi manusia.",
+            "Pemimpin (70-80%): Orang ikut sukarela karena percaya pada 'Rasa' dan niat baik Anda.",
+            "Pengayom (80-90%): Bapak/Ibu Bangsa. Kehadiran Anda membawa rasa aman dan damai.",
+            "Satria Pinandita (90-100%): Kasih Semesta. Diterima raja maupun jelata. Musuh pun segan pada Anda."
+        ],
+        karsa: [
+            "Hanyut (0-10%): Malas. Menunggu mood/motivasi. Nyerah saat kena masalah pertama.",
+            "Reaktif (10-20%): Gerak cuma kalau kepepet (deadline/utang). Tidak ada dorongan dari dalam.",
+            "Rutin (20-30%): Robot 9-5. Bisa ikut jadwal, tapi benci prosesnya. Kerja demi akhir pekan.",
+            "Disiplin (30-40%): Punya kendali diri dasar. Tetap jalan meski bosan.",
+            "Gigih (40-50%): Tahan banting. Kegagalan tidak menghentikan langkah. Masalah adalah bagian proses.",
+            "Tangguh (50-60%): Mental baja. Tetap tenang di tengah chaos dan tekanan tinggi.",
+            "Antifragile (60-70%): Masalah justru bikin makin kuat. Menikmati 'tirakat' karena itu menajamkan jiwa.",
+            "Cipta Diri (70-80%): Niat sudah jadi kenyataan. Apa yang direncana, terjadi (Manifestor).",
+            "Adidaya (80-90%): Tubuh tunduk pada pikiran. Butuh sedikit kenyamanan fisik untuk berfungsi maksimal.",
+            "Mandito (90-100%): Bahu Laweyan. Kehendakmu selaras dengan alam/Tuhan. Niat saja sudah jadi doa."
+        ],
+        karya: [
+            "Benalu (0-10%): Konsumsi lebih besar dari produksi. Hidup menumpang orang lain.",
+            "Buruh (10-20%): Tukar waktu dengan uang murah. Kerja keras, hasil pas-pasan.",
+            "Terampil (20-30%): Punya skill dagang/jasa. Cukup buat hidup dan nabung dikit.",
+            "Mandiri (30-40%): Freelancer/Pedagang. Hasil tergantung keringat sendiri. Berhenti kerja, berhenti makan.",
+            "Manajer (40-50%): Mengelola orang/sumber daya. Punya daya ungkit (leverage).",
+            "Pemilik Aset (50-60%): Punya sesuatu yang menghasilkan uang (saham, emas, kosan).",
+            "Juragan (60-70%): Bisnis jalan tanpa Anda. Passive Income > Pengeluaran.",
+            "Industrialis (70-80%): Produk Anda membentuk pasar. Mempengaruhi hajat hidup orang banyak.",
+            "Konglomerat (80-90%): Menguasai sumber daya makro. Kekayaan berdaulat.",
+            "Ratu Adil (90-100%): Mercusuar Peradaban. Sistemmu menghidupi banyak orang bahkan saat Anda tiada."
+        ],
+        weweh: [
+            "Kikir (0-10%): Mental miskin. Menimbun segalanya. Takut kehilangan sepeser pun.",
+            "Peminjam (10-20%): Mau memberi tapi diri sendiri minus (besar pasak daripada tiang).",
+            "Hitungan (20-30%): Memberi kalau ada imbal balik (pencitraan). Pamrih.",
+            "Patuh (30-40%): Bayar zakat/pajak karena kewajiban, bukan kemauan hati.",
+            "Pendukung (40-50%): Bantu teman/keluarga kalau diminta. Murah hati tapi reaktif.",
+            "Penyumbang (50-60%): Aktif cari peluang bantu kecil-kecilan (donasi rutin).",
+            "Filantropis (60-70%): Punya anggaran khusus sosial. Bangun fasilitas umum.",
+            "Pemberdaya (70-80%): Bukan kasih ikan, tapi kasih kail (modal/ilmu). Memandirikan orang lain.",
+            "Penjaga (80-90%): Menggunakan kekuatan untuk melindungi yang lemah dan alam.",
+            "Batara (90-100%): Sang Surya. Hidupmu adalah memberi. Hartamu bukan milikmu, tapi titipan yang mengalir deras."
+        ]
+    };
+
+    let pamorChart = null;
+
+    function getDescIndex(val) {
+        // Convert 0-100 to index 0-9
+        let idx = Math.floor(val / 10);
+        if (idx >= 10) idx = 9; // Mentok di index 9 kalau nilai 100
+        return idx;
+    }
+
+    function updatePamor() {
+        // Ambil Nilai
+        let cipta = parseInt(document.getElementById('cipta').value);
+        let rasa = parseInt(document.getElementById('rasa').value);
+        let karsa = parseInt(document.getElementById('karsa').value);
+        let karya = parseInt(document.getElementById('karya').value);
+        let weweh = parseInt(document.getElementById('weweh').value);
+
+        // Update Text Angka
+        document.getElementById('v-cipta').innerText = cipta + "%";
+        document.getElementById('v-rasa').innerText = rasa + "%";
+        document.getElementById('v-karsa').innerText = karsa + "%";
+        document.getElementById('v-karya').innerText = karya + "%";
+        document.getElementById('v-weweh').innerText = weweh + "%";
+
+        // Update Deskripsi Dinamis (Real-time)
+        document.getElementById('desc-cipta').innerText = dbPamor.cipta[getDescIndex(cipta)];
+        document.getElementById('desc-rasa').innerText = dbPamor.rasa[getDescIndex(rasa)];
+        document.getElementById('desc-karsa').innerText = dbPamor.karsa[getDescIndex(karsa)];
+        document.getElementById('desc-karya').innerText = dbPamor.karya[getDescIndex(karya)];
+        document.getElementById('desc-weweh').innerText = dbPamor.weweh[getDescIndex(weweh)];
+
+        // LOGIKA PERHITUNGAN STATUS
+        let total = cipta + rasa + karsa + karya + weweh;
+        let average = total / 5;
+        let minVal = Math.min(cipta, rasa, karsa, karya, weweh);
+        
+        let title = "";
+        let desc = "";
+
+        if (minVal < 20) {
+            title = "SATRIA WIRANG (Pincang)";
+            desc = "Hidupmu tidak seimbang. Ada aspek yang tertinggal jauh (di bawah 20%). Rezeki mungkin datang, tapi batin bocor halus. Perbaiki sisi terlemahmu dulu!";
+        } else if (average < 40) {
+            title = "KAWULA ALIT (Perintis)";
+            desc = "Fase 'Babat Alas'. Teruslah menimba ilmu (Cipta) dan perkuat tirakat (Karsa). Jangan menyerah, besi sedang ditempa.";
+        } else if (average < 70) {
+            title = "MADYA MANGGALA (Penggerak)";
+            desc = "Sudah menemukan irama. Karyamu mulai terlihat, dapur ngebul aman. Saatnya perbesar 'Weweh' (Berbagi) agar naik kelas jadi legenda.";
+        } else if (average < 90) {
+            title = "SENOPATI PINILIH (Mumpuni)";
+            desc = "Pilar masyarakat. Ilmumu tinggi, jejaring luas. Kamu 'Sugih Tanpo Bondo' (Kaya tanpa perlu pamer). Orang datang padamu cari solusi.";
+        } else {
+            title = "BEGAWAN PARIPURNA (Sempurna)";
+            desc = "Manunggaling Kawula Gusti. Hidupmu adalah mercusuar. Kehadiranmu saja sudah menjadi rezeki bagi semesta. Puncak kemuliaan manusia.";
+        }
+
+        document.getElementById('status-title').innerText = title;
+        document.getElementById('philosophy-result').innerText = desc;
+
+        // Render Chart
+        renderChart([cipta, rasa, karsa, karya, weweh]);
+    }
+
+    function renderChart(dataArr) {
+        const ctx = document.getElementById('pamorChart').getContext('2d');
+        
+        if (pamorChart) pamorChart.destroy();
+
+        pamorChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Cipta', 'Rasa', 'Karsa', 'Karya', 'Weweh'],
+                datasets: [{
+                    label: 'Pamor Hidup',
+                    data: dataArr,
+                    backgroundColor: 'rgba(212, 175, 55, 0.4)',
+                    borderColor: '#d4af37',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#d4af37'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#443322' },
+                        grid: { color: '#443322' },
+                        pointLabels: {
+                            color: '#e0dacc',
+                            font: { size: 14, family: 'Segoe UI' }
+                        },
+                        ticks: { display: false, backdropColor: 'transparent' },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    }
+
+    // Init saat load
+    window.onload = updatePamor;
+
+</script>
+
+</body>
+</html>
