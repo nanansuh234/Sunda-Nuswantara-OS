@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUDIT VITALITAS & REZEKI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #141414;
+            --accent-red: #ff3333;
+            --accent-gold: #d4af37;
+            --text-main: #e0e0e0;
+            --text-dim: #888;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            background-image: radial-gradient(circle at center, #1a0000 0%, #000000 70%);
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: var(--accent-red);
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-bottom: 2px solid var(--accent-red);
+            padding-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        .container {
+            width: 100%; max-width: 800px;
+            display: grid; gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .warning-box {
+            border: 1px solid var(--accent-red);
+            background: rgba(50, 0, 0, 0.3);
+            color: var(--accent-red);
+            padding: 15px;
+            font-weight: bold;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .formula-box {
+            border: 1px solid var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+        }
+        .formula-title { color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 10px; font-weight: bold; }
+        .formula-text { font-family: 'Share Tech Mono', monospace; font-size: 0.9rem; }
+
+        label { display: block; margin-bottom: 10px; color: var(--text-dim); }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+            accent-color: var(--accent-red);
+        }
+
+        .result-display {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #000;
+            padding: 15px;
+            border-left: 4px solid var(--accent-red);
+            text-align: center;
+        }
+        .stat-value { font-size: 2rem; font-weight: bold; color: #fff; font-family: 'Share Tech Mono'; }
+        .stat-label { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; }
+
+        .spiritual-impact {
+            margin-top: 20px;
+            border-top: 1px dashed #444;
+            padding-top: 20px;
+        }
+        .impact-item {
+            margin-bottom: 10px;
+            padding-left: 15px;
+            border-left: 2px solid var(--accent-gold);
+        }
+
+        button {
+            background: var(--accent-red); color: #fff; border: none; padding: 10px 20px;
+            font-family: 'Share Tech Mono'; cursor: pointer; text-transform: uppercase;
+            font-size: 1.1rem; width: 100%; margin-top: 20px;
+            transition: 0.3s;
+        }
+        button:hover { background: #cc0000; box-shadow: 0 0 15px var(--accent-red); }
+
+        .hidden { display: none; }
+
+        /* Animation */
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
+        .alert-text { animation: pulse 1s infinite; color: var(--accent-red); }
+
+    </style>
+</head>
+<body>
+
+    <h1>Vitality & Wealth Audit</h1>
+    <div style="font-size: 0.9rem; color: #888; margin-bottom: 20px;">SYSTEM: BIOLOGICAL & METAPHYSICAL COST CALCULATOR</div>
+
+    <div class="container">
+
+        <div class="card formula-box">
+            <div class="formula-title">HUKUM KONVERSI ENERGI (ALCHEMICAL LAW)</div>
+            <div class="formula-text">
+                <p>"Butuh <strong>32kg Makanan</strong> untuk menghasilkan <strong>800 tetes Darah</strong>.</p>
+                <p>Butuh <strong>800 tetes Darah</strong> untuk menghasilkan <strong>1 tetes Benih (Jing/Ojas)</strong>."</p>
+                <hr style="border-color: var(--accent-gold); opacity: 0.3;">
+                <p><em>Sumber: Ayurveda (Ojas Theory) & Taoism (Jing Preservation).</em></p>
+                <p><strong>KESIMPULAN:</strong> Cairan vitalmu adalah intisari paling padat dari nyawamu. Membuangnya sia-sia = MEMBUNUH POTENSI DIRI.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>INPUT DATA AKTIVITAS</h3>
+            <label>Berapa kali kamu "buang energi" (Maksiat/PMO/LGBT) dalam seminggu?</label>
+            <input type="range" id="frequency" min="0" max="14" value="0" oninput="updateVal(this.value)">
+            <div style="text-align: center; font-size: 1.5rem; color: var(--accent-red); font-weight: bold;">
+                <span id="freq-val">0</span> kali / minggu
+            </div>
+
+            <button onclick="calculateCost()">HITUNG KERUGIAN SAYA</button>
+        </div>
+
+        <div id="results" class="card hidden">
+            <div class="warning-box">
+                <span>⚠️ PERINGATAN: KEBOCORAN AURA TERDETEKSI</span>
+            </div>
+
+            <div class="result-display">
+                <div class="stat-box">
+                    <div class="stat-value" id="blood-loss">0</div>
+                    <div class="stat-label">Tetes Darah Terbuang (Ekuivalen)</div>
+                </div>
+                <div class="stat-box" style="border-color: var(--accent-gold);">
+                    <div class="stat-value" id="recovery-days">0</div>
+                    <div class="stat-label">Hari Pemulihan Mental</div>
+                </div>
+            </div>
+
+            <div class="spiritual-impact">
+                <h3 style="color: var(--text-main);">DAMPAK REZEKI & METAFISIKA</h3>
+                
+                <div class="impact-item">
+                    <strong style="color: var(--accent-red);">ENTITAS BAWAH (LOOSH FEEDING):</strong>
+                    <p id="entity-feed">Kamu bersih.</p>
+                </div>
+
+                <div class="impact-item">
+                    <strong style="color: var(--accent-gold);">KEBOCORAN REZEKI (FINANSIAL):</strong>
+                    <p id="wealth-leak">Aura kamu stabil.</p>
+                </div>
+
+                <div class="impact-item">
+                    <strong style="color: #fff;">STATUS MENTAL:</strong>
+                    <p id="mental-status">Fokus Tajam (Alpha State).</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; font-size: 0.8rem; color: #666; font-style: italic;">
+                *Catatan: Energi yang dibuang untuk tujuan amoral (LGBT/Zina) memiliki vibrasi rendah yang langsung diserap entitas negatif, membuat pelakunya semakin lemah dan miskin aura.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function updateVal(val) {
+            document.getElementById('freq-val').innerText = val;
+        }
+
+        function calculateCost() {
+            const freq = document.getElementById('frequency').value;
+            const resultsDiv = document.getElementById('results');
+            
+            // RUMUS BIOLOGIS (Ayurveda Metaphor)
+            // 1 release = approx 40 drops of blood equivalent energy cost
+            const bloodCost = freq * 40; 
+            
+            // RUMUS PEMULIHAN
+            // Butuh 7 hari untuk zinc & nutrisi mikro kembali optimal
+            const recovery = freq * 3; // Estimasi kasar hari brain fog
+
+            // TAMPILKAN
+            document.getElementById('blood-loss').innerText = bloodCost;
+            document.getElementById('recovery-days').innerText = recovery > 0 ? recovery + " Hari" : "0";
+
+            // LOGIKA METAFISIKA
+            const entityText = document.getElementById('entity-feed');
+            const wealthText = document.getElementById('wealth-leak');
+            const mentalText = document.getElementById('mental-status');
+
+            if (freq == 0) {
+                entityText.innerHTML = "Tidak ada akses. <span style='color:#0f0'>Entitas kelaparan & menjauh.</span>";
+                wealthText.innerHTML = "Magnetisme Rezeki: <span style='color:#0f0'>100% OPTIMAL</span>. Orang percaya & hormat padamu.";
+                mentalText.innerHTML = "Mode: <span style='color:#0f0'>CREATOR / LEADER</span>.";
+            } else if (freq <= 2) {
+                entityText.innerHTML = "Memberi makan parasit kecil. Energi kreatif tersedot 30%.";
+                wealthText.innerHTML = "Magnetisme Rezeki: <span style='color:orange'>BOCOR HALUS</span>. Peluang sering batal tiba-tiba.";
+                mentalText.innerHTML = "Mode: <span style='color:orange'>WORKER (Mudah Lelah)</span>.";
+            } else {
+                entityText.innerHTML = "<span class='alert-text'>PESTA PORA ENTITAS!</span> Tubuhmu jadi 'Sapi Perah' energi negatif.";
+                wealthText.innerHTML = "Magnetisme Rezeki: <span style='color:var(--accent-red)'>KRITIS / TERTUTUP</span>. Wajah kusam, tidak ada wibawa, sulit dipercaya orang.";
+                mentalText.innerHTML = "Mode: <span style='color:var(--accent-red)'>ZOMBIE / SLAVE</span> (Mudah dikontrol, Depresi, Cemas).";
+            }
+
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.scrollIntoView({behavior: "smooth"});
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIO-DECAY: FERTILITY & HEALTH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000;
+            --panel: #0f0f0f;
+            --alert: #ff0000;
+            --warn: #ffcc00;
+            --safe: #00ff00;
+            --text: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.5rem;
+            color: var(--alert);
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--alert);
+        }
+
+        .subtitle { font-size: 0.9rem; color: #888; margin-bottom: 25px; }
+
+        .container {
+            width: 100%; max-width: 800px;
+            display: grid; gap: 20px;
+        }
+
+        .control-box {
+            background: var(--panel); border: 1px solid #333; padding: 20px;
+            border-left: 5px solid var(--warn);
+        }
+
+        label { display: block; margin-bottom: 10px; color: var(--warn); }
+        input[type="range"] {
+            width: 100%; margin: 15px 0; accent-color: var(--alert);
+        }
+
+        .freq-display {
+            text-align: center; font-size: 1.5rem; font-weight: bold; color: #fff;
+        }
+
+        /* GRID TAMPILAN */
+        .dashboard {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            margin-top: 10px;
+        }
+
+        .card {
+            background: #080808; border: 1px solid #222; padding: 15px;
+            position: relative; overflow: hidden;
+        }
+        .card h3 {
+            margin-top: 0; font-size: 1rem; color: #aaa; border-bottom: 1px dashed #444; padding-bottom: 5px;
+        }
+
+        /* VISUALISASI SPERMA */
+        .sperm-viz {
+            height: 100px; background: #000; border: 1px solid #333;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem;
+        }
+        .swimmer { animation: swim 0.5s infinite alternate; }
+        @keyframes swim { from {transform: translateX(-2px);} to {transform: translateX(2px);} }
+        .dead { transform: rotate(180deg); color: #555; animation: none; }
+
+        /* VISUALISASI FISIK */
+        .body-status {
+            list-style: none; padding: 0; font-size: 0.8rem;
+        }
+        .body-status li {
+            margin-bottom: 8px; padding-left: 15px; position: relative;
+        }
+        .body-status li::before {
+            content: "►"; position: absolute; left: 0; color: var(--alert);
+        }
+
+        /* ZINC METER */
+        .mineral-bar {
+            height: 10px; background: #333; margin-top: 5px;
+        }
+        .mineral-fill {
+            height: 100%; background: var(--safe); width: 100%;
+            transition: 0.5s;
+        }
+
+        /* WARNING BOX */
+        .warning-sign {
+            background: #1a0000; color: var(--alert);
+            border: 1px solid var(--alert); padding: 15px;
+            text-align: center; font-weight: bold;
+            display: none; animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% {opacity:0.8;} 50% {opacity:1;} 100% {opacity:0.8;} }
+
+        @media (max-width: 600px) { .dashboard { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>Kalkulator Kemandulan & Fisik</h1>
+    <div class="subtitle">IMPACT ANALYSIS: FERTILITY, AGING & IMMUNITY</div>
+
+    <div class="container">
+        
+        <div class="control-box">
+            <label>FREKUENSI "BUANG MUATAN" (PMO/Zina) PER MINGGU:</label>
+            <input type="range" id="freq" min="0" max="14" value="0" oninput="analyzeHealth(this.value)">
+            <div class="freq-display"><span id="freq-val">0</span> x / Minggu</div>
+        </div>
+
+        <div id="warning-box" class="warning-sign">
+            ⚠️ PERINGATAN: KADAR ZINC KRITIS! SISTEM IMUN LEMAH!
+        </div>
+
+        <div class="dashboard">
+            
+            <div class="card">
+                <h3>KUALITAS BENIH (SPERMA)</h3>
+                <div class="sperm-viz" id="sperm-icon">
+                    <span style="color:var(--safe)">Run, Alpha! </span> 
+                    <span class="swimmer">~o</span><span class="swimmer">~o</span><span class="swimmer">~o</span>
+                </div>
+                <p id="fertility-text" style="font-size:0.8rem; color:#ccc; margin-top:10px;">
+                    Status: <strong style="color:var(--safe)">SUBUR / WARRIOR CLASS</strong>. 
+                    Benihmu kental, motilitas tinggi. Calon anak cerdas & fisik kuat.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>KERUSAKAN FISIK (AGING)</h3>
+                <ul class="body-status" id="body-list">
+                    <li>Kulit: Cerah & Kencang</li>
+                    <li>Rambut: Akar Kuat</li>
+                    <li>Lutut/Punggung: Solid</li>
+                    <li>Testosteron: High (Alpha)</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>CADANGAN MINERAL (ZINC)</h3>
+                <div style="display:flex; justify-content:space-between; font-size:0.7rem;">
+                    <span>EMPTY</span><span>FULL</span>
+                </div>
+                <div class="mineral-bar">
+                    <div class="mineral-fill" id="zinc-bar"></div>
+                </div>
+                <p id="zinc-text" style="font-size:0.8rem; margin-top:5px; color:#888;">Zinc 100%. Imunitas Optimal.</p>
+            </div>
+
+            <div class="card">
+                <h3>ESTIMASI BIOLOGIS</h3>
+                <div style="font-size:0.8rem;">Umur Asli: <span style="color:#fff">25 Tahun</span></div>
+                <div style="font-size:0.8rem;">Umur Biologis: <span id="bio-age" style="color:var(--safe); font-weight:bold; font-size:1.2rem;">20 Tahun</span></div>
+                <p style="font-size:0.7rem; color:#666;">
+                    *Jika sering buang energi, sel tubuh menua lebih cepat akibat stress oksidatif.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function analyzeHealth(val) {
+            document.getElementById('freq-val').innerText = val;
+            
+            const spermIcon = document.getElementById('sperm-icon');
+            const fertilityText = document.getElementById('fertility-text');
+            const bodyList = document.getElementById('body-list');
+            const zincBar = document.getElementById('zinc-bar');
+            const zincText = document.getElementById('zinc-text');
+            const bioAge = document.getElementById('bio-age');
+            const warningBox = document.getElementById('warning-box');
+
+            if (val == 0) {
+                // SEHAT
+                spermIcon.innerHTML = '<span style="color:var(--safe)">Top Quality! </span><span class="swimmer" style="color:#fff">~o</span><span class="swimmer" style="color:#fff">~o</span>';
+                fertilityText.innerHTML = 'Status: <strong style="color:var(--safe)">SUBUR / WARRIOR</strong>. Benih kental. Potensi mencetak keturunan GENIUS.';
+                
+                bodyList.innerHTML = '<li>Kulit: Glowing Alami</li><li>Rambut: Tebal</li><li>Otot: Mudah Terbentuk</li><li>Mata: Tajam & Bersinar</li>';
+                
+                zincBar.style.width = "100%";
+                zincBar.style.background = "var(--safe)";
+                zincText.innerText = "Zinc Penuh. Jerawat hilang, luka cepat sembuh.";
+                
+                bioAge.innerText = "20 Tahun (Awet Muda)";
+                bioAge.style.color = "var(--safe)";
+                warningBox.style.display = "none";
+
+            } else if (val <= 3) {
+                // WASPADA
+                spermIcon.innerHTML = '<span style="color:var(--warn)">Average... </span><span class="swimmer" style="color:#ccc">~o</span>';
+                fertilityText.innerHTML = 'Status: <strong style="color:var(--warn)">ENCER / LEMAH</strong>. Motilitas berkurang. Calon anak berisiko "Baroncel" (Genetik lemah).';
+                
+                bodyList.innerHTML = '<li>Kulit: Kusam/Berminyak</li><li>Rambut: Mulai Rontok</li><li>Punggung: Sering Pegal</li><li>Fokus: Kabut (Foggy)</li>';
+                
+                zincBar.style.width = "60%";
+                zincBar.style.background = "var(--warn)";
+                zincText.innerText = "Zinc Menipis. Risiko jerawat & rambut rontok meningkat.";
+                
+                bioAge.innerText = "30 Tahun (Penuaan Dini)";
+                bioAge.style.color = "var(--warn)";
+                warningBox.style.display = "none";
+
+            } else {
+                // BAHAYA
+                spermIcon.innerHTML = '<span style="color:var(--alert)">DEAD </span><span class="dead">x~</span><span class="dead">x~</span>';
+                fertilityText.innerHTML = 'Status: <strong style="color:var(--alert)">MANDUL / ZOMBIE</strong>. Oligospermia. Siki "kopong". Risiko tinggi anak Stunting/Cacat Fisik.';
+                
+                bodyList.innerHTML = '<li style="color:var(--alert)">LUTUT KOPONG (Osteoporosis)</li><li style="color:var(--alert)">MATA PANDA (Lingkar Hitam)</li><li style="color:var(--alert)">PIED (Impotensi Dini)</li><li style="color:var(--alert)">RAMBUT BOTAK (DHT Spike)</li>';
+                
+                zincBar.style.width = "10%";
+                zincBar.style.background = "var(--alert)";
+                zincText.innerText = "ZINC HABIS! Sistem imun runtuh. Mudah sakit.";
+                
+                bioAge.innerText = "45 Tahun (RUSAK PARAH)";
+                bioAge.style.color = "var(--alert)";
+                warningBox.style.display = "block";
+            }
+        }
+    </script>
+
+</body>
+</html>

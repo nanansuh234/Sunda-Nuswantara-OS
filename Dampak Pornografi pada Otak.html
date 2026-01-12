@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURO-DEGRADATION SCANNER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020202;
+            --scan-line: rgba(0, 255, 0, 0.1);
+            --neon-blue: #00f3ff;
+            --neon-red: #ff003c;
+            --neon-green: #39ff14;
+            --text-dim: #555;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px;
+            background-image: linear-gradient(0deg, transparent 24%, var(--scan-line) 25%, var(--scan-line) 26%, transparent 27%, transparent 74%, var(--scan-line) 75%, var(--scan-line) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, var(--scan-line) 25%, var(--scan-line) 26%, transparent 27%, transparent 74%, var(--scan-line) 75%, var(--scan-line) 76%, transparent 77%, transparent);
+            background-size: 30px 30px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .container {
+            width: 100%; max-width: 800px;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        /* SLIDER CONTROL */
+        .control-panel {
+            background: #0a0a0a; border: 1px solid #333; padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .control-panel::before {
+            content: "INPUT: ADDICTION LEVEL";
+            position: absolute; top: 0; left: 0; 
+            background: #333; color: #fff; padding: 2px 8px; font-size: 0.7rem;
+        }
+
+        input[type="range"] {
+            width: 100%; margin: 20px 0;
+            accent-color: var(--neon-blue);
+            cursor: pointer;
+        }
+
+        .percentage-display {
+            font-size: 3rem; text-align: center; font-weight: bold;
+            text-shadow: 0 0 15px currentColor;
+        }
+
+        /* BRAIN STATUS DISPLAY */
+        .scan-result {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+        }
+        
+        .brain-box {
+            background: #050505; border: 1px solid #222; padding: 15px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            min-height: 200px; position: relative;
+        }
+
+        .brain-visual {
+            font-size: 5rem; transition: 0.3s;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .stats-box {
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .stat-row {
+            background: #111; padding: 10px; border-left: 3px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .stat-label { font-size: 0.8rem; color: #888; }
+        .stat-val { font-weight: bold; }
+
+        /* MENTAL IMPACT TEXT */
+        .impact-report {
+            background: #110000; border: 1px dashed var(--neon-red); padding: 20px;
+            margin-top: 10px;
+        }
+        .report-title { color: var(--neon-red); font-weight: bold; margin-bottom: 10px; display: block; }
+        .report-text { line-height: 1.5; color: #ccc; }
+
+        /* ANIMATION UTILS */
+        .blink { animation: blink 1s infinite; }
+        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
+
+        @media (max-width: 600px) { .scan-result { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h1>Neuro-Scanner V.2.0</h1>
+    <div style="color:#666; font-size:0.8rem; margin-bottom:20px;">SYSTEM: BRAIN DAMAGE VISUALIZATION // TARGET: PMO ADDICTION</div>
+
+    <div class="container">
+        
+        <div class="control-panel">
+            <label>GESER UNTUK MELIHAT TAHAPAN KERUSAKAN OTAK:</label>
+            <input type="range" id="addiction-level" min="0" max="100" value="0" step="25" oninput="updateScan(this.value)">
+            
+            <div class="percentage-display" id="perc-text" style="color:var(--neon-green)">0%</div>
+            <div style="text-align:center; color:#888; font-size:0.9rem;" id="stage-name">TAHAP: NORMAL / SEHAT</div>
+        </div>
+
+        <div class="scan-result">
+            <div class="brain-box">
+                <div style="position:absolute; top:10px; left:10px; font-size:0.7rem; color:#555;">CORTEX STATUS</div>
+                <div class="brain-visual" id="brain-icon" style="color:var(--neon-green)">🧠</div>
+                <div id="brain-status" style="margin-top:10px; color:var(--neon-green)">OPTIMAL</div>
+            </div>
+
+            <div class="stats-box">
+                <div class="stat-row" id="row-dopamine">
+                    <div>
+                        <div class="stat-label">DOPAMINE RECEPTORS</div>
+                        <div class="stat-val">100% (Sensitif)</div>
+                    </div>
+                </div>
+                <div class="stat-row" id="row-pfc">
+                    <div>
+                        <div class="stat-label">PREFRONTAL CORTEX (LOGIKA/IMAN)</div>
+                        <div class="stat-val">Aktif Penuh</div>
+                    </div>
+                </div>
+                <div class="stat-row" id="row-delta">
+                    <div>
+                        <div class="stat-label">PROTEIN DeltaFosB (ZOMBIE)</div>
+                        <div class="stat-val">0% (Bersih)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="impact-report" id="report-box" style="border-color:var(--neon-green); background:#001100;">
+            <span class="report-title" id="report-title" style="color:var(--neon-green)">DIAGNOSA: SEHAT WAL AFIAT</span>
+            <p class="report-text" id="report-desc">
+                Otak berfungsi normal. Anda bisa menikmati hal sederhana (makan enak, ngobrol, melihat pemandangan). 
+                Mental stabil, fokus tajam, dan motivasi hidup tinggi. Rezeki mudah masuk karena aura positif.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        function updateScan(val) {
+            const percText = document.getElementById('perc-text');
+            const stageName = document.getElementById('stage-name');
+            const brainIcon = document.getElementById('brain-icon');
+            const brainStatus = document.getElementById('brain-status');
+            const rowDopamine = document.getElementById('row-dopamine');
+            const rowPfc = document.getElementById('row-pfc');
+            const rowDelta = document.getElementById('row-delta');
+            const reportBox = document.getElementById('report-box');
+            const reportTitle = document.getElementById('report-title');
+            const reportDesc = document.getElementById('report-desc');
+
+            percText.innerText = val + "%";
+
+            // LOGIKA PERUBAHAN
+            if (val == 0) {
+                // TAHAP 0: NORMAL
+                percText.style.color = "var(--neon-green)";
+                stageName.innerText = "TAHAP: NORMAL / SEHAT";
+                brainIcon.style.color = "var(--neon-green)";
+                brainIcon.innerText = "🧠";
+                brainStatus.innerText = "OPTIMAL";
+                brainStatus.style.color = "var(--neon-green)";
+
+                rowDopamine.innerHTML = '<div><div class="stat-label">DOPAMINE RECEPTORS</div><div class="stat-val" style="color:var(--neon-green)">100% (Sensitif)</div></div>';
+                rowPfc.innerHTML = '<div><div class="stat-label">PREFRONTAL CORTEX (LOGIKA)</div><div class="stat-val" style="color:var(--neon-green)">AKTIF (Pemimpin)</div></div>';
+                rowDelta.innerHTML = '<div><div class="stat-label">PROTEIN DeltaFosB</div><div class="stat-val" style="color:#888">Nihil</div></div>';
+
+                reportBox.style.borderColor = "var(--neon-green)";
+                reportBox.style.background = "#001100";
+                reportTitle.style.color = "var(--neon-green)";
+                reportTitle.innerText = "DIAGNOSA: SUPER HUMAN";
+                reportDesc.innerText = "Mental baja. Fokus setajam laser. Anda memiliki kontrol penuh atas diri sendiri. Emosi stabil, tidak mudah tersinggung. Ini adalah kondisi para Juara.";
+            
+            } else if (val == 25) {
+                // TAHAP 1: COBA-COBA / RINGAN
+                percText.style.color = "#ffff00"; // Yellow
+                stageName.innerText = "TAHAP: TERPAPAR (EARLY EXPOSURE)";
+                brainIcon.style.color = "#ffff00";
+                brainIcon.innerText = "⚡";
+                brainStatus.innerText = "OVERSTIMULATED";
+                brainStatus.style.color = "#ffff00";
+
+                rowDopamine.innerHTML = '<div><div class="stat-label">DOPAMINE RECEPTORS</div><div class="stat-val" style="color:yellow">80% (Mulai Kebas)</div></div>';
+                rowPfc.innerHTML = '<div><div class="stat-label">PREFRONTAL CORTEX (LOGIKA)</div><div class="stat-val" style="color:yellow">TERGANGGU (Sering Melamun)</div></div>';
+                rowDelta.innerHTML = '<div><div class="stat-label">PROTEIN DeltaFosB</div><div class="stat-val" style="color:orange">Terdeteksi Kecil</div></div>';
+
+                reportBox.style.borderColor = "#ffff00";
+                reportBox.style.background = "#1a1a00";
+                reportTitle.style.color = "#ffff00";
+                reportTitle.innerText = "DIAGNOSA: BRAIN FOG (KABUT OTAK)";
+                reportDesc.innerText = "Mulai susah fokus. Sering menunda pekerjaan (Procrastination). Rasa malas ibadah mulai muncul. Kenikmatan dunia nyata mulai terasa hambar dibandingkan layar HP.";
+
+            } else if (val == 50) {
+                // TAHAP 2: KECANDUAN SEDANG
+                percText.style.color = "orange";
+                stageName.innerText = "TAHAP: DESENSITISASI (KEBAS)";
+                brainIcon.style.color = "orange";
+                brainIcon.innerText = "😵‍💫";
+                brainStatus.innerText = "REWIRED (KABEL SALAH)";
+                brainStatus.style.color = "orange";
+
+                rowDopamine.innerHTML = '<div><div class="stat-label">DOPAMINE RECEPTORS</div><div class="stat-val" style="color:orange">50% (Butuh Dosis Tinggi)</div></div>';
+                rowPfc.innerHTML = '<div><div class="stat-label">PREFRONTAL CORTEX (LOGIKA)</div><div class="stat-val" style="color:orange">MENYUSUT (Hypofrontality)</div></div>';
+                rowDelta.innerHTML = '<div><div class="stat-label">PROTEIN DeltaFosB</div><div class="stat-val" style="color:red">MENUMPUK</div></div>';
+
+                reportBox.style.borderColor = "orange";
+                reportBox.style.background = "#1a0f00";
+                reportTitle.style.color = "orange";
+                reportTitle.innerText = "DIAGNOSA: MOOD SWING & ANXIETY";
+                reportDesc.innerText = "Coolidge Effect aktif: Anda butuh konten yang lebih ekstrim/aneh untuk merasa puas. Mudah marah, emosi meledak-ledak. Hubungan sosial mulai rusak. Merasa sepi di keramaian.";
+
+            } else if (val == 75) {
+                // TAHAP 3: KECANDUAN BERAT
+                percText.style.color = "#ff3333";
+                stageName.innerText = "TAHAP: KERUSAKAN STRUKTURAL";
+                brainIcon.style.color = "#ff3333";
+                brainIcon.innerText = "🧟";
+                brainStatus.innerText = "HIJACKED (DIBAJAK)";
+                brainStatus.style.color = "#ff3333";
+
+                rowDopamine.innerHTML = '<div><div class="stat-label">DOPAMINE RECEPTORS</div><div class="stat-val" style="color:red">20% (Goreng/Fried)</div></div>';
+                rowPfc.innerHTML = '<div><div class="stat-label">PREFRONTAL CORTEX (LOGIKA)</div><div class="stat-val" style="color:red">NON-AKTIF (Sifat Hewani)</div></div>';
+                rowDelta.innerHTML = '<div><div class="stat-label">PROTEIN DeltaFosB</div><div class="stat-val" style="color:red">PERMANEN?</div></div>';
+
+                reportBox.style.borderColor = "#ff3333";
+                reportBox.style.background = "#1a0000";
+                reportTitle.style.color = "#ff3333";
+                reportTitle.innerText = "DIAGNOSA: SOSIAL DISORDER & PIED";
+                reportDesc.innerText = "Dampak Fisik: Disfungsi Ereksi (PIED) karena otak tidak respon pada wanita asli. Depresi berat. Berbohong jadi kebiasaan. Aura wajah gelap & menakutkan.";
+
+            } else if (val == 100) {
+                // TAHAP 4: ZOMBIE
+                percText.style.color = "#ff0000";
+                stageName.innerText = "TAHAP: ZOMBIE MODE";
+                brainIcon.style.color = "#ff0000";
+                brainIcon.classList.add("blink");
+                brainIcon.innerText = "💀";
+                brainStatus.innerText = "SYSTEM FAILURE";
+                brainStatus.style.color = "#ff0000";
+
+                rowDopamine.innerHTML = '<div><div class="stat-label">DOPAMINE RECEPTORS</div><div class="stat-val" style="color:red">0% (ANHEDONIA)</div></div>';
+                rowPfc.innerHTML = '<div><div class="stat-label">PREFRONTAL CORTEX (LOGIKA)</div><div class="stat-val" style="color:red">MATI SURI</div></div>';
+                rowDelta.innerHTML = '<div><div class="stat-label">PROTEIN DeltaFosB</div><div class="stat-val" style="color:red">JALUR SARAF BATU</div></div>';
+
+                reportBox.style.borderColor = "#ff0000";
+                reportBox.style.background = "#2a0000";
+                reportTitle.style.color = "#ff0000";
+                reportTitle.innerText = "DIAGNOSA: KEMATIAN JIWA";
+                reportDesc.innerText = "ANHEDONIA TOTAL: Tidak bisa merasakan kebahagiaan dari apapun. Hidup seperti robot. Suicidal thoughts (pikiran bunuh diri) sering muncul. Anda butuh rehabilitasi profesional SEGERA.";
+            }
+        }
+    </script>
+
+</body>
+</html>

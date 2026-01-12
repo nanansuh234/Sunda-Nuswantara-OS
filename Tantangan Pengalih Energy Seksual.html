@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KUNDALINI ROULETTE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --circle: #1a1a1a;
+            --neon: #00ffff; /* Cyan Tartaria */
+            --gold: #ffd700;
+            --alert: #ff003c;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center;
+            min-height: 100vh; margin: 0;
+            background-image: radial-gradient(circle at center, #111 0%, #000 70%);
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            position: absolute; top: 20px; text-align: center; z-index: 10;
+        }
+        h1 {
+            font-family: 'Cinzel', serif; color: var(--gold); margin: 0;
+            text-shadow: 0 0 10px var(--gold); letter-spacing: 5px; font-size: 2rem;
+        }
+        .sub { font-size: 0.7rem; color: #666; letter-spacing: 2px; }
+
+        /* THE ROULETTE WHEEL */
+        .roulette-container {
+            position: relative;
+            width: 300px; height: 300px;
+            margin: 20px;
+        }
+
+        .wheel {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--neon);
+            box-shadow: 0 0 30px var(--neon);
+            position: relative;
+            animation: idleSpin 20s linear infinite;
+            background: conic-gradient(
+                from 0deg,
+                #111 0%, #222 10%, #111 20%, #222 30%, 
+                #111 40%, #222 50%, #111 60%, #222 70%, 
+                #111 80%, #222 90%, #111 100%
+            );
+        }
+        .wheel::before {
+            content: ""; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; height: 80%;
+            border-radius: 50%; border: 1px dashed var(--neon);
+        }
+
+        /* CENTER BUTTON */
+        .trigger-btn {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: #000;
+            border: 2px solid var(--alert);
+            color: var(--alert);
+            font-weight: bold; cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 0 15px var(--alert);
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+        .trigger-btn:hover {
+            background: var(--alert); color: #000; box-shadow: 0 0 40px var(--alert);
+        }
+        .trigger-btn:active { transform: translate(-50%, -50%) scale(0.9); }
+
+        /* MISSION CARD */
+        .mission-overlay {
+            display: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 20;
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px; box-sizing: border-box;
+            border: 4px solid var(--gold);
+        }
+
+        .card-type { font-size: 1rem; color: var(--neon); letter-spacing: 3px; margin-bottom: 20px; }
+        
+        .mission-text {
+            font-size: 2rem; color: #fff; margin: 20px 0; line-height: 1.4;
+            font-family: 'Cinzel'; text-shadow: 0 0 10px #fff;
+            max-width: 600px;
+        }
+
+        .timer {
+            font-size: 3rem; color: var(--alert); margin-top: 20px;
+            font-family: monospace;
+        }
+
+        .btn-done {
+            margin-top: 30px; padding: 15px 40px;
+            background: var(--gold); border: none; font-weight: bold;
+            font-size: 1.2rem; cursor: pointer;
+        }
+        .btn-done:hover { background: #fff; }
+
+        @keyframes idleSpin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+        @keyframes fastSpin { 0% {transform: rotate(0deg);} 100% {transform: rotate(3600deg);} }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>THE ORACLE</h1>
+        <div class="sub">DON'T THINK. JUST SUBMIT.</div>
+    </div>
+
+    <div class="roulette-container">
+        <div class="wheel" id="wheel"></div>
+        <button class="trigger-btn" onclick="spinWheel()">
+            TRANSMUTE<br>ENERGY
+        </button>
+    </div>
+
+    <div id="mission-screen" class="mission-overlay">
+        <div class="card-type" id="m-type">/// PHYSICAL PROTOCOL ///</div>
+        
+        <div class="mission-text" id="m-text">
+            ...
+        </div>
+
+        <div style="font-size:0.8rem; color:#888;">WAKTU EKSEKUSI:</div>
+        <div class="timer" id="countdown">00:00</div>
+
+        <button class="btn-done" onclick="location.reload()">MISI SELESAI</button>
+    </div>
+
+    <script>
+        // DATABASE MISI (ANTI-TROLL)
+        // Kategori: Fisik (P), Mental (M), Esoteric/Aneh (E)
+        const missions = [
+            { type: "/// PHYSICAL PROTOCOL ///", text: "LAKUKAN 20 PUSH-UP SEKARANG JUGA!", time: 60 },
+            { type: "/// PHYSICAL PROTOCOL ///", text: "PLANK POSISI SEMPURNA SELAMA 1 MENIT.", time: 60 },
+            { type: "/// PHYSICAL PROTOCOL ///", text: "SQUAT KUDA-KUDA (HORSE STANCE) SAMPAI KAKI GEMETAR.", time: 120 },
+            { type: "/// MENTAL PROTOCOL ///", text: "AMBIL KERTAS. TULIS ULANG MIMPI TERBESARMU 10 KALI.", time: 180 },
+            { type: "/// MENTAL PROTOCOL ///", text: "BACA 1 HALAMAN BUKU TERBERAT YANG KAMU PUNYA.", time: 300 },
+            { type: "/// ESOTERIC PROTOCOL ///", text: "TAHAN NAPAS (KUMBHAKA) SELAMA MUNGKIN, LALU HEMBUSKAN PERLAHAN.", time: 60 },
+            { type: "/// ESOTERIC PROTOCOL ///", text: "TATAP SALAH SATU TITIK DI DINDING TANPA KEDIP.", time: 120 },
+            { type: "/// CREATION PROTOCOL ///", text: "GAMBAR SEBUAH LINGKARAN SEMPURNA DI KERTAS KOSONG.", time: 60 },
+            { type: "/// SHOCK PROTOCOL ///", text: "CUCI MUKA DENGAN AIR ES / AIR DINGIN SEKARANG!", time: 60 }
+        ];
+
+        function spinWheel() {
+            const wheel = document.getElementById('wheel');
+            const btn = document.querySelector('.trigger-btn');
+            
+            // Efek muter gancang
+            wheel.style.animation = "fastSpin 1s cubic-bezier(0.2, 0.8, 0.2, 1)";
+            btn.innerText = "ACCESSING...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showMission();
+            }, 1000);
+        }
+
+        function showMission() {
+            const screen = document.getElementById('mission-screen');
+            const mType = document.getElementById('m-type');
+            const mText = document.getElementById('m-text');
+            const timerDisplay = document.getElementById('countdown');
+
+            // Pilih Misi Random
+            const rand = Math.floor(Math.random() * missions.length);
+            const mission = missions[rand];
+
+            mType.innerText = mission.type;
+            mText.innerText = mission.text;
+            
+            screen.style.display = "flex";
+
+            // Timer Mundur
+            let timeLeft = mission.time;
+            const timer = setInterval(() => {
+                if(timeLeft <= 0) {
+                    clearInterval(timer);
+                    timerDisplay.innerText = "00:00";
+                    timerDisplay.style.color = "#fff";
+                } else {
+                    let min = Math.floor(timeLeft / 60);
+                    let sec = timeLeft % 60;
+                    if (sec < 10) sec = "0" + sec;
+                    timerDisplay.innerText = `0${min}:${sec}`;
+                    timeLeft--;
+                }
+            }, 1000);
+        }
+    </script>
+
+</body>
+</html>

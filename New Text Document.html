@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSWANTARA VITALITY OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000;
+            --neon-gold: #ffd700;
+            --neon-red: #ff003c;
+            --neon-blue: #00f3ff;
+            --glass: rgba(20, 20, 20, 0.8);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0; padding: 0;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0, 20, 0, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 20, 0, 0.5) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* === 1. THE AGE GATE (OVERLAY) === */
+        #age-gate {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center;
+            border: 4px solid var(--neon-red);
+        }
+
+        .gate-warning {
+            color: var(--neon-red); font-size: 3rem; margin-bottom: 20px;
+            font-family: 'Cinzel'; text-shadow: 0 0 20px var(--neon-red);
+            animation: pulse 1s infinite;
+        }
+
+        .gate-text {
+            max-width: 600px; color: #aaa; margin-bottom: 30px; padding: 0 20px; line-height: 1.6;
+        }
+
+        .checkbox-container {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 30px;
+            cursor: pointer;
+        }
+        input[type="checkbox"] {
+            width: 25px; height: 25px; accent-color: var(--neon-red); cursor: pointer;
+        }
+        
+        .btn-enter {
+            background: transparent; color: var(--neon-red);
+            border: 2px solid var(--neon-red); padding: 15px 40px;
+            font-family: 'Cinzel'; font-size: 1.5rem; cursor: pointer;
+            transition: 0.3s; text-transform: uppercase;
+        }
+        .btn-enter:hover {
+            background: var(--neon-red); color: #000; box-shadow: 0 0 30px var(--neon-red);
+        }
+
+        /* === 2. MAIN DASHBOARD (HIDDEN INITIALLY) === */
+        #dashboard {
+            display: none; /* Hidden until unlocked */
+            padding: 40px 20px;
+            max-width: 1200px; margin: 0 auto;
+            opacity: 0; transition: opacity 2s;
+        }
+
+        header {
+            text-align: center; margin-bottom: 50px; border-bottom: 2px solid var(--neon-gold); padding-bottom: 20px;
+        }
+        h1 {
+            font-family: 'Cinzel'; color: var(--neon-gold); font-size: 2.5rem; margin: 0;
+            text-shadow: 0 0 15px var(--neon-gold);
+        }
+        .sub-head { color: #666; letter-spacing: 3px; font-size: 0.8rem; margin-top: 5px; }
+
+        /* GRID SYSTEM */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* CARD STYLE */
+        .module-card {
+            background: var(--glass);
+            border: 1px solid #333;
+            padding: 25px;
+            text-decoration: none;
+            color: #fff;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 200px;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .icon { font-size: 3rem; margin-bottom: 15px; }
+        .card-title { font-family: 'Cinzel'; font-size: 1.2rem; color: var(--neon-blue); margin-bottom: 10px; }
+        .card-desc { font-size: 0.9rem; color: #888; line-height: 1.4; }
+        
+        .status-dot {
+            position: absolute; top: 15px; right: 15px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #0f0; box-shadow: 0 0 10px #0f0;
+        }
+
+        /* SPECIFIC CARD THEMES */
+        .theme-red { border-color: #500; }
+        .theme-red:hover { border-color: var(--neon-red); box-shadow: 0 0 20px rgba(255, 0, 60, 0.2); }
+        .theme-red .card-title { color: var(--neon-red); }
+
+        .theme-gold { border-color: #550; }
+        .theme-gold:hover { border-color: var(--neon-gold); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+        .theme-gold .card-title { color: var(--neon-gold); }
+
+        footer {
+            margin-top: 50px; text-align: center; color: #444; font-size: 0.8rem;
+        }
+
+        @keyframes pulse { 0% {opacity: 0.8;} 50% {opacity: 1;} 100% {opacity: 0.8;} }
+    </style>
+</head>
+<body>
+
+    <div id="age-gate">
+        <div class="gate-warning">⚠️ RESTRICTED AREA</div>
+        <div class="gate-text">
+            SYSTEM INI MEMUAT KEBENARAN BRUTAL TENTANG BIOLOGI, METAFISIKA, DAN DAMPAK SEKSUALITAS.<br><br>
+            KONTEN DI DALAMNYA DAPAT MENYEBABKAN GANGGUAN MENTAL BAGI MEREKA YANG BELUM SIAP MENERIMA KENYATAAN ATAU MASIH DI BAWAH UMUR.
+        </div>
+        
+        <label class="checkbox-container">
+            <input type="checkbox" id="consent-check">
+            <span style="color: #fff;">SAYA BERUSIA 17+ DAN SAYA SIAP BERTANGGUNG JAWAB ATAS KESADARAN SAYA SENDIRI.</span>
+        </label>
+
+        <button class="btn-enter" onclick="unlockPortal()">BUKA SEGEL</button>
+        <div id="error-msg" style="color:var(--neon-red); margin-top:15px; display:none;">ANDA BELUM BERSUMPAH!</div>
+    </div>
+
+    <div id="dashboard">
+        <header>
+            <h1>NUSWANTARA VITALITY OS</h1>
+            <div class="sub-head">PUSAT KENDALI ENERGI & REALITA</div>
+        </header>
+
+        <div class="grid-container">
+            
+            <a href="BIOLOGICAL & METAPHYSICAL COST CALCULATOR.html" class="module-card theme-gold">
+                <div class="status-dot" style="background:var(--neon-gold)"></div>
+                <div class="icon">💰</div>
+                <div>
+                    <div class="card-title">VITALITY & WEALTH AUDIT</div>
+                    <div class="card-desc">Hitung dampak finansial & darah akibat membuang energi. Kalkulator Rezeki Bocor.</div>
+                </div>
+            </a>
+            
+            <a href="Dampak Pornografi  pada Rezeky.html" class="module-card theme-gold">
+                <div class="status-dot" style="background:var(--neon-gold)"></div>
+                <div class="icon">💰</div>
+                <div>
+                    <div class="card-title">KERUGIAN FINANSIAL</div>
+                    <div class="card-desc">Hitung kerugian finansial akibat membuang energi. Kalkulator Rezeki Bocor secara materi.</div>
+                </div>
+            </a>
+
+            <a href="Dampak Pornografi pada Otak.html" class="module-card theme-red">
+                <div class="status-dot" style="background:var(--neon-red)"></div>
+                <div class="icon">🧠</div>
+                <div>
+                    <div class="card-title">NEURO-DEGRADATION</div>
+                    <div class="card-desc">Visualisasi kerusakan otak (PFC & Dopamin). Seberapa parah level "Zombie" anda?</div>
+                </div>
+            </a>
+
+            <a href="Dampak Pada Kesuburan.html" class="module-card theme-red">
+                <div class="status-dot" style="background:orange"></div>
+                <div class="icon">🧬</div>
+                <div>
+                    <div class="card-title">BIO-DECAY SIMULATOR</div>
+                    <div class="card-desc">Cek kualitas sperma, risiko kemandulan, penuaan dini, dan genetik "Baroncel".</div>
+                </div>
+            </a>
+
+            <a href="Dampak Pornografi dan Pergaulan bebas pada Wanita.html" class="module-card" style="border-color:#ff66b2;">
+                <div class="status-dot" style="background:#ff66b2"></div>
+                <div class="icon">🌺</div>
+                <div>
+                    <div class="card-title" style="color:#ff66b2">THE WOMB KEEPER</div>
+                    <div class="card-desc">Audit khusus wanita. Dampak pergaulan bebas pada rahim, aura, dan pair-bonding.</div>
+                </div>
+            </a>
+
+            <a href="Tantangan Pengalih Energy Seksual.html" class="module-card theme-gold">
+                <div class="status-dot" style="background:#00ff41"></div>
+                <div class="icon">👁️</div>
+                <div>
+                    <div class="card-title">THE ORACLE PROTOCOL</div>
+                    <div class="card-desc">Darurat Sange? Jangan mikir. Klik tombol ini dan lakukan perintah sistem untuk transmutasi instan.</div>
+                </div>
+            </a>
+
+            <a href="info biological reproduksi.html" class="module-card">
+                <div class="status-dot" style="background:#fff"></div>
+                <div class="icon">📜</div>
+                <div>
+                    <div class="card-title" style="color:#fff">THE GRAND ARCHIVES</div>
+                    <div class="card-desc">Rangkuman materi diskusi. Filosofi di balik "Iman = Ukuran" dan data ilmiah lengkap.</div>
+                </div>
+            </a>
+
+        </div>
+
+        <footer>
+            &copy; 2026 NUSWANTARA LABS // NANAN SUHENDAR<br>
+            "He who controls his vitality, controls his reality."
+        </footer>
+    </div>
+
+    <script>
+        function unlockPortal() {
+            const checkbox = document.getElementById('consent-check');
+            const gate = document.getElementById('age-gate');
+            const dashboard = document.getElementById('dashboard');
+            const error = document.getElementById('error-msg');
+
+            if (checkbox.checked) {
+                // Efek buka gerbang
+                error.style.display = 'none';
+                gate.style.transition = 'opacity 1s, transform 1s';
+                gate.style.opacity = '0';
+                gate.style.transform = 'scale(1.1)';
+                
+                setTimeout(() => {
+                    gate.style.display = 'none';
+                    dashboard.style.display = 'block';
+                    // Fade in dashboard
+                    setTimeout(() => {
+                        dashboard.style.opacity = '1';
+                    }, 100);
+                }, 1000);
+            } else {
+                // Efek Error
+                error.style.display = 'block';
+                gate.style.animation = 'none';
+                gate.offsetHeight; /* trigger reflow */
+                gate.style.animation = 'shake 0.3s';
+                gate.style.borderColor = '#fff';
+                setTimeout(() => { gate.style.borderColor = 'var(--neon-red)'; }, 500);
+            }
+        }
+    </script>
+    <style>
+        @keyframes shake {
+            0% { transform: translateX(0); } 25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); } 75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</body>
+</html>

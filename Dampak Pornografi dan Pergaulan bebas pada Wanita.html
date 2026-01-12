@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE SACRED WOMB AUDIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0505;
+            --rose: #b30047; /* Bloody Rose */
+            --gold: #d4af37;
+            --pale: #f0e6e6;
+            --decay: #554444;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--pale);
+            font-family: 'Montserrat', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px;
+            background-image: radial-gradient(circle at top, #2a0011 0%, #000000 80%);
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--rose);
+            font-size: 2.2rem;
+            text-align: center;
+            text-shadow: 0 0 10px var(--rose);
+            margin-bottom: 5px;
+            letter-spacing: 3px;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 0.8rem; letter-spacing: 2px; color: var(--gold); margin-bottom: 30px; text-transform: uppercase;
+        }
+
+        .container {
+            width: 100%; max-width: 800px;
+            display: grid; gap: 25px;
+        }
+
+        /* INPUT PANEL */
+        .panel {
+            background: rgba(20, 0, 5, 0.8);
+            border: 1px solid var(--rose);
+            padding: 25px;
+            position: relative;
+        }
+        .panel::before {
+            content: "AUDIT KEMURNIAN & EMOSI";
+            position: absolute; top: -10px; left: 20px;
+            background: var(--bg); color: var(--gold);
+            padding: 0 10px; font-size: 0.7rem; border: 1px solid var(--gold);
+        }
+
+        label { display: block; margin-bottom: 15px; color: #ccc; font-size: 0.9rem; }
+        
+        /* Custom Slider */
+        input[type="range"] {
+            width: 100%; accent-color: var(--rose); margin-bottom: 10px;
+        }
+
+        .val-display {
+            text-align: center; font-size: 1.5rem; color: #fff; font-weight: bold; margin-bottom: 20px;
+        }
+
+        /* OUTPUT CARDS */
+        .mirror-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            display: none; /* Hidden initial */
+            animation: fadeIn 1s;
+        }
+
+        .mirror-card {
+            background: #111; border: 1px solid #333; padding: 20px;
+            text-align: center;
+        }
+        .card-icon { font-size: 3rem; margin-bottom: 10px; display: block; }
+        .card-title { color: var(--gold); font-family: 'Cinzel'; font-weight: bold; margin-bottom: 10px; display: block; border-bottom: 1px dashed #444; padding-bottom: 5px; }
+        
+        .status-text { font-size: 0.85rem; line-height: 1.5; }
+        .danger { color: #ff3333; }
+        .warning { color: orange; }
+        .safe { color: #00ff00; }
+
+        /* THE WOMB VISUALIZER */
+        .womb-box {
+            background: #000; border: 2px solid var(--rose); padding: 20px;
+            text-align: center; margin-top: 10px; position: relative;
+            overflow: hidden;
+        }
+        .flower {
+            font-size: 5rem; transition: 1s; display: inline-block;
+        }
+        
+        /* FILTERS */
+        .wilted { filter: grayscale(100%) contrast(150%) sepia(50%); transform: rotate(15deg); }
+        .rotten { filter: grayscale(100%) brightness(50%); transform: rotate(180deg); opacity: 0.7; }
+
+        .btn-check {
+            background: transparent; border: 1px solid var(--rose); color: var(--rose);
+            padding: 15px; width: 100%; font-family: 'Cinzel'; font-size: 1.1rem;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-check:hover { background: var(--rose); color: #fff; box-shadow: 0 0 20px var(--rose); }
+
+        @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+    </style>
+</head>
+<body>
+
+    <h1>The Womb Keeper</h1>
+    <div class="subtitle">Dampak Pornografi & Pergaulan Bebas pada Wanita</div>
+
+    <div class="container">
+        
+        <div class="panel">
+            <label>Seberapa sering kamu membiarkan matamu/hatimu "liar" (Konten Dewasa/Fantasi/Hubungan Toxic)?</label>
+            <input type="range" id="exposure" min="0" max="100" value="0" step="25" oninput="updateVal(this.value)">
+            <div class="val-display" id="val-text">Level: Murni</div>
+            
+            <button class="btn-check" onclick="revealFate()">LIHAT CERMIN JIWAKU</button>
+        </div>
+
+        <div id="womb-section" style="display:none;">
+            <div class="womb-box">
+                <div style="font-size:0.7rem; color:#666; margin-bottom:10px;">STATUS ENERGI RAHIM (WADAH PERADABAN)</div>
+                <div id="flower-icon" class="flower">🌺</div>
+                <h3 id="womb-status" style="margin:10px 0; color:var(--rose);">THE ROYAL WOMB</h3>
+                <p id="womb-desc" style="font-size:0.8rem; color:#aaa;">Rahimmu bersih. Siap mencetak Satria/Ratu masa depan.</p>
+            </div>
+        </div>
+
+        <div id="results" class="mirror-grid">
+            
+            <div class="mirror-card">
+                <span class="card-icon">❤️‍🔥</span>
+                <span class="card-title">KEMAMPUAN MENCINTAI</span>
+                <div id="oxy-text" class="status-text safe">
+                    <strong>Hormon Bonding Utuh.</strong><br>
+                    Kamu bisa merasakan cinta tulus. Hatimu tenang, tidak drama, dan mudah bersyukur.
+                </div>
+            </div>
+
+            <div class="mirror-card">
+                <span class="card-icon">✨</span>
+                <span class="card-title">AURA & INNER BEAUTY</span>
+                <div id="aura-text" class="status-text safe">
+                    <strong>The Glow (Nur).</strong><br>
+                    Wajahmu bercahaya meski tanpa makeup tebal. Orang merasa "adem" melihatmu. High Value.
+                </div>
+            </div>
+
+            <div class="mirror-card">
+                <span class="card-icon">🧠</span>
+                <span class="card-title">KESEHATAN MENTAL</span>
+                <div id="mental-text" class="status-text safe">
+                    <strong>Stabil & Ratu.</strong><br>
+                    Kamu punya kontrol emosi. Kamu tidak butuh validasi murahan dari laki-laki asing.
+                </div>
+            </div>
+
+            <div class="mirror-card">
+                <span class="card-icon">👶</span>
+                <span class="card-title">CETAKAN GENERASI</span>
+                <div id="baby-text" class="status-text safe">
+                    <strong>Genetik Unggul.</strong><br>
+                    Rahim yang tenang menghasilkan anak yang tenang, cerdas, dan emosi stabil.
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function updateVal(val) {
+            const txt = document.getElementById('val-text');
+            if(val == 0) txt.innerText = "Level: Murni (Suci)";
+            else if(val == 25) txt.innerText = "Level: Terpapar Ringan";
+            else if(val == 50) txt.innerText = "Level: Terkontaminasi";
+            else if(val == 75) txt.innerText = "Level: Rusak (Toxic)";
+            else txt.innerText = "Level: Hancur (Soul Fragmented)";
+        }
+
+        function revealFate() {
+            const val = document.getElementById('exposure').value;
+            const res = document.getElementById('results');
+            const wombSec = document.getElementById('womb-section');
+            
+            const flower = document.getElementById('flower-icon');
+            const wombStat = document.getElementById('womb-status');
+            const wombDesc = document.getElementById('womb-desc');
+
+            const oxy = document.getElementById('oxy-text');
+            const aura = document.getElementById('aura-text');
+            const mental = document.getElementById('mental-text');
+            const baby = document.getElementById('baby-text');
+
+            res.style.display = "grid";
+            wombSec.style.display = "block";
+
+            // RESET CLASS
+            flower.className = "flower";
+
+            if (val <= 25) {
+                // AMAN / RINGAN
+                flower.innerText = "🌺";
+                wombStat.innerText = "THE ROYAL WOMB";
+                wombStat.style.color = "#ff66b2";
+                wombDesc.innerText = "Rahimmu masih terjaga. Energi femininmu kuat, menarik laki-laki pelindung (Provider).";
+
+                oxy.innerHTML = "<strong>Hormon Stabil.</strong><br>Kamu masih bisa membedakan nafsu dan cinta. Ikatan batinmu kuat.";
+                oxy.className = "status-text safe";
+                
+                aura.innerHTML = "<strong>Cerah Alami.</strong><br>Daya tarikmu datang dari 'rasa malu' dan kehormatan diri.";
+                aura.className = "status-text safe";
+
+                mental.innerHTML = "<strong>Fokus.</strong><br>Sedikit overthinking, tapi masih bisa dikendalikan.";
+                mental.className = "status-text safe";
+
+                baby.innerHTML = "<strong>Potensi Bagus.</strong><br>Siapkan nutrisi dan mental untuk anak Satria.";
+                baby.className = "status-text safe";
+
+            } else if (val <= 50) {
+                // WARNING
+                flower.innerText = "🥀"; // Bunga layu
+                flower.classList.add("wilted");
+                wombStat.innerText = "THE CONFUSED VESSEL";
+                wombStat.style.color = "orange";
+                wombDesc.innerText = "Rahimmu mulai bingung. Terlalu banyak emosi sampah masuk. Risiko PCOS/Kista meningkat karena stress hormonal.";
+
+                oxy.innerHTML = "<strong>Pair Bonding Rusak.</strong><br>Kamu mulai susah jatuh cinta pada 'Cowok Baik'. Kamu malah tertarik pada 'Bad Boy' yang menyakiti.";
+                oxy.className = "status-text warning";
+
+                aura.innerHTML = "<strong>Aura Redup.</strong><br>Wajah terlihat lelah/tua dari umur asli. Makeup tebal diperlukan untuk menutupi kekosongan mata.";
+                aura.className = "status-text warning";
+
+                mental.innerHTML = "<strong>Insecure & Drama.</strong><br>Haus validasi. Sering merasa 'Jelek' jika tidak ada yang like foto.";
+                mental.className = "status-text warning";
+
+                baby.innerHTML = "<strong>Risiko Baroncel.</strong><br>Stress ibunya saat hamil akan mencetak anak yang cengeng & anxiety.";
+                baby.className = "status-text warning";
+
+            } else {
+                // BAHAYA / RUSAK
+                flower.innerText = "🕷️"; // Laba-laba / Rusak
+                flower.classList.add("rotten");
+                wombStat.innerText = "THE BROKEN PORTAL";
+                wombStat.style.color = "var(--rose)";
+                wombDesc.innerText = "BAHAYA! Rahimmu menyimpan trauma & energi ratusan 'sampah' visual. Entitas negatif bersarang di sini.";
+
+                oxy.innerHTML = "<strong>ALPHA WIDOW (Mati Rasa).</strong><br>Kamu tidak bisa lagi mencintai. Hatimu beku. Laki-laki bagimu hanya 'Alat'. Kebahagiaan sejati mustahil diraih.";
+                oxy.className = "status-text danger";
+
+                aura.innerHTML = "<strong>AURA MAGHRIB (Gelap).</strong><br>Aura 'Pick-me' atau 'Murahan' tercium kuat. Laki-laki berkelas akan menjauh, hanya buaya yang mendekat.";
+                aura.className = "status-text danger";
+
+                mental.innerHTML = "<strong>Depresi & Bipolar.</strong><br>Emosi meledak-ledak. Merasa kosong meski di keramaian. Jiwamu terpecah (Soul Fragmentation).";
+                mental.className = "status-text danger";
+
+                baby.innerHTML = "<strong>GENETIK LEMAH.</strong><br>Mencetak generasi Stunting Mental. Anakmu akan mewarisi depresi & kecanduan ibunya.";
+                baby.className = "status-text danger";
+            }
+        }
+    </script>
+
+</body>
+</html>
