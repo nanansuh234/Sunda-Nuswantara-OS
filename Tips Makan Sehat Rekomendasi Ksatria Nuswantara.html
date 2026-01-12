@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Nutri-Guard</title>
+    <style>
+        :root {
+            --bg: #0f1115;
+            --panel: #1a1d24;
+            --gold: #d4af37;
+            --green: #00ff88;
+            --red: #ff3366;
+            --text: #e0e0e0;
+            --dim: #555;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Courier, monospace;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center; margin-bottom: 20px;
+            border-bottom: 1px solid #333; padding-bottom: 15px; width: 100%; max-width: 600px;
+        }
+        h1 { margin: 0; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; font-size: 1.5rem; }
+        .sub { font-size: 0.8rem; color: #888; font-style: italic; }
+
+        /* JAM DIGITAL */
+        .clock-display {
+            font-size: 3rem; font-weight: bold; color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            margin-bottom: 10px;
+        }
+
+        /* CARD UTAMA */
+        .main-card {
+            background: var(--panel);
+            width: 100%; max-width: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            transition: all 0.3s;
+        }
+
+        /* STATUS BAR (Active Organ) */
+        .status-bar {
+            background: #222; padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        .organ-label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; }
+        .organ-name { font-size: 1.2rem; font-weight: bold; color: var(--gold); }
+        .organ-icon { 
+            width: 12px; height: 12px; background: var(--green); 
+            border-radius: 50%; box-shadow: 0 0 10px var(--green);
+            animation: pulse 1s infinite;
+        }
+
+        /* SPLIT MENU (Allowed vs Forbidden) */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .menu-col { padding: 20px; }
+        .menu-col.allowed { background: rgba(0, 255, 136, 0.05); border-right: 1px solid #333; }
+        .menu-col.forbidden { background: rgba(255, 51, 102, 0.05); }
+
+        .col-title {
+            font-size: 0.9rem; font-weight: bold; margin-bottom: 15px;
+            text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center;
+        }
+        .col-title.yes { color: var(--green); }
+        .col-title.no { color: var(--red); }
+
+        /* FOOD ITEMS */
+        .food-item {
+            margin-bottom: 10px; font-size: 0.95rem;
+            padding-bottom: 5px; border-bottom: 1px dashed #333;
+        }
+        .food-item:last-child { border: none; }
+        .food-note { font-size: 0.75rem; color: #777; margin-top: 2px; }
+
+        /* REASON BOX */
+        .reason-box {
+            padding: 15px; background: #151515;
+            border-top: 1px solid #333;
+            font-size: 0.85rem; line-height: 1.5; color: #aaa;
+            text-align: center; font-style: italic;
+        }
+        .reason-highlight { color: var(--gold); font-weight: bold; }
+
+        /* FOOTER ALERT */
+        .footer-status {
+            margin-top: 20px; font-size: 0.8rem;
+            padding: 8px 20px; border-radius: 20px;
+            background: #222; border: 1px solid #444;
+        }
+
+        @keyframes pulse { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.5; transform: scale(1); } }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Nuswantara Nutri-Guard</h1>
+        <div class="sub">Jajanan Sehat Sesuai Jam Biologis</div>
+    </header>
+
+    <div class="clock-display" id="clock">00:00</div>
+
+    <div class="main-card" id="cardContainer">
+        
+        <div class="status-bar">
+            <div>
+                <div class="organ-label">ORGAN DOMINAN SEKARANG</div>
+                <div class="organ-name" id="organName">LOADING...</div>
+            </div>
+            <div class="organ-icon" id="statusLight"></div>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-col allowed">
+                <div class="col-title yes">✅ DISARANKAN</div>
+                <div id="listAllowed">
+                    </div>
+            </div>
+
+            <div class="menu-col forbidden">
+                <div class="col-title no">🚫 DIHINDARI</div>
+                <div id="listForbidden">
+                    </div>
+            </div>
+        </div>
+
+        <div class="reason-box">
+            " <span id="logicText" class="reason-highlight">...</span> "
+        </div>
+
+    </div>
+
+    <div class="footer-status" id="nextPlan">Next: Persiapan Makan Siang (12:00)</div>
+
+<script>
+    // --- DATABASE MAKANAN & LOGIKA JAM ---
+    const nutriSchedule = [
+        {
+            range: [7, 9], // 07:00 - 08:59
+            organ: "LAMBUNG (Stomach)",
+            logic: "Lambung sedang 'memasak'. Butuh kehangatan untuk start mesin. Jangan disiram air es!",
+            good: [
+                {name: "Bubur / Oatmeal", note: "Tekstur lembut, mudah cerna"},
+                {name: "Pisang / Ubi Rebus", note: "Karbo kompleks alami"},
+                {name: "Teh Hangat / Jahe", note: "Menjaga suhu lambung"},
+                {name: "Telur Rebus", note: "Protein murni"}
+            ],
+            bad: [
+                {name: "Es Kopi Susu", note: "Terlalu dingin & asam"},
+                {name: "Sambal Level Dewa", note: "Luka lambung pagi hari"},
+                {name: "Soda / Minuman Dingin", note: "Mematikan api pencernaan"}
+            ],
+            next: "Fase Berpikir (Limpa)"
+        },
+        {
+            range: [9, 11], 
+            organ: "LIMPA (Spleen)",
+            logic: "Limpa mengubah makanan jadi energi otak. Hindari yang bikin 'becek' (lembab/minyak) biar gak ngantuk.",
+            good: [
+                {name: "Kacang-kacangan", note: "Energi padat buat otak"},
+                {name: "Buah Potong", note: "Gula alami (Fruktosa)"},
+                {name: "Madu (1 sdm)", note: "Booster instan"},
+                {name: "Cokelat Hitam", note: "Fokus booster"}
+            ],
+            bad: [
+                {name: "Gorengan Banjir Minyak", note: "Bikin limpa berat & ngantuk"},
+                {name: "Gula Pasir Berlebih", note: "Sugar crash"},
+                {name: "Tepung-tepungan Berat", note: "Donat/Roti manis tebal"}
+            ],
+            next: "Makan Siang (Jantung)"
+        },
+        {
+            range: [11, 13], 
+            organ: "JANTUNG (Heart)",
+            logic: "Jantung di puncak panas. Butuh pendinginan. Jangan makan yang memicu panas dalam.",
+            good: [
+                {name: "Rujak / Salad Buah", note: "Vitamin C & Air"},
+                {name: "Sayur Bening", note: "Netralisir suhu"},
+                {name: "Ikan / Ayam Kukus", note: "Protein ringan"},
+                {name: "Agar-agar / Puding", note: "Serat dingin"}
+            ],
+            bad: [
+                {name: "Durian / Nangka", note: "Sifat panas tinggi"},
+                {name: "Sate Kambing", note: "Terlalu panas buat siang"},
+                {name: "Kopi Strong", note: "Memacu detak jantung berlebih"}
+            ],
+            next: "Penyerapan (Usus Kecil)"
+        },
+        {
+            range: [13, 15], 
+            organ: "USUS KECIL (Small Intestine)",
+            logic: "Fase penyerapan sari pati. Waktunya 'liquid food' atau snack yang mudah serap.",
+            good: [
+                {name: "Yoghurt / Yakult", note: "Probiotik usus"},
+                {name: "Jus Buah Segar", note: "Langsung serap darah"},
+                {name: "Lemper / Ketan", note: "Mengenyangkan tapi padat"},
+                {name: "Teh Hijau", note: "Bantu luruhkan lemak siang"}
+            ],
+            bad: [
+                {name: "Junk Food / Prosesan", note: "Susah diserap, jadi sampah"},
+                {name: "Minuman Bersoda", note: "Gas berlebih di usus"},
+                {name: "Es Krim Dairy Berat", note: "Lendir di usus"}
+            ],
+            next: "Tea Time (Kandung Kemih)"
+        },
+        {
+            range: [15, 17], 
+            organ: "KANDUNG KEMIH (Bladder)",
+            logic: "GOLDEN HOUR JAJAN. Metabolisme cairan lancar. Waktu terbaik kalau mau 'cheating' dikit (manis/asin).",
+            good: [
+                {name: "Teh Manis Hangat", note: "Energi sore"},
+                {name: "Kue Pasar / Jajanan", note: "Limit 1-2 potong"},
+                {name: "Misoa / Bakso Kuah", note: "Asin/gurih oke asal berkuah"},
+                {name: "Air Putih Banyak", note: "Flush racun"}
+            ],
+            bad: [
+                {name: "Kopi (Lagi)", note: "Bikin beser/dehidrasi"},
+                {name: "Keripik Kering", note: "Panas dalam"},
+                {name: "Alkohol", note: "Merusak ginjal jam segini"}
+            ],
+            next: "Makan Malam Ringan (Ginjal)"
+        },
+        {
+            range: [17, 19], 
+            organ: "GINJAL (Kidney)",
+            logic: "Energi mulai disimpan. Cari makanan hangat, kuah, dan asin alami (sedikit). Stop gula.",
+            good: [
+                {name: "Wedang Ronde / Jahe", note: "Hangat buat ginjal"},
+                {name: "Sup Ayam / Kaldu", note: "Nutrisi sumsum"},
+                {name: "Edamame Rebus", note: "Protein nabati"},
+                {name: "Jagung Rebus", note: "Ringan"}
+            ],
+            bad: [
+                {name: "Minuman Dingin/Es", note: "Melemahkan Chi Ginjal"},
+                {name: "Buah-buahan Dingin", note: "Semangka/Melon (Terlalu dingin)"},
+                {name: "Makanan Santan Berat", note: "Beban cerna"}
+            ],
+            next: "Fase Puasa (Pericardium)"
+        },
+        {
+            range: [19, 24], // 19:00 - 00:00 (Covering Pericardium & Triple Burner)
+            organ: "PERICARDIUM / TRIPLE BURNER",
+            logic: "Fase istirahat organ. STOP MAKAN BERAT. Biarkan tubuh fokus detoks & repair.",
+            good: [
+                {name: "Air Putih (Suhu Ruang)", note: "Secukupnya"},
+                {name: "Teh Chamomile/Herbal", note: "Relaksasi syaraf"},
+                {name: "PUASA MAKANAN PADAT", note: "Terbaik"}
+            ],
+            bad: [
+                {name: "Nasi Goreng / Mie Tektek", note: "Timbunan lemak perut"},
+                {name: "Kopi / Kafein", note: "Ganggu jam tidur"},
+                {name: "Gula / Manisan", note: "Insulin spike malam hari"}
+            ],
+            next: "Deep Sleep (Empedu)"
+        }
+    ];
+
+    // Handle 00:00 - 07:00 (Malam/Subuh)
+    const nightMode = {
+        organ: "FASE DETOKS (Deep Sleep)",
+        logic: "Usus & Hati sedang cuci darah. Jangan masukan sampah apapun!",
+        good: [{name: "TIDUR", note: "Nutrisi terbaik saat ini"}, {name: "Air Putih (Bangun Tidur)", note: "Bilas racun"}],
+        bad: [{name: "SEMUA MAKANAN", note: "Merusak proses detoks"}, {name: "Gadget", note: "Radiasi"}],
+        next: "Sarapan (Lambung 07:00)"
+    };
+
+    function updateContent() {
+        const now = new Date();
+        const h = now.getHours();
+        const m = now.getMinutes();
+        
+        // Update Jam Digital
+        const pad = n => n < 10 ? '0'+n : n;
+        document.getElementById('clock').innerText = `${pad(h)}:${pad(m)}`;
+
+        // Cari Data Sesuai Jam
+        let currentData = null;
+        
+        // Cek range normal (07 - 24)
+        for(let item of nutriSchedule) {
+            if(h >= item.range[0] && h < item.range[1]) {
+                currentData = item;
+                break;
+            }
+        }
+
+        // Kalau null, berarti jam 00-07 (Night Mode)
+        if(!currentData) {
+            currentData = nightMode;
+            // Override range visual untuk malam
+            document.querySelector('.main-card').style.borderColor = "#555";
+        }
+
+        // Render UI
+        document.getElementById('organName').innerText = currentData.organ;
+        document.getElementById('logicText').innerText = currentData.logic;
+        document.getElementById('nextPlan').innerText = "Next Phase: " + currentData.next;
+
+        // Render List Allowed
+        const listAllowed = document.getElementById('listAllowed');
+        listAllowed.innerHTML = "";
+        currentData.good.forEach(item => {
+            listAllowed.innerHTML += `
+                <div class="food-item">
+                    ${item.name}
+                    <div class="food-note">${item.note}</div>
+                </div>
+            `;
+        });
+
+        // Render List Forbidden
+        const listForbidden = document.getElementById('listForbidden');
+        listForbidden.innerHTML = "";
+        currentData.bad.forEach(item => {
+            listForbidden.innerHTML += `
+                <div class="food-item">
+                    ${item.name}
+                    <div class="food-note">${item.note}</div>
+                </div>
+            `;
+        });
+
+        // Visual Cues
+        const icon = document.getElementById('statusLight');
+        if(!currentData.range) { // Night mode
+            icon.style.backgroundColor = "#555"; // Grey
+            icon.style.boxShadow = "none";
+        } else {
+            icon.style.backgroundColor = "#00ff88"; // Green active
+            icon.style.boxShadow = "0 0 10px #00ff88";
+        }
+    }
+
+    // Init & Loop
+    setInterval(updateContent, 1000);
+    updateContent(); // First run
+
+</script>
+</body>
+</html>

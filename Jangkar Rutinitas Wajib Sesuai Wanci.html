@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Routine Keeper</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --card: #111;
+            --gold: #d4af37;
+            --blue: #00f3ff;
+            --text: #ccc;
+            --active-glow: 0 0 25px rgba(212, 175, 55, 0.4);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Courier, monospace;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        header {
+            text-align: center; margin-bottom: 30px; border-bottom: 1px solid #333;
+            width: 100%; max-width: 600px; padding-bottom: 15px;
+        }
+        h1 { margin: 0; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+        .sub { font-size: 0.8rem; color: #666; font-style: italic; margin-top: 5px; }
+
+        /* TIMELINE CONTAINER */
+        .timeline {
+            position: relative;
+            max-width: 600px; width: 100%;
+            margin-left: 20px;
+            border-left: 2px solid #333;
+            padding-left: 30px;
+        }
+
+        /* ROUTINE CARD */
+        .routine-card {
+            background: var(--card);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px 15px;
+            margin-bottom: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* DOT INDICATOR */
+        .routine-card::before {
+            content: '';
+            position: absolute;
+            left: -39px; 
+            top: 25px;
+            width: 16px; height: 16px;
+            background: #333;
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+            transition: all 0.3s;
+        }
+
+        /* ACTIVE STATE */
+        .routine-card.active {
+            border-color: var(--gold);
+            background: #1a1500;
+            box-shadow: var(--active-glow);
+            transform: scale(1.02);
+            z-index: 10;
+        }
+        .routine-card.active::before {
+            background: var(--gold);
+            box-shadow: 0 0 15px var(--gold);
+        }
+        .routine-card.active .wanci-label { color: var(--gold); text-shadow: 0 0 10px rgba(212,175,55,0.5); }
+
+        /* CONTENT STYLING */
+        .wanci-label {
+            font-size: 0.9rem; font-weight: 900; color: #555;
+            margin-bottom: 8px; display: block; letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .activity-title {
+            font-size: 1.2rem; font-weight: bold; color: #fff;
+            margin-bottom: 8px; text-transform: uppercase;
+        }
+        .activity-desc {
+            font-size: 0.9rem; line-height: 1.5; color: #aaa;
+        }
+        .bio-reason {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #333;
+            font-size: 0.8rem; color: var(--blue);
+            font-style: italic;
+        }
+
+        /* FREE TIME BLOCK */
+        .free-time {
+            padding: 10px;
+            text-align: center;
+            color: #444;
+            font-size: 0.75rem;
+            margin-bottom: 30px;
+            border: 1px dashed #222;
+            border-radius: 8px;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Routine Keeper</h1>
+        <div class="sub">Jangkar Rutinitas Berbasis Wanci</div>
+    </header>
+
+    <div class="timeline" id="timelineContainer">
+        </div>
+
+<script>
+    // --- DATABASE WANCI (JAM SUNDA) ---
+    const wanciDB = [
+        { start: 0,  end: 1,  name: "JANARI LEUTIK" },
+        { start: 1,  end: 3,  name: "JANARI GEDE" },
+        { start: 3,  end: 4,  name: "KONGKORONGOK" },
+        { start: 4,  end: 5,  name: "BALEBAT" },
+        { start: 5,  end: 6,  name: "CARANGCANG" },
+        { start: 6,  end: 8,  name: "HANEUT MOYAN" },
+        { start: 8,  end: 10, name: "RUMANGSANG" },
+        { start: 10, end: 11, name: "PECAT SAWED" },
+        { start: 11, end: 12, name: "MANCERAN" },
+        { start: 12, end: 13, name: "LINGSIR" },
+        { start: 13, end: 15, name: "KALANGKANG" },
+        { start: 15, end: 16, name: "MENGOK" },
+        { start: 16, end: 17, name: "TUNGGANG GUNUNG" },
+        { start: 17, end: 18, name: "SARIAK LAYUNG" },
+        { start: 18, end: 19, name: "SAREUPNA" },
+        { start: 19, end: 21, name: "SAREUREUH" },
+        { start: 21, end: 23, name: "TUMOREK" },
+        { start: 23, end: 24, name: "INDUNG PEUTING" }
+    ];
+
+    // Helper: Cari Nama Wanci berdasarkan Jam Angka
+    function getWanciName(hour) {
+        let w = wanciDB.find(x => hour >= x.start && hour < x.end);
+        return w ? w.name : "WAKTU GHAIB"; // Fallback
+    }
+
+    // --- DATABASE RUTINITAS (ANCHORS) ---
+const anchors = [
+        {
+            start: 5, end: 7,
+            title: "START ENGINE: BUANG & MINUM",
+            desc: "1. Minum 1-2 gelas air hangat (wajib).<br>2. BAB (Usahakan rutin).<br>3. Stretching/Jalan ringan 10 menit.",
+            reason: "Usus Besar sedang piket buang sampah. Air hangat memancing gerak peristaltik."
+        },
+        {
+            start: 7, end: 9,
+            title: "ISI BENSIN (SARAPAN)",
+            desc: "Makan pagi yang hangat & lembut. Bubur, oatmeal, atau pisang rebus. Hindari es/pedas.",
+            reason: "Lambung butuh panas untuk mencerna. Ini fondasi energi seharian."
+        },
+        // Gap 09-11: Free Flow
+        {
+            start: 11, end: 13,
+            title: "COOLING DOWN (POWER NAP)",
+            desc: "Istirahat sejenak. Jangan olahraga berat. Kalau bisa, tidur siang 15-20 menit (Nap).",
+            reason: "Jantung sedang di puncak panas. Jangan dipaksa ngebut, nanti overheat."
+        },
+        {
+            start: 15, end: 17,
+            title: "FLUSH & MOVE (OLAHRAGA)",
+            desc: "1. Minum air putih yang banyak.<br>2. Olahraga sore (Fisik berat boleh disini).",
+            reason: "Kandung kemih aktif. Metabolisme cair & limbah paling lancar dibuang lewat keringat/urine."
+        },
+        {
+            start: 17, end: 19,
+            title: "RECHARGE (MAKAN MALAM)",
+            desc: "Makan malam terakhir. Menu berkuah/hangat. Porsi sedang. Stop makan berat setelah jam 19.00.",
+            reason: "Ginjal menyimpan esensi energi. Jangan bebani dengan pencernaan berat saat mau istirahat."
+        },
+        {
+            start: 21, end: 23,
+            title: "SHUTDOWN SEQUENCE",
+            desc: "1. Jauhkan HP/Blue light.<br>2. Atur napas/Meditasi ringan.<br>3. Persiapan tidur.",
+            reason: "Triple Burner menyeimbangkan suhu tubuh. Hormon tidur (Melatonin) butuh gelap."
+        },
+        {
+            start: 23, end: 5,
+            title: "DEEP SLEEP (RECOVERY)",
+            desc: "Tidur total. Jangan bangun, jangan mikir.",
+            reason: "Empedu & Liver sedang cuci darah. Gangguan jam segini bikin darah kotor & emosi labil."
+        }
+    ];
+
+    function renderTimeline() {
+        const container = document.getElementById('timelineContainer');
+        const now = new Date();
+        const currentHour = now.getHours();
+        
+        container.innerHTML = "";
+        let lastEnd = 5; // Start loop dari jam 5 pagi (Carangcang)
+
+        anchors.forEach(item => {
+            // 1. Cek Gap Waktu (Free Time)
+            if (item.start > lastEnd) {
+                // Konversi jam gap ke wanci
+                let wStart = getWanciName(lastEnd);
+                let wEnd = getWanciName(item.start - 1); // Ambil nama jam terakhir di gap
+                
+                // Kalo gapnya pendek (cuma 1 jam), namanya sama
+                let gapLabel = (wStart === wEnd) ? wStart : `${wStart} ➔ ${wEnd}`;
+                
+                container.innerHTML += `
+                    <div class="free-time">
+                        ::: FASE BEBAS (${gapLabel}) : KERJA / KREATIVITAS :::
+                    </div>
+                `;
+            }
+
+            // 2. Logic Active State
+            let isActive = false;
+            // Handle cross-day (23 - 5)
+            if (item.start > item.end) { 
+                if (currentHour >= item.start || currentHour < item.end) isActive = true;
+            } else { 
+                if (currentHour >= item.start && currentHour < item.end) isActive = true;
+            }
+            const activeClass = isActive ? 'active' : '';
+
+            // 3. Konversi Jam Angka -> WANCI SUNDA
+            // Ambil nama wanci jam mulai
+            let wanciStart = getWanciName(item.start);
+            // Ambil nama wanci jam selesai (dikurang 1 karena end itu batas)
+            // Khusus kasus lintas hari (end=5), kita hardcode 'BALEBAT' atau hitung manual
+            let endHourForName = (item.end === 0) ? 23 : item.end - 1; 
+            if (item.end === 5) endHourForName = 4; // Subuh
+            
+            let wanciEnd = getWanciName(endHourForName);
+
+            // Kalo durasi pendek & nama wanci sama, satu aja. Kalo beda, pake panah.
+            let wanciDisplay = (wanciStart === wanciEnd) ? wanciStart : `${wanciStart} - ${wanciEnd}`;
+
+            // Tambahin dikit jam masehi kecil buat patokan (opsional, buat user yang masih adaptasi)
+            // Format: CARANGCANG TINGGANG (05:00 - 07:00)
+            
+            container.innerHTML += `
+                <div class="routine-card ${activeClass}">
+                    <span class="wanci-label">${wanciDisplay}</span>
+                    <div class="activity-title">${item.title}</div>
+                    <div class="activity-desc">${item.desc}</div>
+                    <div class="bio-reason">💡 ${item.reason}</div>
+                </div>
+            `;
+
+            lastEnd = item.end;
+        });
+    }
+
+    // Auto refresh
+    setInterval(renderTimeline, 60000);
+    renderTimeline(); 
+
+</script>
+</body>
+</html>
