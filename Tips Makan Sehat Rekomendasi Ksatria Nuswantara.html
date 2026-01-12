@@ -9,10 +9,10 @@
             --bg: #0f1115;
             --panel: #1a1d24;
             --gold: #d4af37;
+            --gold-dim: rgba(212, 175, 55, 0.2);
             --green: #00ff88;
             --red: #ff3366;
             --text: #e0e0e0;
-            --dim: #555;
         }
 
         * { box-sizing: border-box; }
@@ -20,7 +20,7 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', Courier, monospace;
+            font-family: 'Courier New', Courier, monospace; /* Font disamakan dengan Jam Tubuh */
             margin: 0; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
@@ -34,11 +34,45 @@
         h1 { margin: 0; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; font-size: 1.5rem; }
         .sub { font-size: 0.8rem; color: #888; font-style: italic; }
 
-        /* JAM DIGITAL */
-        .clock-display {
-            font-size: 3rem; font-weight: bold; color: #fff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            margin-bottom: 10px;
+        /* JAM NUSWANTARA DIGITAL (STYLE DARI FILE JAM TUBUH) */
+        .digital-wrapper {
+            background: #000;
+            border: 2px solid var(--gold);
+            padding: 15px 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 30px rgba(212, 175, 55, 0.15), 0 0 20px rgba(0,0,0,0.5);
+            width: 100%; max-width: 400px;
+        }
+
+        .digital-main {
+            font-size: 4rem; /* JUMBO SIZE */
+            font-weight: 900;
+            color: var(--gold);
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .digital-sub {
+            font-size: 1rem;
+            color: #888;
+            margin-top: 5px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .wanci-badge {
+            margin-top: 10px;
+            display: inline-block;
+            background: #222;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border: 1px solid #444;
         }
 
         /* CARD UTAMA */
@@ -61,47 +95,37 @@
         .organ-label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; }
         .organ-name { font-size: 1.2rem; font-weight: bold; color: var(--gold); }
         .organ-icon { 
-            width: 12px; height: 12px; background: var(--green); 
+            width: 15px; height: 15px; background: var(--green); 
             border-radius: 50%; box-shadow: 0 0 10px var(--green);
             animation: pulse 1s infinite;
         }
 
-        /* SPLIT MENU (Allowed vs Forbidden) */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-
+        /* SPLIT MENU */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; }
         .menu-col { padding: 20px; }
         .menu-col.allowed { background: rgba(0, 255, 136, 0.05); border-right: 1px solid #333; }
         .menu-col.forbidden { background: rgba(255, 51, 102, 0.05); }
 
         .col-title {
             font-size: 0.9rem; font-weight: bold; margin-bottom: 15px;
-            text-transform: uppercase; letter-spacing: 1px;
-            display: flex; align-items: center;
+            text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center;
         }
         .col-title.yes { color: var(--green); }
         .col-title.no { color: var(--red); }
 
         /* FOOD ITEMS */
-        .food-item {
-            margin-bottom: 10px; font-size: 0.95rem;
-            padding-bottom: 5px; border-bottom: 1px dashed #333;
-        }
+        .food-item { margin-bottom: 10px; font-size: 0.9rem; padding-bottom: 5px; border-bottom: 1px dashed #333; font-family: 'Segoe UI', sans-serif; }
         .food-item:last-child { border: none; }
         .food-note { font-size: 0.75rem; color: #777; margin-top: 2px; }
 
         /* REASON BOX */
         .reason-box {
-            padding: 15px; background: #151515;
-            border-top: 1px solid #333;
+            padding: 15px; background: #151515; border-top: 1px solid #333;
             font-size: 0.85rem; line-height: 1.5; color: #aaa;
-            text-align: center; font-style: italic;
+            text-align: center; font-style: italic; font-family: 'Segoe UI', sans-serif;
         }
         .reason-highlight { color: var(--gold); font-weight: bold; }
 
-        /* FOOTER ALERT */
         .footer-status {
             margin-top: 20px; font-size: 0.8rem;
             padding: 8px 20px; border-radius: 20px;
@@ -119,10 +143,13 @@
         <div class="sub">Jajanan Sehat Sesuai Jam Biologis</div>
     </header>
 
-    <div class="clock-display" id="clock">00:00</div>
+    <div class="digital-wrapper">
+        <div class="digital-main" id="nusDigital">00:00</div>
+        <div class="digital-sub" id="nusCycle">LOADING...</div>
+        <div class="wanci-badge" id="wanciName">...</div>
+    </div>
 
     <div class="main-card" id="cardContainer">
-        
         <div class="status-bar">
             <div>
                 <div class="organ-label">ORGAN DOMINAN SEKARANG</div>
@@ -134,27 +161,36 @@
         <div class="menu-grid">
             <div class="menu-col allowed">
                 <div class="col-title yes">✅ DISARANKAN</div>
-                <div id="listAllowed">
-                    </div>
+                <div id="listAllowed"></div>
             </div>
-
             <div class="menu-col forbidden">
                 <div class="col-title no">🚫 DIHINDARI</div>
-                <div id="listForbidden">
-                    </div>
+                <div id="listForbidden"></div>
             </div>
         </div>
 
         <div class="reason-box">
             " <span id="logicText" class="reason-highlight">...</span> "
         </div>
-
     </div>
 
-    <div class="footer-status" id="nextPlan">Next: Persiapan Makan Siang (12:00)</div>
+    <div class="footer-status" id="nextPlan">Next: ...</div>
 
 <script>
-    // --- DATABASE MAKANAN & LOGIKA JAM ---
+    // --- DATABASE WANCI (Untuk Label Tambahan) ---
+    const wanciDB = [
+        { start: 0,  end: 1,  name: "JANARI LEUTIK" }, { start: 1,  end: 3,  name: "JANARI GEDE" },
+        { start: 3,  end: 4,  name: "KONGKORONGOK" }, { start: 4,  end: 5,  name: "BALEBAT" },
+        { start: 5,  end: 6,  name: "CARANGCANG" }, { start: 6,  end: 8,  name: "HANEUT MOYAN" },
+        { start: 8,  end: 10, name: "RUMANGSANG" }, { start: 10, end: 11, name: "PECAT SAWED" },
+        { start: 11, end: 12, name: "MANCERAN" }, { start: 12, end: 13, name: "LINGSIR" },
+        { start: 13, end: 15, name: "KALANGKANG" }, { start: 15, end: 16, name: "MENGOK" },
+        { start: 16, end: 17, name: "TUNGGANG GUNUNG" }, { start: 17, end: 18, name: "SARIAK LAYUNG" },
+        { start: 18, end: 19, name: "SAREUPNA" }, { start: 19, end: 21, name: "SAREUREUH" },
+        { start: 21, end: 23, name: "TUMOREK" }, { start: 23, end: 24, name: "INDUNG PEUTING" }
+    ];
+
+    // --- DATABASE MAKANAN ---
     const nutriSchedule = [
         {
             range: [7, 9], // 07:00 - 08:59
@@ -275,8 +311,8 @@
             next: "Deep Sleep (Empedu)"
         }
     ];
-
-    // Handle 00:00 - 07:00 (Malam/Subuh)
+    
+   // Handle 00:00 - 07:00 (Malam/Subuh)
     const nightMode = {
         organ: "FASE DETOKS (Deep Sleep)",
         logic: "Usus & Hati sedang cuci darah. Jangan masukan sampah apapun!",
@@ -284,77 +320,76 @@
         bad: [{name: "SEMUA MAKANAN", note: "Merusak proses detoks"}, {name: "Gadget", note: "Radiasi"}],
         next: "Sarapan (Lambung 07:00)"
     };
-
+    
     function updateContent() {
         const now = new Date();
         const h = now.getHours();
         const m = now.getMinutes();
-        
-        // Update Jam Digital
-        const pad = n => n < 10 ? '0'+n : n;
-        document.getElementById('clock').innerText = `${pad(h)}:${pad(m)}`;
+        const s = now.getSeconds();
 
-        // Cari Data Sesuai Jam
-        let currentData = null;
+        // --- 1. ALGORITMA JAM NUSWANTARA (Dari File Referensi) ---
+        // Rumus: 1 Jam Nuswantara = 90 Menit Masehi
+        // Sistem 1-8. 
+        let mTotalMin = ((h % 12) * 60) + m + (s/60);
+        let nTotalHoursRaw = mTotalMin / 90; 
         
-        // Cek range normal (07 - 24)
+        let nHour = Math.floor(nTotalHoursRaw);
+        let displayHour = nHour === 0 ? 8 : nHour; // Kalau 0 berarti jam 8 (terakhir)
+        let nMinute = Math.floor((nTotalHoursRaw % 1) * 90); // Menit sisa dalam siklus 90
+        let cycle = (h >= 6 && h < 18) ? "SIANG" : "MALAM";
+
+        const pad = n => n < 10 ? '0'+n : n;
+        
+        // Update DOM Jam
+        document.getElementById('nusDigital').innerText = `${pad(displayHour)}:${pad(nMinute)}`;
+        document.getElementById('nusCycle').innerText = `${cycle} - MENIT KE ${nMinute}`;
+
+        // Tambahan: Label Wanci (Biar tetep tau nama aslinya)
+        let currentWanci = wanciDB.find(w => h >= w.start && h < w.end);
+        if (!currentWanci && h === 0) currentWanci = wanciDB.find(w => w.name === "JANARI LEUTIK");
+        if (currentWanci) document.getElementById('wanciName').innerText = currentWanci.name;
+
+        // --- 2. LOGIKA MAKANAN (TETAP SAMA) ---
+        let currentData = null;
         for(let item of nutriSchedule) {
             if(h >= item.range[0] && h < item.range[1]) {
                 currentData = item;
                 break;
             }
         }
-
-        // Kalau null, berarti jam 00-07 (Night Mode)
         if(!currentData) {
             currentData = nightMode;
-            // Override range visual untuk malam
             document.querySelector('.main-card').style.borderColor = "#555";
+        } else {
+            document.querySelector('.main-card').style.borderColor = "#d4af37";
         }
 
-        // Render UI
         document.getElementById('organName').innerText = currentData.organ;
         document.getElementById('logicText').innerText = currentData.logic;
         document.getElementById('nextPlan').innerText = "Next Phase: " + currentData.next;
 
-        // Render List Allowed
         const listAllowed = document.getElementById('listAllowed');
         listAllowed.innerHTML = "";
         currentData.good.forEach(item => {
-            listAllowed.innerHTML += `
-                <div class="food-item">
-                    ${item.name}
-                    <div class="food-note">${item.note}</div>
-                </div>
-            `;
+            listAllowed.innerHTML += `<div class="food-item">${item.name}<div class="food-note">${item.note}</div></div>`;
         });
 
-        // Render List Forbidden
         const listForbidden = document.getElementById('listForbidden');
         listForbidden.innerHTML = "";
         currentData.bad.forEach(item => {
-            listForbidden.innerHTML += `
-                <div class="food-item">
-                    ${item.name}
-                    <div class="food-note">${item.note}</div>
-                </div>
-            `;
+            listForbidden.innerHTML += `<div class="food-item">${item.name}<div class="food-note">${item.note}</div></div>`;
         });
 
-        // Visual Cues
         const icon = document.getElementById('statusLight');
-        if(!currentData.range) { // Night mode
-            icon.style.backgroundColor = "#555"; // Grey
-            icon.style.boxShadow = "none";
+        if(!currentData.range) { 
+            icon.style.backgroundColor = "#555"; icon.style.boxShadow = "none";
         } else {
-            icon.style.backgroundColor = "#00ff88"; // Green active
-            icon.style.boxShadow = "0 0 10px #00ff88";
+            icon.style.backgroundColor = "#00ff88"; icon.style.boxShadow = "0 0 10px #00ff88";
         }
     }
 
-    // Init & Loop
     setInterval(updateContent, 1000);
-    updateContent(); // First run
+    updateContent(); 
 
 </script>
 </body>
