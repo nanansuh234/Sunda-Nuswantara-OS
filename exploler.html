@@ -2,260 +2,192 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Arsip Nuswantara - Explorer Pro</title>
+    <title>Nuswantara Explorer - Windows Pro</title>
     <style>
         :root {
-            --bg-main: #0a0a0a;
-            --sidebar-bg: #151515;
-            --active-blue: rgba(41, 128, 185, 0.2);
-            --gold: #d4af37;
+            --win-blue: #0078d7;
+            --bg-main: #ffffff;
+            --sidebar-bg: #f3f3f3;
+            --border: #d2d2d2;
+            --text: #333;
+            --taskbar-bg: #f0f0f0;
+            --hover: #e5e5e5;
+        }
+
+        body.dark-mode {
+            --bg-main: #1a1a1a;
+            --sidebar-bg: #252525;
+            --border: #444;
             --text: #e0e0e0;
-            --border: #333;
-            --cyan: #00ffcc;
+            --taskbar-bg: #111;
+            --hover: #333;
         }
 
         body {
             background-color: var(--bg-main);
             color: var(--text);
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 220px;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--border);
-            padding-top: 10px;
-            font-size: 0.85rem;
-        }
-
-        .nav-item {
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .nav-item:hover { background: rgba(255, 255, 255, 0.05); }
-        .nav-item.active { background: var(--active-blue); border-left: 3px solid #3498db; }
-        .nav-group { margin-bottom: 15px; }
-        .nav-title { 
-            padding: 0 15px 5px; 
-            font-size: 0.7rem; 
-            color: var(--gold); 
-            font-weight: bold; 
-            text-transform: uppercase;
-        }
-
-        /* --- MAIN CONTENT --- */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
         }
 
         /* --- TOOLBAR --- */
         .toolbar {
-            height: 45px;
-            background: #1a1a1a;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            gap: 10px;
+            height: 40px; background: var(--bg-main); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 10px; gap: 10px;
+        }
+        .btn-nav { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--win-blue); }
+        .btn-nav:disabled { color: #ccc; cursor: default; }
+        .address-bar { 
+            flex: 1; border: 1px solid var(--border); padding: 4px 10px; 
+            font-size: 0.85rem; color: #666; background: var(--bg-main);
+        }
+        .search-box {
+            width: 250px; border: 1px solid var(--border); padding: 4px 10px;
+            display: flex; align-items: center; gap: 8px; background: var(--bg-main);
         }
 
-        .btn-back {
-            background: #252525;
-            border: 1px solid #444;
-            color: var(--gold);
-            padding: 4px 10px;
-            cursor: pointer;
-            border-radius: 3px;
-            font-size: 0.8rem;
-        }
-
-        .address-bar {
-            flex: 1;
-            background: #252525;
-            border: 1px solid #444;
-            padding: 5px 12px;
-            border-radius: 3px;
-            color: var(--cyan);
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .search-container {
-            position: relative;
-            width: 220px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: #252525;
-            border: 1px solid #444;
-            padding: 5px 10px 5px 30px;
-            border-radius: 3px;
-            color: #fff;
-            outline: none;
-            font-size: 0.85rem;
-        }
-
-        .search-input:focus { border-color: var(--gold); }
-
-        .search-icon {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
-            pointer-events: none;
-        }
-
-        /* --- VIEW AREA --- */
-        .explorer-view {
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .view-section-title {
-            font-size: 0.9rem;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-            color: #888;
-        }
-
-        /* Drive Cards */
-        .drive-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .drive-card {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            padding: 10px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-
-        .drive-card:hover { background: rgba(255, 255, 255, 0.05); border-color: #444; }
-        .drive-icon { font-size: 2.5rem; }
-        .drive-info { flex: 1; font-size: 0.8rem; }
-        .drive-name { font-weight: bold; margin-bottom: 4px; }
+        /* --- LAYOUT --- */
+        .explorer-container { display: flex; flex: 1; overflow: hidden; position: relative; }
         
-        .storage-bar {
-            width: 100%; height: 8px;
-            background: #333; margin: 4px 0;
-        }
-        .storage-fill { height: 100%; }
-        .fill-blue { background: #2980b9; width: 45%; }
-        .fill-red { background: #c0392b; width: 94%; }
-
-        /* App Grid */
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 15px;
+        .sidebar { 
+            width: 230px; background: var(--sidebar-bg); 
+            border-right: 1px solid var(--border); font-size: 0.85rem;
+            padding-top: 10px;
         }
 
-        .app-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 8px;
-            transition: 0.2s;
+        /* Nav Group Boxed Style */
+        .nav-group { 
+            margin: 5px 10px 15px 10px; 
+            border: 1px solid var(--border); 
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .nav-title { padding: 5px 15px; font-weight: bold; font-size: 0.75rem; color: #666; background: rgba(0,0,0,0.03); }
+        .nav-item { 
+            padding: 6px 15px; display: flex; align-items: center; 
+            gap: 10px; cursor: pointer; transition: 0.1s;
+        }
+        .nav-item:hover { background: var(--hover); }
+        
+        /* Highlight Biru Pindah-Pindah */
+        .nav-item.active { 
+            background: #cce8ff !important; 
+            color: #000 !important; 
+            border-left: 3px solid var(--win-blue); 
         }
 
-        .app-item:hover { background: rgba(212, 175, 55, 0.1); transform: translateY(-3px); }
-        .app-icon { font-size: 2rem; margin-bottom: 8px; }
-        .app-label { font-size: 0.75rem; color: var(--text); }
+        .explorer-view { flex: 1; padding: 20px; overflow-y: auto; }
+
+        /* --- CONTENT AREA --- */
+        .view-section-title { font-size: 0.9rem; margin-bottom: 15px; color: var(--win-blue); border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
+        .item-card { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; padding: 10px; border-radius: 4px; }
+        .item-card:hover { background: #cce8ff; }
+        .item-icon { font-size: 2.5rem; margin-bottom: 5px; }
+        .item-label { font-size: 0.7rem; font-weight: 500; }
+
+        /* --- TASKBAR & POPUP --- */
+        .taskbar {
+            height: 45px; background: var(--taskbar-bg); border-top: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 10px; z-index: 2000;
+        }
+        .start-btn {
+            background: var(--win-blue); color: #fff; border: none;
+            padding: 8px 18px; font-weight: bold; border-radius: 3px; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .start-btn:hover { background: #005a9e; }
+
+        /* Start Menu Popup */
+        #startMenuPopup {
+            display: none; position: fixed; bottom: 50px; left: 10px;
+            width: 220px; background: var(--bg-main); border: 2px solid var(--win-blue);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3); border-radius: 8px; z-index: 9999;
+        }
+        .menu-item {
+            padding: 12px 15px; font-size: 0.85rem; cursor: pointer;
+            display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border);
+        }
+        .menu-item:hover { background: var(--win-blue); color: #fff; }
+
+        .theme-mode-btn {
+            margin-left: auto; cursor: pointer; font-size: 0.85rem;
+            display: flex; align-items: center; gap: 5px; color: var(--text);
+        }
 
         .hidden { display: none !important; }
-
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="nav-group">
-            <div class="nav-title">System</div>
-            <div class="nav-item active" onclick="navigate('root')">💻 This PC</div>
-            <div class="nav-item" onclick="window.parent.launchApp('index.html', 'Tentang', 'ℹ️')">⭐ Desktop</div>
+    <div class="toolbar">
+        <div style="display:flex; gap:5px;">
+            <button class="btn-nav" id="btnBack" onclick="goBack()" disabled>⬅</button>
+            <button class="btn-nav" id="btnForward" onclick="goForward()" disabled>➡</button>
         </div>
-
-        <div class="nav-group">
-            <div class="nav-title">Folder Kategori</div>
-            <div class="nav-item" onclick="navigate('apps', 'cat-time')">📁 Waktu & Kalender</div>
-            <div class="nav-item" onclick="navigate('apps', 'cat-nature')">📁 Alat Perkakas</div>
-            <div class="nav-item" onclick="navigate('apps', 'cat-fin')">📁 Ekonomi Nilai</div>
-            <div class="nav-item" onclick="navigate('apps', 'cat-future')">📁 Teknologi</div>
+        <div class="address-bar" id="pathDisp">📁 This PC > Devices and drives</div>
+        <div class="search-box">
+            🔍 <input type="text" placeholder="Search Index..." oninput="search(this.value)" style="border:none; outline:none; background:none; width:100%; color:inherit;">
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="toolbar">
-            <button class="btn-back" onclick="navigate('root')">◀ Back</button>
-            <div class="address-bar" id="addressBar">This PC > Devices and drives</div>
-            
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search Index..." oninput="performSearch()">
+    <div class="explorer-container">
+        <div class="sidebar">
+            <div class="nav-group">
+                <div class="nav-title">Quick access</div>
+                <div class="nav-item" id="nav-all" onclick="navigate('apps', 'all', true, this)">⭐ All Applications</div>
+                <div class="nav-item" onclick="window.parent.showDashboard()">🖥️ Desktop</div>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-title">This PC</div>
+                <div class="nav-item active" id="nav-root" onclick="navigate('root', 'all', true, this)">💻 This PC</div>
+                <div class="nav-item" id="nav-time" onclick="navigate('apps', 'cat-time', true, this)" style="padding-left:35px;">📁 Waktu & Kala</div>
+                <div class="nav-item" id="nav-nature" onclick="navigate('apps', 'cat-nature', true, this)" style="padding-left:35px;">📁 Alat & Tabib</div>
+                <div class="nav-item" id="nav-fin" onclick="navigate('apps', 'cat-fin', true, this)" style="padding-left:35px;">📁 Ekonomi Nilai</div>
             </div>
         </div>
 
-        <div class="explorer-view" id="explorerView">
-            <div id="driveSection">
+        <div class="explorer-view">
+            <div id="driveView">
                 <div class="view-section-title">Devices and drives (2)</div>
-                <div class="drive-container">
-                    <div class="drive-card" onclick="navigate('apps', 'all')">
-                        <div class="drive-icon">💾</div>
-                        <div class="drive-info">
-                            <div class="drive-name">System (C:)</div>
-                            <div class="storage-bar"><div class="storage-fill fill-blue"></div></div>
-                            <div class="storage-text">53.4 GB free of 119 GB</div>
-                        </div>
+                <div class="grid-layout">
+                    <div class="item-card" onclick="navigate('apps', 'all', true, document.getElementById('nav-all'))">
+                        <div class="item-icon">💾</div>
+                        <div class="item-label">System (C:)</div>
                     </div>
-                    <div class="drive-card" onclick="navigate('apps', 'cat-fin')">
-                        <div class="drive-icon">💾</div>
-                        <div class="drive-info">
-                            <div class="drive-name">Arsip Data (E:)</div>
-                            <div class="storage-bar"><div class="storage-fill fill-red"></div></div>
-                            <div class="storage-text">51.0 GB free of 810 GB</div>
-                        </div>
+                    <div class="item-card" onclick="navigate('apps', 'cat-future', true, null)">
+                        <div class="item-icon">💾</div>
+                        <div class="item-label">Arsip Data (E:)</div>
                     </div>
                 </div>
             </div>
 
-            <div id="appSection" class="hidden">
-                <div class="view-section-title" id="sectionTitle">Applications</div>
-                <div class="app-grid" id="appGrid">
-                    </div>
+            <div id="appView" class="hidden">
+                <div class="view-section-title" id="folderTitle">Applications</div>
+                <div class="grid-layout" id="appGrid"></div>
             </div>
         </div>
     </div>
 
+    <div id="startMenuPopup">
+        <div style="background:var(--win-blue); color:white; padding:10px; font-weight:bold; font-size:0.8rem;">NUSWANTARA EXPLORER</div>
+        <div class="menu-item" onclick="window.parent.showDashboard(); toggleStart();"><span>🖥️</span> Go to Desktop</div>
+        <div class="menu-item" onclick="window.parent.closeAllApps(); toggleStart();"><span>🧹</span> Clear RAM / Close All</div>
+        <div class="menu-item" onclick="location.reload();"><span>🔄</span> Refresh Explorer</div>
+    </div>
+
+    <div class="taskbar">
+        <button class="start-btn" onclick="toggleStart()">
+            <span>💠</span> START
+        </button>
+        <div class="theme-mode-btn" onclick="toggleTheme()">
+            <span id="themeIcon">🌓</span> Theme Mode
+        </div>
+    </div>
+
     <script>
-const appDatabase = [
+    const appDatabase = [
     { url: 'Readme.html', label: 'Tentang', icon: 'ℹ️', cat: 'cat-blue' },
     { url: '01 Jam Sunda Nuswantara.html', label: 'Jam Utama', icon: '🕐', cat: 'cat-time' },
     { url: '02. Kalender Sunda Nuswantara.html', label: 'Kalender', icon: '📅', cat: 'cat-time' },
@@ -327,75 +259,91 @@ const appDatabase = [
     { url: 'Khusus Insan Dewasa Baligh.html', label: 'Dewasa Baligh', icon: '❤️‍🔥', cat: 'cat-future' }
 ];
 
-        let currentCategory = 'all';
+        let historyStack = [{target: 'root', cat: 'all'}];
+        let curIdx = 0;
 
-        function navigate(target, cat = 'all') {
-            const driveSection = document.getElementById('driveSection');
-            const appSection = document.getElementById('appSection');
-            const addrBar = document.getElementById('addressBar');
-            const searchInput = document.getElementById('searchInput');
+        function navigate(target, cat = 'all', push = true, navEl = null) {
+            const dv = document.getElementById('driveView');
+            const av = document.getElementById('appView');
+            const path = document.getElementById('pathDisp');
+            const grid = document.getElementById('appGrid');
 
-            // Reset Search
-            searchInput.value = "";
+            // --- SYNC SIDEBAR HIGHLIGHT ---
+            if(navEl) {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                navEl.classList.add('active');
+            }
 
             if (target === 'root') {
-                driveSection.classList.remove('hidden');
-                appSection.classList.add('hidden');
-                addrBar.innerText = "This PC > Devices and drives";
+                dv.classList.remove('hidden'); av.classList.add('hidden');
+                path.innerText = "📁 This PC > Devices and drives";
             } else {
-                driveSection.classList.add('hidden');
-                appSection.classList.remove('hidden');
-                currentCategory = cat;
-                addrBar.innerText = `This PC > Apps > ${cat}`;
-                renderApps(cat);
+                dv.classList.add('hidden'); av.classList.remove('hidden');
+                path.innerText = `📁 This PC > Apps > ${cat}`;
+                grid.innerHTML = "";
+                const filtered = cat === 'all' ? appDatabase : appDatabase.filter(a => a.cat === cat);
+                filtered.forEach(app => {
+                    grid.innerHTML += `<div class="item-card" onclick="window.parent.launchApp('${app.url}','${app.label}','${app.icon}')">
+                        <div class="item-icon">${app.icon}</div><div class="item-label">${app.label}</div>
+                    </div>`;
+                });
             }
+
+            if (push) {
+                historyStack = historyStack.slice(0, curIdx + 1);
+                historyStack.push({target, cat});
+                curIdx++;
+            }
+            updateBtns();
         }
 
-        function renderApps(filter) {
-            const grid = document.getElementById('appGrid');
-            grid.innerHTML = "";
-            
-            const filtered = filter === 'all' ? appDatabase : appDatabase.filter(a => a.cat === filter);
-            
-            filtered.forEach(app => {
-                const item = document.createElement('div');
-                item.className = 'app-item';
-                item.setAttribute('data-label', app.label.toLowerCase());
-                item.onclick = () => {
-                    if(window.parent && window.parent.launchApp) {
-                        window.parent.launchApp(app.url, app.label, app.icon);
-                    } else {
-                        window.open(app.url, '_blank');
-                    }
-                };
-                item.innerHTML = `
-                    <div class="app-icon">${app.icon}</div>
-                    <div class="app-label">${app.label}</div>
-                `;
-                grid.appendChild(item);
+        function goBack() { 
+            if(curIdx > 0) { 
+                curIdx--; 
+                let s = historyStack[curIdx]; 
+                // Coba cari element navigasi yang cocok biar highlight ikut pindah
+                let el = (s.target === 'root') ? document.getElementById('nav-root') : null;
+                navigate(s.target, s.cat, false, el); 
+            } 
+        }
+
+        function goForward() { 
+            if(curIdx < historyStack.length - 1) { 
+                curIdx++; 
+                let s = historyStack[curIdx]; 
+                navigate(s.target, s.cat, false); 
+            } 
+        }
+        
+        function updateBtns() {
+            document.getElementById('btnBack').disabled = curIdx === 0;
+            document.getElementById('btnForward').disabled = curIdx === historyStack.length - 1;
+        }
+
+        function toggleStart() {
+            const m = document.getElementById('startMenuPopup');
+            m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌓';
+        }
+
+        function search(q) {
+            if(q.length > 0) navigate('apps', 'all', false);
+            document.querySelectorAll('.item-card').forEach(c => {
+                c.style.display = c.innerText.toLowerCase().includes(q.toLowerCase()) ? 'flex' : 'none';
             });
         }
 
-        function performSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const appSection = document.getElementById('appSection');
-            const driveSection = document.getElementById('driveSection');
-
-            // Auto switch ke view App kalau lagi ngetik search
-            if (query.length > 0 && appSection.classList.contains('hidden')) {
-                navigate('apps', 'Search Results');
+        // Close start menu if click anywhere else
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.start-btn') && !e.target.closest('#startMenuPopup')) {
+                document.getElementById('startMenuPopup').style.display = 'none';
             }
-
-            const items = document.querySelectorAll('.app-item');
-            items.forEach(item => {
-                const label = item.getAttribute('data-label');
-                if (label.includes(query)) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
-            });
-        }
+        });
     </script>
 </body>
 </html>
