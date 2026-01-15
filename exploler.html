@@ -55,7 +55,6 @@
             padding-top: 10px;
         }
 
-        /* Nav Group Boxed Style */
         .nav-group { 
             margin: 5px 10px 15px 10px; 
             border: 1px solid var(--border); 
@@ -68,17 +67,10 @@
             gap: 10px; cursor: pointer; transition: 0.1s;
         }
         .nav-item:hover { background: var(--hover); }
-        
-        /* Highlight Biru Pindah-Pindah */
-        .nav-item.active { 
-            background: #cce8ff !important; 
-            color: #000 !important; 
-            border-left: 3px solid var(--win-blue); 
-        }
+        .nav-item.active { background: #cce8ff !important; color: #000 !important; border-left: 3px solid var(--win-blue); }
 
         .explorer-view { flex: 1; padding: 20px; overflow-y: auto; }
 
-        /* --- CONTENT AREA --- */
         .view-section-title { font-size: 0.9rem; margin-bottom: 15px; color: var(--win-blue); border-bottom: 1px solid var(--border); padding-bottom: 5px; }
         .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
         .item-card { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; padding: 10px; border-radius: 4px; }
@@ -96,9 +88,7 @@
             padding: 8px 18px; font-weight: bold; border-radius: 3px; cursor: pointer;
             display: flex; align-items: center; gap: 8px;
         }
-        .start-btn:hover { background: #005a9e; }
 
-        /* Start Menu Popup */
         #startMenuPopup {
             display: none; position: fixed; bottom: 50px; left: 10px;
             width: 220px; background: var(--bg-main); border: 2px solid var(--win-blue);
@@ -136,7 +126,7 @@
             <div class="nav-group">
                 <div class="nav-title">Quick access</div>
                 <div class="nav-item" id="nav-all" onclick="navigate('apps', 'all', true, this)">⭐ All Applications</div>
-                <div class="nav-item" onclick="window.parent.showDashboard()">🖥️ Desktop</div>
+                <div class="nav-item" onclick="parent.showDashboard()">🖥️ Desktop</div>
             </div>
 
             <div class="nav-group">
@@ -172,8 +162,8 @@
 
     <div id="startMenuPopup">
         <div style="background:var(--win-blue); color:white; padding:10px; font-weight:bold; font-size:0.8rem;">NUSWANTARA EXPLORER</div>
-        <div class="menu-item" onclick="window.parent.showDashboard(); toggleStart();"><span>🖥️</span> Go to Desktop</div>
-        <div class="menu-item" onclick="window.parent.closeAllApps(); toggleStart();"><span>🧹</span> Clear RAM / Close All</div>
+        <div class="menu-item" onclick="parent.showDashboard(); toggleStart();"><span>🖥️</span> Go to Desktop</div>
+        <div class="menu-item" onclick="parent.closeAllApps(); toggleStart();"><span>🧹</span> Clear RAM / Close All</div>
         <div class="menu-item" onclick="location.reload();"><span>🔄</span> Refresh Explorer</div>
     </div>
 
@@ -187,7 +177,7 @@
     </div>
 
     <script>
-    const appDatabase = [
+        const appDatabase = [
     { url: 'Readme.html', label: 'Tentang', icon: 'ℹ️', cat: 'cat-blue' },
     { url: '01 Jam Sunda Nuswantara.html', label: 'Jam Utama', icon: '🕐', cat: 'cat-time' },
     { url: '02. Kalender Sunda Nuswantara.html', label: 'Kalender', icon: '📅', cat: 'cat-time' },
@@ -257,7 +247,7 @@
     { url: '56. Nuswantara Hub.html', label: 'Nuswantara Hub & Tools', icon: '👤', cat: 'cat-human' },
     { url: 'Bio Medic.html', label: 'Bio Medic Hacking', icon: '💊', cat: 'cat-future' },
     { url: 'Khusus Insan Dewasa Baligh.html', label: 'Dewasa Baligh', icon: '❤️‍🔥', cat: 'cat-future' }
-];
+        ];
 
         let historyStack = [{target: 'root', cat: 'all'}];
         let curIdx = 0;
@@ -268,7 +258,6 @@
             const path = document.getElementById('pathDisp');
             const grid = document.getElementById('appGrid');
 
-            // --- SYNC SIDEBAR HIGHLIGHT ---
             if(navEl) {
                 document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
                 navEl.classList.add('active');
@@ -283,7 +272,8 @@
                 grid.innerHTML = "";
                 const filtered = cat === 'all' ? appDatabase : appDatabase.filter(a => a.cat === cat);
                 filtered.forEach(app => {
-                    grid.innerHTML += `<div class="item-card" onclick="window.parent.launchApp('${app.url}','${app.label}','${app.icon}')">
+                    // FIX: Menggunakan parent.launchApp supaya manggil fungsi di index.html
+                    grid.innerHTML += `<div class="item-card" onclick="parent.launchApp('${app.url}','${app.label}','${app.icon}')">
                         <div class="item-icon">${app.icon}</div><div class="item-label">${app.label}</div>
                     </div>`;
                 });
@@ -301,7 +291,6 @@
             if(curIdx > 0) { 
                 curIdx--; 
                 let s = historyStack[curIdx]; 
-                // Coba cari element navigasi yang cocok biar highlight ikut pindah
                 let el = (s.target === 'root') ? document.getElementById('nav-root') : null;
                 navigate(s.target, s.cat, false, el); 
             } 
@@ -338,7 +327,6 @@
             });
         }
 
-        // Close start menu if click anywhere else
         window.addEventListener('click', (e) => {
             if (!e.target.closest('.start-btn') && !e.target.closest('#startMenuPopup')) {
                 document.getElementById('startMenuPopup').style.display = 'none';
