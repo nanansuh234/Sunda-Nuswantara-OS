@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Arsip Nuswantara - Explorer Pro</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0a;
+            --sidebar-bg: #151515;
+            --active-blue: rgba(41, 128, 185, 0.2);
+            --gold: #d4af37;
+            --text: #e0e0e0;
+            --border: #333;
+            --cyan: #00ffcc;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 220px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            padding-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        .nav-item {
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover { background: rgba(255, 255, 255, 0.05); }
+        .nav-item.active { background: var(--active-blue); border-left: 3px solid #3498db; }
+        .nav-group { margin-bottom: 15px; }
+        .nav-title { 
+            padding: 0 15px 5px; 
+            font-size: 0.7rem; 
+            color: var(--gold); 
+            font-weight: bold; 
+            text-transform: uppercase;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- TOOLBAR --- */
+        .toolbar {
+            height: 45px;
+            background: #1a1a1a;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 10px;
+        }
+
+        .btn-back {
+            background: #252525;
+            border: 1px solid #444;
+            color: var(--gold);
+            padding: 4px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+
+        .address-bar {
+            flex: 1;
+            background: #252525;
+            border: 1px solid #444;
+            padding: 5px 12px;
+            border-radius: 3px;
+            color: var(--cyan);
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .search-container {
+            position: relative;
+            width: 220px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: #252525;
+            border: 1px solid #444;
+            padding: 5px 10px 5px 30px;
+            border-radius: 3px;
+            color: #fff;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        .search-input:focus { border-color: var(--gold); }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            pointer-events: none;
+        }
+
+        /* --- VIEW AREA --- */
+        .explorer-view {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .view-section-title {
+            font-size: 0.9rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            color: #888;
+        }
+
+        /* Drive Cards */
+        .drive-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .drive-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .drive-card:hover { background: rgba(255, 255, 255, 0.05); border-color: #444; }
+        .drive-icon { font-size: 2.5rem; }
+        .drive-info { flex: 1; font-size: 0.8rem; }
+        .drive-name { font-weight: bold; margin-bottom: 4px; }
+        
+        .storage-bar {
+            width: 100%; height: 8px;
+            background: #333; margin: 4px 0;
+        }
+        .storage-fill { height: 100%; }
+        .fill-blue { background: #2980b9; width: 45%; }
+        .fill-red { background: #c0392b; width: 94%; }
+
+        /* App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
+        }
+
+        .app-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .app-item:hover { background: rgba(212, 175, 55, 0.1); transform: translateY(-3px); }
+        .app-icon { font-size: 2rem; margin-bottom: 8px; }
+        .app-label { font-size: 0.75rem; color: var(--text); }
+
+        .hidden { display: none !important; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="nav-group">
+            <div class="nav-title">System</div>
+            <div class="nav-item active" onclick="navigate('root')">💻 This PC</div>
+            <div class="nav-item" onclick="window.parent.launchApp('index.html', 'Tentang', 'ℹ️')">⭐ Desktop</div>
+        </div>
+
+        <div class="nav-group">
+            <div class="nav-title">Folder Kategori</div>
+            <div class="nav-item" onclick="navigate('apps', 'cat-time')">📁 Waktu & Kalender</div>
+            <div class="nav-item" onclick="navigate('apps', 'cat-nature')">📁 Alat Perkakas</div>
+            <div class="nav-item" onclick="navigate('apps', 'cat-fin')">📁 Ekonomi Nilai</div>
+            <div class="nav-item" onclick="navigate('apps', 'cat-future')">📁 Teknologi</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="toolbar">
+            <button class="btn-back" onclick="navigate('root')">◀ Back</button>
+            <div class="address-bar" id="addressBar">This PC > Devices and drives</div>
+            
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search Index..." oninput="performSearch()">
+            </div>
+        </div>
+
+        <div class="explorer-view" id="explorerView">
+            <div id="driveSection">
+                <div class="view-section-title">Devices and drives (2)</div>
+                <div class="drive-container">
+                    <div class="drive-card" onclick="navigate('apps', 'all')">
+                        <div class="drive-icon">💾</div>
+                        <div class="drive-info">
+                            <div class="drive-name">System (C:)</div>
+                            <div class="storage-bar"><div class="storage-fill fill-blue"></div></div>
+                            <div class="storage-text">53.4 GB free of 119 GB</div>
+                        </div>
+                    </div>
+                    <div class="drive-card" onclick="navigate('apps', 'cat-fin')">
+                        <div class="drive-icon">💾</div>
+                        <div class="drive-info">
+                            <div class="drive-name">Arsip Data (E:)</div>
+                            <div class="storage-bar"><div class="storage-fill fill-red"></div></div>
+                            <div class="storage-text">51.0 GB free of 810 GB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="appSection" class="hidden">
+                <div class="view-section-title" id="sectionTitle">Applications</div>
+                <div class="app-grid" id="appGrid">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const appDatabase = [
+    { url: 'Readme.html', label: 'Tentang', icon: 'ℹ️', cat: 'cat-blue' },
+    { url: '01 Jam Sunda Nuswantara.html', label: 'Jam Utama', icon: '🕐', cat: 'cat-time' },
+    { url: '02. Kalender Sunda Nuswantara.html', label: 'Kalender', icon: '📅', cat: 'cat-time' },
+    { url: '03. Jadwal Shalat Sunda Nuswantara.html', label: 'Shalat', icon: '🕌', cat: 'cat-time' },
+    { url: '04. Converter Waktu & Tanggal Ke Sunda Nuswantara.html', label: 'Konverter', icon: '🔄', cat: 'cat-sys' },
+    { url: '05. Satuan Nilai Sunda Nuswantara.html', label: 'Satuan Nilai', icon: '⚖️', cat: 'cat-sys' },
+    { url: '06. Contoh Jadwal Kegiatan Sunda Nuswantara.html', label: 'Jadwal', icon: '📝', cat: 'cat-blue' },
+    { url: '07. Panduan Manual Contoh Pertanian.html', label: 'Lumbung', icon: '🌾', cat: 'cat-nature' },
+    { url: '08. Panduan Manual Contoh Produktifitas dan Karya.html', label: 'Karya', icon: '🔨', cat: 'cat-nature' },
+    { url: '09. Aksara Hanacaraka.html', label: 'Hanacaraka', icon: 'ꦲ', cat: 'cat-culture' },
+    { url: '10. Aksara Sunda Kuno.html', label: 'Sunda Kuno', icon: 'ᮊ', cat: 'cat-culture' },
+    { url: '11. Rekonstruksi Bahasa Sunda Kuno.html', label: 'Kamus', icon: '📖', cat: 'cat-lingo' },
+    { url: '12. Sunda Kuno.html', label: 'Olaxara', icon: '✒️', cat: 'cat-lingo' },
+    { url: 'Tools.html', label: 'Logic Engine', icon: '🧠', cat: 'cat-nature' },
+    { url: '13. Kumpulan Renungan.html', label: 'Renungan', icon: '📚', cat: 'cat-lingo' },
+    { url: '14. Terapi Cahaya Malam.html', label: 'Terapi Sirep', icon: '🕯️', cat: 'cat-sys' },
+    { url: '15. Appraisal Scanner.html', label: 'Appraisal', icon: '🔍', cat: 'cat-doc' },
+    { url: '16. Restorasi Pangan.html', label: 'Teknologi Pangan', icon: '🍯', cat: 'cat-nature' },
+    { url: '17. Restorasi Arsitektur.html', label: 'Arsitektur', icon: '🛖', cat: 'cat-nature' },
+    { url: '18. Restorasi Kesehatan.html', label: 'Tabib Digital', icon: '🌿', cat: 'cat-nature' },
+    { url: '19. Restorasi Wastra.html', label: 'Wastra Alam', icon: '🧶', cat: 'cat-culture' },
+    { url: '20. Restorasi Sosial.html', label: 'Balai Warga', icon: '🤝', cat: 'cat-sys' },
+    { url: '21. Pustaka Peradaban.html', label: 'Leveling Diri', icon: '⏫', cat: 'cat-lingo' },
+    { url: '23. Scanner Nilai Dasar.html', label: 'Analisa Dasar', icon: '🔍', cat: 'cat-doc' },
+    { url: '24. Estafet Kemanusiaan.html', label: 'Codex Manusia', icon: '👤', cat: 'cat-human' },
+    { url: '25. Menu Ekonomi.html', label: 'Ekonomi Nilai', icon: '💰', cat: 'cat-fin' },
+    { url: '26. Menu Masa Depan.html', label: 'Realitas & Masa Depan', icon: '💊', cat: 'cat-future' },
+    { url: '27. Menu Hukum Syariat dan Hakikat.html', label: 'Syariat & Hakikat', icon: '⚖️', cat: 'cat-edu' },
+    { url: '28. Indikator Iman.html', label: 'Iman Metric', icon: '📶', cat: 'cat-tools' },
+    { url: '29. Pustaka Ajaran Tauhid.html', label: 'Pustaka Ajaran Tauhid', icon: '📄', cat: 'cat-doc' },
+    { url: '30. Quantum Vitality.html', label: 'Quantum Vitality', icon: '⚛️', cat: 'cat-future' },
+    { url: '31. Holistic Calibration.html', label: 'Holistic Radar', icon: '📡', cat: 'cat-edu' },
+    { url: '32. Legacy Hub.html', label: 'Warisan Generasi', icon: '🌳', cat: 'cat-fin' },
+    { url: '33. Civilization Hub.html', label: 'Civilization Hub', icon: '🌍', cat: 'cat-future' },
+    { url: '34.Nusantara Auto-Anchor (POS Mode).html', label: 'Auto-Anchor POS', icon: '⚓', cat: 'cat-future' },
+    { url: '35.Nusantara Savings Simulator.html', label: 'Simulasi Tabungan', icon: '💰', cat: 'cat-fin' },
+    { url: '36.Nusantara Income Generator.html', label: 'Income Generator', icon: '🔨', cat: 'cat-fin' },
+    { url: '37. Pusat Strategi Ekonomi.html', label: 'Pusat Strategi Ekonomi', icon: '🤝', cat: 'cat-sys' },
+    { url: '37. Jam Pasir Timer.html', label: 'Jam Pasir Nusantara', icon: '⏳', cat: 'cat-sys' },
+    { url: '38. Kawi Jawa Kuno.html', label: 'Prasasti Jawa Kawi', icon: '🗿', cat: 'cat-sys' },
+    { url: '39. Pagon Mataram.html', label: 'Mesin Ketik Pegon', icon: '✒️', cat: 'cat-sys' },
+    { url: '40. Encoder Arsip Keraton.html', label: 'Encoder Arsip Keraton', icon: '✒️', cat: 'cat-sys' },
+    { url: '41. Ancient Astronomy.html', label: 'Ancient Astronomy', icon: '🕐', cat: 'cat-sys' },
+    { url: '42. Advanced Systems.html', label: 'Advanced Systems', icon: '⚛️', cat: 'cat-future' },
+    { url: '43. Forbidden Tech.html', label: 'Forbidden Tech', icon: '⚛️', cat: 'cat-future' },
+    { url: '44. Gallery.html', label: 'Gallery', icon: '🖼️', cat: 'cat-tech' },
+    { url: '45. Media Player.html', label: 'Media Player', icon: '🎵', cat: 'cat-time' },
+    { url: '46. TV Jadul.html', label: 'TV Jadul', icon: '📺', cat: 'cat-tech' },
+    { url: '54. Double Anchor System.html', label: 'Double Anchor System', icon: '⚖️', cat: 'cat-doc' },
+    { url: '55. Nilai Komoditas.html', label: 'Daftar Nilai Komoditas', icon: '📚', cat: 'cat-fin' },
+    { url: '56. Sunda Nuswantara Archive.html', label: 'SUNDA NUSWANTARA ARCHIVE', icon: '📖', cat: 'cat-fin' },
+    { url: '62. Menu Ether Tech.html', label: 'ETHER TECH & BLUEPRINTS', icon: '⚡', cat: 'cat-fin' },
+    { url: 'kompas.html', label: 'NAVIGASI TAKTIS', icon: '🧭', cat: 'cat-fin' },
+    { url: 'petajalur.html', label: 'BUAT PETA JALUR', icon: '🌍', cat: 'cat-fin' },
+    { url: 'DecentralizedID.html', label: 'Cetak Data Personal', icon: '📄', cat: 'cat-fin' },
+    { url: 'WAenigma.html', label: 'WAenigma', icon: '✒️', cat: 'cat-fin' },
+    { url: 'Picmigma.html', label: 'Picmigma', icon: '🔍', cat: 'cat-fin' },
+    { url: 'morsenigma.html', label: 'Morsenigma', icon: '🔊', cat: 'cat-fin' },
+    { url: 'stegavault.html', label: 'Stegavault', icon: '🗿', cat: 'cat-fin' },
+    { url: 'sonicmind.html', label: 'Sonicmind', icon: '🔊', cat: 'cat-fin' },
+    { url: 'sonicmindtransfer.html', label: 'Sonic Mind Transfer', icon: '🔊', cat: 'cat-fin' },
+    { url: 'https://unorganically-flangeless-parthenia.ngrok-free.dev/', label: 'Genesis Chat', icon: '💬', cat: 'cat-human' },
+    { url: 'genesis manager.html', label: 'Genesis Local File Manager', icon: '📂', cat: 'cat-human' },
+    { url: 'mtfzonetradingsystem.html', label: 'MTF Zone Trading System', icon: '📈', cat: 'cat-human' },
+    { url: 'Nmail.html', label: 'N-Mail', icon: '✉️', cat: 'cat-human' },
+    { url: 'SMS.html', label: 'Inbox SMS', icon: '📂', cat: 'cat-human' },
+    { url: '56. Nuswantara Hub.html', label: 'Nuswantara Hub & Tools', icon: '👤', cat: 'cat-human' },
+    { url: 'Bio Medic.html', label: 'Bio Medic Hacking', icon: '💊', cat: 'cat-future' },
+    { url: 'Khusus Insan Dewasa Baligh.html', label: 'Dewasa Baligh', icon: '❤️‍🔥', cat: 'cat-future' }
+];
+
+        let currentCategory = 'all';
+
+        function navigate(target, cat = 'all') {
+            const driveSection = document.getElementById('driveSection');
+            const appSection = document.getElementById('appSection');
+            const addrBar = document.getElementById('addressBar');
+            const searchInput = document.getElementById('searchInput');
+
+            // Reset Search
+            searchInput.value = "";
+
+            if (target === 'root') {
+                driveSection.classList.remove('hidden');
+                appSection.classList.add('hidden');
+                addrBar.innerText = "This PC > Devices and drives";
+            } else {
+                driveSection.classList.add('hidden');
+                appSection.classList.remove('hidden');
+                currentCategory = cat;
+                addrBar.innerText = `This PC > Apps > ${cat}`;
+                renderApps(cat);
+            }
+        }
+
+        function renderApps(filter) {
+            const grid = document.getElementById('appGrid');
+            grid.innerHTML = "";
+            
+            const filtered = filter === 'all' ? appDatabase : appDatabase.filter(a => a.cat === filter);
+            
+            filtered.forEach(app => {
+                const item = document.createElement('div');
+                item.className = 'app-item';
+                item.setAttribute('data-label', app.label.toLowerCase());
+                item.onclick = () => {
+                    if(window.parent && window.parent.launchApp) {
+                        window.parent.launchApp(app.url, app.label, app.icon);
+                    } else {
+                        window.open(app.url, '_blank');
+                    }
+                };
+                item.innerHTML = `
+                    <div class="app-icon">${app.icon}</div>
+                    <div class="app-label">${app.label}</div>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const appSection = document.getElementById('appSection');
+            const driveSection = document.getElementById('driveSection');
+
+            // Auto switch ke view App kalau lagi ngetik search
+            if (query.length > 0 && appSection.classList.contains('hidden')) {
+                navigate('apps', 'Search Results');
+            }
+
+            const items = document.querySelectorAll('.app-item');
+            items.forEach(item => {
+                const label = item.getAttribute('data-label');
+                if (label.includes(query)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
