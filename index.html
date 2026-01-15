@@ -143,14 +143,70 @@
         .nus-full-date { font-size: 0.9rem; color: #888; margin-top: 5px; }
         .nus-pasaran { display: inline-block; background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-top: 5px; }
 
+        /* --- PERBAIKAN ICON DESKTOP (TRANSPARAN & RAPAT) --- */
         .dashboard-grid {
-            padding: 30px;
+            padding: 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 15px;
+            /* Ukuran grid lebih kecil agar ikon lebih rapat */
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
+            gap: 10px;
             align-content: start;
         }
 
+        a.app-card {
+            text-decoration: none; 
+            background: transparent; /* Hilangkan kotak background */
+            border: 1px solid transparent; /* Hilangkan border kotak */
+            border-radius: 10px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            justify-content: center; 
+            transition: 0.2s; 
+            position: relative;
+            box-shadow: none; /* Hilangkan bayangan kotak */
+            cursor: pointer;
+            height: 110px; /* Tinggi disesuaikan */
+            padding: 5px;
+        }
+
+        /* Efek hover seperti windows desktop */
+        a.app-card:hover { 
+            background: rgba(212, 175, 55, 0.1); 
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(0); /* Tidak perlu melayang terlalu tinggi */
+        }
+
+        .app-icon { 
+            font-size: 2.8rem; /* Ukuran icon sedikit diperbesar */
+            margin-bottom: 5px;
+            filter: drop-shadow(0 0 8px rgba(0,0,0,0.5)); /* Bayangan pada icon saja */
+        }
+
+        .app-label { 
+            font-size: 0.65rem; 
+            font-weight: 600; 
+            color: #ffffff; /* Paksa warna putih agar kontras dengan wallpaper */
+            opacity: 1; 
+            text-align: center; 
+            letter-spacing: 0.3px; 
+            text-transform: none; /* Hilangkan Uppercase berlebih */
+            padding: 0 2px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8); /* Shadow teks agar terbaca di wallpaper terang */
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Batasi 2 baris teks */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Atur ukuran gambar di dalam icon jika ada */
+        .app-icon img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        
         a.app-card {
             text-decoration: none; background: var(--card-bg);
             border: 1px solid var(--border); border-radius: 15px;
@@ -446,8 +502,9 @@
             </div>
 
             <div class="dashboard-grid">
-                <a href="#" onclick="launchApp('Readme.html', 'Tentang', 'ℹ️')" class="app-card cat-blue">
-                    <div class="app-icon">ℹ️</div><div class="app-label">Tentang</div>
+                <a href="#" onclick="launchApp('explorer.html', 'Explorer', '📂')" class="app-card cat-tech">
+                  <div class="app-icon">📂</div>
+                  <div class="app-label">Explorer</div>
                 </a>
                 <a href="#" onclick="launchApp('01 Jam Sunda Nuswantara.html', 'Jam Utama', '🕐')" class="app-card cat-time">
                     <div class="app-icon">🕐</div><div class="app-label">Jam Utama</div>
@@ -461,71 +518,17 @@
                 <a href="#" onclick="launchApp('04. Converter Waktu & Tanggal Ke Sunda Nuswantara.html', 'Konverter', '🔄')" class="app-card cat-sys">
                     <div class="app-icon">🔄</div><div class="app-label">Konverter</div>
                 </a>
-                <a href="#" onclick="launchApp('05. Satuan Nilai Sunda Nuswantara.html', 'Satuan Nilai', '⚖️')" class="app-card cat-sys">
-                    <div class="app-icon">⚖️</div><div class="app-label">Satuan Nilai</div>
-                </a>
-                <a href="#" onclick="launchApp('06. Contoh Jadwal Kegiatan Sunda Nuswantara.html', 'Jadwal', '📝')" class="app-card cat-blue">
-                    <div class="app-icon">📝</div><div class="app-label">Jadwal</div>
-                </a>
-                <a href="#" onclick="launchApp('07. Panduan Manual Contoh Pertanian.html', 'Lumbung', '🌾')" class="app-card cat-nature">
-                    <div class="app-icon">🌾</div><div class="app-label">Lumbung</div>
-                </a>
-                <a href="#" onclick="launchApp('08. Panduan Manual Contoh Produktifitas dan Karya.html', 'Karya', '🔨')" class="app-card cat-nature">
-                    <div class="app-icon">🔨</div><div class="app-label">Karya</div>
-                </a>
-                <a href="#" onclick="launchApp('09. Aksara Hanacaraka.html', 'Hanacaraka', 'ꦲ')" class="app-card cat-culture">
-                    <div class="app-icon">ꦲ</div><div class="app-label">Hanacaraka</div>
-                </a>
-                <a href="#" onclick="launchApp('10. Aksara Sunda Kuno.html', 'Sunda Kuno', 'ᮊ')" class="app-card cat-culture">
-                    <div class="app-icon">ᮊ</div><div class="app-label">Sunda Kuno</div>
-                </a>
-                <a href="#" onclick="launchApp('11. Rekonstruksi Bahasa Sunda Kuno.html', 'Kamus', '📖')" class="app-card cat-lingo">
-                    <div class="app-icon">📖</div><div class="app-label">Kamus</div>
-                </a>
-                <a href="#" onclick="launchApp('12. Sunda Kuno.html', 'Olaxara', '✒️')" class="app-card cat-lingo">
-                    <div class="app-icon">✒️</div><div class="app-label">Olaxara</div>
-                </a>
-                <a href="#" onclick="launchApp('Tools.html', 'Logic Engine', '🧠')" class="app-card cat-nature">
-                    <div class="app-icon">🧠</div><div class="app-label">Logic Engine</div>
-                </a>
                 <a href="#" onclick="launchApp('13. Kumpulan Renungan.html', 'Renungan', '📚')" class="app-card cat-lingo">
                     <div class="app-icon">📚</div><div class="app-label">Renungan</div>
                 </a>
-                <a href="#" onclick="launchApp('14. Terapi Cahaya Malam.html', 'Terapi Sirep', '🕯️')" class="app-card cat-sys">
-                    <div class="app-icon">🕯️</div><div class="app-label">Terapi Sirep</div>
-                </a>
                 <a href="15. Appraisal Scanner.html" class="app-card cat-doc">
                     <div class="app-icon">🔍</div><div class="app-label">Appraisal</div>
-                </a>
-                <a href="#" onclick="launchApp('16. Restorasi Pangan.html', 'Teknologi Pangan', '🍯')" class="app-card cat-nature">
-                    <div class="app-icon">🍯</div><div class="app-label">Teknologi Pangan</div>
-                </a>
-                <a href="#" onclick="launchApp('17. Restorasi Arsitektur.html', 'Arsitektur', '🛖')" class="app-card cat-nature">
-                    <div class="app-icon">🛖</div><div class="app-label">Arsitektur</div>
-                </a>
-                <a href="#" onclick="launchApp('18. Restorasi Kesehatan.html', 'Tabib Digital', '🌿')" class="app-card cat-nature">
-                    <div class="app-icon">🌿</div><div class="app-label">Tabib Digital</div>
-                </a>
-                <a href="#" onclick="launchApp('19. Restorasi Wastra.html', 'Wastra Alam', '🧶')" class="app-card cat-culture">
-                    <div class="app-icon">🧶</div><div class="app-label">Wastra Alam</div>
-                </a>
-                <a href="#" onclick="launchApp('20. Restorasi Sosial.html', 'Balai Warga', '🤝')" class="app-card cat-sys">
-                    <div class="app-icon">🤝</div><div class="app-label">Balai Warga</div>
                 </a>
                 <a href="#" onclick="launchApp('21. Pustaka Peradaban.html', 'Leveling Diri', '⏫')" class="app-card cat-lingo">
                     <div class="app-icon">⏫</div><div class="app-label">Leveling Diri</div>
                 </a>
                 <a href="23. Scanner Nilai Dasar.html" class="app-card cat-doc">
                     <div class="app-icon">🔍</div><div class="app-label">Analisa Dasar</div>
-                </a>
-                <a href="#" onclick="launchApp('24. Estafet Kemanusiaan.html', 'Codex Manusia', '👤')" class="app-card cat-human">
-                    <div class="app-icon">👤</div><div class="app-label">Codex Manusia</div>
-                </a>
-                <a href="#" onclick="launchApp('25. Menu Ekonomi.html', 'Ekonomi Nilai', '💰')" class="app-card cat-fin">
-                    <div class="app-icon">💰</div><div class="app-label">Ekonomi Nilai</div>
-                </a>
-                <a href="#" onclick="launchApp('26. Menu Masa Depan.html', 'Realitas & Masa Depan', '💊')" class="app-card cat-future">
-                    <div class="app-icon">💊</div><div class="app-label">Realitas & Masa Depan</div>
                 </a>
                 <a href="#" onclick="launchApp('27. Menu Hukum Syariat dan Hakikat.html', 'Syariat & Hakikat', '⚖️')" class="app-card cat-edu">
                     <div class="app-icon">⚖️</div><div class="app-label">Syariat & Hakikat</div>
@@ -539,41 +542,14 @@
                 <a href="#" onclick="launchApp('30. Quantum Vitality.html', 'Quantum Vitality', '⚛️')" class="app-card cat-future">
                     <div class="app-icon">⚛️</div><div class="app-label">Quantum Vitality</div>
                 </a>
-                <a href="#" onclick="launchApp('31. Holistic Calibration.html', 'Holistic Radar', '📡')" class="app-card cat-edu">
-                    <div class="app-icon">📡</div><div class="app-label">Holistic Radar</div>
-                </a>
-                <a href="#" onclick="launchApp('32. Legacy Hub.html', 'Warisan Generasi', '🌳')" class="app-card cat-fin">
-                    <div class="app-icon">🌳</div><div class="app-label">Warisan Generasi</div>
-                </a>
-                <a href="#" onclick="launchApp('33. Civilization Hub.html', 'Civilization Hub', '🌍')" class="app-card cat-future">
-                    <div class="app-icon">🌍</div><div class="app-label">Civilization Hub</div>
-                </a>
                 <a href="34.Nusantara Auto-Anchor (POS Mode).html" target="_blank" class="app-card cat-future">
                     <div class="app-icon" style="display: flex; align-items: center; justify-content: center;">
                     <img src="https://nanansuh234.github.io/Sunda-Nuswantara-OS/favicon.png" alt="Icon POS" style="width: 50px; height: 50px;">
                     </div>
                     <div class="app-label">Nusantara Auto-Anchor (POS Mode)</div>
                 </a>
-                <a href="#" onclick="launchApp('35.Nusantara Savings Simulator.html', 'Simulasi Dinar', '💰')" class="app-card cat-fin">
-                    <div class="app-icon">💰</div><div class="app-label">Simulasi Tabungan</div>
-                </a>
-                <a href="#" onclick="launchApp('36.Nusantara Income Generator.html', 'Income Gen', '🔨')" class="app-card cat-fin" style="border-color: var(--green);">
-                    <div class="app-icon">🔨</div><div class="app-label">Income Generator</div>
-                </a>
-                <a href="#" onclick="launchApp('37. Pusat Strategi Ekonomi.html', 'Pusat Strategi', '🤝')" class="app-card cat-sys">
-                    <div class="app-icon">🤝</div><div class="app-label">Pusat Strategi Ekonomi</div>
-                </a>
                 <a href="#" onclick="launchApp('37. Jam Pasir Timer.html', 'Jam Pasir', '⏳')" class="app-card cat-sys">
                     <div class="app-icon">⏳</div><div class="app-label">Jam Pasir Nusantara</div>
-                </a>
-                <a href="#" onclick="launchApp('38. Kawi Jawa Kuno.html', 'Prasasti Kawi', '🗿')" class="app-card cat-sys">
-                    <div class="app-icon">🗿</div><div class="app-label">Prasasti Jawa Kawi</div>
-                </a>
-                <a href="#" onclick="launchApp('39. Pagon Mataram.html', 'Mesin Ketik Pegon', '✒️')" class="app-card cat-sys">
-                    <div class="app-icon">✒️</div><div class="app-label">Mesin Ketik Pegon</div>
-                </a>
-                <a href="#" onclick="launchApp('40. Encoder Arsip Keraton.html', 'Encoder Arsip', '✒️')" class="app-card cat-sys">
-                    <div class="app-icon">✒️</div><div class="app-label">Encoder Arsip Keraton</div>
                 </a>
                 <a href="#" onclick="launchApp('41. Ancient Astronomy.html', 'Astronomy', '🕐')" class="app-card cat-sys">
                     <div class="app-icon">🕐</div><div class="app-label">Ancient Astronomy</div>
@@ -583,18 +559,6 @@
                 </a>
                 <a href="#" onclick="launchApp('43. Forbidden Tech.html', 'Forbidden', '⚛️')" class="app-card cat-future">
                     <div class="app-icon">⚛️</div><div class="app-label">Forbidden Tech</div>
-                </a>
-                <a href="#" onclick="launchApp('44. Gallery.html', 'Browser', '🖼️')" class="app-card cat-tech">
-                    <div class="app-icon">🖼️</div><div class="app-label">Gallery</div>
-                </a>
-                <a href="#" onclick="launchApp('45. Media Player.html', 'Gamelan Player', '🎵')" class="app-card cat-time">
-                    <div class="app-icon">🎵</div>
-                    <div class="app-label">Media Player</div>
-                </a>
-                <a href="#" onclick="launchApp('46. TV Jadul.html', 'Nuswantara TV', '📺')" class="app-card cat-tech">
-                    <div class="app-icon">📺</div>
-                    <div class="app-label">TV Jadul</div>
-                </a>
                 <a href="54. Double Anchor System.html" class="app-card cat-doc">
                     <div class="app-icon">⚖️</div><div class="app-label">Double Anchor System</div>
                 </a>
@@ -621,38 +585,6 @@
                 <a href="#" onclick="launchApp('DecentralizedID.html', 'Cetak Data Personal', '📄')" class="app-card cat-fin">
                     <div class="app-icon">📄</div>
                     <div class="app-label">Cetak Data Personal</div>
-                </a>
-                <a href="#" onclick="launchApp('WAenigma.html', 'WAenigma', '✒️')" class="app-card cat-fin">
-                    <div class="app-icon">✒️</div>
-                    <div class="app-label">WAenigma</div>
-                </a>
-                <a href="#" onclick="launchApp('Picmigma.html', 'Picmigma', '🔍')" class="app-card cat-fin">
-                    <div class="app-icon">🔍</div>
-                    <div class="app-label">Picmigma</div>
-                </a>
-                <a href="#" onclick="launchApp('morsenigma.html', 'Morsenigma', '🔊')" class="app-card cat-fin">
-                    <div class="app-icon">🔊</div>
-                    <div class="app-label">Morsenigma</div>
-                </a>
-                <a href="#" onclick="launchApp('stegavault.html', 'Stegavault', '🗿')" class="app-card cat-fin">
-                    <div class="app-icon">🗿</div>
-                    <div class="app-label">Stegavault</div>
-                </a>
-                <a href="#" onclick="launchApp('sonicmind.html', 'Sonicmind', '🔊')" class="app-card cat-fin">
-                    <div class="app-icon">🔊</div>
-                    <div class="app-label">Sonicmind</div>
-                </a>
-                <a href="#" onclick="launchApp('sonicmindtransfer.html', 'Sonicmindtransfer', '🔊')" class="app-card cat-fin">
-                    <div class="app-icon">🔊</div>
-                    <div class="app-label">Sonic Mind Transfer</div>
-                </a>
-                <a href="#" onclick="launchApp('https://unorganically-flangeless-parthenia.ngrok-free.dev/', 'Genesis Chat', '💬')" class="app-card cat-human">
-                    <div class="app-icon">💬</div>
-                    <div class="app-label">Genesis Chat</div>
-                </a>
-                <a href="#" onclick="launchApp('genesis manager.html', 'Genesis Local File Manager', '📂')" class="app-card cat-human">
-                    <div class="app-icon">📂</div>
-                    <div class="app-label">Genesis Local File Manager</div>
                 </a>
                 <a href="#" onclick="launchApp('mtfzonetradingsystem.html', 'MTF Zone Trading System', '📈')" class="app-card cat-human">
                     <div class="app-icon">
@@ -702,7 +634,7 @@
     </div>
 </a>
                 <a href="#" onclick="launchApp('SMS.html', 'Inbox SMS', '📂')" class="app-card cat-human">
-                    <div class="app-icon">📂</div>
+                    <div class="app-icon">✉️</div>
                     <div class="app-label">Inbox SMS</div>
                 </a>
                 <a href="#" onclick="launchApp('56. Nuswantara Hub.html', 'Inbox SMS', '👤')" class="app-card cat-human">
@@ -711,11 +643,6 @@
                 </a>
                     <a href="" onclick="launchApp('Bio Medic.html', 'Realitas & Masa Depan', '💊')" class="app-card cat-future">
                     <div class="app-icon">💊</div><div class="app-label">Bio Medic Hacking</div>
-                </a>
-
-                <a href="" onclick="launchApp('Khusus Insan Dewasa Baligh.html', 'Khusus Insan Dewasa Baligh', '🧬')" class="app-card cat-future">
-                    <div class="app-icon">❤️‍🔥</div>
-                    <div class="app-label">Khusus Insan Dewasa Baligh</div>
                 </a>
                 
             </div>
@@ -1099,23 +1026,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
