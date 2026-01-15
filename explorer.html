@@ -132,9 +132,19 @@
             <div class="nav-group">
                 <div class="nav-title">This PC</div>
                 <div class="nav-item active" id="nav-root" onclick="navigate('root', 'all', true, this)">💻 This PC</div>
-                <div class="nav-item" id="nav-time" onclick="navigate('apps', 'cat-time', true, this)" style="padding-left:35px;">📁 Waktu & Kala</div>
-                <div class="nav-item" id="nav-nature" onclick="navigate('apps', 'cat-nature', true, this)" style="padding-left:35px;">📁 Alat & Tabib</div>
-                <div class="nav-item" id="nav-fin" onclick="navigate('apps', 'cat-fin', true, this)" style="padding-left:35px;">📁 Ekonomi Nilai</div>
+                <div class="nav-item" id="cat-future" onclick="navigate('apps', 'cat-future', true, this)" style="padding-left:35px;">📁 Astronomi</div>
+                <div class="nav-item" id="cat-human" onclick="navigate('apps', 'cat-human', true, this)" style="padding-left:35px;">📁 Kemanusiaan</div>
+                <div class="nav-item" id="nav-fin" onclick="navigate('apps', 'cat-fin', true, this)" style="padding-left:35px;">📁 Ekonomi</div>
+                <div class="nav-item" id="cat-doc" onclick="navigate('apps', 'cat-doc', true, this)" style="padding-left:35px;">📁 Arsip Dokumen</div>
+                <div class="nav-item" id="cat-tech" onclick="navigate('apps', 'cat-tech', true, this)" style="padding-left:35px;">📁 Teknologi</div>
+                <div class="nav-item" id="cat-time" onclick="navigate('apps', 'cat-time', true, this)" style="padding-left:35px;">📁 Waktu dan Tanggal</div>
+                <div class="nav-item" id="cat-sys" onclick="navigate('apps', 'cat-sys', true, this)" style="padding-left:35px;">📁 Sistem</div>
+                <div class="nav-item" id="cat-edu" onclick="navigate('apps', 'cat-edu', true, this)" style="padding-left:35px;">📁 Arsip Edukasi</div>
+                <div class="nav-item" id="cat-tools" onclick="navigate('apps', 'cat-tools', true, this)" style="padding-left:35px;">📁 Aplikasi Peralatan</div>
+                <div class="nav-item" id="cat-lingo" onclick="navigate('apps', 'cat-lingo', true, this)" style="padding-left:35px;">📁 Bahasa</div>
+                <div class="nav-item" id="cat-culture" onclick="navigate('apps', 'cat-culture', true, this)" style="padding-left:35px;">📁 Budaya</div>
+                <div class="nav-item" id="cat-nature" onclick="navigate('apps', 'cat-nature', true, this)" style="padding-left:35px;">📁 Alami</div>
+                <div class="nav-item" id="cat-blue" onclick="navigate('apps', 'cat-blue', true, this)" style="padding-left:35px;">📁 Arsip Nilai</div>
             </div>
         </div>
 
@@ -176,77 +186,77 @@
 
     <script>
         // Database aplikasi sinkron dengan index.html
-const appDatabase = [
+      const appDatabase = [
     { url: 'Readme.html', label: 'Tentang', icon: 'ℹ️', cat: 'cat-blue' },
     { url: '01 Jam Sunda Nuswantara.html', label: 'Jam Utama', icon: '🕐', cat: 'cat-time' },
     { url: '02. Kalender Sunda Nuswantara.html', label: 'Kalender', icon: '📅', cat: 'cat-time' },
-    { url: '03. Jadwal Shalat Sunda Nuswantara.html', label: 'Shalat', icon: '🕌', cat: 'cat-time' },
-    { url: '04. Converter Waktu & Tanggal Ke Sunda Nuswantara.html', label: 'Konverter', icon: '🔄', cat: 'cat-sys' },
-    { url: '05. Satuan Nilai Sunda Nuswantara.html', label: 'Satuan Nilai', icon: '⚖️', cat: 'cat-sys' },
-    { url: '06. Contoh Jadwal Kegiatan Sunda Nuswantara.html', label: 'Jadwal', icon: '📝', cat: 'cat-blue' },
-    { url: '07. Panduan Manual Contoh Pertanian.html', label: 'Lumbung', icon: '🌾', cat: 'cat-nature' },
-    { url: '08. Panduan Manual Contoh Produktifitas dan Karya.html', label: 'Karya', icon: '🔨', cat: 'cat-nature' },
-    { url: '09. Aksara Hanacaraka.html', label: 'Hanacaraka', icon: 'ꦲ', cat: 'cat-culture' },
-    { url: '10. Aksara Sunda Kuno.html', label: 'Sunda Kuno', icon: 'ᮊ', cat: 'cat-culture' },
+    { url: '03. Jadwal Shalat Sunda Nuswantara.html', label: 'Shalat', icon: '🕌', cat: 'cat-culture' },
+    { url: '04. Converter Waktu & Tanggal Ke Sunda Nuswantara.html', label: 'Konverter', icon: '🔄', cat: 'cat-tools' },
+    { url: '05. Satuan Nilai Sunda Nuswantara.html', label: 'Satuan Nilai', icon: '⚖️', cat: 'cat-edu' },
+    { url: '06. Contoh Jadwal Kegiatan Sunda Nuswantara.html', label: 'Jadwal', icon: '📝', cat: 'cat-edu' },
+    { url: '07. Panduan Manual Contoh Pertanian.html', label: 'Lumbung', icon: '🌾', cat: 'cat-fin' },
+    { url: '08. Panduan Manual Contoh Produktifitas dan Karya.html', label: 'Karya', icon: '🔨', cat: 'cat-fin' },
+    { url: '09. Aksara Hanacaraka.html', label: 'Hanacaraka', icon: 'ꦲ', cat: 'cat-lingo' },
+    { url: '10. Aksara Sunda Kuno.html', label: 'Sunda Kuno', icon: 'ᮊ', cat: 'cat-lingo' },
     { url: '11. Rekonstruksi Bahasa Sunda Kuno.html', label: 'Kamus', icon: '📖', cat: 'cat-lingo' },
     { url: '12. Sunda Kuno.html', label: 'Olaxara', icon: '✒️', cat: 'cat-lingo' },
     { url: 'Tools.html', label: 'Logic Engine', icon: '🧠', cat: 'cat-nature' },
-    { url: '13. Kumpulan Renungan.html', label: 'Renungan', icon: '📚', cat: 'cat-lingo' },
-    { url: '14. Terapi Cahaya Malam.html', label: 'Terapi Sirep', icon: '🕯️', cat: 'cat-sys' },
-    { url: '15. Appraisal Scanner.html', label: 'Appraisal', icon: '🔍', cat: 'cat-doc' },
-    { url: '16. Restorasi Pangan.html', label: 'Teknologi Pangan', icon: '🍯', cat: 'cat-nature' },
-    { url: '17. Restorasi Arsitektur.html', label: 'Arsitektur', icon: '🛖', cat: 'cat-nature' },
-    { url: '18. Restorasi Kesehatan.html', label: 'Tabib Digital', icon: '🌿', cat: 'cat-nature' },
-    { url: '19. Restorasi Wastra.html', label: 'Wastra Alam', icon: '🧶', cat: 'cat-culture' },
-    { url: '20. Restorasi Sosial.html', label: 'Balai Warga', icon: '🤝', cat: 'cat-sys' },
-    { url: '21. Pustaka Peradaban.html', label: 'Leveling Diri', icon: '⏫', cat: 'cat-lingo' },
-    { url: '23. Scanner Nilai Dasar.html', label: 'Analisa Dasar', icon: '🔍', cat: 'cat-doc' },
+    { url: '13. Kumpulan Renungan.html', label: 'Renungan', icon: '📚', cat: 'cat-edu' },
+    { url: '14. Terapi Cahaya Malam.html', label: 'Terapi Sirep', icon: '🕯️', cat: 'cat-tech' },
+    { url: '15. Appraisal Scanner.html', label: 'Appraisal', icon: '🔍', cat: 'cat-edu' },
+    { url: '16. Restorasi Pangan.html', label: 'Teknologi Pangan', icon: '🍯', cat: 'cat-edu' },
+    { url: '17. Restorasi Arsitektur.html', label: 'Arsitektur', icon: '🛖', cat: 'cat-edu' },
+    { url: '18. Restorasi Kesehatan.html', label: 'Tabib Digital', icon: '🌿', cat: 'cat-edu' },
+    { url: '19. Restorasi Wastra.html', label: 'Wastra Alam', icon: '🧶', cat: 'cat-human' },
+    { url: '20. Restorasi Sosial.html', label: 'Balai Warga', icon: '🤝', cat: 'cat-human' },
+    { url: '21. Pustaka Peradaban.html', label: 'Leveling Diri', icon: '⏫', cat: 'cat-human' },
+    { url: '23. Scanner Nilai Dasar.html', label: 'Analisa Dasar', icon: '🔍', cat: 'cat-edu' },
     { url: '24. Estafet Kemanusiaan.html', label: 'Codex Manusia', icon: '👤', cat: 'cat-human' },
     { url: '25. Menu Ekonomi.html', label: 'Ekonomi Nilai', icon: '💰', cat: 'cat-fin' },
-    { url: '26. Menu Masa Depan.html', label: 'Realitas & Masa Depan', icon: '💊', cat: 'cat-future' },
-    { url: '27. Menu Hukum Syariat dan Hakikat.html', label: 'Syariat & Hakikat', icon: '⚖️', cat: 'cat-edu' },
-    { url: '28. Indikator Iman.html', label: 'Iman Metric', icon: '📶', cat: 'cat-tools' },
-    { url: '29. Pustaka Ajaran Tauhid.html', label: 'Pustaka Ajaran Tauhid', icon: '📄', cat: 'cat-doc' },
-    { url: '30. Quantum Vitality.html', label: 'Quantum Vitality', icon: '⚛️', cat: 'cat-future' },
-    { url: '31. Holistic Calibration.html', label: 'Holistic Radar', icon: '📡', cat: 'cat-edu' },
-    { url: '32. Legacy Hub.html', label: 'Warisan Generasi', icon: '🌳', cat: 'cat-fin' },
-    { url: '33. Civilization Hub.html', label: 'Civilization Hub', icon: '🌍', cat: 'cat-future' },
-    { url: '34.Nusantara Auto-Anchor (POS Mode).html', label: 'Auto-Anchor POS', icon: '⚓', cat: 'cat-future' },
+    { url: '26. Menu Masa Depan.html', label: 'Realitas & Masa Depan', icon: '💊', cat: 'cat-fin' },
+    { url: '27. Menu Hukum Syariat dan Hakikat.html', label: 'Syariat & Hakikat', icon: '⚖️', cat: 'cat-culture' },
+    { url: '28. Indikator Iman.html', label: 'Iman Metric', icon: '📶', cat: 'cat-culture' },
+    { url: '29. Pustaka Ajaran Tauhid.html', label: 'Pustaka Ajaran Tauhid', icon: '📄', cat: 'cat-culture' },
+    { url: '30. Quantum Vitality.html', label: 'Quantum Vitality', icon: '⚛️', cat: 'cat-human' },
+    { url: '31. Holistic Calibration.html', label: 'Holistic Radar', icon: '📡', cat: 'cat-human' },
+    { url: '32. Legacy Hub.html', label: 'Warisan Generasi', icon: '🌳', cat: 'cat-human' },
+    { url: '33. Civilization Hub.html', label: 'Civilization Hub', icon: '🌍', cat: 'cat-human' },
+    { url: '34.Nusantara Auto-Anchor (POS Mode).html', label: 'Auto-Anchor POS', icon: '⚓', cat: 'cat-fin' },
     { url: '35.Nusantara Savings Simulator.html', label: 'Simulasi Tabungan', icon: '💰', cat: 'cat-fin' },
     { url: '36.Nusantara Income Generator.html', label: 'Income Generator', icon: '🔨', cat: 'cat-fin' },
-    { url: '37. Pusat Strategi Ekonomi.html', label: 'Pusat Strategi Ekonomi', icon: '🤝', cat: 'cat-sys' },
-    { url: '37. Jam Pasir Timer.html', label: 'Jam Pasir Nusantara', icon: '⏳', cat: 'cat-sys' },
-    { url: '38. Kawi Jawa Kuno.html', label: 'Prasasti Jawa Kawi', icon: '🗿', cat: 'cat-sys' },
-    { url: '39. Pagon Mataram.html', label: 'Mesin Ketik Pegon', icon: '✒️', cat: 'cat-sys' },
-    { url: '40. Encoder Arsip Keraton.html', label: 'Encoder Arsip Keraton', icon: '✒️', cat: 'cat-sys' },
-    { url: '41. Ancient Astronomy.html', label: 'Ancient Astronomy', icon: '🕐', cat: 'cat-sys' },
-    { url: '42. Advanced Systems.html', label: 'Advanced Systems', icon: '⚛️', cat: 'cat-future' },
-    { url: '43. Forbidden Tech.html', label: 'Forbidden Tech', icon: '⚛️', cat: 'cat-future' },
-    { url: '44. Gallery.html', label: 'Gallery', icon: '🖼️', cat: 'cat-tech' },
-    { url: '45. Media Player.html', label: 'Media Player', icon: '🎵', cat: 'cat-time' },
-    { url: '46. TV Jadul.html', label: 'TV Jadul', icon: '📺', cat: 'cat-tech' },
-    { url: '54. Double Anchor System.html', label: 'Double Anchor System', icon: '⚖️', cat: 'cat-doc' },
+    { url: '37. Pusat Strategi Ekonomi.html', label: 'Pusat Strategi Ekonomi', icon: '🤝', cat: 'cat-fin' },
+    { url: '37. Jam Pasir Timer.html', label: 'Jam Pasir Nusantara', icon: '⏳', cat: 'cat-tools' },
+    { url: '38. Kawi Jawa Kuno.html', label: 'Prasasti Jawa Kawi', icon: '🗿', cat: 'cat-lingo' },
+    { url: '39. Pagon Mataram.html', label: 'Mesin Ketik Pegon', icon: '✒️', cat: 'cat-culture' },
+    { url: '40. Encoder Arsip Keraton.html', label: 'Encoder Arsip Keraton', icon: '✒️', cat: 'cat-lingo' },
+    { url: '41. Ancient Astronomy.html', label: 'Ancient Astronomy', icon: '🕐', cat: 'cat-future' },
+    { url: '42. Advanced Systems.html', label: 'Advanced Systems', icon: '⚛️', cat: 'cat-tech' },
+    { url: '43. Forbidden Tech.html', label: 'Forbidden Tech', icon: '⚛️', cat: 'cat-tech' },
+    { url: '44. Gallery.html', label: 'Gallery', icon: '🖼️', cat: 'cat-doc' },
+    { url: '45. Media Player.html', label: 'Media Player', icon: '🎵', cat: 'cat-doc' },
+    { url: '46. TV Jadul.html', label: 'TV Jadul', icon: '📺', cat: 'cat-doc' },
+    { url: '54. Double Anchor System.html', label: 'Double Anchor System', icon: '⚖️', cat: 'cat-fin' },
     { url: '55. Nilai Komoditas.html', label: 'Daftar Nilai Komoditas', icon: '📚', cat: 'cat-fin' },
-    { url: '56. Sunda Nuswantara Archive.html', label: 'SUNDA NUSWANTARA ARCHIVE', icon: '📖', cat: 'cat-fin' },
-    { url: '62. Menu Ether Tech.html', label: 'ETHER TECH & BLUEPRINTS', icon: '⚡', cat: 'cat-fin' },
-    { url: 'kompas.html', label: 'NAVIGASI TAKTIS', icon: '🧭', cat: 'cat-fin' },
-    { url: 'petajalur.html', label: 'BUAT PETA JALUR', icon: '🌍', cat: 'cat-fin' },
-    { url: 'DecentralizedID.html', label: 'Cetak Data Personal', icon: '📄', cat: 'cat-fin' },
-    { url: 'WAenigma.html', label: 'WAenigma', icon: '✒️', cat: 'cat-fin' },
-    { url: 'Picmigma.html', label: 'Picmigma', icon: '🔍', cat: 'cat-fin' },
-    { url: 'morsenigma.html', label: 'Morsenigma', icon: '🔊', cat: 'cat-fin' },
-    { url: 'stegavault.html', label: 'Stegavault', icon: '🗿', cat: 'cat-fin' },
-    { url: 'sonicmind.html', label: 'Sonicmind', icon: '🔊', cat: 'cat-fin' },
-    { url: 'sonicmindtransfer.html', label: 'Sonic Mind Transfer', icon: '🔊', cat: 'cat-fin' },
-    { url: 'https://unorganically-flangeless-parthenia.ngrok-free.dev/', label: 'Genesis Chat', icon: '💬', cat: 'cat-human' },
-    { url: 'genesis manager.html', label: 'Genesis Local File Manager', icon: '📂', cat: 'cat-human' },
-    { url: 'mtfzonetradingsystem.html', label: 'MTF Zone Trading System', icon: '📈', cat: 'cat-human' },
-    { url: 'Nmail.html', label: 'N-Mail', icon: '✉️', cat: 'cat-human' },
-    { url: 'SMS.html', label: 'Inbox SMS', icon: '📂', cat: 'cat-human' },
-    { url: '56. Nuswantara Hub.html', label: 'Nuswantara Hub & Tools', icon: '👤', cat: 'cat-human' },
-    { url: 'Bio Medic.html', label: 'Bio Medic Hacking', icon: '💊', cat: 'cat-future' },
-    { url: 'Khusus Insan Dewasa Baligh.html', label: 'Dewasa Baligh', icon: '❤️‍🔥', cat: 'cat-future' }
-];
+    { url: '56. Sunda Nuswantara Archive.html', label: 'SUNDA NUSWANTARA ARCHIVE', icon: '📖', cat: 'cat-human' },
+    { url: '62. Menu Ether Tech.html', label: 'ETHER TECH & BLUEPRINTS', icon: '⚡', cat: 'cat-tech' },
+    { url: 'kompas.html', label: 'NAVIGASI TAKTIS', icon: '🧭', cat: 'cat-tools' },
+    { url: 'petajalur.html', label: 'BUAT PETA JALUR', icon: '🌍', cat: 'cat-tools' },
+    { url: 'DecentralizedID.html', label: 'Cetak Data Personal', icon: '📄', cat: 'cat-sys' },
+    { url: 'WAenigma.html', label: 'WAenigma', icon: '✒️', cat: 'cat-sys' },
+    { url: 'Picmigma.html', label: 'Picmigma', icon: '🔍', cat: 'cat-sys' },
+    { url: 'morsenigma.html', label: 'Morsenigma', icon: '🔊', cat: 'cat-sys' },
+    { url: 'stegavault.html', label: 'Stegavault', icon: '🗿', cat: 'cat-sys' },
+    { url: 'sonicmind.html', label: 'Sonicmind', icon: '🔊', cat: 'cat-sys' },
+    { url: 'sonicmindtransfer.html', label: 'Sonic Mind Transfer', icon: '🔊', cat: 'cat-sys' },
+    { url: 'https://unorganically-flangeless-parthenia.ngrok-free.dev/', label: 'Genesis Chat', icon: '💬', cat: 'cat-tools' },
+    { url: 'genesis manager.html', label: 'Genesis Local File Manager', icon: '📂', cat: 'cat-tools' },
+    { url: 'mtfzonetradingsystem.html', label: 'MTF Zone Trading System', icon: '📈', cat: 'cat-fin' },
+    { url: 'Nmail.html', label: 'N-Mail', icon: '✉️', cat: 'cat-tools' },
+    { url: 'SMS.html', label: 'Inbox SMS', icon: '📂', cat: 'cat-tools' },
+    { url: '56. Nuswantara Hub.html', label: 'Nuswantara Hub & Tools', icon: '👤', cat: 'cat-tools' },
+    { url: 'Bio Medic.html', label: 'Bio Medic Hacking', icon: '💊', cat: 'cat-tech' },
+    { url: 'Khusus Insan Dewasa Baligh.html', label: 'Dewasa Baligh', icon: '❤️‍🔥', cat: 'cat-human' }
+      ];
 
         let historyStack = [{target: 'root', cat: 'all'}];
         let curIdx = 0;
