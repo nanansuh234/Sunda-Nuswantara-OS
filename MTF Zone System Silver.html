@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Dashboard Nuswantara v5.1 - Silver Edition</title>
+    <style>
+        :root {
+            --bg: #0b1120;
+            --card-bg: #151e32;
+            --sidebar-bg: #1e293b;
+            --border: #334155;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent: #d4af37; 
+            --bull: #10b981;    
+            --bear: #ef4444;    
+            --lo-color: #f43f5e; 
+            --hi-color: #3b82f6; 
+            --cond-color: #a855f7;
+            --cyan: #22d3ee;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+        }
+
+        .widget-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 1050px; 
+            background: var(--card-bg);
+            border: 3px solid var(--border);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.8);
+        }
+
+        /* --- PANEL KIRI --- */
+        .left-panel {
+            flex: 1.8;
+            border-right: 3px solid var(--border);
+            display: flex; flex-direction: column;
+        }
+
+        .header {
+            padding: 25px;
+            background: rgba(0,0,0,0.4);
+            border-bottom: 3px solid var(--border);
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        
+        .clock-container {
+            text-align: center;
+            border: 3px solid var(--accent);
+            background: radial-gradient(circle, rgba(212,175,55,0.2) 0%, rgba(0,0,0,0.4) 100%);
+            border-radius: 12px;
+            padding: 25px;
+        }
+        .clock-date { font-size: 1.3rem; font-weight: bold; color: #fff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+        .clock-time { font-size: 2.5rem; color: var(--accent); font-family: 'Courier New', monospace; font-weight: 900; text-shadow: 0 0 20px rgba(212, 175, 55, 0.6); }
+        .highlight { color: var(--accent); }
+
+        .sub-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 10px; }
+        .section-label-main { font-size: 1.1rem; color: var(--text-sub); letter-spacing: 1px; font-weight: bold; }
+        .last-sync-label { font-size: 0.9rem; color: #64748b; font-style: italic; }
+
+        .trend-badge { font-size: 1.3rem; font-weight: 900; padding: 10px 25px; border-radius: 8px; border: 3px solid var(--border); text-transform: uppercase; }
+        .is-up { color: var(--bull); border-color: var(--bull); background: rgba(16, 185, 129, 0.2); }
+        .is-down { color: var(--bear); border-color: var(--bear); background: rgba(239, 68, 68, 0.2); }
+
+        /* MARKET DEPTH TABLE - BIG FONT */
+        .depth-container { padding: 25px; }
+        .section-label { font-size: 1.1rem; color: var(--accent); margin-bottom: 15px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;}
+
+        .market-table {
+            display: grid;
+            grid-template-columns: 0.7fr 1.2fr 1.2fr 1.5fr;
+            gap: 3px; background: var(--border);
+            border: 2px solid var(--border); border-radius: 12px; overflow: hidden;
+        }
+        .th, .td { padding: 18px 12px; text-align: center; background: var(--card-bg); font-size: 16px; }
+        .th { font-size: 14px; font-weight: bold; color: var(--text-sub); background: rgba(0,0,0,0.5); text-transform: uppercase; }
+        .val-lo { color: var(--lo-color); font-family: 'Courier New', monospace; font-weight: bold; font-size: 18px; }
+        .val-hi { color: var(--hi-color); font-family: 'Courier New', monospace; font-weight: bold; font-size: 18px; }
+        .val-cond { font-size: 14px; font-weight: bold; color: var(--cond-color); }
+
+        /* FIBONACCI - BIG LIST */
+        .fib-container { padding: 0 25px 25px 25px; }
+        .fib-list { display: flex; flex-direction: column; gap: 8px; }
+        .fib-row {
+            display: flex; justify-content: space-between; padding: 15px 20px;
+            background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        .fib-label { font-size: 15px; color: var(--text-sub); font-weight: bold; }
+        .fib-val { font-size: 18px; font-family: 'Courier New', monospace; color: var(--text-main); font-weight: bold; }
+
+        /* --- PANEL KANAN --- */
+        .right-panel { flex: 1; background: var(--sidebar-bg); padding: 25px; display: flex; flex-direction: column; }
+        .note-title { font-size: 1.2rem; color: var(--cyan); font-weight: bold; margin-bottom: 20px; text-transform: uppercase; border-bottom: 4px solid var(--cyan); padding-bottom: 10px; }
+        .note-content { font-size: 15px; line-height: 1.8; color: #e2e8f0; white-space: pre-wrap; flex-grow: 1; overflow-y: auto; margin-bottom: 25px; padding-right: 5px; }
+
+        .download-btn {
+            display: block; background: var(--accent); color: var(--bg); border: none;
+            padding: 20px; text-align: center; text-decoration: none; font-size: 15px; font-weight: 900;
+            border-radius: 10px; text-transform: uppercase; transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        .download-btn:hover { background: #fff; color: #000; transform: translateY(-3px); }
+
+        @media (max-width: 850px) { .widget-wrapper { flex-direction: column; } .left-panel { border-right: none; border-bottom: 3px solid var(--border); } }
+    </style>
+</head>
+<body>
+
+    <div class="widget-wrapper">
+        <div class="left-panel">
+            <div class="header">
+                <div class="clock-container">
+                    <div id="nusDate" class="clock-date">KALKULASI...</div>
+                    <div id="nusTime" class="clock-time">--:--:--</div>
+                </div>
+                <div class="sub-header">
+                    <div>
+                        <div class="section-label-main">OVERVIEW SILVER (XAGUSD)</div>
+                        <div id="lastSync" class="last-sync-label">Syncing...</div>
+                    </div>
+                    <div id="val-trend" class="trend-badge">---</div>
+                </div>
+            </div>
+
+            <div class="depth-container">
+                <div class="section-label">MARKET DEPTH RANGE</div>
+                <div class="market-table">
+                    <div class="th">TF</div> <div class="th">LOW</div> <div class="th">HIGH</div> <div class="th">CONDITION</div>
+                    <div class="td" style="font-weight:900">M5</div> <div class="td val-lo" id="val-m5-lo">---</div> <div class="td val-hi" id="val-m5-hi">---</div> <div class="td val-cond" id="val-m5-cond">---</div>
+                    <div class="td" style="font-weight:900">M15</div> <div class="td val-lo" id="val-m15-lo">---</div> <div class="td val-hi" id="val-m15-hi">---</div> <div class="td val-cond" id="val-m15-cond">---</div>
+                    <div class="td" style="font-weight:900">M30</div> <div class="td val-lo" id="val-m30-lo">---</div> <div class="td val-hi" id="val-m30-hi">---</div> <div class="td val-cond" id="val-m30-cond">---</div>
+                    <div class="td" style="font-weight:900">H1</div> <div class="td val-lo" id="val-h1-lo">---</div> <div class="td val-hi" id="val-h1-hi">---</div> <div class="td val-cond" id="val-h1-cond">---</div>
+                </div>
+            </div>
+
+            <div class="fib-container">
+                <div class="section-label">FIBONACCI GOLDEN ZONES</div>
+                <div id="fib-list" class="fib-list">Memuat Level...</div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="note-title">📝 ANALISIS STRATEGI</div>
+            <div id="val-note" class="note-content">---</div>
+            <a href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/MTFZoneLevels.rar" class="download-btn">📥 DOWNLOAD INDIKATOR SILVER</a>
+        </div>
+    </div>
+
+    <script>
+        const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+        const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+
+        function updateClock() {
+            let now = new Date();
+            let anchor = new Date(2025, 2, 21);
+            let diffDays = Math.floor((now - anchor) / (1000 * 60 * 60 * 24));
+            let Year = 1 + Math.floor(diffDays / 365);
+            let dYear = diffDays % 365;
+            let mIdx = Math.min(Math.floor(dYear / 28), 12);
+            let dDate = (dYear % 28) + 1;
+            let pIdx = (diffDays + 2) % 5;
+            let h = now.getHours(); let m = now.getMinutes();
+            let mTotal = ((h % 12) * 60) + m;
+            let nHours = mTotal / 90;
+            let dHour = Math.floor(nHours) || 8;
+            let dMin = Math.floor((nHours % 1) * 90);
+            let phase = (h >= 6 && h < 18) ? 'SIANG' : 'MALAM';
+            document.getElementById('nusDate').innerHTML = `<span class="highlight">${String(dDate).padStart(2,'0')} ${months[mIdx].toUpperCase()}</span> | TH 00${Year} | <span class="highlight">${pasarans[pIdx].toUpperCase()}</span>`;
+            document.getElementById('nusTime').innerText = `PUKUL ${String(dHour).padStart(2,'0')}:${String(dMin).padStart(2,'0')} ${phase}`;
+        }
+
+        // URL FIX: Menggunakan format export?format=csv untuk akses data XAGUSD
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQGkIRI-_XNlA7-5YP1amp9axQdYbGFLERIted9INYCDKpFa8AxtJ-qwVMf9kFLB-kLcmUoJPzCmend/pub?gid=1060721268&single=true&output=csv";
+
+        async function fetchMarketData() {
+            try {
+                const response = await fetch(SHEET_URL + "&t=" + new Date().getTime());
+                const csvData = await response.text();
+                
+                // Parsing CSV baris pertama (headers) dan kedua (values)
+                const rows = csvData.split('\n');
+                if (rows.length < 2) return;
+                
+                const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+                const vals = rows[1].split(',').map(v => v.trim());
+
+                const getVal = (key) => {
+                    const i = headers.findIndex(h => h.includes(key.toLowerCase()));
+                    return (i !== -1) ? vals[i] : "";
+                };
+
+                // Update Trend
+                const trend = getVal('trend');
+                const trendEl = document.getElementById('val-trend');
+                trendEl.innerText = trend || "---";
+                trendEl.className = 'trend-badge ' + (trend.toUpperCase().includes('UP') || trend.toUpperCase().includes('BULL') ? 'is-up' : 'is-down');
+                
+                // Update Catatan
+                document.getElementById('val-note').innerText = getVal('catatan') || "Menunggu update strategi...";
+
+                // Update Depth (XAGUSD Data)
+                const tfs = ['m5', 'm15', 'm30', 'h1'];
+                const globalCond = getVal('movement condition') || "---";
+                
+                tfs.forEach(tf => {
+                    document.getElementById(`val-${tf}-lo`).innerText = getVal(tf + ' lo') || "---";
+                    document.getElementById(`val-${tf}-hi`).innerText = getVal(tf + ' hi') || "---";
+                    let c = getVal(tf + ' cond');
+                    document.getElementById(`val-${tf}-cond`).innerText = c ? c : globalCond;
+                });
+
+                // Update Fibonacci
+                const fLevels = ['0', '32', '50', '61', '100', '161'];
+                let fHtml = '';
+                fLevels.forEach(lvl => {
+                    const price = getVal('fibbo ' + lvl);
+                    fHtml += `<div class="fib-row"><span class="fib-label">LEVEL FIBONACCI ${lvl}%</span><span class="fib-val">${price || '---'}</span></div>`;
+                });
+                document.getElementById('fib-list').innerHTML = fHtml;
+                
+                document.getElementById('lastSync').innerText = "Sync: " + new Date().toLocaleTimeString() + " WIB";
+            } catch (err) { 
+                console.error(err);
+                document.getElementById('lastSync').innerText = "Sync Error!"; 
+            }
+        }
+
+        updateClock(); setInterval(updateClock, 1000);
+        fetchMarketData(); setInterval(fetchMarketData, 5000);
+    </script>
+</body>
+</html>
