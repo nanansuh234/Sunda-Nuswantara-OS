@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Nuswantara Explorer - Windows Pro</title>
+    <title>Nuswantara Explorer - Fixed Connection</title>
     <style>
         :root {
             --win-blue: #0078d7;
@@ -177,7 +177,8 @@
     </div>
 
     <script>
-        const appDatabase = [
+        // Database aplikasi sinkron dengan index.html
+const appDatabase = [
     { url: 'Readme.html', label: 'Tentang', icon: 'ℹ️', cat: 'cat-blue' },
     { url: '01 Jam Sunda Nuswantara.html', label: 'Jam Utama', icon: '🕐', cat: 'cat-time' },
     { url: '02. Kalender Sunda Nuswantara.html', label: 'Kalender', icon: '📅', cat: 'cat-time' },
@@ -247,10 +248,23 @@
     { url: '56. Nuswantara Hub.html', label: 'Nuswantara Hub & Tools', icon: '👤', cat: 'cat-human' },
     { url: 'Bio Medic.html', label: 'Bio Medic Hacking', icon: '💊', cat: 'cat-future' },
     { url: 'Khusus Insan Dewasa Baligh.html', label: 'Dewasa Baligh', icon: '❤️‍🔥', cat: 'cat-future' }
-        ];
+];
 
         let historyStack = [{target: 'root', cat: 'all'}];
         let curIdx = 0;
+
+        // FUNGSI UTAMA UNTUK MEMBUKA APLIKASI DI PANEL UTAMA
+        function openAppInOS(url, label, icon) {
+            // Kita coba berbagai cara untuk mencapai parent.launchApp
+            if (typeof parent.launchApp === "function") {
+                parent.launchApp(url, label, icon);
+            } else if (window.parent && typeof window.parent.launchApp === "function") {
+                window.parent.launchApp(url, label, icon);
+            } else {
+                console.error("Gagal terhubung ke Nuswantara OS utama.");
+                window.open(url, '_blank');
+            }
+        }
 
         function navigate(target, cat = 'all', push = true, navEl = null) {
             const dv = document.getElementById('driveView');
@@ -272,8 +286,7 @@
                 grid.innerHTML = "";
                 const filtered = cat === 'all' ? appDatabase : appDatabase.filter(a => a.cat === cat);
                 filtered.forEach(app => {
-                    // FIX: Menggunakan parent.launchApp supaya manggil fungsi di index.html
-                    grid.innerHTML += `<div class="item-card" onclick="parent.launchApp('${app.url}','${app.label}','${app.icon}')">
+                    grid.innerHTML += `<div class="item-card" onclick="openAppInOS('${app.url}','${app.label}','${app.icon}')">
                         <div class="item-icon">${app.icon}</div><div class="item-label">${app.label}</div>
                     </div>`;
                 });
