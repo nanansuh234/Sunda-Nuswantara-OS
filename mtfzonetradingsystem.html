@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genesis Dashboard Nuswantara v5.1</title>
+    <title>Genesis Dashboard Nuswantara v5.1 - Big Mode</title>
     <style>
         :root {
             --bg: #0b1120;
@@ -12,7 +12,7 @@
             --border: #334155;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
-            --accent: #d4af37; /* Emas Nuswantara */
+            --accent: #d4af37; 
             --bull: #10b981;    
             --bear: #ef4444;    
             --lo-color: #f43f5e; 
@@ -30,286 +30,199 @@
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
 
-        /* Container Utama */
         .widget-wrapper {
             display: flex;
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px; /* Gue lebarin dikit biar gak sesek */
             background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            border: 2px solid var(--border);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
         }
-        .widget-wrapper:hover { transform: translateY(-3px); border-color: var(--accent); }
 
-        /* === PANEL KIRI (DATA) === */
+        /* --- PANEL KIRI --- */
         .left-panel {
-            flex: 2;
-            border-right: 1px solid var(--border);
+            flex: 1.8;
+            border-right: 2px solid var(--border);
             display: flex; flex-direction: column;
         }
 
-        /* HEADER SPESIAL NUSWANTARA */
         .header {
-            padding: 15px;
-            background: rgba(0,0,0,0.3);
-            border-bottom: 1px solid var(--border);
-            display: flex; flex-direction: column; gap: 10px;
+            padding: 25px;
+            background: rgba(0,0,0,0.4);
+            border-bottom: 2px solid var(--border);
+            display: flex; flex-direction: column; gap: 15px;
         }
         
-        /* Jam Nuswantara Style */
         .clock-container {
             text-align: center;
-            border: 1px solid var(--accent);
-            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, rgba(0,0,0,0.2) 100%);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 5px;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--accent);
+            background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(0,0,0,0.3) 100%);
+            border-radius: 12px;
+            padding: 20px;
         }
-        .clock-date {
-            font-size: 0.9rem; font-weight: bold; color: #fff; letter-spacing: 2px; text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-        .clock-time {
-            font-size: 1.4rem; color: var(--accent); font-family: 'Courier New', monospace; font-weight: 800;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
-        }
+        .clock-date { font-size: 1.2rem; font-weight: bold; color: #fff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+        .clock-time { font-size: 2.2rem; color: var(--accent); font-family: 'Courier New', monospace; font-weight: 900; text-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
         .highlight { color: var(--accent); }
 
-        /* Sub-Header (Trend Status) */
-        .sub-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 5px;
-        }
-        .section-label-main { font-size: 0.75rem; color: var(--text-sub); letter-spacing: 1px; font-weight: bold; }
-        .last-sync-label { font-size: 0.65rem; color: #64748b; font-style: italic; margin-top: 2px;}
+        .sub-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; }
+        .section-label-main { font-size: 1rem; color: var(--text-sub); letter-spacing: 1px; font-weight: bold; }
+        .last-sync-label { font-size: 0.85rem; color: #64748b; font-style: italic; }
 
-        .trend-badge {
-            font-size: 0.9rem; font-weight: 800; padding: 3px 10px; border-radius: 4px;
-            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        .is-up { color: var(--bull); border-color: var(--bull); background: rgba(16, 185, 129, 0.1); }
-        .is-down { color: var(--bear); border-color: var(--bear); background: rgba(239, 68, 68, 0.1); }
+        .trend-badge { font-size: 1.2rem; font-weight: 900; padding: 8px 20px; border-radius: 6px; border: 2px solid var(--border); text-transform: uppercase; }
+        .is-up { color: var(--bull); border-color: var(--bull); background: rgba(16, 185, 129, 0.15); }
+        .is-down { color: var(--bear); border-color: var(--bear); background: rgba(239, 68, 68, 0.15); }
 
-        /* DEPTH MARKET */
-        .depth-container { padding: 15px; }
-        .section-label { font-size: 0.7rem; color: var(--accent); margin-bottom: 5px; font-weight: bold; letter-spacing: 1px; }
+        /* MARKET DEPTH TABLE - BIG FONT */
+        .depth-container { padding: 25px; }
+        .section-label { font-size: 1rem; color: var(--accent); margin-bottom: 15px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;}
 
         .market-table {
             display: grid;
-            grid-template-columns: 0.6fr 1fr 1fr 1fr;
-            gap: 1px; background: var(--border);
-            border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+            grid-template-columns: 0.7fr 1.2fr 1.2fr 1.5fr;
+            gap: 2px; background: var(--border);
+            border: 2px solid var(--border); border-radius: 10px; overflow: hidden;
         }
-        .th, .td {
-            padding: 8px 5px; text-align: center; background: var(--card-bg);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .th { font-size: 0.65rem; font-weight: bold; color: var(--text-sub); background: rgba(0,0,0,0.3); }
+        .th, .td { padding: 15px 10px; text-align: center; background: var(--card-bg); font-size: 15px; }
+        .th { font-size: 13px; font-weight: bold; color: var(--text-sub); background: rgba(0,0,0,0.4); text-transform: uppercase; }
+        .val-lo { color: var(--lo-color); font-family: 'Courier New', monospace; font-weight: bold; font-size: 16px; }
+        .val-hi { color: var(--hi-color); font-family: 'Courier New', monospace; font-weight: bold; font-size: 16px; }
+        .val-cond { font-size: 13px; font-weight: bold; color: var(--cond-color); }
 
-        .tf-col { font-weight: bold; color: var(--text-main); font-size: 0.85rem; }
-        .val-lo { color: var(--lo-color); font-family: 'Courier New', monospace; font-weight: bold; font-size: 0.9rem; }
-        .val-hi { color: var(--hi-color); font-family: 'Courier New', monospace; font-weight: bold; font-size: 0.9rem; }
-        .val-cond { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: var(--cond-color); }
-
-        /* FIBONACCI */
-        .fib-container { padding: 0 15px 15px 15px; }
+        /* FIBONACCI - BIG LIST */
+        .fib-container { padding: 0 25px 25px 25px; }
+        .fib-list { display: flex; flex-direction: column; gap: 8px; }
         .fib-row {
-            display: flex; justify-content: space-between; padding: 4px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; padding: 12px 20px;
+            background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-radius: 5px;
         }
-        .fib-label { font-size: 0.75rem; color: var(--text-sub); }
-        .fib-val { font-size: 0.85rem; font-family: 'Courier New', monospace; color: var(--text-main); }
+        .fib-label { font-size: 14px; color: var(--text-sub); font-weight: bold; }
+        .fib-val { font-size: 16px; font-family: 'Courier New', monospace; color: var(--text-main); font-weight: bold; }
 
-        /* === PANEL KANAN (NOTES) === */
-        .right-panel {
-            flex: 1;
-            background: var(--sidebar-bg);
-            padding: 15px;
-            display: flex; flex-direction: column;
-        }
-        .note-title {
-            font-size: 0.85rem; color: var(--cyan); font-weight: bold;
-            margin-bottom: 15px; text-transform: uppercase;
-            border-bottom: 2px solid var(--cyan); padding-bottom: 8px; display: inline-block;
-        }
-        .note-content {
-            font-size: 0.9rem; line-height: 1.6; color: #e2e8f0;
-            white-space: pre-wrap; flex-grow: 1; overflow-y: auto;
-        }
+        /* --- PANEL KANAN --- */
+        .right-panel { flex: 1; background: var(--sidebar-bg); padding: 25px; display: flex; flex-direction: column; }
+        .note-title { font-size: 1.1rem; color: var(--cyan); font-weight: bold; margin-bottom: 20px; text-transform: uppercase; border-bottom: 3px solid var(--cyan); padding-bottom: 10px; }
+        .note-content { font-size: 14px; line-height: 1.8; color: #e2e8f0; white-space: pre-wrap; flex-grow: 1; overflow-y: auto; margin-bottom: 25px; }
 
-        @media (max-width: 600px) {
-            .widget-wrapper { flex-direction: column; }
-            .left-panel { border-right: none; border-bottom: 1px solid var(--border); }
-            .right-panel { min-height: 150px; }
+        .download-btn {
+            display: block; background: var(--accent); color: var(--bg); border: none;
+            padding: 18px; text-align: center; text-decoration: none; font-size: 14px; font-weight: 900;
+            border-radius: 8px; text-transform: uppercase; transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
         }
+        .download-btn:hover { background: #fff; color: #000; transform: scale(1.02); }
+
+        @media (max-width: 800px) { .widget-wrapper { flex-direction: column; } .left-panel { border-right: none; border-bottom: 2px solid var(--border); } }
     </style>
 </head>
 <body>
 
-    <a href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/54.%20Double%20Anchor%20System.html" target="_blank" class="widget-wrapper">
-        
+    <div class="widget-wrapper">
         <div class="left-panel">
-            
             <div class="header">
                 <div class="clock-container">
-                    <div id="nusDate" class="clock-date">CALCULATING ORBIT...</div>
+                    <div id="nusDate" class="clock-date">MEMUAT...</div>
                     <div id="nusTime" class="clock-time">--:--:--</div>
                 </div>
-
                 <div class="sub-header">
                     <div>
-                        <div class="section-label-main">MARKET OVERVIEW XAUUSD</div>
-                        <div id="lastSync" class="last-sync-label">Sync: --:-- WIB</div>
+                        <div class="section-label-main">OVERVIEW XAUUSD</div>
+                        <div id="lastSync" class="last-sync-label">Syncing...</div>
                     </div>
                     <div id="val-trend" class="trend-badge">---</div>
                 </div>
             </div>
 
             <div class="depth-container">
-                <div class="section-label">MARKET DEPTH</div>
+                <div class="section-label">MARKET DEPTH RANGE</div>
                 <div class="market-table">
-                    <div class="th">TF</div> <div class="th" style="color:var(--lo-color)">LOW</div> <div class="th" style="color:var(--hi-color)">HIGH</div> <div class="th" style="color:var(--cond-color)">COND</div>
-
-                    <div class="td tf-col">M5</div>  <div class="td val-lo" id="val-m5-lo">---</div>  <div class="td val-hi" id="val-m5-hi">---</div>  <div class="td val-cond" id="val-m5-cond">---</div>
-                    <div class="td tf-col">M15</div> <div class="td val-lo" id="val-m15-lo">---</div> <div class="td val-hi" id="val-m15-hi">---</div> <div class="td val-cond" id="val-m15-cond">---</div>
-                    <div class="td tf-col">M30</div> <div class="td val-lo" id="val-m30-lo">---</div> <div class="td val-hi" id="val-m30-hi">---</div> <div class="td val-cond" id="val-m30-cond">---</div>
-                    <div class="td tf-col">H1</div>  <div class="td val-lo" id="val-h1-lo">---</div>  <div class="td val-hi" id="val-h1-hi">---</div>  <div class="td val-cond" id="val-h1-cond">---</div>
+                    <div class="th">TF</div> <div class="th">LOW</div> <div class="th">HIGH</div> <div class="th">CONDITION</div>
+                    <div class="td" style="font-weight:900">M5</div> <div class="td val-lo" id="val-m5-lo">---</div> <div class="td val-hi" id="val-m5-hi">---</div> <div class="td val-cond" id="val-m5-cond">---</div>
+                    <div class="td" style="font-weight:900">M15</div> <div class="td val-lo" id="val-m15-lo">---</div> <div class="td val-hi" id="val-m15-hi">---</div> <div class="td val-cond" id="val-m15-cond">---</div>
+                    <div class="td" style="font-weight:900">M30</div> <div class="td val-lo" id="val-m30-lo">---</div> <div class="td val-hi" id="val-m30-hi">---</div> <div class="td val-cond" id="val-m30-cond">---</div>
+                    <div class="td" style="font-weight:900">H1</div> <div class="td val-lo" id="val-h1-lo">---</div> <div class="td val-hi" id="val-h1-hi">---</div> <div class="td val-cond" id="val-h1-cond">---</div>
                 </div>
             </div>
 
             <div class="fib-container">
-                <div class="section-label">FIBONACCI ZONES</div>
-                <div id="fib-list">Loading...</div>
+                <div class="section-label">FIBONACCI GOLDEN ZONES</div>
+                <div id="fib-list" class="fib-list">Memuat Level...</div>
             </div>
         </div>
 
         <div class="right-panel">
-            <div class="note-title">📝 Catatan Trader</div>
-            <div id="val-note" class="note-content">Menunggu data...</div>
+            <div class="note-title">📝 ANALISIS STRATEGI</div>
+            <div id="val-note" class="note-content">---</div>
+            <a href="https://nanansuh234.github.io/Sunda-Nuswantara-OS/MTFZoneLevels.rar" class="download-btn">📥 DOWNLOAD INDIKATOR MT4</a>
         </div>
-
-    </a>
+    </div>
 
     <script>
-        // === 1. LOGIK JAM NUSWANTARA (Rumus 01 Jam Sunda Nuswantara.html) ===
         const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
         const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
 
-        function updateNuswantaraClock() {
+        function updateClock() {
             let now = new Date();
-            
-            // --- Tanggal & Pasaran ---
             let anchor = new Date(2025, 2, 21);
-            let diffTime = now - anchor;
-            let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
-            let nusYear = 1 + Math.floor(diffDays / 365);
-            let daysInYear = diffDays % 365;
-            let mIdx = Math.floor(daysInYear / 28);
-            if(mIdx > 12) mIdx = 12;
-            let dDate = (daysInYear % 28) + 1;
-            let pIdx = (diffDays + 2) % 5; 
-            if(pIdx < 0) pIdx = 0;
-
-            let strMonth = months[mIdx].toUpperCase();
-            let strPasaran = pasarans[pIdx].toUpperCase();
-
-            // --- WAKTU (1 Jam Nus = 90 Menit Masehi) ---
-            let h = now.getHours();
-            let m = now.getMinutes();
-            let s = now.getSeconds();
-
-            // Rumus: Total Menit Masehi (reset per 12 jam) dibagi 90
-            let mTotalMin = ((h % 12) * 60) + m + (s/60);
-            let nTotalHours = mTotalMin / 90;
-            
-            // Jam Nuswantara (1-8)
-            let dHour = Math.floor(nTotalHours) || 8; 
-            // Menit Nuswantara (0-90)
-            let dMin = Math.floor((nTotalHours % 1) * 90);
-            
-            // Siang/Malam (Siang = 06:00-18:00 WIB)
+            let diffDays = Math.floor((now - anchor) / (1000 * 60 * 60 * 24));
+            let Year = 1 + Math.floor(diffDays / 365);
+            let dYear = diffDays % 365;
+            let mIdx = Math.min(Math.floor(dYear / 28), 12);
+            let dDate = (dYear % 28) + 1;
+            let pIdx = (diffDays + 2) % 5;
+            let h = now.getHours(); let m = now.getMinutes();
+            let mTotal = ((h % 12) * 60) + m;
+            let nHours = mTotal / 90;
+            let dHour = Math.floor(nHours) || 8;
+            let dMin = Math.floor((nHours % 1) * 90);
             let phase = (h >= 6 && h < 18) ? 'SIANG' : 'MALAM';
-
-            let displayTime = `PUKUL ${String(dHour).padStart(2,'0')}:${String(dMin).padStart(2,'0')} ${phase}`;
-            let displayDate = `<span class="highlight">${dDate.toString().padStart(2,'0')} ${strMonth}</span> | TH 00${nusYear} | <span class="highlight">${strPasaran}</span>`;
-
-            document.getElementById('nusDate').innerHTML = displayDate;
-            document.getElementById('nusTime').innerText = displayTime;
+            document.getElementById('nusDate').innerHTML = `<span class="highlight">${String(dDate).padStart(2,'0')} ${months[mIdx].toUpperCase()}</span> | TH 00${Year} | <span class="highlight">${pasarans[pIdx].toUpperCase()}</span>`;
+            document.getElementById('nusTime').innerText = `PUKUL ${String(dHour).padStart(2,'0')}:${String(dMin).padStart(2,'0')} ${phase}`;
         }
 
-        // === 2. LOGIK DATA MARKET (GOOGLE SHEETS) ===
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQGkIRI-_XNlA7-5YP1amp9axQdYbGFLERIted9INYCDKpFa8AxtJ-qwVMf9kFLB-kLcmUoJPzCmend/pub?gid=692499759&single=true&output=csv";
 
-        const MAPPING = {
-            'val-trend': 'daily trend',
-            'val-note': 'catatan',
-            'val-m5-lo': 'm5 lo',   'val-m5-hi': 'm5 hi',   'val-m5-cond': 'm5 cond',
-            'val-m15-lo': 'm15 lo', 'val-m15-hi': 'm15 hi', 'val-m15-cond': 'm15 cond',
-            'val-m30-lo': 'm30 lo', 'val-m30-hi': 'm30 hi', 'val-m30-cond': 'm30 cond',
-            'val-h1-lo': 'h1 lo',   'val-h1-hi': 'h1 hi',   'val-h1-cond': 'h1 cond',
-        };
-        const FIB_KEYS = ['fibbo 0', 'fibbo 32', 'fibbo 50', 'fibbo 61', 'fibbo 100', 'fibbo 161'];
-
-        async function updateData() {
+        async function fetchMarketData() {
             try {
-                const res = await fetch(SHEET_URL);
-                const text = await res.text();
-                
-                const rows = text.split('\n').map(r => r.split(','));
-                if(rows.length < 2) return;
-                const headers = rows[0].map(h => h.trim().toLowerCase());
-                const values = rows[1].map(v => v.trim());
+                const response = await fetch(SHEET_URL + "&t=" + new Date().getTime());
+                const data = await response.text();
+                const rows = data.split('\n');
+                const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+                const vals = rows[1].split(',').map(v => v.trim());
+                const getVal = (key) => {
+                    const i = headers.findIndex(h => h.includes(key.toLowerCase()));
+                    return (i !== -1) ? vals[i] : "";
+                };
 
-                for (const [domId, csvKey] of Object.entries(MAPPING)) {
-                    const idx = headers.findIndex(h => h.includes(csvKey));
-                    const el = document.getElementById(domId);
-                    if (idx !== -1 && values[idx]) {
-                        el.innerText = values[idx];
-                        if(domId === 'val-trend') {
-                            const t = values[idx].toUpperCase();
-                            el.className = 'trend-badge'; 
-                            if(t.includes('UP') || t.includes('BULL')) el.classList.add('is-up');
-                            else if(t.includes('DOWN') || t.includes('BEAR')) el.classList.add('is-down');
-                        }
-                    } else if (csvKey.includes('cond')) {
-                        const globalIdx = headers.findIndex(h => h.includes('movement condition'));
-                        if (globalIdx !== -1 && values[globalIdx]) el.innerText = values[globalIdx];
-                    }
-                }
+                const trend = getVal('trend');
+                const trendEl = document.getElementById('val-trend');
+                trendEl.innerText = trend || "---";
+                trendEl.className = 'trend-badge ' + (trend.toUpperCase().includes('UP') || trend.toUpperCase().includes('BULL') ? 'is-up' : 'is-down');
+                document.getElementById('val-note').innerText = getVal('catatan') || "No data.";
 
-                let fibHtml = '';
-                FIB_KEYS.forEach(key => {
-                    const idx = headers.findIndex(h => h.includes(key));
-                    let val = "---";
-                    if(idx !== -1 && values[idx]) val = values[idx];
-                    let label = key.replace('fibbo', 'Fib').toUpperCase() + "%";
-                    fibHtml += `<div class="fib-row"><span class="fib-label">${label}</span><span class="fib-val">${val}</span></div>`;
+                const tfs = ['m5', 'm15', 'm30', 'h1'];
+                const globalCond = getVal('movement condition') || "---";
+                tfs.forEach(tf => {
+                    document.getElementById(`val-${tf}-lo`).innerText = getVal(tf + ' lo') || "---";
+                    document.getElementById(`val-${tf}-hi`).innerText = getVal(tf + ' hi') || "---";
+                    let c = getVal(tf + ' cond');
+                    document.getElementById(`val-${tf}-cond`).innerText = c ? c : globalCond;
                 });
-                document.getElementById('fib-list').innerHTML = fibHtml;
 
-                // Update Waktu Sync (Tetap Masehi untuk referensi Real World)
-                const now = new Date();
-                document.getElementById('lastSync').innerText = "Sync: " + now.toLocaleTimeString() + " WIB";
-
-            } catch (e) { console.log(e); }
+                const fLevels = ['0', '32', '50', '61', '100', '161'];
+                let fHtml = '';
+                fLevels.forEach(lvl => {
+                    fHtml += `<div class="fib-row"><span class="fib-label">LEVEL FIBONACCI ${lvl}%</span><span class="fib-val">${getVal('fibbo ' + lvl) || '---'}</span></div>`;
+                });
+                document.getElementById('fib-list').innerHTML = fHtml;
+                document.getElementById('lastSync').innerText = "Sync: " + new Date().toLocaleTimeString() + " WIB";
+            } catch (err) { document.getElementById('lastSync').innerText = "Sync Error!"; }
         }
 
-        // JALANKAN SEMUA
-        updateNuswantaraClock();
-        setInterval(updateNuswantaraClock, 1000); // Clock Nuswantara Live
-
-        updateData();
-        setInterval(updateData, 5000); // Data Market Sync
+        updateClock(); setInterval(updateClock, 1000);
+        fetchMarketData(); setInterval(fetchMarketData, 5000);
     </script>
 </body>
-
 </html>
-
