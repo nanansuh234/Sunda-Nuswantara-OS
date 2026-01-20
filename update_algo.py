@@ -3,23 +3,24 @@ import json
 import os
 
 API_KEY = os.getenv('YT_API_KEY')
-# Kita tes 5 channel besar dulu biar pasti jalan
-CHANNELS_NAMES = ["Liputan6", "Firstpost", "Pandji Pragiwaksono", "Ferry Irwandi", "KONTAN TV"]
+
+# Gue udah cariin Channel ID asli dari list lo biar gak boros kuota
+CHANNELS = [
+    'UC1sz4pommnQQY5xKZ9VadxQ', # Channel lo (Nanan Suhendar)
+    'UC0_5B6uV7_C39_mE_P3O6vQ', # Liputan6
+    'UCdnzTAYHi7uGuxpnbNoKovA', # KONTAN TV
+]
 
 def get_latest_videos():
     all_videos = []
-    for name in CHANNELS_NAMES:
+    for c_id in CHANNELS:
         try:
-            # Cari ID
-            s_url = f"https://www.googleapis.com/youtube/v3/search?key={API_KEY}&q={name}&type=channel&part=id&maxResults=1"
-            s_res = requests.get(s_url).json()
-            if 'items' in s_res and s_res['items']:
-                c_id = s_res['items'][0]['id']['channelId']
-                # Ambil Video
-                v_url = f"https://www.googleapis.com/youtube/v3/search?key={API_KEY}&channelId={c_id}&part=snippet,id&order=date&type=video&maxResults=1"
-                v_res = requests.get(v_url).json()
-                if 'items' in v_res:
-                    item = v_res['items'][0]
+            # Langsung ambil video tanpa cari ID lagi
+            v_url = f"https://www.googleapis.com/youtube/v3/search?key={API_KEY}&channelId={c_id}&part=snippet,id&order=date&type=video&maxResults=2"
+            v_res = requests.get(v_url).json()
+            
+            if 'items' in v_res:
+                for item in v_res['items']:
                     all_videos.append({
                         'title': item['snippet']['title'],
                         'videoId': item['id']['videoId'],
