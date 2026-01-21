@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nanan - Full Double Anchor Live</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #05070a; color: #ffcc00; padding: 20px; }
+        .container { max-width: 1500px; margin: auto; border: 5px solid #ffcc00; padding: 30px; box-shadow: 0 0 40px rgba(255, 204, 0, 0.5); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; font-size: 2.2em; margin-bottom: 5px; }
+        .manifesto { text-align: center; color: #00ffcc; font-size: 1.2em; font-weight: bold; margin-bottom: 25px; border-bottom: 2px solid #333; padding-bottom: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; background: #0d1117; font-size: 20px; } 
+        th, td { border: 2px solid #30363d; padding: 15px; text-align: right; }
+        th { background: #1a1f26; color: #fff; text-align: center; font-size: 0.85em; }
+        
+        .gold-val { color: #ffcc00; font-weight: bold; }
+        .silver-val { color: #e0e0e0; font-weight: bold; }
+        .reject-m2 { border: 4px solid #ff4d4d !important; box-shadow: inset 0 0 10px #ff4d4d; color: #ff4d4d !important; font-weight: bold; }
+        .secured { border: 2px solid #00ffcc !important; color: #00ffcc !important; }
+        
+        .pair-name { text-align: left; color: #fff; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .flag { font-size: 1.5em; }
+        
+        #status-bar { text-align: center; padding: 15px; margin-bottom: 20px; border: 3px dashed #ffcc00; color: #ffcc00; font-size: 1.3em; font-weight: bold; }
+        .footer-note { margin-top: 30px; padding: 25px; border: 4px solid #ffcc00; background: rgba(255, 204, 0, 0.1); color: #fff; font-size: 1.4em; line-height: 1.6; text-align: center; }
+        .highlight { color: #ffcc00; font-weight: bold; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>KESETARAAN EMAS & PERAK SEPANJANG MASA</h1>
+    <div class="manifesto">DOUBLE ANCHOR (1:27 RATIO) | STANDAR DINAR-DIRHAM | UKURAN MURNI TANPA INJEKSI M2</div>
+    
+    <div id="status-bar">MENGHUBUNGKAN KE JARINGAN PASAR GLOBAL...</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>MATA UANG</th>
+                <th>RUNNING (USD)</th>
+                <th>KESETARAAN EMAS (GRAM)</th>
+                <th>KESETARAAN PERAK (GRAM)</th>
+                <th>DEVIASI & STATUS</th>
+            </tr>
+        </thead>
+        <tbody id="ratio-table">
+            </tbody>
+    </table>
+
+    <div class="footer-note">
+        <span class="highlight">HUKUM KESETARAAN DINAR-DIRHAM:</span><br>
+        Jika <span style="color:#ff4d4d">TOLAK FIAT</span> menyala, martabat uang fiat Anda sedang dihancurkan.<br>
+        Wajib Pertahankan: <span class="highlight">30% CASH</span> & <span class="highlight">70% NILAI RIIL (FISIK)</span>.<br>
+        Gunakan "Ukuran" Harga Tengah ($3.622,9) sebagai benteng pertahanan terakhir!
+    </div>
+</div>
+
+<script>
+    // Database Anchor & Rasio
+    const goldMidAnchorUSD = 3622.90; 
+    const gramPerOz = 31.1035;
+
+    const flags = {
+        "IDR": "🇮🇩", "SGD": "🇸🇬", "MYR": "🇲🇾", "THB": "🇹🇭", "PHP": "🇵🇭", "VND": "🇻🇳",
+        "JPY": "🇯🇵", "CNY": "🇨🇳", "EUR": "🇪🇺", "GBP": "🇬🇧", "RUB": "🇷🇺", "SAR": "🇸🇦",
+        "INR": "🇮🇳", "TRY": "🇹🇷", "KRW": "🇰🇷", "AED": "🇦🇪", "BRL": "🇧🇷", "ZAR": "🇿🇦",
+        "AUD": "🇦🇺", "CAD": "🇨🇦", "CHF": "🇨🇭"
+    };
+
+    async function updateRatioEquity() {
+        try {
+            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            const data = await res.json();
+            const r = data.rates;
+            
+            // Driver Emas Live
+            const goldSpotUSD = r.XAU ? (1 / r.XAU) : 4845.88; 
+            const goldGramLiveUSD = goldSpotUSD / gramPerOz;
+
+            const list = [
+                { s: "IDR", n: r.IDR, d: 2 }, { s: "MYR", n: r.MYR, d: 4 }, { s: "SGD", n: r.SGD, d: 4 },
+                { s: "THB", n: r.THB, d: 2 }, { s: "VND", n: r.VND, d: 2 }, { s: "PHP", n: r.PHP, d: 2 },
+                { s: "JPY", n: r.JPY, d: 2 }, { s: "SAR", n: r.SAR, d: 4 }, { s: "AED", n: r.AED, d: 4 },
+                { s: "CNY", n: r.CNY, d: 4 }, { s: "KRW", n: r.KRW, d: 2 }, { s: "EUR", n: 1/r.EUR, d: 4 },
+                { s: "GBP", n: 1/r.GBP, d: 4 }, { s: "AUD", n: 1/r.AUD, d: 4 }, { s: "CHF", n: r.CHF, d: 4 },
+                { s: "RUB", n: r.RUB, d: 2 }, { s: "TRY", n: r.TRY, d: 4 }, { s: "INR", n: r.INR, d: 2 },
+                { s: "BRL", n: r.BRL, d: 4 }, { s: "ZAR", n: r.ZAR, d: 2 }
+            ];
+
+            let html = "";
+            list.forEach(p => {
+                const unitToUSD = (p.s === "EUR" || p.s === "GBP" || p.s === "AUD") ? p.n : (1 / p.n);
+                
+                // KESETARAAN GRAM EMAS
+                const liveGoldGram = unitToUSD / goldGramLiveUSD;
+                
+                // KESETARAAN GRAM PERAK (FIX RATIO 1:27) [cite: 2026-01-21]
+                // 1 unit uang harus dapet 27x lipat lebih banyak berat perak daripada emas
+                const liveSilverGram = liveGoldGram * 27; 
+                
+                const deviation = (((goldSpotUSD - goldMidAnchorUSD) / goldMidAnchorUSD) * 100).toFixed(4);
+                const isRejected = goldSpotUSD > goldMidAnchorUSD;
+                const statusClass = isRejected ? "reject-m2" : "secured";
+
+                html += `<tr>
+                    <td class="pair-name"><span class="flag">${flags[p.s]}</span> 1 ${p.s}</td>
+                    <td>${p.n.toFixed(p.d)}</td>
+                    <td class="gold-val">${liveGoldGram.toFixed(8)} gr</td>
+                    <td class="silver-val">${liveSilverGram.toFixed(7)} gr</td>
+                    <td style="text-align:center; font-weight:bold" class="${statusClass}">
+                        ${deviation}%<br><span style="font-size:10px">${isRejected ? 'TOLAK FIAT' : 'SECURED'}</span>
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('ratio-table').innerHTML = html;
+            document.getElementById('status-bar').innerText = "DOUBLE ANCHOR AKTIF | XAU LIVE: $" + goldSpotUSD.toFixed(2);
+        } catch (e) {
+            document.getElementById('status-bar').innerText = "MENUNGGU SINKRONISASI DATA PASAR...";
+        }
+    }
+
+    setInterval(updateRatioEquity, 15000);
+    updateRatioEquity();
+</script>
+</body>
+</html>

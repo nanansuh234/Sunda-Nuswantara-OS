@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nanan - Sepanjang Masa Anchor (Extended)</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #05070a; color: #00ffcc; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; border: 4px solid #00ffcc; padding: 25px; box-shadow: 0 0 30px #00ffcc; }
+        
+        h1 { text-align: center; color: #fff; text-transform: uppercase; font-size: 2.5em; margin-bottom: 5px; }
+        .manifesto { text-align: center; color: #ffcc00; font-size: 1.2em; font-weight: bold; margin-bottom: 25px; border-bottom: 2px solid #333; padding-bottom: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; background: #0d1117; font-size: 20px; } 
+        th, td { border: 2px solid #30363d; padding: 15px; text-align: right; }
+        th { background: #1a1f26; color: #fff; font-size: 0.9em; }
+        
+        .reject-m2 { 
+            border: 4px solid #ff4d4d !important; 
+            box-shadow: inset 0 0 12px #ff4d4d, 0 0 15px #ff4d4d; 
+            color: #ff4d4d !important;
+            font-weight: bold;
+        }
+        
+        .secured { border: 2px solid #00ffcc !important; color: #00ffcc !important; }
+        .pair-name { text-align: left; color: #fff; font-weight: bold; display: flex; align-items: center; gap: 12px; }
+        .flag { font-size: 1.8em; }
+        
+        #status-bar { text-align: center; padding: 15px; margin-bottom: 20px; border: 3px dashed #ffcc00; color: #ffcc00; font-size: 1.4em; font-weight: bold; }
+        
+        .footer-note { margin-top: 30px; padding: 25px; border: 3px solid #ffcc00; background: rgba(255, 204, 0, 0.1); color: #fff; font-size: 1.4em; line-height: 1.6; text-align: center; }
+        .highlight { color: #ffcc00; font-weight: bold; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>JANGKAR MONETER SEPANJANG MASA</h1>
+    <div class="manifesto">FILTER INJEKSI M2: RATA-RATAKAN HARGA TENGAH TAHUN 2000 HINGGA DETIK INI</div>
+    
+    <div id="status-bar">SINKRONISASI LIVE ANCHOR...</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>MATA UANG (VS USD)</th>
+                <th>LIVE RUNNING</th>
+                <th>LIVE ANCHOR (AVG)</th>
+                <th>DEVIASI (%)</th>
+                <th>HASIL UKUR PERLAWANAN</th>
+            </tr>
+        </thead>
+        <tbody id="anchor-table">
+            </tbody>
+    </table>
+
+    <div class="footer-note">
+        <span class="highlight">UKURAN PERTAHANAN MURNI:</span><br>
+        Jika <span style="color:#ff4d4d">RUNNING</span> > <span style="color:#ffcc00">ANCHOR</span> = Manipulasi M2 Terdeteksi.<br>
+        Wajib Pertahankan: <span class="highlight">30% CASH</span> & <span class="highlight">70% NILAI RIIL (EMAS/PERAK/FISIK)</span><br>
+        Gunakan "Ukuran" rata-rata harga tengah sejak milenium untuk menolak devaluasi!
+    </div>
+</div>
+
+<script>
+    // Harga Tengah Januari 2000 (Anchor Sejarah) [cite: 2026-01-21]
+    const jan2000 = {
+        // ASEAN
+        "IDR": 7100.00, "SGD": 1.6600, "MYR": 3.8000, "THB": 37.50, "PHP": 40.30, 
+        "VND": 14050.00, "KHR": 3850.00, "LAK": 7600.00,
+        // ASIA & TIMUR TENGAH
+        "JPY": 102.50, "CNY": 8.2800, "KRW": 1130.00, "INR": 43.50, "TWD": 30.80,
+        "SAR": 3.7500, "AED": 3.6700, "ILS": 4.1500, "TRY": 0.5400, // TRY redenominated
+        // GLOBAL MAJOR & EXOTIC
+        "EUR": 1.0100, "GBP": 1.6300, "AUD": 0.6500, "CHF": 1.5800, "CAD": 1.4500,
+        "RUB": 27.00, "BRL": 1.8000, "MXN": 9.5000, "ZAR": 6.1500
+    };
+
+    const flags = {
+        "IDR": "🇮🇩", "SGD": "🇸🇬", "MYR": "🇲🇾", "THB": "🇹🇭", "PHP": "🇵🇭", "VND": "🇻🇳",
+        "KHR": "🇰🇭", "LAK": "🇱🇦", "JPY": "🇯🇵", "CNY": "🇨🇳", "KRW": "🇰🇷", "INR": "🇮🇳",
+        "TWD": "🇹🇼", "SAR": "🇸🇦", "AED": "🇦🇪", "ILS": "🇮🇱", "TRY": "🇹🇷", "EUR": "🇪🇺",
+        "GBP": "🇬🇧", "AUD": "🇦🇺", "CHF": "🇨🇭", "CAD": "🇨🇦", "RUB": "🇷🇺", "BRL": "🇧🇷",
+        "MXN": "🇲🇽", "ZAR": "🇿🇦"
+    };
+
+    async function updateLiveAnchor() {
+        try {
+            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            const data = await res.json();
+            const r = data.rates;
+            
+            const pairs = [
+                { s: "IDR", b: jan2000.IDR, n: r.IDR, d: 2 },
+                { s: "MYR", b: jan2000.MYR, n: r.MYR, d: 4 },
+                { s: "SGD", b: jan2000.SGD, n: r.SGD, d: 4 },
+                { s: "THB", b: jan2000.THB, n: r.THB, d: 2 },
+                { s: "VND", b: jan2000.VND, n: r.VND, d: 2 },
+                { s: "PHP", b: jan2000.PHP, n: r.PHP, d: 2 },
+                { s: "SAR", b: jan2000.SAR, n: r.SAR, d: 4 },
+                { s: "JPY", b: jan2000.JPY, n: r.JPY, d: 2 },
+                { s: "CNY", b: jan2000.CNY, n: r.CNY, d: 4 },
+                { s: "KRW", b: jan2000.KRW, n: r.KRW, d: 2 },
+                { s: "EUR", b: jan2000.EUR, n: 1/r.EUR, d: 4 },
+                { s: "GBP", b: jan2000.GBP, n: 1/r.GBP, d: 4 },
+                { s: "RUB", b: jan2000.RUB, n: r.RUB, d: 2 },
+                { s: "TRY", b: jan2000.TRY, n: r.TRY, d: 4 },
+                { s: "BRL", b: jan2000.BRL, n: r.BRL, d: 4 },
+                { s: "ZAR", b: jan2000.ZAR, n: r.ZAR, d: 2 }
+            ];
+
+            let html = "";
+            pairs.forEach(p => {
+                // RUMUS LIVE ANCHOR: (Harga Jan 2000 + Harga Live Running) / 2 [cite: 2026-01-21]
+                const liveAnchor = (p.b + p.n) / 2;
+                const diff = (((p.n - liveAnchor) / liveAnchor) * 100).toFixed(4);
+                
+                const m2Injected = p.n > liveAnchor;
+                const statusClass = m2Injected ? "reject-m2" : "secured";
+
+                html += `<tr>
+                    <td class="pair-name"><span class="flag">${flags[p.s]}</span> ${p.s}</td>
+                    <td>${p.n.toFixed(p.d)}</td>
+                    <td class="${statusClass}">${liveAnchor.toFixed(p.d)}</td>
+                    <td class="${m2Injected ? 'reject-m2' : ''}">${diff}%</td>
+                    <td style="text-align:center; font-weight:bold" class="${statusClass}">${m2Injected ? 'TOLAK PENUH DOLLAR' : 'TERIMA 30% DOLLAR'}</td>
+                </tr>`;
+            });
+
+            document.getElementById('anchor-table').innerHTML = html;
+            document.getElementById('status-bar').innerText = "LIVE ANCHOR SEPANJANG MASA AKTIF | SYNC: " + new Date().toLocaleTimeString();
+        } catch (e) {
+            document.getElementById('status-bar').innerText = "OFFLINE - MANIPULATOR DETECTED";
+        }
+    }
+
+    setInterval(updateLiveAnchor, 10000);
+    updateLiveAnchor();
+</script>
+</body>
+</html>

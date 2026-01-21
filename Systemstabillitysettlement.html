@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nanan - Dashboard Pusat Perlawanan</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #05070a; color: #ffcc00; padding: 40px; }
+        .menu-container { max-width: 1000px; margin: auto; border: 5px solid #ffcc00; padding: 40px; box-shadow: 0 0 50px rgba(255, 204, 0, 0.3); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; font-size: 2.8em; margin-bottom: 40px; border-bottom: 3px solid #ffcc00; padding-bottom: 20px; }
+        
+        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
+        
+        .menu-item { 
+            display: flex; 
+            flex-direction: column; 
+            background: #0d1117; 
+            border: 2px solid #30363d; 
+            padding: 25px; 
+            text-decoration: none; 
+            transition: 0.3s;
+        }
+        
+        .menu-item:hover { 
+            border-color: #00ffcc; 
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2); 
+            transform: scale(1.02);
+        }
+        
+        .menu-title { color: #00ffcc; font-size: 1.8em; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .menu-desc { color: #fff; font-size: 1.2em; line-height: 1.5; }
+        .file-tag { font-size: 0.8em; color: #888; margin-top: 10px; font-style: italic; }
+        
+        .footer { text-align: center; margin-top: 50px; color: #ffcc00; font-weight: bold; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+
+<div class="menu-container">
+    <h1>PANEL KONTROL DINAR DIRHAM</h1>
+    
+    <div class="menu-grid">
+        
+        <a href="atim2injection.html" class="menu-item">
+            <div class="menu-title">1. Filter Injeksi M2 (2000 - Live)</div>
+            <div class="menu-desc">Dashboard pembanding mata uang global terhadap harga tengah tahun 2000. Digunakan untuk mendeteksi berapa besar uang Anda telah dicetak (devaluasi) sejak milenium.</div>
+            <div class="file-tag">File: antim2injection.html</div>
+        </a>
+
+        <a href="forcestadar emas.html" class="menu-item">
+            <div class="menu-title">2. Paksa Standar Emas (Live Equity)</div>
+            <div class="menu-desc">Menelanjangi nilai fiat dengan menghitung berat emas murni (gram) yang setara dengan 1 unit mata uang. Fokus pada martabat emas sebagai ukuran tunggal.</div>
+            <div class="file-tag">File: forcestadar emas.html</div>
+        </a>
+
+        <a href="standar perak.html" class="menu-item">
+            <div class="menu-title">3. Kesetaraan Perak (Ratio 1:27)</div>
+            <div class="menu-desc">Menampilkan berat perak yang setara dengan mata uang Anda menggunakan rasio tetap 1 Emas = 27 Perak. Memastikan martabat Dirham terkunci pada harga emas.</div>
+            <div class="file-tag">File: standar perak.html</div>
+        </a>
+
+        <a href="standardinardandirham.html" class="menu-item">
+            <div class="menu-title">4. Kontrol Dinar & Dirham Global</div>
+            <div class="menu-desc">Dashboard utama harga 1 Dinar (4.25g) dan 1 Dirham (2.975g) dalam mata uang lokal berbagai negara. Alat bantu transaksi komunitas berbasis nilai riil.</div>
+            <div class="file-tag">File: standardinardandirham.html</div>
+        </a>
+
+    </div>
+
+    <div class="footer">
+        MANUFAKTUR NILAI RIIL - JANGKAR SEPANJANG MASA [cite: 2026-01-21]
+    </div>
+</div>
+
+</body>
+</html>

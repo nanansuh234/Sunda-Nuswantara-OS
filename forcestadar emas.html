@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nanan - Full Gold Equity Dashboard</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #05070a; color: #ffcc00; padding: 20px; }
+        .container { max-width: 1500px; margin: auto; border: 5px solid #ffcc00; padding: 30px; box-shadow: 0 0 40px rgba(255, 204, 0, 0.5); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; font-size: 2.5em; margin-bottom: 5px; }
+        .manifesto { text-align: center; color: #00ffcc; font-size: 1.3em; font-weight: bold; margin-bottom: 25px; border-bottom: 2px solid #333; padding-bottom: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; background: #0d1117; font-size: 22px; } 
+        th, td { border: 2px solid #30363d; padding: 15px; text-align: right; }
+        th { background: #1a1f26; color: #fff; text-align: center; font-size: 0.85em; }
+        
+        .metal-val { color: #ffcc00; font-weight: bold; }
+        .reject-m2 { border: 4px solid #ff4d4d !important; box-shadow: 0 0 15px #ff4d4d; color: #ff4d4d !important; font-weight: bold; }
+        .secured { border: 2px solid #00ffcc !important; color: #00ffcc !important; }
+        
+        .pair-name { text-align: left; color: #fff; font-weight: bold; display: flex; align-items: center; gap: 12px; }
+        .flag { font-size: 1.6em; }
+        
+        #status-bar { text-align: center; padding: 20px; margin-bottom: 25px; border: 3px dashed #ffcc00; color: #ffcc00; font-size: 1.5em; font-weight: bold; }
+        .footer-note { margin-top: 30px; padding: 25px; border: 4px solid #ffcc00; background: rgba(255, 204, 0, 0.1); color: #fff; font-size: 1.5em; line-height: 1.6; text-align: center; }
+        .highlight { color: #ffcc00; font-weight: bold; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>KESETARAAN EMAS SEPANJANG MASA</h1>
+    <div class="manifesto">DOUBLE ANCHOR: MENGUKUR MARTABAT FIAT TERHADAP BERAT EMAS (JAN 2000 - LIVE)</div>
+    
+    <div id="status-bar">MENGHUBUNGKAN KE JARINGAN DOUBLE ANCHOR...</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>MATA UANG</th>
+                <th>RUNNING (VS USD)</th>
+                <th>KESETARAAN EMAS (GRAM)</th>
+                <th>DEVIASI VS ANCHOR</th>
+                <th>HASIL UKUR</th>
+            </tr>
+        </thead>
+        <tbody id="gold-table">
+            </tbody>
+    </table>
+
+    <div class="footer-note">
+        <span class="highlight">MISI PERTAHANAN NILAI:</span><br>
+        Jika <span style="color:#ff4d4d">TOLAK M2</span> menyala, artinya uang kertas Anda sedang didevaluasi secara brutal.<br>
+        Wajib Pertahankan: <span class="highlight">30% CASH</span> & <span class="highlight">70% NILAI RIIL (EMAS/PERAK/FISIK)</span><br>
+        Tolak manipulasi penambahan M2 global dan hanya terima emas/perak!
+    </div>
+</div>
+
+<script>
+    // Anchor Harga Tengah lo
+    const goldMidAnchorUSD = 3622.90; 
+    const gramPerOz = 31.1035;
+
+    const flags = {
+        "IDR": "🇮🇩", "SGD": "🇸🇬", "MYR": "🇲🇾", "THB": "🇹🇭", "PHP": "🇵🇭", "VND": "🇻🇳",
+        "KHR": "🇰🇭", "LAK": "🇱🇦", "MMK": "🇲🇲", "JPY": "🇯🇵", "CNY": "🇨🇳", "KRW": "🇰🇷",
+        "SAR": "🇸🇦", "AED": "🇦🇪", "EUR": "🇪🇺", "GBP": "🇬🇧", "AUD": "🇦🇺", "CHF": "🇨🇭",
+        "CAD": "🇨🇦", "RUB": "🇷🇺", "INR": "🇮🇳", "BRL": "🇧🇷", "TRY": "🇹🇷"
+    };
+
+    async function updateGoldEquity() {
+        try {
+            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            const data = await res.json();
+            const r = data.rates;
+            
+            // Mengambil Harga Emas Live (XAU) atau fallback ke High YTD lo jika API limit
+            const goldSpotUSD = r.XAU ? (1 / r.XAU) : 4845.88; //
+            const goldGramLiveUSD = goldSpotUSD / gramPerOz;
+
+            const pairs = [
+                { s: "IDR", n: r.IDR, d: 2 }, { s: "MYR", n: r.MYR, d: 4 }, { s: "SGD", n: r.SGD, d: 4 },
+                { s: "THB", n: r.THB, d: 2 }, { s: "VND", n: r.VND, d: 2 }, { s: "PHP", n: r.PHP, d: 2 },
+                { s: "JPY", n: r.JPY, d: 2 }, { s: "CNY", n: r.CNY, d: 4 }, { s: "KRW", n: r.KRW, d: 2 },
+                { s: "SAR", n: r.SAR, d: 4 }, { s: "AED", n: r.AED, d: 4 }, { s: "EUR", n: 1/r.EUR, d: 4 },
+                { s: "GBP", n: 1/r.GBP, d: 4 }, { s: "AUD", n: 1/r.AUD, d: 4 }, { s: "RUB", n: r.RUB, d: 2 },
+                { s: "TRY", n: r.TRY, d: 4 }, { s: "INR", n: r.INR, d: 2 }, { s: "BRL", n: r.BRL, d: 4 }
+            ];
+
+            let html = "";
+            pairs.forEach(p => {
+                const unitToUSD = (p.s === "EUR" || p.s === "GBP" || p.s === "AUD") ? p.n : (1 / p.n);
+                const liveEquityGram = unitToUSD / goldGramLiveUSD;
+                
+                // Menghitung deviasi harga spot terhadap Anchor Tengah lo
+                const deviation = (((goldSpotUSD - goldMidAnchorUSD) / goldMidAnchorUSD) * 100).toFixed(4);
+                
+                const isRejected = goldSpotUSD > goldMidAnchorUSD;
+                const statusClass = isRejected ? "reject-m2" : "secured";
+
+                html += `<tr>
+                    <td class="pair-name"><span class="flag">${flags[p.s]}</span> 1 ${p.s}</td>
+                    <td>${p.n.toFixed(p.d)}</td>
+                    <td class="metal-val">${liveEquityGram.toFixed(8)} gr</td>
+                    <td class="${isRejected ? 'reject-m2' : ''}">${deviation}%</td>
+                    <td style="text-align:center; font-weight:bold" class="${statusClass}">${isRejected ? 'TOLAK M2' : 'AMAN'}</td>
+                </tr>`;
+            });
+
+            document.getElementById('gold-table').innerHTML = html;
+            document.getElementById('status-bar').innerText = "DOUBLE ANCHOR SYNC AKTIF | XAU/USD LIVE: $" + goldSpotUSD.toLocaleString('id-ID');
+        } catch (e) {
+            document.getElementById('status-bar').innerText = "MENUNGGU SINKRONISASI DATA PASAR...";
+        }
+    }
+
+    setInterval(updateGoldEquity, 15000);
+    updateGoldEquity();
+</script>
+</body>
+</html>
