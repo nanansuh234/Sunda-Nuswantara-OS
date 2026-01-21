@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nanan - 150+ Global Ponzi Liquidation</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #05070a; color: #ff0000; padding: 20px; }
+        .container { max-width: 1500px; margin: auto; border: 5px solid #ff0000; padding: 30px; box-shadow: 0 0 50px rgba(255, 0, 0, 0.5); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; font-size: 2.5em; margin-bottom: 5px; }
+        .alert { text-align: center; background: #ff0000; color: #000; font-weight: bold; padding: 15px; font-size: 1.4em; margin-bottom: 25px; }
+        
+        /* Search Box */
+        .search-box { text-align: center; margin-bottom: 25px; }
+        #search { padding: 12px; width: 400px; background: #000; border: 2px solid #ffcc00; color: #ffcc00; font-size: 1.2em; text-align: center; }
+
+        table { width: 100%; border-collapse: collapse; background: #0d1117; font-size: 18px; }
+        th, td { border: 1px solid #30363d; padding: 12px; text-align: right; }
+        th { background: #1a1f26; color: #fff; text-align: center; sticky; top: 0; }
+        
+        .pair-label { text-align: left; color: #fff; font-weight: bold; }
+        .ponzi-rate { color: #ffcc00; font-weight: bold; }
+        .danger { color: #ff4d4d; }
+        .highlight { color: #00ffcc; }
+
+        #status-bar { text-align: center; padding: 15px; margin-bottom: 20px; border: 2px dashed #ffcc00; color: #ffcc00; font-size: 1.2em; font-weight: bold; }
+        .footer-note { margin-top: 30px; padding: 20px; border: 3px solid #ffcc00; background: rgba(255, 204, 0, 0.1); color: #fff; font-size: 1.3em; text-align: center; line-height: 1.7; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>150+ NEGARA: VONIS LIKUIDASI PONZI DOLAR</h1>
+    <div class="alert">VONIS: DOLAR ADALAH SAMPAH TERENCERKAN 5.85x OLEH BEBAN $60.89T</div>
+
+    <div class="search-box">
+        <input type="text" id="search" placeholder="CARI MATA UANG NEGARA... (MISAL: IDR, JPY, EUR)" onkeyup="filterTable()">
+    </div>
+
+    <div id="status-bar">MENGADU 150 MATA UANG TERHADAP DAGING EMAS...</div>
+
+    <table id="currencyTable">
+        <thead>
+            <tr>
+                <th>NEGARA / UNIT</th>
+                <th>MARTABAT DOLAR (PONZI)</th>
+                <th>MARTABAT LAWAN (MARKET)</th>
+                <th>NILAI TUKAR JUJUR (REAL)</th>
+                <th>STATUS</th>
+            </tr>
+        </thead>
+        <tbody id="exchange-body">
+            </tbody>
+    </table>
+
+    <div class="footer-note">
+        <span style="color:#ffcc00; font-weight:bold;">LOGIKA PERANG NILAI:</span><br>
+        1. Martabat Dolar disunat <span class="danger">5,85x LIPAT</span> karena beban $60,89T (Utang AS $38T + M2 $22T).<br>
+        2. Mata uang lain diukur jujur terhadap emas fisik, menunjukkan Dolar adalah mata uang paling <span class="danger">TIDAK BERHARGA</span> [cite: 2026-01-21].<br>
+        3. Segera amankan <span class="highlight">70% FISIK</span>. Jangan simpan debu kertas yang sudah diencerkan! [cite: 2025-11-12, 2026-01-21]
+    </div>
+</div>
+
+<script>
+    const paperLive2026 = 60.89; // Triliun USD
+    const paperBasis2000 = 10.40; // Triliun USD
+    const dilutionFactor = paperLive2026 / paperBasis2000;
+    const gramPerOz = 31.1035;
+
+    async function updateGlobalPonzi() {
+        try {
+            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            const data = await res.json();
+            const r = data.rates;
+            
+            const goldHighUSD = r.XAU ? (1 / r.XAU) : 4845.88;
+            const goldGramPrice = goldHighUSD / gramPerOz;
+
+            // Martabat Dolar setelah sunat 60T
+            const martabatDolarPonzi = (1 / goldGramPrice) / dilutionFactor;
+
+            let html = "";
+            Object.keys(r).forEach(symbol => {
+                if(symbol === "XAU") return; // Lewati emas itu sendiri
+
+                const valTargetUSD = (1 / r[symbol]);
+                const martabatTarget = valTargetUSD / goldGramPrice;
+                const honestRate = martabatDolarPonzi / martabatTarget;
+
+                html += `<tr>
+                    <td class="pair-label">1 USD ke ${symbol}</td>
+                    <td class="danger">${martabatDolarPonzi.toFixed(8)} gr</td>
+                    <td class="highlight">${martabatTarget.toFixed(8)} gr</td>
+                    <td class="ponzi-rate">${honestRate.toLocaleString('id-ID', {maximumFractionDigits: 2})} ${symbol}</td>
+                    <td class="danger">DILUTED 5.8x</td>
+                </tr>`;
+            });
+
+            document.getElementById('exchange-body').innerHTML = html;
+            document.getElementById('status-bar').innerText = "VONIS GLOBAL AKTIF | 150+ MATA UANG TERVERIFIKASI | DILUSI USD: " + dilutionFactor.toFixed(2) + "x";
+        } catch (e) {
+            document.getElementById('status-bar').innerText = "GAGAL SINKRONISASI - ELIT MEMBLOKIR DATA?";
+        }
+    }
+
+    function filterTable() {
+        let input = document.getElementById("search");
+        let filter = input.value.toUpperCase();
+        let table = document.getElementById("currencyTable");
+        let tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            let td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                let txtValue = td.textContent || td.innerText;
+                tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+    }
+
+    updateGlobalPonzi();
+    setInterval(updateGlobalPonzi, 60000); // Update tiap menit
+</script>
+</body>
+</html>
