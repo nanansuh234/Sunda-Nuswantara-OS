@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nanan - Dynamic Debt Counter-Strike</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #05070a; color: #ff0000; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; border: 6px solid #ff0000; padding: 35px; box-shadow: 0 0 60px rgba(255, 0, 0, 0.7); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; font-size: 2.2em; margin-bottom: 5px; }
+        .alert { text-align: center; background: #ff0000; color: #000; font-weight: bold; padding: 15px; font-size: 1.4em; margin-bottom: 25px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: #1a0000; border: 3px solid #ff0000; padding: 15px; text-align: center; }
+        .stat-label { color: #fff; font-size: 0.9em; text-transform: uppercase; }
+        .stat-val { font-size: 1.8em; font-weight: bold; color: #ffcc00; }
+
+        .sim-box { background: #0d1117; border: 4px solid #ffcc00; padding: 30px; margin-bottom: 30px; text-align: center; }
+        input { background: #000; border: 2px solid #ffcc00; color: #ffcc00; padding: 15px; font-size: 1.8em; width: 450px; text-align: center; font-weight: bold; }
+        
+        .result-panel { margin-top: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .result-card { background: #1a1a00; border: 2px solid #00ffcc; padding: 20px; text-align: center; }
+        .res-label { color: #fff; font-size: 1.1em; margin-bottom: 10px; text-transform: uppercase; }
+        .res-val { font-size: 2.2em; font-weight: bold; color: #00ffcc; }
+
+        .manifesto-box { background: #2a0000; border-left: 12px solid #ff0000; padding: 30px; color: #fff; line-height: 1.8; font-size: 1.4em; text-align: justify; }
+        .highlight { color: #ffcc00; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AUDIT KEBANGKRUTAN BANDAR (DYNAMIC COUNTER-STRIKE)</h1>
+    <div class="alert">VONIS: JAMINAN EMAS BANDAR HANYA 2.06% DARI TOTAL BEBAN $60.89T</div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">TOTAL BEBAN KERTAS (USD)</div>
+            <div class="stat-val">$60,89 Triliun</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">RASIO JAMINAN RIIL</div>
+            <div class="stat-val" style="color:#ff0000">2,06%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">DILUSI PONZI</div>
+            <div class="stat-val">5,85x</div>
+        </div>
+    </div>
+
+    <div class="sim-box">
+        <label style="display:block; color:#fff; margin-bottom:10px; font-size: 1.2em;">MASUKKAN JUMLAH TAGIHAN UTANG (USD):</label>
+        <input type="number" id="debtInput" value="1000000" oninput="runAudit()">
+        
+        <div class="result-panel">
+            <div class="result-card">
+                <div class="res-label">BERAT EMAS RIIL TERKANDUNG</div>
+                <div class="res-val" id="goldWeight">1,09 kg Emas</div>
+                <div style="color:#888;">*Sesuai Martabat Ponzi 0,0010g/USD</div>
+            </div>
+            <div class="result-card" style="border-color:#ff4d4d;">
+                <div class="res-label">KEWAJIBAN BAYAR (NILAI ADIL)</div>
+                <div class="res-val" id="fairPay" style="color:#ff4d4d;">$20.693,05</div>
+                <div style="color:#888;">*Hanya bayar 2.06% jaminan riil</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="manifesto-box" id="manifesto">
+        </div>
+</div>
+
+<script>
+    function runAudit() {
+        const debt = parseFloat(document.getElementById('debtInput').value) || 0;
+        
+        // Konstanta Berdasarkan Audit Global
+        const coverageRatio = 0.020693; // 2.06% jaminan emas terhadap beban $60T
+        const ponziGramPerUSD = 0.00109629; // Martabat Ponzi
+        
+        // Perhitungan
+        const goldGram = debt * ponziGramPerUSD;
+        const goldDisplay = goldGram >= 1000 ? (goldGram/1000).toLocaleString('id-ID', {maximumFractionDigits: 2}) + " kg" : goldGram.toLocaleString('id-ID', {maximumFractionDigits: 2}) + " gr";
+        const fairValue = debt * coverageRatio;
+
+        // Update UI Panel
+        document.getElementById('goldWeight').innerText = goldDisplay + " Emas";
+        document.getElementById('fairPay').innerText = "$" + fairValue.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+        // Update Narasi Manifesto
+        document.getElementById('manifesto').innerHTML = `
+            <span class="highlight">PERNYATAAN PERLAWANAN:</span><br>
+            "Anda menagih <span class="highlight">$${debt.toLocaleString('id-ID')}</span> dengan dalih nilai kuat, padahal Dolar yang Anda cetak hanya memiliki jaminan emas sebesar 
+            <span class="highlight">2,06%</span> dari total beban global Anda. Kami menolak membayar 'angin' sebesar 98% yang Anda ciptakan dari mesin cetak. 
+            Kami hanya akan melunasi utang sesuai <span class="highlight">Berat Emas Riil</span> sebesar <span class="highlight">${goldDisplay}</span> yang Anda miliki di gudang cadangan Anda. 
+            Secara timbangan adil, kewajiban kami hanya senilai <span class="highlight">$${fairValue.toLocaleString('id-ID', {minimumFractionDigits: 2})}</span>. 
+            Jika Anda tidak bisa membuktikan fisik emasnya, maka utang ini dianggap <span class="highlight">LUNAS OLEH KEBANGKRUTAN ANDA SENDIRI!</span>"
+        `;
+    }
+    runAudit();
+</script>
+</body>
+</html>
