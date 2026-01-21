@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nanan - Total Liquidation Protocol</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #05070a; color: #ff0000; padding: 20px; }
+        .container { max-width: 1200px; margin: auto; border: 5px solid #ff0000; padding: 35px; box-shadow: 0 0 50px rgba(255, 0, 0, 0.7); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; font-size: 2.2em; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #ffcc00; font-weight: bold; margin-bottom: 25px; font-size: 1.2em; }
+        
+        .input-section { background: #1a0000; border: 2px solid #ff0000; padding: 25px; text-align: center; margin-bottom: 30px; }
+        input { background: #000; border: 2px solid #ffcc00; color: #ffcc00; padding: 15px; font-size: 1.8em; width: 350px; text-align: center; border-radius: 5px; }
+        
+        .emergency-alert { background: #330000; border: 4px solid #ff0000; padding: 25px; color: #fff; text-align: center; margin-bottom: 30px; }
+        .hangus { font-size: 2.5em; color: #ff0000; font-weight: bold; text-decoration: line-through; }
+        .sisa { font-size: 2.5em; color: #00ffcc; font-weight: bold; }
+
+        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .card { background: #0d1117; border: 2px solid #30363d; padding: 20px; text-align: center; }
+        .card-header { font-size: 1.3em; font-weight: bold; margin-bottom: 15px; color: #ffcc00; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .card-val { font-size: 2.2em; color: #fff; font-weight: bold; }
+        
+        .dinar-dirham { background: #1a1a00; border: 3px solid #00ffcc; padding: 25px; text-align: center; color: #00ffcc; margin-top: 20px; }
+        .footer-note { margin-top: 30px; padding: 25px; border: 3px dashed #ff0000; color: #fff; font-size: 1.3em; line-height: 1.7; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PROTOKOL LIKUIDASI TOTAL (RUGI BANDAR)</h1>
+    <div class="subtitle">VONIS: 83% KEKAYAAN ANDA TELAH MENJADI DEBU KERTAS</div>
+
+    <div class="input-section">
+        <label style="display:block; margin-bottom:10px; color:#fff;">SALDO DOLAR DI BANK ANDA:</label>
+        <input type="number" id="userBalance" value="1000" oninput="calculateVonis()">
+    </div>
+
+    <div class="emergency-alert">
+        <div style="font-size: 1.5em; margin-bottom: 10px;">TOTAL SALDO YANG HANGUS (83%):</div>
+        <div id="displayHangus" class="hangus">$829.06</div>
+        <div style="font-size: 1.5em; margin-top: 20px; margin-bottom: 10px;">SISA NILAI RIIL YANG BERLAKU (17%):</div>
+        <div id="displaySisa" class="sisa">$170.94</div>
+    </div>
+
+    <div class="result-grid">
+        <div class="card">
+            <div class="card-header">30% JANGKAR CASH</div>
+            <div class="card-val" id="cash30">$51.28</div>
+            <div style="color:#888; margin-top:10px;">Gunakan untuk bertahan hidup harian.</div>
+        </div>
+        <div class="card">
+            <div class="card-header">70% EKUITAS RIIL</div>
+            <div class="card-val" id="real70">$119.66</div>
+            <div style="color:#888; margin-top:10px;">Konversi segera ke Dinar/Dirham fisik.</div>
+        </div>
+    </div>
+
+    <div class="dinar-dirham">
+        <div style="font-size: 1.5em; font-weight: bold; margin-bottom: 10px;">ESTIMASI PEROLEHAN DARURAT:</div>
+        <div style="font-size: 2.5em;">
+            <span id="dinarCount">0.02</span> DINAR & <span id="dirhamCount">0.76</span> DIRHAM
+        </div>
+        <div style="color:#fff; margin-top:10px; font-style: italic;">
+            *Dipatok pada Martabat Ponzi: 1 USD = 0.0010 Gram Emas
+        </div>
+    </div>
+
+    <div class="footer-note">
+        📢 <span style="color:#ffcc00; font-weight:bold;">VONIS AKHIR:</span> 📢<br>
+        1. Beban <span style="color:#ff0000">$60,89T</span> telah merampok <span style="color:#ff0000">83%</span> martabat uang Anda.<br>
+        2. Martabat 1 USD resmi dibusukkan menjadi hanya <span style="color:#00ffcc">0,0010 Gram</span> emas.<br>
+        3. <span style="color:#00ffcc">70% Ekuitas Riil</span> adalah sisa "daging" yang harus Anda selamatkan sebelum bandar menutup pintu bank selamanya [cite: 2026-01-21].
+    </div>
+</div>
+
+<script>
+    function calculateVonis() {
+        const balance = parseFloat(document.getElementById('userBalance').value) || 0;
+        const beratDinar = 4.25;
+        const ponziGramPerUSD = 0.00109629; // Vonis Ponzi 60T
+        
+        // 1. Hitung Sisa Nilai Riil (17.09% dari total saldo)
+        const sisaRiil = balance * 0.17094;
+        const hangus = balance - sisaRiil;
+        
+        // 2. Bagi Sisa Riil ke 30% Cash dan 70% Ekuitas Fisik
+        const cash30 = sisaRiil * 0.3;
+        const real70 = sisaRiil * 0.7;
+        
+        // 3. Konversi Ekuitas Fisik ke Dinar/Dirham (Gunakan 1 USD = 0.0010 gr)
+        const totalGram = real70 * ponziGramPerUSD;
+        const dinarCount = totalGram / beratDinar;
+        const dirhamCount = dinarResult = (totalGram / beratDinar) * 27;
+
+        // Update UI
+        document.getElementById('displayHangus').innerText = "$" + hangus.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('displaySisa').innerText = "$" + sisaRiil.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('cash30').innerText = "$" + cash30.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('real70').innerText = "$" + real70.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('dinarCount').innerText = dinarCount.toFixed(4);
+        document.getElementById('dirhamCount').innerText = dirhamCount.toFixed(2);
+    }
+    calculateVonis();
+</script>
+</body>
+</html>
