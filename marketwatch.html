@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Terminal - Equal Size Decimal</title>
+    <style>
+        :root {
+            --bg-dark: #020205;
+            --panel-bg: #0a0b10;
+            --gold: #ffcc00;
+            --cyan: #00f2ff;
+            --red: #ff3131;
+            --silver: #8b949e; /* Warna Silver untuk desimal [cite: 2026-01-21] */
+            --border: #1f2328;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: #fff; margin: 0; padding: 0; overflow-x: hidden; }
+        
+        .ticker-wrap { background: #111; border-bottom: 2px solid var(--gold); padding: 8px 0; white-space: nowrap; overflow: hidden; }
+        .ticker { display: inline-block; animation: marquee 30s linear infinite; color: var(--cyan); font-family: monospace; font-size: 0.9em; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .container { max-width: 1400px; margin: 20px auto; padding: 20px; }
+        .terminal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #333; padding-bottom: 15px; margin-bottom: 30px; }
+        .terminal-title { font-size: 1.8em; font-weight: 900; letter-spacing: 2px; color: var(--gold); }
+
+        .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; background: var(--panel-bg); padding: 25px; border: 1px solid var(--border); margin-bottom: 30px; }
+        .input-group label { display: block; color: var(--silver); font-size: 0.75rem; margin-bottom: 8px; text-transform: uppercase; font-weight: bold; }
+        
+        .base-input-container { display: flex; align-items: center; gap: 10px; background: #000; border: 1px solid #444; padding: 2px 10px; }
+        .base-flag { width: 25px; height: 15px; object-fit: cover; }
+        input { background: transparent; border: none; color: var(--gold); padding: 10px; font-size: 1.4em; font-family: 'Courier New', monospace; outline: none; width: 100%; }
+
+        .market-table { width: 100%; border-collapse: collapse; background: var(--panel-bg); }
+        .market-table th { text-align: left; padding: 15px; background: #161b22; color: var(--silver); font-size: 0.75rem; text-transform: uppercase; border-bottom: 2px solid var(--border); }
+        .market-table td { padding: 18px 15px; border-bottom: 1px solid var(--border); }
+        
+        .asset-cell { display: flex; align-items: center; gap: 15px; }
+        .flag-img { width: 28px; height: 18px; }
+        .asset-name { font-weight: bold; font-size: 1.1em; color: #fff; }
+        
+        /* Digit Styling: Ukuran Sama, Warna Beda [cite: 2026-01-21] */
+        .price-container { text-align: right; }
+        .main-digits { color: var(--gold); font-weight: 800; font-size: 1.4em; }
+        .decimal-digits { color: var(--silver); font-weight: 800; font-size: 1.4em; font-family: inherit; }
+        
+        .gram-val { font-family: 'Courier New', monospace; color: var(--cyan); font-weight: bold; font-size: 0.9em; }
+        .status-badge { padding: 4px 8px; border-radius: 2px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; border: 1px solid var(--cyan); color: var(--cyan); }
+        .status-diluted { border-color: var(--red); color: var(--red); }
+        #clock { font-family: monospace; font-size: 1.2em; color: var(--cyan); }
+    </style>
+</head>
+<body>
+
+<div class="ticker-wrap">
+    <div class="ticker">
+        SYSTEM STABILITY SETTLEMENT | NEW GOLD STANDARD NUSWANTARA | 1 USD FAKE = 0.00109629 gr | NUSWANTARA TERMINAL |
+    </div>
+</div>
+
+<div class="container">
+    <div class="terminal-header">
+        <div class="terminal-title">NUSWANTARA TERMINAL</div>
+        <div id="clock">00:00:00 UTC</div>
+    </div>
+
+    <div class="input-grid">
+        <div class="input-group">
+            <label>Transaction Volume (QTY)</label>
+            <input type="number" id="qtyInput" value="1" oninput="runTerminal()">
+        </div>
+        <div class="input-group">
+            <label>Benchmark Asset</label>
+            <div class="base-input-container">
+                <img id="baseFlag" class="base-flag" src="https://flagcdn.com/w40/id.png">
+                <input type="text" id="baseInput" value="IDR" oninput="runTerminal()" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="input-group" style="display: flex; flex-direction: column; justify-content: flex-end; color: var(--silver); font-size: 0.8em;">
+            <span>JANGKAR: PURE GOLD REJECTION [cite: 2026-01-21]</span>
+            <span>STATUS: EQUAL SIZE DECIMAL VISUAL ACTIVE</span>
+        </div>
+    </div>
+
+    <table class="market-table">
+        <thead>
+            <tr>
+                <th>ASSET PAIR</th>
+                <th>TOTAL GRAM BASIS</th>
+                <th>GRAM UNIT TUJUAN</th>
+                <th style="text-align: right;">REAL EXCHANGE RATE</th>
+                <th style="text-align: center;">VONIS</th>
+            </tr>
+        </thead>
+        <tbody id="terminal-body"></tbody>
+    </table>
+</div>
+
+<script>
+    const gramPerOz = 31.1035;
+
+    async function runTerminal() {
+        try {
+            const qty = parseFloat(document.getElementById('qtyInput').value) || 1;
+            const baseSym = document.getElementById('baseInput').value.toUpperCase().trim() || "IDR";
+            
+            const baseCode = baseSym.substring(0, 2).toLowerCase();
+            document.getElementById('baseFlag').src = `https://flagcdn.com/w40/${baseCode}.png`;
+
+            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            const data = await res.json();
+            const r = data.rates;
+
+            if (!r || !r[baseSym]) return;
+
+            const goldGramPriceUSD = 4845.88 / gramPerOz; 
+
+            const valBaseUSD = 1 / r[baseSym];
+            let martabatBaseUnit = valBaseUSD / goldGramPriceUSD;
+            if (baseSym === "USD") martabatBaseUnit = 0.00109629; //
+            
+            const totalGramBase = martabatBaseUnit * qty;
+
+            let html = "";
+            Object.keys(r).sort().forEach(target => {
+                if (target === "XAU" || target === baseSym) return;
+
+                const valTargetUSD = 1 / r[target];
+                let martabatTargetUnit = valTargetUSD / goldGramPriceUSD;
+                if (target === "USD") martabatTargetUnit = 0.00109629;
+
+                const realRate = totalGramBase / martabatTargetUnit;
+                
+                // Format Silver Decimal (Ukuran Disamakan) [cite: 2026-01-21]
+                const rateString = realRate.toFixed(4);
+                const parts = rateString.split('.');
+                const mainPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                const decimalPart = parts[1];
+
+                const flagUrl = `https://flagcdn.com/w40/${target.substring(0, 2).toLowerCase()}.png`;
+
+                html += `
+                <tr>
+                    <td class="asset-cell">
+                        <img src="${flagUrl}" class="flag-img" onerror="this.style.opacity='0'">
+                        <div class="asset-name">${baseSym}/${target}</div>
+                    </td>
+                    <td class="gram-val">${totalGramBase.toFixed(10)} gr</td>
+                    <td class="gram-val">${martabatTargetUnit.toFixed(10)} gr</td>
+                    <td class="price-container">
+                        <span class="main-digits">${mainPart},</span><span class="decimal-digits">${decimalPart}</span>
+                        <span style="color:var(--silver); font-size:0.75em; margin-left:6px;">${target}</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="status-badge ${(baseSym==='USD' || target==='USD') ? 'status-diluted' : ''}">
+                            ${(baseSym==='USD' || target==='USD') ? 'VONIS PONZI' : 'SECURED'}
+                        </span>
+                    </td>
+                </tr>`;
+            });
+            document.getElementById('terminal-body').innerHTML = html;
+        } catch (e) { console.error(e); }
+    }
+
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('id-ID') + " UTC"; }, 1000);
+    runTerminal();
+</script>
+</body>
+</html>
