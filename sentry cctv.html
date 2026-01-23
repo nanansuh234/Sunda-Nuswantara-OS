@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Sentry CCTV</title>
+    <style>
+        :root {
+            --bg: #000;
+            --safe: #003300;
+            --alert: #ff0000;
+            --text: #0f0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Consolas', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Video disembunyikan, kita cuma butuh datanya */
+        video {
+            display: none; 
+        }
+
+        /* Canvas buat visualisasi */
+        canvas {
+            width: 100%;
+            max-width: 640px;
+            border: 2px solid #333;
+            background: #111;
+            margin-top: 10px;
+        }
+
+        .hud {
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            background: #111;
+            border-bottom: 1px solid #333;
+            box-sizing: border-box;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            background: #333;
+            color: #888;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        
+        .status-badge.alert {
+            background: var(--alert);
+            color: #fff;
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .log-area {
+            flex-grow: 1;
+            width: 100%;
+            max-width: 640px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            padding: 10px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #004400;
+            color: #0f0;
+            border: 1px solid #0f0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        button.stop {
+            background: #440000;
+            border-color: red;
+            color: red;
+        }
+
+        input[type=range] {
+            accent-color: #0f0;
+        }
+
+        .gallery {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            padding: 5px;
+            height: 60px;
+            width: 100%;
+            background: #111;
+        }
+        
+        .gallery img {
+            height: 100%;
+            border: 1px solid #555;
+        }
+
+        /* Flash Screen effect */
+        #flash-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="flash-overlay"></div>
+
+    <div class="hud">
+        <div>SENTRY MODE: <span id="mode-status">OFFLINE</span></div>
+        <div id="alert-box" class="status-badge">SAFE</div>
+    </div>
+
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+
+    <div class="log-area" id="logs">
+        <div>> System initialized...</div>
+    </div>
+    
+    <div class="gallery" id="gallery">
+        </div>
+
+    <div class="controls">
+        <button id="btn-toggle" onclick="toggleSentry()">AKTIFKAN PENGAWAS</button>
+        <div style="display:flex; flex-direction:column;">
+            <label style="font-size:0.7rem">SENSITIVITY</label>
+            <input type="range" id="sens-slider" min="10" max="100" value="30">
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const logBox = document.getElementById('logs');
+        const btnToggle = document.getElementById('btn-toggle');
+        const alertBox = document.getElementById('alert-box');
+        const gallery = document.getElementById('gallery');
+        const flash = document.getElementById('flash-overlay');
+        const sensSlider = document.getElementById('sens-slider');
+        const modeStatus = document.getElementById('mode-status');
+
+        let isRunning = false;
+        let lastFrameData = null;
+        let w, h;
+        let alarmCooldown = false;
+
+        // Alarm Audio (Beep)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function beep() {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.value = 1200;
+            osc.type = 'square';
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5);
+            osc.stop(audioCtx.currentTime + 0.5);
+        }
+
+        function log(msg) {
+            const div = document.createElement('div');
+            div.innerText = `> ${new Date().toLocaleTimeString()} : ${msg}`;
+            logBox.prepend(div);
+        }
+
+        async function toggleSentry() {
+            if (isRunning) {
+                // Stop
+                isRunning = false;
+                video.srcObject.getTracks().forEach(track => track.stop());
+                btnToggle.innerText = "AKTIFKAN PENGAWAS";
+                btnToggle.classList.remove('stop');
+                modeStatus.innerText = "OFFLINE";
+                modeStatus.style.color = "#888";
+                alertBox.className = "status-badge";
+                alertBox.innerText = "SAFE";
+                return;
+            }
+
+            try {
+                // Request Camera (Rear camera preferred)
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } 
+                });
+                video.srcObject = stream;
+                await video.play();
+
+                w = 320; // Low res processing for performance
+                h = video.videoHeight / (video.videoWidth/320);
+                canvas.width = w;
+                canvas.height = h;
+
+                isRunning = true;
+                btnToggle.innerText = "MATIKAN";
+                btnToggle.classList.add('stop');
+                modeStatus.innerText = "ARMED & WATCHING";
+                modeStatus.style.color = "#0f0";
+                
+                lastFrameData = null; // Reset reference frame
+                detectLoop();
+                log("Camera Active. Sentry Mode ON.");
+
+            } catch (err) {
+                alert("Gagal akses kamera: " + err);
+            }
+        }
+
+        function detectLoop() {
+            if (!isRunning) return;
+
+            // Draw current video frame to canvas
+            ctx.drawImage(video, 0, 0, w, h);
+            
+            // Get pixel data
+            const frame = ctx.getImageData(0, 0, w, h);
+            const data = frame.data;
+            const len = data.length;
+
+            if (lastFrameData) {
+                let diffCount = 0;
+                const sensitivity = (100 - sensSlider.value) + 10; // Inverse slider logic
+                
+                // Compare pixels (Step by 4 to optimize speed)
+                for (let i = 0; i < len; i += 4 * 4) {
+                    const rDiff = Math.abs(data[i] - lastFrameData[i]);
+                    const gDiff = Math.abs(data[i+1] - lastFrameData[i+1]);
+                    const bDiff = Math.abs(data[i+2] - lastFrameData[i+2]);
+                    
+                    if (rDiff + gDiff + bDiff > 100) { // Threshold for color change
+                        diffCount++;
+                    }
+                }
+
+                // If motion detected
+                if (diffCount > sensitivity * 5) { // Threshold count
+                    triggerAlarm();
+                    
+                    // Highlight motion on canvas (Green overlay)
+                    ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
+                    ctx.fillRect(0,0,w,h);
+                    
+                    // Draw text
+                    ctx.fillStyle = "red";
+                    ctx.font = "20px Courier";
+                    ctx.fillText("INTRUDER DETECTED", 10, 30);
+                } else {
+                    alertBox.className = "status-badge";
+                    alertBox.innerText = "SAFE";
+                }
+            }
+
+            // Save current frame as reference for next loop
+            lastFrameData = data;
+
+            requestAnimationFrame(detectLoop);
+        }
+
+        function triggerAlarm() {
+            if (alarmCooldown) return;
+
+            alarmCooldown = true;
+            
+            // 1. UI Alert
+            alertBox.className = "status-badge alert";
+            alertBox.innerText = "MOTION DETECTED!";
+            log("Movement Detected!");
+
+            // 2. Sound
+            beep();
+
+            // 3. Capture Photo
+            const shot = canvas.toDataURL('image/jpeg');
+            const img = document.createElement('img');
+            img.src = shot;
+            gallery.prepend(img);
+
+            // 4. Flash Screen
+            flash.style.opacity = 1;
+            setTimeout(() => flash.style.opacity = 0, 100);
+
+            // Reset cooldown
+            setTimeout(() => { alarmCooldown = false; }, 2000); // 2 detik jeda antar alarm
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sunda Rangefinder</title>
+    <style>
+        :root {
+            --reticle-color: #00ff00; /* Hijau Taktis */
+            --bg-dark: rgba(0, 0, 0, 0.6);
+            --danger: #ff0000;
+        }
+
+        body {
+            margin: 0;
+            background: #000;
+            color: var(--reticle-color);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Camera Layer */
+        #video-feed {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        /* UI Layer */
+        .hud-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            pointer-events: none; /* Biar tembus klik ke kontrol bawah */
+        }
+
+        /* Top Info */
+        .top-bar {
+            background: var(--bg-dark);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: auto;
+        }
+
+        .target-select {
+            background: #002200;
+            color: var(--reticle-color);
+            border: 1px solid var(--reticle-color);
+            padding: 5px;
+            font-family: inherit;
+            font-weight: bold;
+        }
+
+        /* Center Reticle (The Scope) */
+        .scope-container {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* The moving horizontal bars */
+        .stadia-line {
+            position: absolute;
+            width: 60%;
+            height: 2px;
+            background-color: var(--reticle-color);
+            left: 20%;
+            box-shadow: 0 0 5px var(--reticle-color);
+        }
+        
+        #line-top { margin-bottom: 0px; } /* Updated by JS */
+        #line-bottom { margin-top: 0px; } /* Updated by JS */
+        
+        .center-cross {
+            position: absolute;
+            width: 20px; height: 20px;
+            border-left: 2px solid var(--danger);
+            border-bottom: 2px solid var(--danger);
+            opacity: 0.7;
+        }
+
+        /* Distance Readout */
+        .distance-box {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: right;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        .dist-val {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--reticle-color);
+        }
+
+        .unit { font-size: 1rem; }
+
+        /* Controls Bottom */
+        .controls {
+            background: var(--bg-dark);
+            padding: 15px;
+            pointer-events: auto;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            width: 80px;
+            font-size: 0.8rem;
+            text-align: right;
+        }
+
+        input[type=range] {
+            flex-grow: 1;
+            accent-color: var(--reticle-color);
+        }
+
+        .btn-cal {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        
+        .btn-cal.active {
+            background: var(--danger);
+            border-color: red;
+        }
+
+        /* Calibration Warning */
+        #cal-warning {
+            position: absolute;
+            top: 60px; left: 10px;
+            background: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 5px;
+            font-size: 0.8rem;
+            display: none;
+            max-width: 200px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <video id="video-feed" autoplay playsinline></video>
+
+    <div class="hud-overlay">
+        <div class="top-bar">
+            <div>
+                <select class="target-select" id="target-type" onchange="updateTargetHeight()">
+                    <option value="1.7">Manusia (1.7m)</option>
+                    <option value="0.9">Babi Hutan (0.9m)</option>
+                    <option value="1.5">Rusa/Kijang (1.5m)</option>
+                    <option value="1.4">Mobil Sedan (1.4m)</option>
+                    <option value="2.5">Truk Militer (2.5m)</option>
+                    <option value="custom">Custom...</option>
+                </select>
+                <input type="number" id="custom-h" placeholder="Tinggi (m)" style="width: 50px; display:none;" oninput="updateTargetHeight()">
+            </div>
+            <button class="btn-cal" id="btn-cal-mode" onclick="toggleCalibrate()">MODE KALIBRASI</button>
+        </div>
+
+        <div id="cal-warning">
+            ⚠ MODE KALIBRASI AKTIF<br>
+            1. Cari benda yang jaraknya lu tau PASTI (misal: tembok 10 meter).<br>
+            2. Pasin garis ke benda itu.<br>
+            3. Geser 'Focal Slider' sampai angka jarak menunjukkan 10m.
+        </div>
+
+        <div class="scope-container">
+            <div class="stadia-line" id="line-top"></div>
+            <div class="center-cross"></div>
+            <div class="stadia-line" id="line-bottom"></div>
+            
+            <div class="distance-box">
+                <div class="dist-val" id="dist-display">---</div>
+                <div class="unit">METER</div>
+                <div style="font-size: 0.7rem; color: #aaa;">ESTIMATED</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="slider-row">
+                <label>BRACKET SIZE</label>
+                <input type="range" id="bracket-slider" min="10" max="800" value="200" oninput="calculateDistance()">
+            </div>
+            
+            <div class="slider-row" id="cal-row" style="display:none; border: 1px solid red; padding: 5px;">
+                <label style="color:red;">LENS CALIB</label>
+                <input type="range" id="focal-slider" min="100" max="5000" value="1000" oninput="calculateDistance()">
+            </div>
+            
+            <div style="text-align: center; font-size: 0.7rem; color: #888;">
+                Jepit target di antara dua garis hijau
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Init Camera
+        const video = document.getElementById('video-feed');
+        
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } 
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                alert("Kamera error: " + err);
+            }
+        }
+        startCamera();
+
+        // Variables
+        let targetHeight = 1.7; // meter (default human)
+        let calibrationFactor = 1000; // Nilai default lensa standar
+        
+        // DOM Elements
+        const lineTop = document.getElementById('line-top');
+        const lineBottom = document.getElementById('line-bottom');
+        const bracketSlider = document.getElementById('bracket-slider');
+        const focalSlider = document.getElementById('focal-slider');
+        const distDisplay = document.getElementById('dist-display');
+        const calRow = document.getElementById('cal-row');
+        const btnCal = document.getElementById('btn-cal-mode');
+        const calWarn = document.getElementById('cal-warning');
+
+        // Logic Functions
+        function updateTargetHeight() {
+            const select = document.getElementById('target-type');
+            const customInput = document.getElementById('custom-h');
+            
+            if (select.value === 'custom') {
+                customInput.style.display = 'inline-block';
+                targetHeight = parseFloat(customInput.value) || 1;
+            } else {
+                customInput.style.display = 'none';
+                targetHeight = parseFloat(select.value);
+            }
+            calculateDistance();
+        }
+
+        function toggleCalibrate() {
+            const isHidden = calRow.style.display === 'none';
+            if (isHidden) {
+                calRow.style.display = 'flex';
+                calWarn.style.display = 'block';
+                btnCal.classList.add('active');
+            } else {
+                calRow.style.display = 'none';
+                calWarn.style.display = 'none';
+                btnCal.classList.remove('active');
+            }
+        }
+
+        function calculateDistance() {
+            // 1. Update Visual Lines
+            // Nilai slider adalah jarak pixel antar garis (gap)
+            const gapPixels = parseInt(bracketSlider.value);
+            const halfGap = gapPixels / 2;
+            
+            lineTop.style.transform = `translateY(-${halfGap}px)`;
+            lineBottom.style.transform = `translateY(${halfGap}px)`;
+
+            // 2. Calculate Distance
+            // Rumus Stadiametric: Distance = (RealHeight * FocalLength) / ImageHeight(pixels)
+            const focalLength = parseInt(focalSlider.value);
+            
+            // Mencegah pembagian nol
+            if (gapPixels > 0) {
+                const distance = (targetHeight * focalLength) / gapPixels;
+                
+                // Format display
+                if (distance > 1000) {
+                    distDisplay.innerText = (distance/1000).toFixed(2) + "k";
+                } else {
+                    distDisplay.innerText = Math.round(distance);
+                }
+            }
+        }
+
+        // Initialize
+        updateTargetHeight();
+
+    </script>
+</body>
+</html>

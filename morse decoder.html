@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara Morse Decoder</title>
+    <style>
+        :root {
+            --bg-color: #0c0c0c;
+            --panel-color: #1a1a1a;
+            --text-color: #00ff00; /* Hijau Terminal Hacker */
+            --dim-color: #004400;
+            --alert-color: #ff3333;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .decoder-box {
+            background-color: var(--panel-color);
+            border: 2px solid var(--dim-color);
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 1px solid var(--dim-color);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Visualizer Bar */
+        .meter-container {
+            height: 30px;
+            background-color: #000;
+            margin: 20px 0;
+            position: relative;
+            border: 1px solid #333;
+        }
+
+        .meter-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--text-color);
+            transition: width 0.05s linear;
+        }
+
+        .threshold-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--alert-color);
+            z-index: 10;
+            left: 50%; /* Default middle */
+        }
+
+        /* Signal Indicator Light */
+        .status-light {
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            background-color: #333;
+            margin: 0 auto 10px auto;
+            border: 1px solid #555;
+            box-shadow: 0 0 5px #000;
+        }
+
+        .status-light.active {
+            background-color: var(--text-color);
+            box-shadow: 0 0 15px var(--text-color);
+        }
+
+        /* Output Screens */
+        .output-area {
+            background-color: #000;
+            border: 1px solid var(--dim-color);
+            height: 150px;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            margin-bottom: 10px;
+        }
+
+        .live-buffer {
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        /* Controls */
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: var(--text-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--dim-color);
+            color: var(--text-color);
+            border: 1px solid var(--text-color);
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            background-color: var(--text-color);
+            color: #000;
+        }
+
+        .hint {
+            font-size: 0.7rem;
+            color: #555;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="decoder-box">
+        <h2>Audio Morse Decoder</h2>
+        
+        <div class="status-light" id="signal-led"></div>
+        
+        <div class="meter-container">
+            <div class="meter-bar" id="audio-meter"></div>
+            <div class="threshold-line" id="thresh-marker"></div>
+        </div>
+
+        <div class="output-area" id="output-text">
+            <span id="final-text">Ready...</span><span class="live-buffer" id="buffer-text"></span>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label>SENSITIVITY (Threshold)</label>
+                <input type="range" id="thresh-slider" min="0" max="255" value="100">
+            </div>
+            <div>
+                <label>SPEED (WPM Estimate: <span id="wpm-val">15</span>)</label>
+                <input type="range" id="wpm-slider" min="5" max="40" value="15">
+            </div>
+        </div>
+
+        <button id="start-btn" onclick="startListening()">AKTIFKAN MIKROFON</button>
+        <p class="hint">Pastikan ruangan tidak berisik atau dekatkan sumber suara ke mik.</p>
+    </div>
+
+    <script>
+        let audioContext;
+        let analyser;
+        let microphone;
+        let javascriptNode;
+        let isListening = false;
+
+        // Morse Logic Variables
+        let isSignalHigh = false;
+        let signalStartTime = 0;
+        let signalEndTime = 0;
+        let signalHistory = ""; // Stores dots/dashes like ".-"
+        
+        // Settings
+        let threshold = 100;
+        let wpm = 15;
+        let unitTime = 1200 / 15; // ms for one dot
+
+        // DOM Elements
+        const meterBar = document.getElementById('audio-meter');
+        const threshMarker = document.getElementById('thresh-marker');
+        const signalLed = document.getElementById('signal-led');
+        const finalText = document.getElementById('final-text');
+        const bufferText = document.getElementById('buffer-text');
+        const startBtn = document.getElementById('start-btn');
+        const wpmVal = document.getElementById('wpm-val');
+
+        // Morse Lookup Table
+        const morseTable = {
+            ".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E",
+            "..-.": "F", "--.": "G", "....": "H", "..": "I", ".---": "J",
+            "-.-": "K", ".-..": "L", "--": "M", "-.": "N", "---": "O",
+            ".--.": "P", "--.-": "Q", ".-.": "R", "...": "S", "-": "T",
+            "..-": "U", "...-": "V", ".--": "W", "-..-": "X", "-.--": "Y",
+            "--..": "Z", "-----": "0", ".----": "1", "..---": "2", "...--": "3",
+            "....-": "4", ".....": "5", "-....": "6", "--...": "7", "---..": "8",
+            "----.": "9", ".-.-.-": ".", "--..--": ",", "..--..": "?", "-.-.--": "!"
+        };
+
+        // UI Updates
+        document.getElementById('thresh-slider').addEventListener('input', (e) => {
+            threshold = parseInt(e.target.value);
+            threshMarker.style.left = (threshold / 255 * 100) + "%";
+        });
+
+        document.getElementById('wpm-slider').addEventListener('input', (e) => {
+            wpm = parseInt(e.target.value);
+            unitTime = 1200 / wpm;
+            wpmVal.innerText = wpm;
+        });
+
+        async function startListening() {
+            if (isListening) return;
+
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                microphone = audioContext.createMediaStreamSource(stream);
+                analyser = audioContext.createAnalyser();
+                analyser.smoothingTimeConstant = 0.3;
+                analyser.fftSize = 1024;
+                
+                microphone.connect(analyser);
+                
+                // Processing loop using ScriptProcessor (Legacy but works simply in single file)
+                // or requestAnimationFrame for visual + logic
+                startProcessing();
+                
+                startBtn.innerText = "MENDENGARKAN...";
+                startBtn.style.backgroundColor = "#004400";
+                finalText.innerText = "";
+                isListening = true;
+            } catch (err) {
+                alert("Gagal akses mik: " + err);
+            }
+        }
+
+        function startProcessing() {
+            const array = new Uint8Array(analyser.frequencyBinCount);
+            
+            function loop() {
+                analyser.getByteFrequencyData(array);
+                
+                // Calculate Average Volume
+                let values = 0;
+                let length = array.length;
+                for (let i = 0; i < length; i++) {
+                    values += array[i];
+                }
+                let average = values / length;
+                
+                // Boost average for better visibility (simple gain simulation)
+                let displayVol = average * 3; 
+                if(displayVol > 255) displayVol = 255;
+
+                // Update Visuals
+                meterBar.style.width = (displayVol / 255 * 100) + "%";
+
+                const now = Date.now();
+
+                // Logic: Signal High vs Low
+                if (displayVol > threshold) {
+                    // Signal is ON
+                    if (!isSignalHigh) {
+                        // Just turned ON
+                        const silenceDuration = now - signalEndTime;
+                        processSilence(silenceDuration);
+                        
+                        isSignalHigh = true;
+                        signalStartTime = now;
+                        signalLed.classList.add('active');
+                    }
+                } else {
+                    // Signal is OFF
+                    if (isSignalHigh) {
+                        // Just turned OFF
+                        const signalDuration = now - signalStartTime;
+                        processSignal(signalDuration);
+                        
+                        isSignalHigh = false;
+                        signalEndTime = now;
+                        signalLed.classList.remove('active');
+                    } else {
+                        // Still OFF, check for gaps (end of letter/word) live
+                        const currentSilence = now - signalEndTime;
+                        // Real-time update for word space could be added here
+                    }
+                }
+
+                requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        function processSignal(duration) {
+            // Determine Dot or Dash
+            // Cutoff is usually 2 units (between 1 and 3)
+            // But we add slack. Say 2.0 * unitTime
+            
+            let symbol = "";
+            if (duration < unitTime * 2) {
+                symbol = ".";
+            } else {
+                symbol = "-";
+            }
+            
+            signalHistory += symbol;
+            bufferText.innerText = signalHistory;
+        }
+
+        function processSilence(duration) {
+            // Check gap type
+            // Letter Gap = 3 units
+            // Word Gap = 7 units
+            
+            // Allow some tolerance
+            if (duration > unitTime * 6) {
+                // Word Gap -> Decode current letter + Add Space
+                decodeBuffer();
+                finalText.innerText += " / ";
+            } else if (duration > unitTime * 2.5) {
+                // Letter Gap -> Decode current letter
+                decodeBuffer();
+            }
+            // If less, it's just an intra-character gap, do nothing
+        }
+
+        function decodeBuffer() {
+            if (signalHistory === "") return;
+            
+            const char = morseTable[signalHistory];
+            if (char) {
+                finalText.innerText += char;
+            } else {
+                finalText.innerText += "?"; // Unknown sequence
+            }
+            
+            signalHistory = "";
+            bufferText.innerText = "";
+            
+            // Auto scroll
+            const outArea = document.getElementById('output-text');
+            outArea.scrollTop = outArea.scrollHeight;
+        }
+
+    </script>
+</body>
+</html>

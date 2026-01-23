@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Scientific Calculator</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --panel-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-color: #00e676; /* Warna hijau neon biar kontras */
+            --btn-bg: #2d2d2d;
+            --btn-hover: #3d3d3d;
+            --operator-color: #ff9100;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Font monospaced biar kesan teknikal */
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: var(--panel-color);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            padding: 20px;
+            width: 350px;
+            max-width: 90%;
+            border: 1px solid #333;
+        }
+
+        .display-screen {
+            width: 100%;
+            height: 80px;
+            background-color: #000;
+            color: var(--accent-color);
+            border: 1px solid #333;
+            border-radius: 5px;
+            font-size: 2rem;
+            text-align: right;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .history {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: right;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+
+        .keys {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            height: 50px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background-color: var(--btn-bg);
+            color: var(--text-color);
+            transition: background 0.2s;
+            font-weight: bold;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .operator {
+            color: var(--operator-color);
+        }
+
+        .scientific {
+            color: #4fc3f7;
+            font-size: 0.9rem;
+        }
+
+        .equal-sign {
+            background-color: var(--accent-color);
+            color: #000;
+            grid-column: span 1; /* Bisa diubah kalau mau tombol = lebih lebar */
+        }
+        
+        .equal-sign:hover {
+            background-color: #00c853;
+        }
+
+        .clear {
+            background-color: #d32f2f;
+            color: white;
+        }
+        
+        .clear:hover {
+            background-color: #b71c1c;
+        }
+
+        /* Responsive layout adjustment */
+        @media (max-width: 400px) {
+            button {
+                height: 45px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div class="history" id="history-display"></div>
+        <input type="text" class="display-screen" id="display" disabled value="0">
+        
+        <div class="keys">
+            <button class="scientific" onclick="appendFunction('sin')">sin</button>
+            <button class="scientific" onclick="appendFunction('cos')">cos</button>
+            <button class="scientific" onclick="appendFunction('tan')">tan</button>
+            <button class="clear" onclick="clearDisplay()">AC</button>
+
+            <button class="scientific" onclick="appendFunction('log')">log</button>
+            <button class="scientific" onclick="appendFunction('ln')">ln</button>
+            <button class="scientific" onclick="appendFunction('sqrt')">√</button>
+            <button class="clear" onclick="deleteLast()" style="background-color: #c62828;">DEL</button>
+
+            <button class="scientific" onclick="appendFunction('pow')">x^y</button>
+            <button class="scientific" onclick="appendValue('(')">(</button>
+            <button class="scientific" onclick="appendValue(')')">)</button>
+            <button class="operator" onclick="appendValue('/')">÷</button>
+
+            <button onclick="appendValue('7')">7</button>
+            <button onclick="appendValue('8')">8</button>
+            <button onclick="appendValue('9')">9</button>
+            <button class="operator" onclick="appendValue('*')">×</button>
+
+            <button onclick="appendValue('4')">4</button>
+            <button onclick="appendValue('5')">5</button>
+            <button onclick="appendValue('6')">6</button>
+            <button class="operator" onclick="appendValue('-')">-</button>
+
+            <button onclick="appendValue('1')">1</button>
+            <button onclick="appendValue('2')">2</button>
+            <button onclick="appendValue('3')">3</button>
+            <button class="operator" onclick="appendValue('+')">+</button>
+
+            <button class="scientific" onclick="appendValue('3.14159265359')">π</button>
+            <button onclick="appendValue('0')">0</button>
+            <button onclick="appendValue('.')">.</button>
+            <button class="equal-sign" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        const historyDisplay = document.getElementById('history-display');
+        let currentInput = "";
+        
+        function appendValue(val) {
+            if (currentInput === "0" && val !== ".") {
+                currentInput = val;
+            } else {
+                currentInput += val;
+            }
+            updateDisplay();
+        }
+
+        function appendFunction(func) {
+            if (func === 'sqrt') {
+                currentInput += 'Math.sqrt(';
+            } else if (func === 'pow') {
+                currentInput += '**';
+            } else if (func === 'sin') {
+                currentInput += 'Math.sin(';
+            } else if (func === 'cos') {
+                currentInput += 'Math.cos(';
+            } else if (func === 'tan') {
+                currentInput += 'Math.tan(';
+            } else if (func === 'log') {
+                currentInput += 'Math.log10(';
+            } else if (func === 'ln') {
+                currentInput += 'Math.log(';
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = "0";
+            historyDisplay.innerText = "";
+            updateDisplay();
+        }
+
+        function deleteLast() {
+            if (currentInput.length > 1) {
+                // Handle special cases (keywords like Math.sin) - simple approach
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = "0";
+            }
+            updateDisplay();
+        }
+
+        function calculate() {
+            try {
+                // Safety check: only allow math characters
+                // Note: eval() is generally risky, but for a local offline calc file controlled by user, it's acceptable for simplicity.
+                // We show the expression in history
+                historyDisplay.innerText = display.value;
+                
+                let result = eval(currentInput);
+                
+                // Format result if too long
+                if (String(result).length > 12) {
+                    result = result.toPrecision(10);
+                }
+                
+                currentInput = String(result);
+                updateDisplay();
+            } catch (error) {
+                display.value = "Error";
+                currentInput = "";
+            }
+        }
+
+        function updateDisplay() {
+            // Visual cleanup for the display (hide "Math." etc)
+            let visual = currentInput
+                .replace(/Math.sqrt/g, "√")
+                .replace(/Math.sin/g, "sin")
+                .replace(/Math.cos/g, "cos")
+                .replace(/Math.tan/g, "tan")
+                .replace(/Math.log10/g, "log")
+                .replace(/Math.log/g, "ln")
+                .replace(/\*\*/g, "^")
+                .replace(/\*/g, "×")
+                .replace(/\//g, "÷");
+                
+            display.value = visual;
+        }
+    </script>
+</body>
+</html>

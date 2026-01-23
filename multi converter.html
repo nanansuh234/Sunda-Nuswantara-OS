@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara Converter</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #252525;
+            --text-main: #e0e0e0;
+            --accent: #ff9800; /* Orange Industrial */
+            --input-bg: #333;
+            --border: #444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .converter-box {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-top: 5px solid var(--accent);
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 1.4rem;
+        }
+
+        .category-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--bg-color);
+        }
+
+        .cat-btn {
+            background: var(--input-bg);
+            color: #888;
+            border: 1px solid var(--border);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .cat-btn.active {
+            background: var(--accent);
+            color: #000;
+            font-weight: bold;
+            border-color: var(--accent);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.5rem;
+            background-color: var(--input-bg);
+            border: 2px solid var(--border);
+            color: white;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--input-bg);
+            color: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-top: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .swap-btn {
+            display: block;
+            margin: 0 auto 20px auto;
+            background: transparent;
+            border: 1px solid #555;
+            color: #888;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .swap-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .result-area {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+
+        .result-val {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .result-unit {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="converter-box">
+        <h2>Engineering Converter</h2>
+        
+        <div class="category-scroll">
+            <button class="cat-btn active" onclick="setCategory('length')">Panjang</button>
+            <button class="cat-btn" onclick="setCategory('weight')">Berat</button>
+            <button class="cat-btn" onclick="setCategory('pressure')">Tekanan</button>
+            <button class="cat-btn" onclick="setCategory('power')">Daya (HP)</button>
+            <button class="cat-btn" onclick="setCategory('temp')">Suhu</button>
+            <button class="cat-btn" onclick="setCategory('speed')">Kecepatan</button>
+        </div>
+
+        <div class="input-group">
+            <label>Dari:</label>
+            <input type="number" id="inputVal" value="1" oninput="convert()">
+            <select id="fromUnit" onchange="convert()"></select>
+        </div>
+
+        <button class="swap-btn" onclick="swapUnits()">⇅</button>
+
+        <div class="input-group">
+            <label>Ke:</label>
+            <select id="toUnit" onchange="convert()"></select>
+        </div>
+
+        <div class="result-area">
+            <div class="result-val" id="outputVal">--</div>
+            <div class="result-unit" id="outputLabel">Unit</div>
+        </div>
+    </div>
+
+    <script>
+        // Database Satuan & Faktor Konversi (Base unit = unit pertama di list)
+        const categories = {
+            length: {
+                units: ['Meter', 'Kilometer', 'Centimeter', 'Millimeter', 'Inch', 'Feet', 'Yard', 'Mile'],
+                ratios: { // Base: Meter
+                    'Meter': 1, 'Kilometer': 0.001, 'Centimeter': 100, 'Millimeter': 1000,
+                    'Inch': 39.3701, 'Feet': 3.28084, 'Yard': 1.09361, 'Mile': 0.000621371
+                }
+            },
+            weight: {
+                units: ['Kilogram', 'Gram', 'Ton', 'Pound (lbs)', 'Ounce (oz)'],
+                ratios: { // Base: Kilogram
+                    'Kilogram': 1, 'Gram': 1000, 'Ton': 0.001, 
+                    'Pound (lbs)': 2.20462, 'Ounce (oz)': 35.274
+                }
+            },
+            pressure: {
+                units: ['Bar', 'PSI', 'Pascal (Pa)', 'Atmosphere (atm)'],
+                ratios: { // Base: Bar
+                    'Bar': 1, 'PSI': 14.5038, 'Pascal (Pa)': 100000, 'Atmosphere (atm)': 0.986923
+                }
+            },
+            power: {
+                units: ['Watt', 'Kilowatt (kW)', 'Horsepower (HP/PK)'],
+                ratios: { // Base: Watt
+                    'Watt': 1, 'Kilowatt (kW)': 0.001, 'Horsepower (HP/PK)': 0.00134102
+                }
+            },
+            speed: {
+                units: ['Km/Jam', 'Meter/Detik', 'Miles/Hour', 'Knot (Laut)'],
+                ratios: { // Base: Km/Jam
+                    'Km/Jam': 1, 'Meter/Detik': 0.277778, 'Miles/Hour': 0.621371, 'Knot (Laut)': 0.539957
+                }
+            },
+            temp: {
+                units: ['Celsius', 'Fahrenheit', 'Kelvin'],
+                // Temp is special, handled in function
+            }
+        };
+
+        let currentCat = 'length';
+
+        // Initialize
+        function init() {
+            populateSelects();
+            convert();
+        }
+
+        function setCategory(cat) {
+            currentCat = cat;
+            
+            // Update buttons visuals
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            populateSelects();
+            convert();
+        }
+
+        function populateSelects() {
+            const fromSelect = document.getElementById('fromUnit');
+            const toSelect = document.getElementById('toUnit');
+            
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+
+            categories[currentCat].units.forEach(unit => {
+                let opt1 = document.createElement('option');
+                opt1.value = unit;
+                opt1.innerText = unit;
+                fromSelect.appendChild(opt1);
+
+                let opt2 = document.createElement('option');
+                opt2.value = unit;
+                opt2.innerText = unit;
+                toSelect.appendChild(opt2);
+            });
+
+            // Set default second option for "To" if available
+            if (categories[currentCat].units.length > 1) {
+                toSelect.selectedIndex = 1;
+            }
+        }
+
+        function swapUnits() {
+            const fromSelect = document.getElementById('fromUnit');
+            const toSelect = document.getElementById('toUnit');
+            
+            const temp = fromSelect.value;
+            fromSelect.value = toSelect.value;
+            toSelect.value = temp;
+            
+            convert();
+        }
+
+        function convert() {
+            const val = parseFloat(document.getElementById('inputVal').value);
+            const from = document.getElementById('fromUnit').value;
+            const to = document.getElementById('toUnit').value;
+            const outputDisplay = document.getElementById('outputVal');
+            const outputLabel = document.getElementById('outputLabel');
+
+            outputLabel.innerText = to;
+
+            if (isNaN(val)) {
+                outputDisplay.innerText = "---";
+                return;
+            }
+
+            let result;
+
+            if (currentCat === 'temp') {
+                result = convertTemp(val, from, to);
+            } else {
+                // Linear conversion
+                const ratios = categories[currentCat].ratios;
+                // Formula: (Value / FromRatio) * ToRatio ? 
+                // Wait, ratio is "How many Units in 1 Base".
+                // So Base = Value / Ratio_From
+                // Target = Base * Ratio_To
+                
+                // Example: 1000m to km. 
+                // Base (m) = 1000 / 1 = 1000.
+                // Target (km) = 1000 * 0.001 = 1.
+                
+                // Example: 1 km to m
+                // Base (m) = 1 / 0.001 = 1000.
+                // Target (m) = 1000 * 1 = 1000.
+                
+                const baseValue = val / ratios[from];
+                result = baseValue * ratios[to];
+            }
+
+            // Formatting: remove trailing zeros, max 5 decimals
+            outputDisplay.innerText = parseFloat(result.toPrecision(7)) * 1; 
+        }
+
+        function convertTemp(val, from, to) {
+            let celsius;
+
+            // 1. Convert to Celsius first
+            if (from === 'Celsius') celsius = val;
+            else if (from === 'Fahrenheit') celsius = (val - 32) * 5/9;
+            else if (from === 'Kelvin') celsius = val - 273.15;
+
+            // 2. Convert Celsius to Target
+            if (to === 'Celsius') return celsius;
+            if (to === 'Fahrenheit') return (celsius * 9/5) + 32;
+            if (to === 'Kelvin') return celsius + 273.15;
+        }
+
+        // Start
+        init();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Seismometer</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --grid-color: #1a1a1a;
+            --x-color: #ff3333; /* Merah */
+            --y-color: #33ff33; /* Hijau */
+            --z-color: #3333ff; /* Biru */
+            --text-color: #e0e0e0;
+            --alert-bg: #550000;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            background: #111;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 { margin: 0; font-size: 1.2rem; }
+        
+        .status-dot {
+            height: 10px; width: 10px;
+            background-color: #555;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 5px #555;
+        }
+        .status-dot.active {
+            background-color: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        #graph-container {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #111;
+            border-top: 1px solid #333;
+        }
+
+        .readings {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .val-box { padding: 5px; border-radius: 4px; border: 1px solid #333; }
+        .val-x { color: var(--x-color); }
+        .val-y { color: var(--y-color); }
+        .val-z { color: var(--z-color); }
+
+        .slider-group {
+            margin-bottom: 15px;
+        }
+        
+        label { display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; }
+        input[type=range] { width: 100%; accent-color: #ff9800; }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #333;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover { background: #444; }
+
+        .alarm-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 0, 0, 0.3);
+            display: none;
+            pointer-events: none;
+            z-index: 10;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0.3; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Vibration Analyzer</h1>
+        <div id="status" class="status-dot"></div>
+    </header>
+
+    <div id="graph-container">
+        <div id="alarm" class="alarm-overlay"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="controls">
+        <div class="readings">
+            <div class="val-box val-x">X: <span id="x-val">0.0</span></div>
+            <div class="val-box val-y">Y: <span id="y-val">0.0</span></div>
+            <div class="val-box val-z">Z: <span id="z-val">0.0</span></div>
+        </div>
+
+        <div class="slider-group">
+            <label>Alarm Threshold (Sensitivitas)</label>
+            <input type="range" id="threshold" min="0.5" max="10" step="0.1" value="2.0">
+        </div>
+        
+        <div class="slider-group">
+            <label>Zoom Grafik (Scale)</label>
+            <input type="range" id="scale" min="10" max="100" step="10" value="30">
+        </div>
+
+        <button id="btn-start" onclick="requestPermission()">IZINKAN SENSOR & MULAI</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const xVal = document.getElementById('x-val');
+        const yVal = document.getElementById('y-val');
+        const zVal = document.getElementById('z-val');
+        const statusDot = document.getElementById('status');
+        const alarmOverlay = document.getElementById('alarm');
+        const thresholdSlider = document.getElementById('threshold');
+        const scaleSlider = document.getElementById('scale');
+
+        let isRunning = false;
+        let historyX = [];
+        let historyY = [];
+        let historyZ = [];
+        const maxDataPoints = 200; // Lebar grafik
+
+        // Ukuran Canvas
+        function resize() {
+            canvas.width = document.getElementById('graph-container').offsetWidth;
+            canvas.height = document.getElementById('graph-container').offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Fungsi Request Permission (Wajib buat iOS 13+)
+        function requestPermission() {
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            startSensing();
+                        } else {
+                            alert("Izin sensor ditolak.");
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // Android / iOS lama (non-HTTPS mungkin butuh trik, tapi di localhost/file aman)
+                startSensing();
+            }
+        }
+
+        function startSensing() {
+            if (isRunning) return;
+            window.addEventListener('devicemotion', handleMotion);
+            isRunning = true;
+            statusDot.classList.add('active');
+            document.getElementById('btn-start').style.display = 'none';
+            loop();
+        }
+
+        function handleMotion(event) {
+            // Mengambil akselerasi (tanpa gravitasi biar murni getaran)
+            // Kalau null (beberapa HP murah), fallback ke accelerationIncludingGravity
+            let acc = event.acceleration;
+            if (!acc || acc.x === null) {
+                acc = event.accelerationIncludingGravity;
+                // Simple filter buat buang gravitasi statis (kasar)
+                // Di real app butuh high-pass filter, tapi ini cukup buat visual
+            }
+
+            const x = acc.x || 0;
+            const y = acc.y || 0;
+            const z = acc.z || 0;
+
+            // Update Angka
+            xVal.innerText = x.toFixed(2);
+            yVal.innerText = y.toFixed(2);
+            zVal.innerText = z.toFixed(2);
+
+            // Cek Alarm
+            const threshold = parseFloat(thresholdSlider.value);
+            // Hitung Magnitude vektor (kekuatan total getaran)
+            const magnitude = Math.sqrt(x*x + y*y + z*z);
+            
+            if (magnitude > threshold) {
+                alarmOverlay.style.display = 'block';
+                // Bisa tambah bunyi beep disini kalau mau
+            } else {
+                alarmOverlay.style.display = 'none';
+            }
+
+            // Simpan Data
+            historyX.push(x);
+            historyY.push(y);
+            historyZ.push(z);
+
+            if (historyX.length > maxDataPoints) {
+                historyX.shift();
+                historyY.shift();
+                historyZ.shift();
+            }
+        }
+
+        function drawLine(data, color, offset) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+
+            const step = canvas.width / maxDataPoints;
+            const scale = parseFloat(scaleSlider.value);
+            const midY = canvas.height / 2;
+
+            for (let i = 0; i < data.length; i++) {
+                const x = i * step;
+                // Invert Y karena canvas 0 di atas
+                const y = midY - (data[i] * scale);
+                
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        function loop() {
+            // Clear Screen
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Garis tengah
+            ctx.beginPath();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.moveTo(0, canvas.height/2);
+            ctx.lineTo(canvas.width, canvas.height/2);
+            ctx.stroke();
+
+            // Gambar Grafik
+            if (historyX.length > 0) {
+                drawLine(historyX, '#ff3333'); // Merah
+                drawLine(historyY, '#33ff33'); // Hijau
+                drawLine(historyZ, '#3333ff'); // Biru
+            }
+
+            requestAnimationFrame(loop);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Waypoint Radar</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --radar-bg: #1e293b;
+            --radar-line: #334155;
+            --accent: #00ff9d; /* Hijau Radar */
+            --text: #e2e8f0;
+            --danger: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Radar UI */
+        .radar-scope {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--radar-bg) 0%, #000 100%);
+            border: 2px solid var(--radar-line);
+            border-radius: 50%;
+            position: relative;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .radar-scope::before, .radar-scope::after {
+            content: '';
+            position: absolute;
+            background: var(--radar-line);
+        }
+        .radar-scope::before { width: 100%; height: 1px; top: 50%; }
+        .radar-scope::after { width: 1px; height: 100%; left: 50%; }
+
+        .compass-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px dashed var(--radar-line);
+            box-sizing: border-box;
+            transition: transform 0.2s cubic-bezier(0.1, 0.5, 0.5, 1);
+        }
+
+        .north-marker {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        /* The Arrow pointing to Target */
+        .target-arrow {
+            position: absolute;
+            width: 0; 
+            height: 0; 
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 50px solid var(--accent);
+            filter: drop-shadow(0 0 5px var(--accent));
+            transform-origin: bottom center;
+            transition: transform 0.5s ease-out;
+            z-index: 5;
+        }
+
+        /* Info Display */
+        .info-panel {
+            text-align: center;
+            background: var(--radar-bg);
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 350px;
+            border: 1px solid var(--radar-line);
+        }
+
+        .distance-display {
+            font-size: 2.5rem;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+
+        .coords-small {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        /* Inputs */
+        .input-group {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        input {
+            background: #000;
+            border: 1px solid var(--radar-line);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            grid-column: span 2;
+            padding: 12px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .status-msg {
+            color: yellow;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            height: 20px;
+        }
+        
+        #ios-perm {
+            display: none;
+            background: var(--danger);
+            color: white;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="info-panel">
+        <button id="ios-perm" onclick="requestDeviceOrientation()">IZINKAN KOMPAS (iOS/Android 13+)</button>
+        <div class="coords-small">MY LOCATION: <span id="my-loc">Waiting GPS...</span></div>
+        <div class="distance-display" id="dist-val">--- m</div>
+        <div class="status-msg" id="status">Menunggu GPS Lock...</div>
+    </div>
+
+    <div class="radar-scope">
+        <div class="north-marker">N</div>
+        <div class="compass-ring" id="compass-ring"></div>
+        
+        <div class="target-arrow" id="arrow"></div>
+        
+        <div style="width: 10px; height: 10px; background: white; border-radius: 50%; position: absolute; z-index: 6;"></div>
+    </div>
+
+    <div class="info-panel">
+        <div style="font-size: 0.9rem; margin-bottom: 5px;">TARGET COORDINATES</div>
+        <div class="input-group">
+            <input type="number" id="target-lat" placeholder="Latitude (-6.xxx)" step="any">
+            <input type="number" id="target-lon" placeholder="Longitude (106.xxx)" step="any">
+            <button onclick="setTarget()">LOCK TARGET</button>
+            <button onclick="saveCurrent()" style="background: #334155; color: white;">SIMPAN POSISI SAAT INI</button>
+        </div>
+    </div>
+
+    <script>
+        // State Variables
+        let myLat = 0, myLon = 0;
+        let targetLat = null, targetLon = null;
+        let deviceHeading = 0; // 0 = North
+        let bearingToTarget = 0;
+        
+        const compassRing = document.getElementById('compass-ring');
+        const arrow = document.getElementById('arrow');
+        const distVal = document.getElementById('dist-val');
+        const statusEl = document.getElementById('status');
+        const myLocEl = document.getElementById('my-loc');
+
+        // 1. Get GPS Location
+        if ("geolocation" in navigator) {
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    myLat = position.coords.latitude;
+                    myLon = position.coords.longitude;
+                    
+                    myLocEl.innerText = `${myLat.toFixed(5)}, ${myLon.toFixed(5)}`;
+                    
+                    // Accuracy check
+                    if(position.coords.accuracy > 50) {
+                        statusEl.innerText = `GPS Lemah (Akurasi: ${Math.round(position.coords.accuracy)}m)`;
+                        statusEl.style.color = "yellow";
+                    } else {
+                        statusEl.innerText = "GPS OK";
+                        statusEl.style.color = "#00ff9d";
+                    }
+
+                    calculateNavigation();
+                },
+                (error) => {
+                    statusEl.innerText = "Error GPS: " + error.message;
+                    statusEl.style.color = "red";
+                },
+                { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+            );
+        } else {
+            alert("Browser tidak support GPS");
+        }
+
+        // 2. Get Compass Heading (Device Orientation)
+        function handleOrientation(event) {
+            let heading = 0;
+            
+            // Android Support
+            if (event.webkitCompassHeading) {
+                // iOS
+                heading = event.webkitCompassHeading;
+            } else if (event.alpha) {
+                // Android (alpha is usually 0 at initial load, need absolute)
+                if(event.absolute) {
+                    heading = 360 - event.alpha;
+                } else {
+                    // Fallback for non-absolute (relative gyro), not perfect compass
+                    heading = 360 - event.alpha; 
+                    statusEl.innerText = "Mode Gyro (Bukan Kompas Magnetik)";
+                }
+            }
+
+            deviceHeading = heading;
+            updateVisuals();
+        }
+
+        // Permission handler for iOS 13+
+        function requestDeviceOrientation() {
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                            document.getElementById('ios-perm').style.display = 'none';
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                window.addEventListener('deviceorientationabsolute', handleOrientation); // Android modern
+                window.addEventListener('deviceorientation', handleOrientation); // Fallback
+            }
+        }
+        
+        // Show button if needed
+        if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+            document.getElementById('ios-perm').style.display = 'block';
+        } else {
+            // Auto start for Android
+            window.addEventListener('deviceorientationabsolute', handleOrientation);
+            window.addEventListener('deviceorientation', handleOrientation);
+        }
+
+        // 3. Logic: Set Target
+        function setTarget() {
+            const latIn = document.getElementById('target-lat').value;
+            const lonIn = document.getElementById('target-lon').value;
+            
+            if(latIn && lonIn) {
+                targetLat = parseFloat(latIn);
+                targetLon = parseFloat(lonIn);
+                calculateNavigation();
+            } else {
+                alert("Masukkan koordinat dulu!");
+            }
+        }
+
+        function saveCurrent() {
+            if(myLat !== 0) {
+                document.getElementById('target-lat').value = myLat;
+                document.getElementById('target-lon').value = myLon;
+                targetLat = myLat;
+                targetLon = myLon;
+                calculateNavigation();
+                alert("Posisi tersimpan sebagai Target! Berjalanlah menjauh untuk tes.");
+            }
+        }
+
+        // 4. Math: Haversine & Bearing
+        function calculateNavigation() {
+            if (targetLat === null) return;
+
+            // Distance (Haversine)
+            const R = 6371e3; // Earth radius in meters
+            const φ1 = myLat * Math.PI/180;
+            const φ2 = targetLat * Math.PI/180;
+            const Δφ = (targetLat - myLat) * Math.PI/180;
+            const Δλ = (targetLon - myLon) * Math.PI/180;
+
+            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+                      Math.cos(φ1) * Math.cos(φ2) *
+                      Math.sin(Δλ/2) * Math.sin(Δλ/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const d = R * c; // Distance in meters
+
+            // Update UI Distance
+            if (d > 1000) {
+                distVal.innerText = (d/1000).toFixed(2) + " km";
+            } else {
+                distVal.innerText = Math.round(d) + " m";
+            }
+
+            // Bearing (Direction to Target from True North)
+            const y = Math.sin(Δλ) * Math.cos(φ2);
+            const x = Math.cos(φ1)*Math.sin(φ2) -
+                      Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
+            const θ = Math.atan2(y, x);
+            bearingToTarget = (θ * 180 / Math.PI + 360) % 360; // 0-360 degrees
+
+            updateVisuals();
+        }
+
+        function updateVisuals() {
+            // Rotasi Ring Kompas (Biar 'N' selalu di Utara)
+            // Kalau HP muter ke kanan (90), ring harus muter ke kiri (-90)
+            compassRing.style.transform = `rotate(${-deviceHeading}deg)`;
+
+            // Rotasi Panah Target
+            // Panah harus nunjuk ke Bearing Target RELATIF terhadap hadap HP
+            // Contoh: Target di Timur (90), HP hadap Utara (0) -> Panah miring 90
+            // Contoh: Target di Timur (90), HP hadap Timur (90) -> Panah lurus 0
+            if (targetLat !== null) {
+                let arrowRotation = bearingToTarget - deviceHeading;
+                arrow.style.transform = `rotate(${arrowRotation}deg)`;
+                arrow.style.opacity = 1;
+            } else {
+                arrow.style.opacity = 0.3; // Dim if no target
+            }
+        }
+
+    </script>
+</body>
+</html>

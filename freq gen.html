@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara Signal Gen</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --panel-color: #1e293b;
+            --text-color: #94a3b8;
+            --accent-color: #38bdf8; /* Cyan Neon */
+            --danger-color: #ef4444;
+            --knob-bg: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            user-select: none;
+        }
+
+        .generator-panel {
+            background-color: var(--panel-color);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 30px;
+            width: 320px;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--accent-color);
+            margin-top: 0;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .screen {
+            background-color: #000;
+            color: var(--accent-color);
+            font-family: 'Courier New', monospace;
+            font-size: 2.5rem;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .unit {
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Sliders */
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--accent-color);
+        }
+
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle {
+            background-color: var(--accent-color);
+            color: #000;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        .btn-toggle:hover {
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
+        .btn-toggle.active {
+            background-color: var(--danger-color);
+            color: white;
+            box-shadow: 0 0 15px var(--danger-color);
+        }
+
+        select {
+            background-color: var(--knob-bg);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .preset-btn {
+            background-color: var(--knob-bg);
+            color: var(--text-color);
+            font-size: 0.8rem;
+        }
+        
+        .preset-btn:hover {
+            background-color: #475569;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="generator-panel">
+        <h2>Freq Generator</h2>
+        
+        <div class="screen">
+            <span id="freq-display">440</span><span class="unit">Hz</span>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label>Frequency (Coarse)</label>
+                <input type="range" id="freq-slider" min="1" max="20000" value="440" step="1">
+            </div>
+            
+            <div>
+                <label>Fine Tune (+/- 10Hz)</label>
+                <input type="range" id="fine-slider" min="-10" max="10" value="0" step="0.1">
+            </div>
+
+            <div>
+                <label>Waveform</label>
+                <select id="wave-type">
+                    <option value="sine">Sine (Halus)</option>
+                    <option value="square">Square (Kasar/Digital)</option>
+                    <option value="sawtooth">Sawtooth (Tajam)</option>
+                    <option value="triangle">Triangle (Game Retro)</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Volume: <span id="vol-val">50%</span></label>
+                <input type="range" id="vol-slider" min="0" max="1" value="0.1" step="0.01">
+            </div>
+
+            <div class="btn-group">
+                <button class="preset-btn" onclick="setFreq(432)">432 Hz</button>
+                <button class="preset-btn" onclick="setFreq(528)">528 Hz</button>
+            </div>
+
+            <button id="toggle-btn" class="btn-toggle">START OSCILLATOR</button>
+        </div>
+    </div>
+
+    <script>
+        // Audio Context setup
+        let audioCtx;
+        let oscillator;
+        let gainNode;
+        let isPlaying = false;
+
+        const freqSlider = document.getElementById('freq-slider');
+        const fineSlider = document.getElementById('fine-slider');
+        const volSlider = document.getElementById('vol-slider');
+        const waveType = document.getElementById('wave-type');
+        const freqDisplay = document.getElementById('freq-display');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const volVal = document.getElementById('vol-val');
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function updateFrequency() {
+            const baseFreq = parseFloat(freqSlider.value);
+            const fineTune = parseFloat(fineSlider.value);
+            const totalFreq = baseFreq + fineTune;
+            
+            freqDisplay.innerText = totalFreq.toFixed(1);
+            
+            if (oscillator) {
+                oscillator.frequency.setValueAtTime(totalFreq, audioCtx.currentTime);
+            }
+        }
+
+        function updateVolume() {
+            const vol = parseFloat(volSlider.value);
+            volVal.innerText = Math.round(vol * 100) + "%";
+            if (gainNode) {
+                gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+            }
+        }
+
+        function setFreq(val) {
+            freqSlider.value = val;
+            fineSlider.value = 0;
+            updateFrequency();
+        }
+
+        function toggleOscillator() {
+            initAudio();
+
+            if (isPlaying) {
+                // Stop
+                oscillator.stop();
+                oscillator.disconnect();
+                toggleBtn.innerText = "START OSCILLATOR";
+                toggleBtn.classList.remove('active');
+                isPlaying = false;
+            } else {
+                // Start
+                oscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+
+                oscillator.type = waveType.value;
+                oscillator.frequency.value = parseFloat(freqSlider.value) + parseFloat(fineSlider.value);
+                gainNode.gain.value = parseFloat(volSlider.value);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start();
+                toggleBtn.innerText = "STOP SIGNAL";
+                toggleBtn.classList.add('active');
+                isPlaying = true;
+            }
+        }
+
+        // Event Listeners
+        toggleBtn.addEventListener('click', toggleOscillator);
+        
+        freqSlider.addEventListener('input', updateFrequency);
+        fineSlider.addEventListener('input', updateFrequency);
+        
+        volSlider.addEventListener('input', updateVolume);
+
+        waveType.addEventListener('change', () => {
+            if (oscillator) {
+                oscillator.type = waveType.value;
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara Spectral Eye</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --grid-color: #333333;
+            --text-color: #00ffff;
+            --overlay-color: rgba(0, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Consolas', 'Monaco', monospace;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--grid-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0a0a0a;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: var(--overlay-color);
+        }
+
+        button.active {
+            background: var(--text-color);
+            color: #000;
+        }
+
+        /* Main Display Area */
+        #visualizer-container {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* HUD Overlay info */
+        .hud-info {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            pointer-events: none;
+            background: rgba(0,0,0,0.5);
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .freq-axis {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            font-size: 0.8rem;
+            color: #888;
+            pointer-events: none;
+        }
+
+        /* Mode Selector */
+        .mode-select {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Spectral Eye v1.0</h1>
+        <div class="controls">
+            <button id="btn-start" onclick="startAudio()">AKTIFKAN SENSOR</button>
+            <button id="btn-pause" onclick="togglePause()" disabled>FREEZE</button>
+        </div>
+    </header>
+
+    <div id="visualizer-container">
+        <canvas id="canvas"></canvas>
+        
+        <div class="hud-info">
+            <div>PEAK FREQ: <span id="peak-freq">0</span> Hz</div>
+            <div>DECIBEL: <span id="db-level">-100</span> dB</div>
+        </div>
+
+        <div class="mode-select">
+            <button onclick="setMode('bars')">BARS</button>
+            <button onclick="setMode('spectrogram')">WATERFALL</button>
+            <button onclick="setMode('oscilloscope')">WAVE</button>
+        </div>
+
+        <div class="freq-axis">
+            <span>0Hz</span>
+            <span>5kHz</span>
+            <span>10kHz</span>
+            <span>15kHz</span>
+            <span>20kHz</span>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx;
+        let analyser;
+        let source;
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        let animationId;
+        let isRunning = false;
+        let isPaused = false;
+        let mode = 'bars'; // bars, spectrogram, oscilloscope
+
+        // Waterfall variables
+        let tempCanvas = document.createElement('canvas');
+        let tempCtx = tempCanvas.getContext('2d');
+        let waterfallScrollSpeed = 2;
+
+        // Resize handling
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight - 50; // minus header
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        async function startAudio() {
+            if (isRunning) return;
+            
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 2048; // Resolusi frekuensi
+                
+                source = audioCtx.createMediaStreamSource(stream);
+                source.connect(analyser);
+                
+                isRunning = true;
+                isPaused = false;
+                document.getElementById('btn-start').classList.add('active');
+                document.getElementById('btn-start').innerText = "RUNNING";
+                document.getElementById('btn-pause').disabled = false;
+                
+                draw();
+            } catch (err) {
+                alert("Gagal akses mik: " + err);
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('btn-pause');
+            btn.innerText = isPaused ? "RESUME" : "FREEZE";
+            btn.classList.toggle('active');
+            if (!isPaused) draw();
+        }
+
+        function setMode(newMode) {
+            mode = newMode;
+            // Clear screen when switching
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function draw() {
+            if (!isRunning || isPaused) return;
+
+            animationId = requestAnimationFrame(draw);
+
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            
+            // HUD Update Logic
+            analyser.getByteFrequencyData(dataArray);
+            
+            // Cari Peak Frequency (sederhana)
+            let maxVal = 0;
+            let maxIndex = 0;
+            for(let i=0; i<bufferLength; i++) {
+                if(dataArray[i] > maxVal) {
+                    maxVal = dataArray[i];
+                    maxIndex = i;
+                }
+            }
+            // Konversi index ke Hz: index * (SampleRate / fftSize)
+            const nyquist = audioCtx.sampleRate / 2;
+            const peakHz = maxIndex * (audioCtx.sampleRate / analyser.fftSize);
+            
+            // Update HUD text
+            document.getElementById('peak-freq').innerText = Math.round(peakHz);
+            // dB is rough approx from 0-255 scale
+            let db = Math.round(20 * Math.log10(maxVal / 255)) || -100;
+            document.getElementById('db-level').innerText = db;
+
+
+            // DRAWING MODES
+            if (mode === 'bars') {
+                drawBars(dataArray, bufferLength);
+            } else if (mode === 'spectrogram') {
+                drawSpectrogram(dataArray, bufferLength);
+            } else if (mode === 'oscilloscope') {
+                const waveArray = new Uint8Array(analyser.fftSize);
+                analyser.getByteTimeDomainData(waveArray);
+                drawOscilloscope(waveArray, analyser.fftSize);
+            }
+        }
+
+        function drawBars(data, bufferLength) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Trail effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let barHeight;
+            let x = 0;
+
+            for(let i = 0; i < bufferLength; i++) {
+                barHeight = data[i] / 255 * canvas.height;
+
+                // Color based on height (Volume)
+                const r = barHeight + (25 * (i/bufferLength));
+                const g = 250 * (i/bufferLength);
+                const b = 50;
+
+                ctx.fillStyle = `rgb(${r},${g},${b})`;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+
+                x += barWidth + 1;
+            }
+        }
+
+        function drawOscilloscope(data, bufferLength) {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#00ffff';
+            ctx.beginPath();
+
+            const sliceWidth = canvas.width * 1.0 / bufferLength;
+            let x = 0;
+
+            for(let i = 0; i < bufferLength; i++) {
+                const v = data[i] / 128.0;
+                const y = v * canvas.height / 2;
+
+                if(i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+
+                x += sliceWidth;
+            }
+
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
+        }
+
+        function drawSpectrogram(data, bufferLength) {
+            // 1. Draw current frame to temp canvas top
+            // Create a 1px high line representing current freq
+            const lineImg = ctx.createImageData(canvas.width, 1);
+            
+            for (let i = 0; i < canvas.width; i++) {
+                // Map x position to frequency index
+                // Logarithmic scale is better, but linear is easier for now
+                const freqIndex = Math.floor(i / canvas.width * bufferLength);
+                const value = data[freqIndex];
+
+                // Heatmap Color Map
+                const r = value;
+                const g = 255 - value;
+                const b = 50;
+                const a = 255;
+
+                const pixelIndex = i * 4;
+                lineImg.data[pixelIndex] = r;
+                lineImg.data[pixelIndex+1] = g;
+                lineImg.data[pixelIndex+2] = b;
+                lineImg.data[pixelIndex+3] = a;
+            }
+
+            // 2. Shift existing canvas down
+            // Draw current canvas to temp
+            tempCtx.drawImage(canvas, 0, 0);
+            
+            // Clear main
+            // ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw temp shifted down
+            ctx.drawImage(tempCanvas, 0, waterfallScrollSpeed);
+            
+            // Draw new line at top
+            ctx.putImageData(lineImg, 0, 0);
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: #111;
+            --border: #333;
+            --text-main: #00ff41; /* Hacker Green */
+            --text-dim: #008f11;
+            --accent: #00ff41;
+            --danger: #ff3333;
+            --nav: #00bcd4;
+            --eng: #ff9800;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Consolas', 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Header Area */
+        header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        .sys-info {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-align: right;
+        }
+
+        /* Categories Filter */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: #888;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: inherit;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        /* Grid Layout */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        /* App Card */
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.2);
+        }
+
+        .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+        }
+
+        .label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Color Coding by Category */
+        .cat-comms { border-top: 3px solid #d0f; }
+        .cat-sensor { border-top: 3px solid #0ff; }
+        .cat-nav { border-top: 3px solid #ff0; }
+        .cat-eng { border-top: 3px solid #f90; }
+        .cat-sec { border-top: 3px solid #f00; }
+
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #444;
+            border-top: 1px solid #111;
+            padding-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>Multi Tools Sunda OS</h1>
+            <div style="font-size: 0.7rem; color: #666;">v1.0.4 [OFFLINE MODE]</div>
+        </div>
+        <div class="sys-info">
+            <div id="clock">00:00</div>
+            <div>BATT: <span id="batt">--%</span></div>
+        </div>
+    </header>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterApps('all')">ALL SYSTEMS</button>
+        <button class="filter-btn" onclick="filterApps('cat-eng')">ENGINEERING</button>
+        <button class="filter-btn" onclick="filterApps('cat-sensor')">SENSORS</button>
+        <button class="filter-btn" onclick="filterApps('cat-comms')">COMMS</button>
+        <button class="filter-btn" onclick="filterApps('cat-nav')">NAV & FIELD</button>
+        <button class="filter-btn" onclick="filterApps('cat-sec')">SECURITY</button>
+    </div>
+
+    <div class="app-grid" id="grid">
+        </div>
+
+    <footer>
+        &copy; 2026 SUNDA NUSWANTARA SURVIVAL SYSTEMS
+    </footer>
+
+    <script>
+        // --- DATA APLIKASI ---
+        // Pastikan nama file (url) SAMA PERSIS dengan file yang lu save
+        const tools = [
+            { url: 'kalkulator.html', label: 'Scientific Calc', icon: '🧮', cat: 'cat-eng' },
+            { url: 'multi converter.html', label: 'Unit Converter', icon: '⚖️', cat: 'cat-eng' },
+            { url: 'freq gen.html', label: 'Freq Generator', icon: '〰️', cat: 'cat-sensor' },
+            { url: 'spectrum_analyzer.html', label: 'Spectrum Eye', icon: '👁️', cat: 'cat-sensor' },
+            { url: 'seismometer.html', label: 'Vibro Analyzer', icon: '📉', cat: 'cat-sensor' },
+            { url: 'sentry cctv.html', label: 'Sentry Watch', icon: '📹', cat: 'cat-sec' },
+            { url: 'morse decoder.html', label: 'Morse Decoder', icon: '📻', cat: 'cat-comms' },
+            { url: 'soundchat.html', label: 'Sonic Modem', icon: '🔊', cat: 'cat-comms' },
+            { url: 'gps location.html', label: 'GPS Radar', icon: '🧭', cat: 'cat-nav' },
+            { url: 'rangefinder.html', label: 'Sniper Scope', icon: '🔭', cat: 'cat-nav' }
+        ];
+
+        const grid = document.getElementById('grid');
+
+        // Render Icons
+        function render(filter) {
+            grid.innerHTML = '';
+            tools.forEach(tool => {
+                if (filter === 'all' || tool.cat === filter) {
+                    const a = document.createElement('a');
+                    a.href = tool.url;
+                    a.className = `app-card ${tool.cat}`;
+                    a.innerHTML = `
+                        <div class="icon">${tool.icon}</div>
+                        <div class="label">${tool.label}</div>
+                    `;
+                    grid.appendChild(a);
+                }
+            });
+        }
+
+        // Filter Logic
+        function filterApps(category) {
+            // Visual Active State
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            render(category);
+        }
+
+        // System Clock & Battery
+        function updateStatus() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+        setInterval(updateStatus, 1000);
+        updateStatus();
+
+        // Battery Status (Modern Browsers)
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(batt => {
+                const updateBatt = () => {
+                    document.getElementById('batt').innerText = Math.round(batt.level * 100) + "%";
+                };
+                updateBatt();
+                batt.addEventListener('levelchange', updateBatt);
+            });
+        }
+
+        // Initial Render
+        render('all');
+
+    </script>
+</body>
+</html>
