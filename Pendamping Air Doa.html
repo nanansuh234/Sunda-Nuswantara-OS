@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Charging Station - 963 Hz</title>
+    <style>
+        body {
+            background: #050505; color: #d4af37; font-family: 'Courier New', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+        .container {
+            text-align: center; background: rgba(20, 20, 20, 0.8);
+            padding: 30px; border-radius: 20px; border: 1px solid #333;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+        }
+        .plate-box {
+            width: 300px; height: 300px; border: 5px solid #222; border-radius: 50%;
+            background: #000; margin: 20px auto; position: relative; overflow: hidden;
+        }
+        .hz-display { font-size: 2.5rem; color: #00ffcc; margin-bottom: 5px; text-shadow: 0 0 10px #00ffcc; }
+        .timer-display { font-size: 1.2rem; color: #ffaa00; margin-bottom: 20px; }
+        
+        button {
+            width: 100%; padding: 15px; font-weight: bold; cursor: pointer;
+            background: #d4af37; color: #000; border: none; border-radius: 5px;
+            font-family: inherit; transition: 0.3s;
+        }
+        button.active { background: #ff3e3e; color: #fff; }
+        
+        .slider-group { margin: 20px 0; text-align: left; }
+        input[type=range] { width: 100%; accent-color: #00ffcc; }
+        
+        .progress-bar {
+            width: 100%; height: 5px; background: #222; margin-top: 10px;
+            border-radius: 5px; overflow: hidden;
+        }
+        #progressFill { width: 0%; height: 100%; background: #00ffcc; transition: 0.5s; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 style="margin:0; letter-spacing: 2px;">WATER CHARGER</h2>
+        <div style="font-size:0.7rem; color:#666; margin-bottom:20px;">Molecular Alignment Protocol</div>
+
+        <div class="hz-display" id="hzVal">963.00 Hz</div>
+        <div class="timer-display" id="timerLabel">READY TO CHARGE</div>
+
+        <div class="plate-box">
+            <canvas id="sandCanvas" width="300" height="300"></canvas>
+        </div>
+
+        <div class="slider-group">
+            <label style="font-size:0.8rem;">VIBRATION INTENSITY</label>
+            <input type="range" id="volSlider" min="0" max="0.5" step="0.01" value="0.1">
+            <div class="progress-bar"><div id="progressFill"></div></div>
+        </div>
+
+        <button id="masterBtn" onclick="startCharging()">START 15 MIN CHARGE</button>
+        <p style="font-size: 0.6rem; color: #444; margin-top: 15px;">Place water vessel near speaker for maximum induction.</p>
+    </div>
+
+    <script>
+        let audioCtx, oscL, oscR, gainNode, isRunning = false;
+        let timeLeft = 15 * 60; // 15 Menit dalam detik
+        let timerInterval;
+
+        const canvas = document.getElementById('sandCanvas');
+        const ctx = canvas.getContext('2d');
+        const particles = Array.from({length: 2500}, () => ({x: Math.random()*300, y: Math.random()*300}));
+
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            oscL = audioCtx.createOscillator();
+            oscR = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+            
+            const pannerL = audioCtx.createStereoPanner();
+            const pannerR = audioCtx.createStereoPanner();
+            pannerL.pan.value = -1;
+            pannerR.pan.value = 1;
+
+            oscL.frequency.value = 963;
+            oscR.frequency.value = 971; // Binaural 8Hz Alpha shift
+
+            oscL.connect(pannerL).connect(gainNode);
+            oscR.connect(pannerR).connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            oscL.start(); oscR.start();
+        }
+
+        function startCharging() {
+            if (!audioCtx) initAudio();
+            const btn = document.getElementById('masterBtn');
+
+            if (!isRunning) {
+                isRunning = true;
+                const vol = document.getElementById('volSlider').value;
+                gainNode.gain.setTargetAtTime(vol, audioCtx.currentTime, 0.5);
+                
+                btn.innerText = "CANCEL CHARGING";
+                btn.className = "active";
+                
+                startTimer();
+            } else {
+                stopSystem();
+            }
+        }
+
+        function stopSystem() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+            document.getElementById('masterBtn').innerText = "START 15 MIN CHARGE";
+            document.getElementById('masterBtn').className = "";
+            document.getElementById('timerLabel').innerText = "CHARGING STOPPED";
+            document.getElementById('progressFill').style.width = "0%";
+            timeLeft = 15 * 60;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                let mins = Math.floor(timeLeft / 60);
+                let secs = timeLeft % 60;
+                document.getElementById('timerLabel').innerText = 
+                    `CHARGING: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                
+                let progress = ((15 * 60 - timeLeft) / (15 * 60)) * 100;
+                document.getElementById('progressFill').style.width = progress + "%";
+
+                if (timeLeft <= 0) {
+                    stopSystem();
+                    alert("Proses charging air selesai. Air telah terstruktur.");
+                }
+            }, 1000);
+        }
+
+        function getChladni(x, y) {
+            let nx = (x/300)*2-1, ny = (y/300)*2-1;
+            let n = 9.63; // Scaling from 963Hz
+            let m = 4.81;
+            let p = Math.PI;
+            return Math.cos(n*p*nx) * Math.cos(m*p*ny) - Math.cos(m*p*nx) * Math.cos(n*p*ny);
+        }
+
+        function animate() {
+            ctx.fillStyle = "rgba(0,0,0,0.2)"; ctx.fillRect(0,0,300,300);
+            ctx.fillStyle = isRunning ? "#00ffcc" : "#333";
+            
+            particles.forEach(p => {
+                let v = getChladni(p.x, p.y);
+                let move = Math.abs(v) * (isRunning ? 5 : 0.2);
+                p.x += (Math.random()-0.5)*move; 
+                p.y += (Math.random()-0.5)*move;
+                if(p.x<0) p.x=300; if(p.x>300) p.x=0; if(p.y<0) p.y=300; if(p.y>300) p.y=0;
+                ctx.fillRect(p.x, p.y, 1, 1);
+            });
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('volSlider').oninput = (e) => {
+            if(isRunning) gainNode.gain.setTargetAtTime(e.target.value, audioCtx.currentTime, 0.1);
+        };
+
+        animate();
+    </script>
+</body>
+</html>

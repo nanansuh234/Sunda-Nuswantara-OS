@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schumann Resonance Generator</title>
+    <style>
+        body {
+            background: #000; color: #00ff00; font-family: 'Courier New', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0;
+        }
+        .core {
+            width: 200px; height: 200px; border: 2px solid #00ff00; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px #00ff00; transition: 0.1s;
+        }
+        .hz-display { font-size: 2rem; margin-top: 20px; }
+        button {
+            margin-top: 30px; padding: 15px 40px; background: transparent;
+            border: 1px solid #00ff00; color: #00ff00; cursor: pointer;
+            font-weight: bold; letter-spacing: 2px;
+        }
+        button:hover { background: #00ff00; color: #000; }
+        .warning { color: #ffaa00; font-size: 0.7rem; margin-top: 20px; max-width: 300px; }
+    </style>
+</head>
+<body>
+
+    <div class="core" id="visualCore">
+        <div style="font-size: 3rem;">⊕</div>
+    </div>
+
+    <div class="hz-display">7.83 Hz</div>
+    <div style="font-size: 0.8rem; opacity: 0.7;">EARTH'S HEARTBEAT</div>
+
+    <button id="powerBtn" onclick="toggleEarthFreq()">START RESONANCE</button>
+
+    <p class="warning">
+        INFO: Frekuensi ini di bawah ambang pendengaran manusia (Infrasound). 
+        Gunakan speaker besar/subwoofer untuk merasakan getaran fisik.
+    </p>
+
+    <script>
+        let audioCtx, osc, gainNode;
+        let isRunning = false;
+
+        function toggleEarthFreq() {
+            if (!isRunning) {
+                // Inisialisasi Audio Context
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                osc = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+
+                // Set Frekuensi Schumann 7.83 Hz
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(7.83, audioCtx.currentTime);
+
+                // Set Volume Maksimal (untuk kebutuhan induksi/energi)
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(1.0, audioCtx.currentTime + 1);
+
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                osc.start();
+                isRunning = true;
+                document.getElementById('powerBtn').innerText = "STOP RESONANCE";
+                animateVisual();
+            } else {
+                osc.stop();
+                audioCtx.close();
+                audioCtx = null;
+                isRunning = false;
+                document.getElementById('powerBtn').innerText = "START RESONANCE";
+            }
+        }
+
+        function animateVisual() {
+            if (!isRunning) return;
+            const core = document.getElementById('visualCore');
+            // Visualisasi berdenyut sesuai frekuensi (simulasi)
+            core.style.transform = "scale(1.1)";
+            setTimeout(() => {
+                core.style.transform = "scale(1.0)";
+            }, 100);
+            
+            // Interval denyut sekitar 127ms (1000ms / 7.83Hz)
+            setTimeout(animateVisual, 127);
+        }
+    </script>
+</body>
+</html>

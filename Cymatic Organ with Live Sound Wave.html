@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cymatic Sound Generator</title>
+    <style>
+        /* Mengambil style dari file lo sebelumnya */
+        body {
+            background: #050505; color: #d4af37; font-family: 'Courier New', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+        h1 { margin: 0; letter-spacing: 3px; font-size: 1.5rem; color: #fff; text-shadow: 0 0 10px #d4af37; }
+        .main-layout { display: flex; gap: 20px; margin-top: 20px; align-items: flex-start; }
+        .visual-area { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .plate-box {
+            width: 380px; height: 380px; border: 8px solid #333; border-radius: 50%;
+            background: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+            position: relative; overflow: hidden;
+        }
+        canvas { display: block; }
+        .hz-display {
+            background: #111; padding: 10px 20px; border: 1px solid #d4af37;
+            font-size: 1.5rem; font-weight: bold; color: #00ffcc; min-width: 150px; text-align: center;
+        }
+        .control-panel {
+            width: 350px; height: 450px; background: #1a1a1a; border: 2px solid #554400;
+            padding: 15px; display: flex; flex-direction: column; border-radius: 5px;
+        }
+        .slider-group { margin-bottom: 20px; text-align: center; }
+        input[type=range] { width: 100%; accent-color: #00ffcc; cursor: pointer; }
+        .logbook { flex-grow: 1; border: 1px solid #444; background: #000; overflow-y: auto; font-size: 0.8rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #333; color: #fff; padding: 5px; text-align: left; position: sticky; top: 0; }
+        td { padding: 5px; border-bottom: 1px solid #222; color: #888; cursor: pointer; }
+        tr.active-row td { background: rgba(0, 255, 204, 0.2); color: #00ffcc; font-weight: bold; }
+        button {
+            flex-grow: 1; background: #222; border: 1px solid #555; color: #00ffcc;
+            padding: 10px; cursor: pointer; font-family: inherit; font-weight: bold;
+        }
+        button:hover { background: #00ffcc; color: #000; }
+    </style>
+</head>
+<body>
+
+    <h1>CYMATIC SOUND GENERATOR</h1>
+    <div style="font-size:0.8rem; color:#666;">Harmonic Reconstruction Protocol</div>
+
+    <div class="main-layout">
+        <div class="visual-area">
+            <div class="hz-display" id="hzVal">0.00 Hz</div>
+            <div class="plate-box">
+                <canvas id="sandCanvas" width="380" height="380"></canvas>
+            </div>
+            <button onclick="toggleAudio()" id="audioBtn">START AUDIO</button>
+        </div>
+
+        <div class="control-panel">
+            <div class="slider-group">
+                <label>RESONANCE TUNING (x100 Hz)</label>
+                <input type="range" id="freqSlider" min="100" max="1000" value="432" step="1" oninput="updateFreq(this.value)">
+            </div>
+            <div class="logbook">
+                <table id="freqTable">
+                    <thead><tr><th>FREQ</th><th>SHAPE</th><th>EFFECT</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- AUDIO ENGINE ---
+        let audioCtx, oscillator, gainNode;
+        let isAudioPlaying = false;
+
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            oscillator = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(432, audioCtx.currentTime);
+            
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+        }
+
+        function toggleAudio() {
+            if (!audioCtx) initAudio();
+            if (!isAudioPlaying) {
+                gainNode.gain.setTargetAtTime(0.1, audioCtx.currentTime, 0.1);
+                document.getElementById('audioBtn').innerText = "STOP AUDIO";
+                isAudioPlaying = true;
+            } else {
+                gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+                document.getElementById('audioBtn').innerText = "START AUDIO";
+                isAudioPlaying = false;
+            }
+        }
+
+        // --- CYMATICS ENGINE ---
+        const canvas = document.getElementById('sandCanvas');
+        const ctx = canvas.getContext('2d');
+        const size = 380;
+        const numParticles = 3000;
+        let particles = [];
+        let currentFreq = 432;
+
+        for(let i=0; i<numParticles; i++) {
+            particles.push({ x: Math.random()*size, y: Math.random()*size });
+        }
+
+        const harmonics = [
+            { hz: 174, shape: "Flat", desc: "Pain Relief" },
+            { hz: 396, shape: "△", desc: "Liberating Guilt" },
+            { hz: 432, shape: "□", desc: "Nature Harmony" },
+            { hz: 528, shape: "☆", desc: "DNA Repair" },
+            { hz: 639, shape: "✡", desc: "Connection" },
+            { hz: 741, shape: "❀", desc: "Detox" },
+            { hz: 852, shape: "❂", desc: "Intuition" },
+            { hz: 963, shape: "🕸", desc: "God Freq" }
+        ];
+
+        const tableBody = document.querySelector('#freqTable tbody');
+        harmonics.forEach(h => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `<td>${h.hz}Hz</td><td>${h.shape}</td><td>${h.desc}</td>`;
+            tr.onclick = () => updateFreq(h.hz);
+            tableBody.appendChild(tr);
+        });
+
+        function updateFreq(val) {
+            currentFreq = parseFloat(val);
+            document.getElementById('hzVal').innerText = currentFreq + " Hz";
+            document.getElementById('freqSlider').value = currentFreq;
+
+            if (isAudioPlaying && oscillator) {
+                oscillator.frequency.setTargetAtTime(currentFreq, audioCtx.currentTime, 0.05);
+            }
+        }
+
+        function getChladniValue(x, y, freq) {
+            let nx = (x / size) * 2 - 1;
+            let ny = (y / size) * 2 - 1;
+            let n = freq / 100; // Skala pola berdasarkan ratusan Hz
+            let m = n * 0.5;
+            let pi = Math.PI;
+            return Math.cos(n * pi * nx) * Math.cos(m * pi * ny) - 
+                   Math.cos(m * pi * nx) * Math.cos(n * pi * ny);
+        }
+
+        function animate() {
+            ctx.fillStyle = "rgba(0,0,0,0.2)";
+            ctx.fillRect(0, 0, size, size);
+            ctx.fillStyle = "#00ffcc";
+
+            particles.forEach(p => {
+                let val = getChladniValue(p.x, p.y, currentFreq);
+                let moveAmount = Math.abs(val) * 5; 
+
+                p.x += (Math.random() - 0.5) * moveAmount;
+                p.y += (Math.random() - 0.5) * moveAmount;
+
+                if (p.x < 0) p.x = size; if (p.x > size) p.x = 0;
+                if (p.y < 0) p.y = size; if (p.y > size) p.y = 0;
+
+                ctx.fillRect(p.x, p.y, 1.2, 1.2);
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

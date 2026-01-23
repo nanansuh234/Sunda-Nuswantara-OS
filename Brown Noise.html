@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Resonance Shield with Oscilloscope</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #0a0a0a;
+            color: #00ff41; /* Matrix Green */
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            margin: 0;
+            overflow: hidden; /* Hide scrollbar if canvas is slightly larger */
+        }
+        .shield-box {
+            border: 2px solid #00ff41;
+            padding: 30px;
+            box-shadow: 0 0 20px #00ff41;
+            background: rgba(0, 255, 65, 0.05);
+            max-width: 90%;
+            margin: 20px;
+        }
+        h1 { margin-bottom: 10px; }
+        button {
+            background: #00ff41;
+            color: black;
+            border: none;
+            padding: 12px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px;
+            text-transform: uppercase;
+        }
+        button.stop {
+            background:#ff3e3e;
+            color: white;
+        }
+        .status { margin-bottom: 15px; font-size: 1.1rem; }
+        .warning { color: #ff3e3e; font-size: 0.75rem; margin-top: 15px; max-width: 400px; margin-left: auto; margin-right: auto; }
+        .control-group { margin-top: 15px; }
+        input[type=range] {
+            width: 180px;
+            accent-color: #00ff41;
+        }
+        canvas {
+            background: rgba(0, 255, 65, 0.02);
+            border: 1px dashed #00ff41;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="shield-box">
+        <h1>ANTI-RESONANCE SHIELD</h1>
+        <div class="status" id="status">SISTEM: STANDBY</div>
+        
+        <button onclick="startShield()">AKTIFKAN MASKING</button>
+        <button class="stop" onclick="stopShield()">OFF</button>
+
+        <div class="control-group">
+            <label>Intensitas Noise</label><br>
+            <input type="range" id="vol" min="0" max="0.5" step="0.01" value="0.2">
+        </div>
+
+        <canvas id="oscilloscope" width="400" height="150"></canvas>
+
+        <p class="warning">Gunakan Headphone Noise-Cancelling untuk proteksi maksimal.<br>Visualisasi gelombang di atas menunjukkan Noise Masking yang dihasilkan.</p>
+    </div>
+
+    <script>
+        let audioCtx;
+        let biquadFilter;
+        let noiseNode;
+        let analyser; // Untuk oscilloscope
+        let gainNode; // Agar volume slider bekerja
+
+        const canvas = document.getElementById('oscilloscope');
+        const canvasCtx = canvas.getContext('2d');
+
+        function startShield() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // --- Noise Generator (Brown Noise) ---
+                const bufferSize = 4096;
+                let lastOut = 0.0;
+                noiseNode = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+                
+                noiseNode.onaudioprocess = function(e) {
+                    let output = e.outputBuffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        let white = Math.random() * 2 - 1;
+                        output[i] = (lastOut + (0.02 * white)) / 1.02;
+                        lastOut = output[i];
+                        output[i] *= 3.5; // Gain adjustment
+                    }
+                }
+
+                // --- Filter (Lowpass) ---
+                biquadFilter = audioCtx.createBiquadFilter();
+                biquadFilter.type = "lowpass";
+                biquadFilter.frequency.setValueAtTime(500, audioCtx.currentTime);
+
+                // --- Gain Node (Volume Control) ---
+                gainNode = audioCtx.createGain(); // Initialize gainNode
+                gainNode.gain.value = document.getElementById('vol').value;
+
+                // --- Analyser Node (Oscilloscope) ---
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 2048; // Semakin besar, semakin detail
+
+                // --- Connect Nodes ---
+                noiseNode.connect(biquadFilter);
+                biquadFilter.connect(gainNode);
+                gainNode.connect(analyser); // Connect to analyser before destination
+                analyser.connect(audioCtx.destination); // Finally connect to speakers
+
+                document.getElementById('status').innerText = "SISTEM: AKTIF (SHIELDING ON)";
+                draw(); // Start drawing the oscilloscope
+            }
+        }
+
+        function stopShield() {
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+                document.getElementById('status').innerText = "SISTEM: STANDBY";
+                // Clear canvas when stopped
+                canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // --- Oscilloscope Drawing Function ---
+        function draw() {
+            if (!audioCtx || !analyser) return; // Stop drawing if audio is off
+
+            requestAnimationFrame(draw);
+
+            analyser.fftSize = 2048;
+            const bufferLength = analyser.fftSize;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteTimeDomainData(dataArray); // Ambil data gelombang waktu
+
+            canvasCtx.clearRect(0, 0, canvas.width, canvas.height); // Bersihkan canvas
+            canvasCtx.lineWidth = 2;
+            canvasCtx.strokeStyle = '#00ff41'; // Warna gelombang
+
+            canvasCtx.beginPath();
+
+            const sliceWidth = canvas.width * 1.0 / bufferLength;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                const v = dataArray[i] / 128.0; // Normalisasi ke 0-2
+                const y = v * canvas.height / 2;
+
+                if (i === 0) {
+                    canvasCtx.moveTo(x, y);
+                } else {
+                    canvasCtx.lineTo(x, y);
+                }
+
+                x += sliceWidth;
+            }
+
+            canvasCtx.lineTo(canvas.width, canvas.height / 2);
+            canvasCtx.stroke();
+        }
+
+        // --- Volume Slider Listener ---
+        document.getElementById('vol').addEventListener('input', (e) => {
+            if (audioCtx && gainNode) {
+                gainNode.gain.setTargetAtTime(e.target.value, audioCtx.currentTime, 0.01);
+            }
+        });
+    </script>
+</body>
+</html>

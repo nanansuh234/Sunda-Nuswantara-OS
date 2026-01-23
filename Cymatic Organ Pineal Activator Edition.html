@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tartarian Pineal Activator</title>
+    <style>
+        body {
+            background: #050505; color: #d4af37; font-family: 'Courier New', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+        .main-layout { display: flex; gap: 30px; align-items: flex-start; z-index: 1; }
+        .plate-box {
+            width: 400px; height: 400px; border: 10px solid #222; border-radius: 50%;
+            background: #000; box-shadow: 0 0 50px rgba(0, 255, 204, 0.15);
+            position: relative; overflow: hidden;
+        }
+        .hz-display {
+            background: #111; padding: 15px; border: 1px solid #00ffcc;
+            font-size: 2rem; font-weight: bold; color: #00ffcc; text-align: center; margin-bottom: 10px;
+        }
+        .control-panel {
+            width: 380px; background: rgba(20, 20, 20, 0.9); border: 2px solid #333;
+            padding: 20px; border-radius: 10px; backdrop-filter: blur(5px);
+        }
+        .logbook { height: 250px; border: 1px solid #444; background: #000; overflow-y: auto; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #222; color: #fff; padding: 8px; text-align: left; }
+        td { padding: 8px; border-bottom: 1px solid #222; color: #888; cursor: pointer; }
+        tr.active-row td { background: rgba(0, 255, 204, 0.1); color: #00ffcc; }
+        button {
+            width: 100%; padding: 15px; margin-top: 10px; font-weight: bold; cursor: pointer;
+            background: #00ffcc; color: #000; border: none; transition: 0.3s;
+        }
+        button.active { background: #ff3e3e; color: #fff; }
+        .slider-group { margin: 15px 0; }
+        input[type=range] { width: 100%; accent-color: #00ffcc; }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-shadow: 0 0 20px #00ffcc;">PINEAL CYMATIC RECONSTRUCTION</h1>
+
+    <div class="main-layout">
+        <div class="visual-area">
+            <div class="hz-display" id="hzVal">432.00 Hz</div>
+            <div class="plate-box">
+                <canvas id="sandCanvas" width="400" height="400"></canvas>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <button id="masterBtn" onclick="toggleSystem()">INITIALIZE SYSTEM</button>
+            
+            <div class="slider-group">
+                <label>BINAURAL INTENSITY</label>
+                <input type="range" id="volSlider" min="0" max="0.3" step="0.01" value="0.1">
+            </div>
+
+            <div class="logbook">
+                <table>
+                    <thead><tr><th>FREQ</th><th>TYPE</th><th>INTENT</th></tr></thead>
+                    <tbody id="freqTable"></tbody>
+                </table>
+            </div>
+            <p style="font-size: 0.7rem; color: #555; margin-top: 10px;">
+                *Binaural Shift: +8Hz (Alpha) auto-injected to Right Channel.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx, oscL, oscR, gainL, gainR, pannerL, pannerR;
+        let isRunning = false;
+        let currentFreq = 432;
+
+        // --- CYMATICS ENGINE ---
+        const canvas = document.getElementById('sandCanvas');
+        const ctx = canvas.getContext('2d');
+        const particles = Array.from({length: 4000}, () => ({x: Math.random()*400, y: Math.random()*400}));
+
+        const harmonics = [
+            { hz: 174, type: "Safe", intent: "Pain Relief" },
+            { hz: 285, type: "Cell", intent: "Tissue Repair" },
+            { hz: 396, type: "Base", intent: "Liberation" },
+            { hz: 417, type: "Wave", intent: "Undoing Situations" },
+            { hz: 432, type: "Nature", intent: "Pineal Prep" },
+            { hz: 528, type: "DNA", intent: "Transformation" },
+            { hz: 639, type: "Link", intent: "Connecting" },
+            { hz: 741, type: "Purge", intent: "Awakening" },
+            { hz: 852, type: "Light", intent: "Spiritual Order" },
+            { hz: 963, type: "God", intent: "Pineal Activation" }
+        ];
+
+        const tableBody = document.getElementById('freqTable');
+        harmonics.forEach(h => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `<td>${h.hz}Hz</td><td>${h.type}</td><td>${h.intent}</td>`;
+            tr.onclick = () => updateFreq(h.hz);
+            tableBody.appendChild(tr);
+        });
+
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Channel Kiri (Base Frequency)
+            oscL = audioCtx.createOscillator();
+            gainL = audioCtx.createGain();
+            pannerL = audioCtx.createStereoPanner();
+            pannerL.pan.value = -1; // Full Kiri
+
+            // Channel Kanan (Base + 8Hz Binaural Shift)
+            oscR = audioCtx.createOscillator();
+            gainR = audioCtx.createGain();
+            pannerR = audioCtx.createStereoPanner();
+            pannerR.pan.value = 1; // Full Kanan
+
+            oscL.connect(gainL).connect(pannerL).connect(audioCtx.destination);
+            oscR.connect(gainR).connect(pannerR).connect(audioCtx.destination);
+
+            oscL.start(); oscR.start();
+            updateFreq(432);
+        }
+
+        function toggleSystem() {
+            if (!audioCtx) initAudio();
+            const btn = document.getElementById('masterBtn');
+            const vol = document.getElementById('volSlider').value;
+
+            if (!isRunning) {
+                gainL.gain.setTargetAtTime(vol, audioCtx.currentTime, 0.2);
+                gainR.gain.setTargetAtTime(vol, audioCtx.currentTime, 0.2);
+                btn.innerText = "SYSTEM ACTIVE - STOP";
+                btn.className = "active";
+                isRunning = true;
+            } else {
+                gainL.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+                gainR.gain.setTargetAtTime(0, audioCtx.currentTime, 0.2);
+                btn.innerText = "INITIALIZE SYSTEM";
+                btn.className = "";
+                isRunning = false;
+            }
+        }
+
+        function updateFreq(hz) {
+            currentFreq = hz;
+            document.getElementById('hzVal').innerText = hz + ".00 Hz";
+            if (audioCtx) {
+                oscL.frequency.setTargetAtTime(hz, audioCtx.currentTime, 0.1);
+                oscR.frequency.setTargetAtTime(hz + 8, audioCtx.currentTime, 0.1); // Binaural effect
+            }
+        }
+
+        function getChladni(x, y, f) {
+            let nx = (x/400)*2-1, ny = (y/400)*2-1;
+            let n = f/80, m = n/2, p = Math.PI;
+            return Math.cos(n*p*nx) * Math.cos(m*p*ny) - Math.cos(m*p*nx) * Math.cos(n*p*ny);
+        }
+
+        function animate() {
+            ctx.fillStyle = "rgba(0,0,0,0.2)"; ctx.fillRect(0,0,400,400);
+            ctx.fillStyle = isRunning ? "#00ffcc" : "#555";
+            
+            particles.forEach(p => {
+                let v = getChladni(p.x, p.y, currentFreq);
+                let move = Math.abs(v) * (isRunning ? 6 : 0.5);
+                p.x += (Math.random()-0.5)*move; p.y += (Math.random()-0.5)*move;
+                if(p.x<0) p.x=400; if(p.x>400) p.x=0; if(p.y<0) p.y=400; if(p.y>400) p.y=0;
+                ctx.fillRect(p.x, p.y, 1.2, 1.2);
+            });
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('volSlider').oninput = (e) => {
+            if(isRunning) {
+                gainL.gain.setTargetAtTime(e.target.value, audioCtx.currentTime, 0.1);
+                gainR.gain.setTargetAtTime(e.target.value, audioCtx.currentTime, 0.1);
+            }
+        };
+
+        animate();
+    </script>
+</body>
+</html>

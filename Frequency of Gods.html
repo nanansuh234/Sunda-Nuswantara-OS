@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>963 Hz - Pineal Activator</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #0f0c29;
+            background: linear-gradient(to bottom, #24243e, #302b63, #0f0c29);
+            color: #00d2ff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            background-color: #00d2ff;
+            color: #0f0c29;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #3a7bd5;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+        }
+        .volume-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input[type=range] {
+            width: 200px;
+            cursor: pointer;
+        }
+        label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>963 Hz</h1>
+        <p>Frequency of Gods</p>
+        
+        <button id="btnPlay" onclick="toggleFrequency()">PLAY</button>
+
+        <div class="volume-container">
+            <label for="volumeSlider">Volume Level</label>
+            <input type="range" id="volumeSlider" min="0" max="0.5" step="0.01" value="0.1">
+            <span id="volValue">10%</span>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx;
+        let oscillator;
+        let gainNode;
+        let isPlaying = false;
+
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volValueDisplay = document.getElementById('volValue');
+
+        function toggleFrequency() {
+            if (!isPlaying) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(963, audioCtx.currentTime); 
+                
+                // Ambil nilai dari slider
+                const startVol = volumeSlider.value;
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(startVol, audioCtx.currentTime + 1.5);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                document.getElementById('btnPlay').innerText = "STOP";
+                isPlaying = true;
+            } else {
+                // Fade out biar gak kaget pas matiin
+                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+                setTimeout(() => {
+                    oscillator.stop();
+                    audioCtx.close();
+                }, 500);
+                document.getElementById('btnPlay').innerText = "PLAY";
+                isPlaying = false;
+            }
+        }
+
+        // Listener untuk mengubah volume secara real-time saat slider digeser
+        volumeSlider.addEventListener('input', () => {
+            const val = volumeSlider.value;
+            volValueDisplay.innerText = Math.round(val * 200) + "%"; // Hanya display
+            
+            if (isPlaying && gainNode) {
+                // Perubahan volume yang halus
+                gainNode.gain.setTargetAtTime(val, audioCtx.currentTime, 0.1);
+            }
+        });
+    </script>
+</body>
+</html>
