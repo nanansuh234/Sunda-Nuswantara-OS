@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - GeoSpatial System v2.0</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 20, 0, 0.9);
+            padding: 15px;
+            border: 1px solid #00ff41;
+            box-shadow: 0 0 15px #00ff41;
+            max-width: 320px;
+            pointer-events: none; /* Biar mouse event tembus ke canvas */
+            user-select: none;
+        }
+
+        h1 { font-size: 16px; margin: 0 0 10px 0; text-transform: uppercase; border-bottom: 1px solid #004400; padding-bottom: 5px; }
+        p { font-size: 11px; margin: 4px 0; }
+        .stat-label { color: #88ff88; }
+        .stat-value { font-weight: bold; color: #fff; float: right; }
+        
+        .controls-hint {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #444;
+            font-size: 10px;
+            text-align: right;
+            pointer-events: none;
+        }
+
+        canvas {
+            background: radial-gradient(circle, #001a00 0%, #000500 100%);
+            cursor: move;
+        }
+
+        /* Flight Path Legend */
+        .legend-box { margin-top: 10px; border-top: 1px dashed #004400; padding-top: 5px; }
+        .legend-item { display: flex; align-items: center; font-size: 10px; margin-bottom: 2px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; display: inline-block; }
+        .line-legend { width: 20px; height: 2px; margin-right: 8px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <h1>Sunda Nuswantara OS v2.0</h1>
+        <p><span class="stat-label">Anchor Point:</span> <span class="stat-value">GARUT (0,0)</span></p>
+        <p><span class="stat-label">Projection:</span> <span class="stat-value">Concave Azimuthal</span></p>
+        <br>
+        <p><span class="stat-label">Target:</span> <span id="t-name" class="stat-value">--</span></p>
+        <p><span class="stat-label">Jarak (KM):</span> <span id="t-km" class="stat-value">0</span></p>
+        <p><span class="stat-label">Jarak (Juta Depa):</span> <span id="t-depa" class="stat-value" style="color:cyan">0</span></p>
+        
+        <div class="legend-box">
+            <div class="legend-item"><span class="dot" style="background:#ffff00"></span>Pusat (High Land)</div>
+            <div class="legend-item"><span class="dot" style="background:#00ff41"></span>Area Dalam</div>
+            <div class="legend-item"><span class="dot" style="background:#ff0055"></span>Area Luar (Rim)</div>
+            <div class="legend-item"><span class="line-legend" style="background:rgba(255, 100, 100, 0.5)"></span>Rute Pesawat Modern</div>
+        </div>
+    </div>
+
+    <div class="controls-hint">
+        [SCROLL] Zoom In/Out<br>
+        [DRAG] Geser Peta
+    </div>
+
+    <canvas id="radarMap"></canvas>
+
+<script>
+    const canvas = document.getElementById('radarMap');
+    const ctx = canvas.getContext('2d');
+
+    // KONFIGURASI
+    const CENTER_LAT = -7.2278; // Garut Latitude
+    const CENTER_LON = 107.9087; // Garut Longitude
+    const DEPA_CONV = 1.6;
+
+    // STATE ZOOM & PAN
+    let cam = { x: 0, y: 0, zoom: 1 };
+    let isDragging = false;
+    let lastMouse = { x: 0, y: 0 };
+    let hoverData = null;
+
+    // DATA LOKASI
+    const locations = [
+        { name: "GARUT", lat: -7.2278, lon: 107.9087, type: "core" },
+        { name: "Jakarta", lat: -6.2088, lon: 106.8456, type: "local" },
+        { name: "Yogyakarta", lat: -7.7956, lon: 110.3695, type: "local" },
+        { name: "Surabaya", lat: -7.2575, lon: 112.7521, type: "local" },
+        { name: "Singapore", lat: 1.3521, lon: 103.8198, type: "hub" }, // Hub Transit
+        { name: "Dubai", lat: 25.2048, lon: 55.2708, type: "hub" }, // Hub Transit
+        { name: "Tokyo", lat: 35.6762, lon: 139.6503, type: "outer" },
+        { name: "London", lat: 51.5074, lon: -0.1278, type: "outer" },
+        { name: "Cape Town", lat: -33.9249, lon: 18.4241, type: "outer" }, // Africa
+        { name: "Sydney", lat: -33.8688, lon: 151.2093, type: "outer" }, // Aussie
+        { name: "Santiago", lat: -33.4489, lon: -70.6693, type: "outer" }, // Chile
+        { name: "New York", lat: 40.7128, lon: -74.0060, type: "outer" }
+    ];
+
+    // DEFINISI RUTE PENERBANGAN (Untuk Membuktikan Anomali)
+    const flights = [
+        // Rute Cape Town -> Sydney (Kenyataan: Mampir Dubai/Singapore)
+        { from: "Cape Town", to: "Dubai", color: "rgba(255, 100, 100, 0.6)" },
+        { from: "Dubai", to: "Sydney", color: "rgba(255, 100, 100, 0.6)" },
+        // Rute Santiago -> Sydney (Kenyataan: Muter lewat US atau NZ)
+        { from: "Santiago", to: "Sydney", color: "rgba(100, 100, 255, 0.3)", dashed: true } // Direct Impossible
+    ];
+
+    let processedLocs = [];
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        // Default pos di tengah
+        if(cam.zoom === 1) {
+            cam.x = canvas.width / 2;
+            cam.y = canvas.height / 2;
+            // Skala awal: Dunia muat di layar
+            cam.zoom = Math.min(canvas.width, canvas.height) / 2 / 18000; 
+        }
+    }
+
+    // MATH GEO
+    function getDist(lat1, lon1, lat2, lon2) {
+        var R = 6371; 
+        var dLat = (lat2-lat1) * Math.PI/180;  
+        var dLon = (lon2-lon1) * Math.PI/180; 
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function getBearing(startLat, startLng, destLat, destLng) {
+        startLat = startLat*Math.PI/180; startLng = startLng*Math.PI/180;
+        destLat = destLat*Math.PI/180; destLng = destLng*Math.PI/180;
+        y = Math.sin(destLng - startLng) * Math.cos(destLat);
+        x = Math.cos(startLat) * Math.sin(destLat) - Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+        brng = Math.atan2(y, x);
+        return (brng * 180 / Math.PI + 360) % 360;
+    }
+
+    // RENDER LOOP
+    function draw() {
+        // Clear
+        ctx.fillStyle = "#050505";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Transform Camera
+        ctx.save();
+        ctx.translate(cam.x, cam.y);
+        ctx.scale(cam.zoom, cam.zoom); // Zoom Logic
+
+        // 1. GRID SYSTEM
+        ctx.strokeStyle = "#003300";
+        ctx.lineWidth = 1 / cam.zoom; // Garis tetap tipis saat zoom
+        
+        // Lingkaran Jarak (Setiap 2000 KM)
+        for(let i=1; i<=10; i++) {
+            let r = i * 2000 * 1000; // Scale multiplier (arbitrary visual scale)
+            r = i * 2000; // Keep it simple mapped to pixel scale logic below
+            
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, 2*Math.PI);
+            ctx.stroke();
+            
+            // Label di grid
+            ctx.fillStyle = "#004400";
+            ctx.font = `${100/cam.zoom}px Courier`; // Font size ikut zoom biar kebaca
+            // ctx.fillText(i*2000 + "KM", 5, -r);
+        }
+
+        // Garis Radial (Jam)
+        for(let i=0; i<12; i++) {
+            let ang = i * 30 * Math.PI/180;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(ang)*20000, Math.sin(ang)*20000);
+            ctx.stroke();
+        }
+
+        // 2. CALCULATE POSITIONS (Hanya hitung sekali per frame buat mouse detection)
+        processedLocs = locations.map(loc => {
+            if(loc.type === 'core') return { ...loc, x:0, y:0, dist:0 };
+
+            let dist = getDist(CENTER_LAT, CENTER_LON, loc.lat, loc.lon);
+            let bearing = getBearing(CENTER_LAT, CENTER_LON, loc.lat, loc.lon);
+            let angle = (bearing - 90) * Math.PI/180;
+
+            // Visual Scaling: Dist * 1 unit pixel
+            let x = dist * Math.cos(angle);
+            let y = dist * Math.sin(angle);
+            
+            return { ...loc, x, y, dist };
+        });
+
+        // 3. DRAW FLIGHT ROUTES
+        flights.forEach(f => {
+            let p1 = processedLocs.find(l => l.name === f.from);
+            let p2 = processedLocs.find(l => l.name === f.to);
+            if(p1 && p2) {
+                ctx.strokeStyle = f.color;
+                ctx.lineWidth = 2 / cam.zoom;
+                if(f.dashed) ctx.setLineDash([5/cam.zoom, 5/cam.zoom]);
+                else ctx.setLineDash([]);
+                
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+                ctx.setLineDash([]); // reset
+            }
+        });
+
+        // 4. DRAW LOCATIONS DOTS
+        processedLocs.forEach(loc => {
+            ctx.fillStyle = loc.type === 'outer' ? '#ff0055' : (loc.type === 'hub' ? '#00ccff' : '#00ff41');
+            if(loc.type === 'core') ctx.fillStyle = '#ffff00';
+
+            // Dot Size constant relative to screen or world?
+            let dotSize = loc.type === 'core' ? 8 : 4;
+            dotSize = dotSize / cam.zoom; 
+            if (dotSize < 2) dotSize = 2; // Minimal size
+
+            ctx.beginPath();
+            ctx.arc(loc.x, loc.y, dotSize, 0, 2*Math.PI);
+            ctx.fill();
+
+            // Text Label
+            if(cam.zoom > 0.1 || loc.type === 'core' || loc.type === 'outer') {
+                ctx.fillStyle = "#fff";
+                ctx.font = `${12/cam.zoom}px Courier`;
+                ctx.fillText(loc.name, loc.x + dotSize + 2, loc.y + dotSize/2);
+            }
+        });
+
+        ctx.restore(); // Balik ke koordinat layar normal buat UI overlay logic kalo ada
+
+        requestAnimationFrame(draw);
+    }
+
+    // INPUT HANDLERS
+    window.addEventListener('resize', resize);
+    
+    // Zoom (Scroll)
+    canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const scaleAmount = 1.1;
+        const mouseX = e.clientX - cam.x;
+        const mouseY = e.clientY - cam.y;
+
+        if (e.deltaY < 0) { // Zoom In
+            cam.x -= mouseX * (scaleAmount - 1);
+            cam.y -= mouseY * (scaleAmount - 1);
+            cam.zoom *= scaleAmount;
+        } else { // Zoom Out
+            cam.x += mouseX * (1 - 1/scaleAmount);
+            cam.y += mouseY * (1 - 1/scaleAmount);
+            cam.zoom /= scaleAmount;
+        }
+    }, { passive: false });
+
+    // Pan (Drag)
+    canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        lastMouse = { x: e.clientX, y: e.clientY };
+        canvas.style.cursor = 'grabbing';
+    });
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+        canvas.style.cursor = 'move';
+    });
+    window.addEventListener('mousemove', (e) => {
+        if(isDragging) {
+            let dx = e.clientX - lastMouse.x;
+            let dy = e.clientY - lastMouse.y;
+            cam.x += dx;
+            cam.y += dy;
+            lastMouse = { x: e.clientX, y: e.clientY };
+        }
+
+        // Hover Detection
+        // Convert screen mouse to world coord
+        let worldX = (e.clientX - cam.x) / cam.zoom;
+        let worldY = (e.clientY - cam.y) / cam.zoom;
+
+        let found = false;
+        processedLocs.forEach(loc => {
+            let dx = worldX - loc.x;
+            let dy = worldY - loc.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            
+            // Hit box toleransi
+            if(dist < (10 / cam.zoom) + 10) { // +10 for easy grabbing
+                found = true;
+                document.getElementById('t-name').innerText = loc.name;
+                document.getElementById('t-km').innerText = loc.dist.toFixed(0);
+                
+                let depa = (loc.dist * 1000) / DEPA_CONV;
+                document.getElementById('t-depa').innerText = (depa/1000000).toFixed(2) + " Jt";
+            }
+        });
+        if(!found) {
+             document.getElementById('t-name').innerText = "--";
+        }
+    });
+
+    resize();
+    draw();
+
+</script>
+</body>
+</html>

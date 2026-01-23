@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Area Rectifier v2.0</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            border-left: 2px solid #003300;
+            border-right: 2px solid #003300;
+            min-height: 100vh;
+        }
+
+        h1 { text-transform: uppercase; border-bottom: 2px solid #00ff41; padding-bottom: 10px; letter-spacing: 2px; }
+        .subtitle { font-size: 12px; color: #88ff88; margin-bottom: 30px; }
+
+        /* PRESET GRID SYSTEM */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #004400;
+            padding: 15px;
+            background: rgba(0,20,0,0.5);
+        }
+
+        .preset-btn {
+            background: #002200;
+            border: 1px solid #005500;
+            color: #00aa00;
+            padding: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11px;
+            text-transform: uppercase;
+            transition: 0.2s;
+            text-align: left;
+        }
+        
+        .preset-btn:hover { background: #00ff41; color: #000; box-shadow: 0 0 10px #00ff41; border-color: #fff; }
+        .preset-btn strong { display: block; font-size: 13px; margin-bottom: 3px; }
+
+        /* SECTION HEADERS */
+        .section-title {
+            background: #003300;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 700px) { .container { grid-template-columns: 1fr; } }
+
+        .card {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid #004400;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+            position: relative;
+        }
+
+        label { display: block; margin-top: 15px; font-size: 11px; color: #aaffaa; text-transform: uppercase; }
+        input {
+            width: 90%;
+            background: #001100;
+            border: 1px solid #00ff41;
+            color: #fff;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        button.action-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 15px;
+            background: #004400;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        button.action-btn:hover { background: #00ff41; color: #000; box-shadow: 0 0 15px #00ff41; }
+
+        .result-box {
+            margin-top: 0;
+            border: 1px solid #ff0055; 
+            padding: 15px;
+            display: none;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .result-box.active { display: block; border-color: #00ff41; animation: flash 0.5s; }
+
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dotted #003300; padding-bottom: 4px; font-size: 12px; }
+        .big-val { font-size: 24px; font-weight: bold; color: #ffff00; text-shadow: 0 0 10px rgba(255,255,0,0.5); }
+        
+        .highlight { color: #ffff00; }
+        @keyframes flash {
+            0% { background-color: #00ff41; color: #000; }
+            100% { background-color: transparent; color: #00ff41; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sunda Nuswantara OS</h1>
+    <div class="subtitle">Module: Geo-Spatial Truth Rectifier v2.0</div>
+
+    <div class="section-title">>> QUICK TARGET SELECTOR (PRE-LOADED DATA)</div>
+    <div class="preset-grid">
+        <button class="preset-btn" onclick="loadPreset('Sundaland (Full)', 4500000, 0)">
+            <strong>SUNDALAND</strong>Pusat Peradaban
+        </button>
+        <button class="preset-btn" onclick="loadPreset('Pulau Jawa', 128297, 100)">
+            <strong>PULAU JAWA</strong>The Core Anchor
+        </button>
+        <button class="preset-btn" onclick="loadPreset('Kalimantan', 743330, 800)">
+            <strong>KALIMANTAN</strong>Jantung Benua
+        </button>
+
+        <button class="preset-btn" onclick="loadPreset('India', 3287000, 4500)">
+            <strong>INDIA</strong>Ring 2
+        </button>
+        <button class="preset-btn" onclick="loadPreset('Australia', 7692000, 4000)">
+            <strong>AUSTRALIA</strong>Ring 2
+        </button>
+        <button class="preset-btn" onclick="loadPreset('China', 9596961, 5000)">
+            <strong>CHINA</strong>Ring 2
+        </button>
+
+        <button class="preset-btn" onclick="loadPreset('USA (Amerika)', 9833520, 16000)">
+            <strong>USA</strong>Outer Rim
+        </button>
+        <button class="preset-btn" onclick="loadPreset('Rusia', 17098242, 10000)">
+            <strong>RUSIA</strong>The Fence
+        </button>
+        <button class="preset-btn" onclick="loadPreset('Eropa Barat', 10180000, 12000)">
+            <strong>EROPA</strong>Semenanjung Es
+        </button>
+        <button class="preset-btn" onclick="loadPreset('Greenland', 2166086, 13000)">
+            <strong>GREENLAND</strong>Ilusi Terbesar
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="section-title">>> MANUAL TARGETING</div>
+            
+            <label>Target Name</label>
+            <input type="text" id="regionName" placeholder="Contoh: Kota Bandung">
+
+            <label>Luas Globe (KM²)</label>
+            <input type="number" id="globeArea" placeholder="Data Google/Wikipedia">
+
+            <label>Jarak dari Garut (KM)</label>
+            <input type="number" id="distGarut" placeholder="Jarak Radial">
+            
+            <button class="action-btn" onclick="calculateTruth()">EXECUTE CALCULATION</button>
+        </div>
+
+        <div class="card">
+            <div id="outputPanel" style="text-align: center; color: #555; padding-top: 80px; font-size: 12px;">
+                [SYSTEM STANDBY]<br>Pilih Target atau Input Manual
+            </div>
+
+            <div id="resultBox" class="result-box">
+                <h2 style="margin:0 0 15px 0; font-size:14px; color:#fff; border-bottom:1px solid #00ff41; padding-bottom:5px;">ANALYSIS REPORT</h2>
+                
+                <div class="stat-row">
+                    <span>Target:</span>
+                    <span id="resName" style="color:#fff; font-weight:bold;">--</span>
+                </div>
+                <div class="stat-row">
+                    <span>Zona:</span>
+                    <span id="resZone" style="font-weight:bold;">--</span>
+                </div>
+                
+                <div style="margin: 20px 0; padding: 10px; background: rgba(0,0,0,0.5); border: 1px dashed #444;">
+                    <div class="stat-row">
+                        <span>Luas Globe (Ilusi):</span>
+                        <span id="resGlobe">0</span> km²
+                    </div>
+                    <div class="stat-row">
+                        <span>Koreksi Distorsi:</span>
+                        <span id="resFactor" style="color:#ff0055">--</span>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <span style="font-size: 10px; color: #88ff88; letter-spacing: 1px;">LUAS REALITA (KUBA)</span><br>
+                    <span id="resReal" class="big-val">0</span> <span style="font-size:12px">km²</span>
+                </div>
+                <br>
+                <div style="text-align: center; border-top: 1px solid #004400; padding-top: 10px;">
+                    <span style="font-size: 10px; color: cyan;">SISTEM UKUR NUSWANTARA:</span><br>
+                    <span id="resDepa" style="font-size: 18px; color: cyan; font-weight: bold; text-shadow: 0 0 5px cyan;">0</span> <span style="font-size:12px">Jt Depa²</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // FUNGSI PRESET BUTTON
+        function loadPreset(name, area, dist) {
+            document.getElementById('regionName').value = name;
+            document.getElementById('globeArea').value = area;
+            document.getElementById('distGarut').value = dist;
+            calculateTruth(); // Auto execute
+        }
+
+        function calculateTruth() {
+            // 1. AMBIL DATA
+            let name = document.getElementById('regionName').value;
+            let areaGlobe = parseFloat(document.getElementById('globeArea').value);
+            let dist = parseFloat(document.getElementById('distGarut').value);
+
+            if (!name || !areaGlobe && areaGlobe !== 0) {
+                alert("ERR: Input Data Kosong.");
+                return;
+            }
+
+            // 2. LOGIKA KOREKSI (THE ALGORITHM)
+            let correctionFactor = 1;
+            let zoneName = "";
+            let zoneColor = "";
+
+            // LOGIKA ZONA KUBA
+            if (dist < 3000) {
+                // ZONE 1: SUNDALAND (PUSAT)
+                // Logika: Semakin dekat pusat, semakin padat massa daratannya.
+                // Globe mengecilkan ini secara drastis.
+                correctionFactor = 4.8; 
+                zoneName = "RING 1: HIGH LAND (CORE)";
+                zoneColor = "#ffff00"; 
+            } else if (dist < 8000) {
+                // ZONE 2: MIDDLE EARTH
+                // Logika: Stabil.
+                correctionFactor = 1.2;
+                zoneName = "RING 2: STABILIZED ZONE";
+                zoneColor = "#00ff41"; 
+            } else {
+                // ZONE 3: OUTER RIM (PINGGIRAN)
+                // Logika: Wilayah melar di dinding mangkuk. Kelihatannya besar, isinya kosong.
+                // Greenland, Russia, Canada, Europe.
+                correctionFactor = 0.45; 
+                zoneName = "RING 3: OUTER RIM (WALL)";
+                zoneColor = "#ff0055"; 
+            }
+
+            // 3. HITUNG
+            let realArea = areaGlobe * correctionFactor;
+            let depaArea = (realArea / 1.6); 
+
+            // 4. UI UPDATE
+            document.getElementById('outputPanel').style.display = 'none';
+            let box = document.getElementById('resultBox');
+            box.style.display = 'block';
+            box.classList.remove('active');
+            void box.offsetWidth; 
+            box.classList.add('active');
+
+            document.getElementById('resName').innerText = name;
+            
+            let zoneEl = document.getElementById('resZone');
+            zoneEl.innerText = zoneName;
+            zoneEl.style.color = zoneColor;
+
+            document.getElementById('resGlobe').innerText = formatNumber(areaGlobe);
+            
+            let factorText = "";
+            if(correctionFactor > 1) {
+                factorText = "EXPAND " + correctionFactor + "x (DIKECILKAN GLOBE)";
+            } else {
+                factorText = "SHRINK " + (correctionFactor*100) + "% (DIBESARKAN GLOBE)";
+            }
+            document.getElementById('resFactor').innerText = factorText;
+
+            document.getElementById('resReal').innerText = formatNumber(Math.round(realArea));
+            document.getElementById('resDepa').innerText = formatNumber((depaArea/1000000).toFixed(2));
+        }
+    </script>
+</body>
+</html>

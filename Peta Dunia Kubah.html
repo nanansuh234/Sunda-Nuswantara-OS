@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Master Interface</title>
+    <style>
+        body {
+            background-color: #000500;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* HEADER UI */
+        #ui-layer {
+            position: absolute;
+            top: 20px; left: 20px;
+            z-index: 100;
+            pointer-events: none;
+            text-shadow: 0 0 5px #00ff41;
+        }
+        h1 { margin: 0; font-size: 20px; letter-spacing: 2px; border-bottom: 2px solid #00ff41; display: inline-block; }
+        .status { font-size: 11px; color: #88ff88; margin-top: 5px; }
+
+        /* MANGKOK UTAMA */
+        .map-viewport {
+            position: relative;
+            width: 90vmin;
+            height: 90vmin;
+            border-radius: 50%;
+            border: 5px solid #333;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.1), inset 0 0 150px rgba(0,0,0,1);
+            overflow: hidden;
+            background: #000;
+            cursor: grab;
+        }
+
+        /* 1. LAYER GAMBAR (User File) */
+        .user-map-layer {
+            width: 100%;
+            height: 100%;
+            /* NAMA FILE LO DISINI */
+            background-image: url('petaduniakubah.jpg'); 
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7; /* Agak gelap biar garis ring nyala */
+            transition: transform 0.1s;
+        }
+
+        /* 2. LAYER RING ZONA (Garis Tegas) */
+        .zone-container {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        /* Ring 1: High Land (Kuning) */
+        .ring-core {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25%; height: 25%; /* Radius Kecil */
+            border: 1px dashed #ffff00;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.2);
+        }
+        .label-core { color: #ffff00; top: -15px; position: absolute; left: 50%; transform: translateX(-50%); font-size: 10px; white-space: nowrap; text-shadow: 0 0 5px #000; }
+
+        /* Ring 2: Stabilized Zone (Hijau) */
+        .ring-mid {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55%; height: 55%; 
+            border: 1px dashed #00ff41;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .label-mid { color: #00ff41; top: -15px; position: absolute; left: 50%; transform: translateX(-50%); font-size: 10px; white-space: nowrap; text-shadow: 0 0 5px #000; }
+
+        /* Ring 3: Outer Rim / Distorted (Merah) */
+        .ring-outer {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%; height: 85%; 
+            border: 1px dashed #ff0055;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .label-outer { color: #ff0055; top: -15px; position: absolute; left: 50%; transform: translateX(-50%); font-size: 10px; white-space: nowrap; text-shadow: 0 0 5px #000; }
+
+        /* 3. RADAR GRID (Jaring Halus) */
+        .grid-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-radial-gradient(
+                transparent 0, 
+                transparent 49px, 
+                rgba(0, 50, 0, 0.5) 50px
+            );
+            pointer-events: none;
+        }
+        
+        /* Garis Crosshair */
+        .cross-x, .cross-y { position: absolute; background: rgba(0, 255, 65, 0.2); pointer-events: none; }
+        .cross-x { top: 50%; left: 0; width: 100%; height: 1px; }
+        .cross-y { top: 0; left: 50%; width: 1px; height: 100%; }
+
+        /* 4. SCANNER */
+        .scanner {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 50%; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0,255,65,0.8));
+            transform-origin: left center;
+            animation: radar-spin 6s linear infinite;
+            z-index: 20;
+            pointer-events: none;
+        }
+        @keyframes radar-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* GARUT ANCHOR */
+        .anchor {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px; height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff;
+            z-index: 30;
+        }
+
+        .controls { position: absolute; bottom: 20px; font-size: 10px; color: #666; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <h1>NUSWANTARA OS</h1>
+        <div class="status">SOURCE: petaduniakubah.jpg</div>
+        <div class="status">MODE: ZONAL SCANNING</div>
+    </div>
+
+    <div class="map-viewport" id="viewport">
+        <div class="user-map-layer" id="mapLayer"></div>
+
+        <div class="grid-overlay"></div>
+        
+        <div class="zone-container" id="zoneLayer">
+            <div class="ring-core">
+                <span class="label-core">RING 1: HIGH LAND (REAL 1:1)</span>
+            </div>
+            
+            <div class="ring-mid">
+                <span class="label-mid">RING 2: STABLE ZONE</span>
+            </div>
+
+            <div class="ring-outer">
+                <span class="label-outer">RING 3: OUTER RIM (DISTORTED)</span>
+            </div>
+        </div>
+
+        <div class="cross-x"></div>
+        <div class="cross-y"></div>
+        <div class="scanner"></div>
+        <div class="anchor"></div>
+    </div>
+
+    <div class="controls">
+        SCROLL: ZOOM PETA | DRAG: GESER PETA<br>
+        *Garis Ring Statis Mengikuti Grid OS
+    </div>
+
+    <script>
+        const viewport = document.getElementById('viewport');
+        const mapLayer = document.getElementById('mapLayer');
+        const zoneLayer = document.getElementById('zoneLayer');
+        
+        let scale = 1;
+        let isDragging = false;
+        let startX, startY, translateX = 0, translateY = 0;
+
+        // ZOOM FUNCTION
+        viewport.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            scale += e.deltaY * -0.001;
+            scale = Math.min(Math.max(0.5, scale), 5); // Limit Zoom
+            updateTransform();
+        });
+
+        // DRAG FUNCTION
+        viewport.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            viewport.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            viewport.style.cursor = 'grab';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            updateTransform();
+        });
+
+        function updateTransform() {
+            // Kita zoom & geser gambarnya aja, RING (Grid) TETAP DIAM sebagai patokan
+            mapLayer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            
+            // Opsi: Kalau mau ring ikut zoom, uncomment baris bawah ini, tapi biasanya grid OS itu statis
+            // zoneLayer.style.transform = `translate(-50%, -50%) scale(${scale})`; 
+        }
+    </script>
+</body>
+</html>

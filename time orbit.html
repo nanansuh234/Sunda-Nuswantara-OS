@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara OS - Gold Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #ffaa00;
+            --green: #00ff41;
+            --blue: #00ccff;
+            --red: #ff0055;
+            --bg: #020202;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--gold);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* UI LAYOUT */
+        .hud-panel {
+            position: absolute;
+            background: rgba(0, 10, 0, 0.85);
+            border: 1px solid var(--green);
+            padding: 15px;
+            border-radius: 10px;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        /* HEADER (Kiri Atas) */
+        #header-hud { top: 20px; left: 20px; }
+        h1 { margin: 0; font-size: 18px; border-bottom: 2px solid var(--gold); display: inline-block; letter-spacing: 2px; }
+        .sub-txt { font-size: 10px; color: #aaa; margin-top: 5px; }
+
+        /* JAM NUSWANTARA (Kanan Atas) */
+        #clock-hud { top: 20px; right: 20px; text-align: right; width: 300px; }
+        .digital-big { font-size: 32px; color: #fff; text-shadow: 0 0 10px var(--gold); font-weight: bold; }
+        .fase-txt { font-size: 18px; color: var(--green); font-weight: bold; margin: 5px 0; }
+        .desc-txt { font-size: 10px; color: #ccc; line-height: 1.2; }
+        .pasaran-badge { display: inline-block; background: var(--red); color: #fff; padding: 2px 8px; font-size: 12px; border-radius: 4px; margin-right: 5px; }
+
+        /* INFO KALENDER (Kiri Bawah) */
+        #date-hud { bottom: 20px; left: 20px; text-align: left; }
+        .date-big { font-size: 20px; color: var(--blue); }
+        .season-txt { color: var(--gold); font-size: 12px; margin-top: 5px; }
+
+        /* CONTROLS (Tengah Bawah) */
+        #controls {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 20, 0, 0.95); border: 1px solid var(--green);
+            padding: 15px 25px; border-radius: 40px;
+            display: flex; gap: 20px; z-index: 200; pointer-events: auto;
+            align-items: flex-end;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+        
+        .ctrl-group { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .ctrl-label { font-size: 9px; color: var(--green); text-transform: uppercase; letter-spacing: 1px; }
+
+        button { background: #004400; color: var(--green); border: 1px solid var(--green); padding: 8px 15px; cursor: pointer; font-family: inherit; font-weight: bold; border-radius: 5px; height: 35px; }
+        button:hover { background: var(--green); color: #000; }
+        
+        input[type=range] { width: 100px; cursor: pointer; accent-color: var(--gold); }
+
+        /* VIEWPORT UTAMA */
+        #viewport {
+            width: 100vw; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; cursor: grab; background: #000;
+        }
+        #viewport:active { cursor: grabbing; }
+
+        #world-container {
+            position: relative;
+            width: 1000px; height: 1000px;
+            border-radius: 50%;
+            background: #000;
+            box-shadow: 0 0 100px #000;
+        }
+
+        /* LAYER PETA */
+        .map-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('petaduniakubah.jpg');
+            background-size: cover;
+            border-radius: 50%;
+            /* Default agak gelap biar ambience malam terasa */
+            filter: brightness(0.3) contrast(1.2) saturate(0.8);
+            z-index: 1;
+            transition: filter 0.2s;
+        }
+
+        canvas#orbitCanvas { position: absolute; top: 0; left: 0; z-index: 2; pointer-events: none; opacity: 0.7; }
+
+        /* MATAHARI & CAHAYA */
+        #sun-wrapper {
+            position: absolute; top: 50%; left: 50%; width: 0; height: 0; z-index: 50;
+        }
+        #sun {
+            position: absolute; transform: translate(-50%, -50%);
+            width: 30px; height: 30px;
+            background: radial-gradient(#fff, #ffaa00);
+            box-shadow: 0 0 40px #ffaa00, 0 0 80px #ffaa00;
+            border-radius: 50%;
+            z-index: 52;
+        }
+        
+        /* SPOTLIGHT SIANG */
+        .daylight-spot {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 600px;
+            background: radial-gradient(
+                circle, 
+                rgba(255, 220, 150, 0.7) 0%,
+                rgba(255, 170, 0, 0.2) 50%,
+                rgba(0, 0, 0, 0) 70%
+            );
+            mix-blend-mode: hard-light;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 51;
+            transition: width 0.1s, height 0.1s;
+        }
+
+        /* BULAN */
+        #moon-wrapper {
+            position: absolute; top: 50%; left: 50%; width: 0; height: 0; z-index: 40;
+        }
+        #moon {
+            position: absolute; transform: translate(-50%, -50%);
+            width: 25px; height: 25px;
+            background: radial-gradient(#eee, #333);
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            border-radius: 50%;
+        }
+
+        .center-marker {
+            position: absolute; top: 50%; left: 50%; width: 6px; height: 6px;
+            background: #fff; transform: translate(-50%, -50%);
+            border-radius: 50%; box-shadow: 0 0 10px cyan; z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-hud" class="hud-panel">
+        <h1>NUSWANTARA OS</h1>
+        <div class="sub-txt">SYSTEM: GOLD EDITION</div>
+        <div class="sub-txt">ZOOM: <span id="zoom-val" style="color:#fff">100%</span></div>
+    </div>
+
+    <div id="clock-hud" class="hud-panel">
+        <div style="font-size:10px; color:#aaa;">JAM NUSWANTARA (8 FASE)</div>
+        <div class="digital-big" id="digital-clock">08:00</div>
+        <div class="fase-txt" id="fase-name">HENING</div>
+        <div class="desc-txt" id="fase-desc">Istirahat Mental. Lucid Dream.</div>
+        <div style="margin-top:10px; border-top:1px dashed #333; padding-top:5px;">
+            <span class="pasaran-badge" id="pasaran-badge">LEGI</span>
+            <span style="font-size:12px; color:#fff;" id="day-name">SUKRA</span>
+        </div>
+    </div>
+
+    <div id="date-hud" class="hud-panel">
+        <div style="font-size:10px; color:#aaa;">KALENDER SAKA</div>
+        <div class="date-big" id="full-date">1 WIWITAN 001</div>
+        <div class="season-txt" id="season-display">POSISI: KHATULISTIWA</div>
+    </div>
+
+    <div id="viewport">
+        <div id="world-container">
+            <div class="map-layer" id="mapBase"></div>
+            <canvas id="orbitCanvas" width="1000" height="1000"></canvas>
+            <div class="center-marker" title="GARUT PUSAT"></div>
+
+            <div id="sun-wrapper">
+                <div id="sun"></div>
+                <div class="daylight-spot" id="spotlight"></div>
+            </div>
+
+            <div id="moon-wrapper">
+                <div id="moon"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="controls">
+        <button onclick="togglePause()" id="btnPause">PAUSE</button>
+        
+        <div class="ctrl-group">
+            <label class="ctrl-label">SIM SPEED</label>
+            <input type="range" min="0" max="100" value="10" id="speedSlider">
+        </div>
+
+        <div class="ctrl-group">
+            <label class="ctrl-label">SUN AREA</label>
+            <input type="range" min="300" max="1200" value="650" id="lightSizeSlider" oninput="updateLight()">
+        </div>
+
+        <div class="ctrl-group">
+            <label class="ctrl-label">AMBIENT</label>
+            <input type="range" min="10" max="100" value="30" id="ambientSlider" oninput="updateAmbient()">
+        </div>
+    </div>
+
+<script>
+    // --- DATABASE JAM NUSWANTARA (8 FASE) ---
+    const phases = [
+        { id: 3, name: "HENING", desc: "Istirahat Mental. Download Data Semesta.", range: [0, 1, 2] },
+        { id: 4, name: "FAJAR", desc: "Golden Hour. Meditasi & Ide Brilian.", range: [3, 4, 5] },
+        { id: 5, name: "DUHA", desc: "Start Engine. Olahraga & Planning.", range: [6, 7, 8] },
+        { id: 6, name: "KARYA", desc: "High Performance. Eksekusi Kerja.", range: [9, 10, 11] },
+        { id: 7, name: "ISTIWA", desc: "Puncak Matahari. Power Nap Wajib.", range: [12, 13, 14] },
+        { id: 8, name: "ASAR", desc: "Wrapping Up. Evaluasi & Santai.", range: [15, 16, 17] },
+        { id: 1, name: "SANDIKALA", desc: "Transisi. Kumpul Keluarga.", range: [18, 19, 20] },
+        { id: 2, name: "SIREPAN", desc: "Deep Sleep. Detoks Organ Vital.", range: [21, 22, 23] }
+    ];
+
+    // --- DATABASE KALENDER ---
+    const months = ["WIWITAN", "GANGGA", "BIJA", "TRUBUS", "TEJA", "BASKARA", "KARTIKA", "HUMA", "PHALA", "LUMBUNG", "RESWARA", "PURNAKA", "SUWUNG"];
+    const pasarans = ["LEGI", "PAHING", "PON", "WAGE", "KLIWON"];
+    const dayNames = ["RADITE", "SOMA", "ANGGARA", "BUDHA", "RESPATI", "SUKRA", "TUMPAK"];
+    const anchorDate = new Date("2025-03-21T00:00:00");
+
+    // --- SETUP SIMULASI ---
+    let simTime = new Date();
+    let isPaused = false;
+
+    // DOM Elements
+    const world = document.getElementById('world-container');
+    const sunWrap = document.getElementById('sun-wrapper');
+    const moonWrap = document.getElementById('moon-wrapper');
+    const canvas = document.getElementById('orbitCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Lighting Elements
+    const spotlight = document.getElementById('spotlight');
+    const mapBase = document.getElementById('mapBase');
+    
+    // Zoom Variables
+    const viewport = document.getElementById('viewport');
+    let scale = 1, pointX = 0, pointY = 0, startX = 0, startY = 0, panning = false;
+
+    // Orbit Config
+    const CENTER = 500;
+    const TROPIC_INNER = 150;
+    const TROPIC_OUTER = 350;
+
+    function init() {
+        pointX = (window.innerWidth - 1000) / 2;
+        pointY = (window.innerHeight - 1000) / 2;
+        updateLight();
+        updateAmbient();
+        updateTransform();
+        animate();
+    }
+
+    function animate() {
+        if (!isPaused) {
+            let speedVal = parseInt(document.getElementById('speedSlider').value);
+            simTime = new Date(simTime.getTime() + (speedVal * 60000));
+            updateNuswantaraData();
+            updateCelestialPositions();
+        }
+        requestAnimationFrame(animate);
+    }
+
+    // --- LOGIKA JAM 8 JAM & KALENDER ---
+    function updateNuswantaraData() {
+        let h = simTime.getHours();
+        let m = simTime.getMinutes();
+        let s = simTime.getSeconds();
+
+        // >>> FIX JAM NUSWANTARA (8 JAM) <<<
+        // 12 Jam Masehi = 8 Jam Nuswantara
+        // 1 Jam Nuswantara = 90 Menit Masehi
+        let totalMinMasehi = ((h % 12) * 60) + m;
+        let totalHoursNus = totalMinMasehi / 90; 
+
+        let nusH = Math.floor(totalHoursNus);
+        if (nusH === 0) nusH = 8; // Handle jam 12-1:30 sebagai jam 8
+        
+        let nusM = Math.floor((totalHoursNus % 1) * 90); // Menit dalam skala 90
+
+        let nusHStr = nusH < 10 ? "0" + nusH : nusH;
+        let nusMStr = nusM < 10 ? "0" + nusM : nusM;
+        let period = (h >= 6 && h < 18) ? "SIANG" : "MALAM"; // Penanda Siang/Malam
+
+        document.getElementById('digital-clock').innerText = `${nusHStr}:${nusMStr} ${period}`;
+
+        // Update Fase Text
+        let currentPhase = phases.find(p => p.range.includes(h));
+        if (currentPhase) {
+            document.getElementById('fase-name').innerText = currentPhase.name;
+            document.getElementById('fase-desc').innerText = currentPhase.desc;
+        }
+
+        // Kalender Logic
+        let diffTime = simTime - anchorDate;
+        let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        
+        let pasaranIdx = Math.abs(diffDays) % 5;
+        document.getElementById('pasaran-badge').innerText = pasarans[pasaranIdx];
+
+        let dayIdx = simTime.getDay();
+        document.getElementById('day-name').innerText = dayNames[dayIdx];
+
+        let yearNum = 1 + Math.floor(diffDays / 365);
+        let dayOfYear = diffDays % 365;
+        if (dayOfYear < 0) dayOfYear += 365;
+
+        let monthIdx = Math.floor(dayOfYear / 28);
+        if (monthIdx > 12) monthIdx = 12;
+        let dateNum = (dayOfYear % 28) + 1;
+
+        let monthName = months[monthIdx] || "SUWUNG";
+        document.getElementById('full-date').innerText = `${dateNum} ${monthName} ${String(yearNum).padStart(3, '0')}`;
+
+        return { monthIdx, dayOfYear };
+    }
+
+    // --- UPDATE POSISI ORBIT ---
+    function updateCelestialPositions() {
+        let h = simTime.getHours();
+        let m = simTime.getMinutes();
+        let totalMin = (h * 60) + m;
+
+        // 1. Sudut Matahari (Harian)
+        let sunAngle = ((totalMin / 1440) * 360) - 90;
+
+        // 2. Radius Matahari (Musiman)
+        let calData = updateNuswantaraData();
+        let yearProgress = calData.dayOfYear / 365;
+        let seasonWave = -Math.sin(yearProgress * Math.PI * 2);
+        let sunRadius = ((seasonWave + 1) / 2) * (TROPIC_OUTER - TROPIC_INNER) + TROPIC_INNER;
+
+        // Posisi DOM Matahari
+        setPos(sunWrap, sunRadius, sunAngle);
+
+        // Teks Musim
+        let seasonEl = document.getElementById('season-display');
+        if(sunRadius < 200) seasonEl.innerText = "MUSIM: PANAS UTARA (ORBIT DALAM)";
+        else if(sunRadius > 300) seasonEl.innerText = "MUSIM: PANAS SELATAN (ORBIT LUAR)";
+        else seasonEl.innerText = "MUSIM: PANCAROBA (KHATULISTIWA)";
+
+        // 3. Posisi Bulan
+        let moonLag = calData.dayOfYear * 12;
+        let moonAngle = sunAngle - moonLag;
+        let moonRadius = sunRadius * 0.95;
+        setPos(moonWrap, moonRadius, moonAngle);
+
+        // Gambar Garis
+        drawOrbits(sunRadius);
+    }
+
+    function setPos(el, r, deg) {
+        let rad = deg * (Math.PI / 180);
+        let x = CENTER + r * Math.cos(rad);
+        let y = CENTER + r * Math.sin(rad);
+        el.style.left = x + "px";
+        el.style.top = y + "px";
+    }
+
+    // --- FUNGSI LIGHTING CONTROL ---
+    function updateLight() {
+        let size = document.getElementById('lightSizeSlider').value;
+        spotlight.style.width = size + "px";
+        spotlight.style.height = size + "px";
+    }
+
+    function updateAmbient() {
+        let val = document.getElementById('ambientSlider').value;
+        let brightness = val / 100;
+        mapBase.style.filter = `brightness(${brightness}) contrast(1.1) saturate(0.8)`;
+    }
+
+    function drawOrbits(currentSunR) {
+        ctx.clearRect(0,0,1000,1000);
+        
+        ctx.beginPath(); ctx.arc(CENTER, CENTER, TROPIC_INNER, 0, 2*Math.PI);
+        ctx.strokeStyle = "rgba(0, 255, 65, 0.2)"; ctx.stroke();
+        
+        ctx.beginPath(); ctx.arc(CENTER, CENTER, TROPIC_OUTER, 0, 2*Math.PI);
+        ctx.strokeStyle = "rgba(255, 0, 85, 0.2)"; ctx.stroke();
+
+        ctx.beginPath(); ctx.arc(CENTER, CENTER, currentSunR, 0, 2*Math.PI);
+        ctx.strokeStyle = "rgba(255, 170, 0, 0.5)"; ctx.setLineDash([5,5]); ctx.stroke(); ctx.setLineDash([]);
+    }
+
+    // --- ZOOM & DRAG ---
+    viewport.addEventListener('mousedown', e => { e.preventDefault(); panning = true; startX = e.clientX - pointX; startY = e.clientY - pointY; viewport.style.cursor = 'grabbing'; });
+    window.addEventListener('mouseup', () => { panning = false; viewport.style.cursor = 'grab'; });
+    viewport.addEventListener('mousemove', e => {
+        if (!panning) return;
+        e.preventDefault();
+        pointX = e.clientX - startX;
+        pointY = e.clientY - startY;
+        updateTransform();
+    });
+    viewport.addEventListener('wheel', e => {
+        e.preventDefault();
+        let xs = (e.clientX - pointX) / scale;
+        let ys = (e.clientY - pointY) / scale;
+        let delta = -e.deltaY;
+        (delta > 0) ? (scale *= 1.1) : (scale /= 1.1);
+        scale = Math.min(Math.max(0.3, scale), 8);
+        pointX = e.clientX - xs * scale;
+        pointY = e.clientY - ys * scale;
+        updateTransform();
+    });
+    function updateTransform() {
+        world.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+        document.getElementById('zoom-val').innerText = Math.round(scale * 100) + "%";
+    }
+
+    function togglePause() {
+        isPaused = !isPaused;
+        document.getElementById('btnPause').innerText = isPaused ? "PLAY" : "PAUSE";
+    }
+
+    init();
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Knowledge Base</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #ffaa00;
+            --green: #00ff41;
+            --red: #ff0055;
+            --bg: #020202;
+            --glass: rgba(0, 20, 0, 0.8);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--green);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 { text-transform: uppercase; margin-top: 0; }
+        
+        .header {
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .header h1 { color: var(--gold); font-size: 32px; text-shadow: 0 0 15px var(--gold); }
+        .subtitle { color: #888; font-size: 12px; letter-spacing: 2px; }
+
+        /* GRID LAYOUT */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: var(--glass);
+            border: 1px solid #333;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.05);
+            transition: 0.3s;
+        }
+        .card:hover { border-color: var(--gold); box-shadow: 0 0 20px rgba(255, 170, 0, 0.1); }
+
+        .tag {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 8px;
+            border: 1px solid var(--green);
+            margin-bottom: 15px;
+        }
+
+        /* PERBANDINGAN TABEL */
+        .truth-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 15px;
+        }
+        .truth-table th { text-align: left; border-bottom: 1px solid #555; padding: 5px; color: #fff; }
+        .truth-table td { border-bottom: 1px dashed #333; padding: 8px 5px; vertical-align: top; }
+        .false-col { color: #888; width: 45%; }
+        .true-col { color: var(--gold); font-weight: bold; width: 55%; }
+        
+        /* VISUALISASI PENERBANGAN */
+        .flight-diagram {
+            width: 100%;
+            height: 200px;
+            background: radial-gradient(circle, #111 0%, #000 70%);
+            border: 1px solid #333;
+            position: relative;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .highlight { color: var(--gold); }
+        .alert { color: var(--red); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>THE TRUTH ARCHIVE</h1>
+        <div class="subtitle">DECODING THE GEOMETRY OF NUSWANTARA OS</div>
+    </div>
+
+    <div class="grid-container">
+
+        <div class="card">
+            <span class="tag">UNIT PENGUKURAN</span>
+            <h2>1. KEMBALI KE "DEPA"</h2>
+            <p>Sistem Globalis menggunakan <strong>METER</strong> (abstrak, buatan Prancis). Kita kembali ke <strong>IMAN = UKURAN</strong> (Tubuh Manusia adalah standar).</p>
+            
+            <table class="truth-table">
+                <tr>
+                    <th>SISTEM LAMA (GLOBE)</th>
+                    <th>SISTEM BARU (NUSWANTARA)</th>
+                </tr>
+                <tr>
+                    <td class="false-col">Meter / Kilometer<br><em>(Base: Keliling Bumi Palsu)</em></td>
+                    <td class="true-col">DEPA<br><em>(Base: Rentang Tangan Manusia ~1.6m)</em></td>
+                </tr>
+                <tr>
+                    <td class="false-col">Logika Abstrak</td>
+                    <td class="true-col">Logika Tubuh (Tangible)</td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 15px; border-top: 1px dashed #333; padding-top: 10px;">
+                <strong style="color:var(--green)">RUMUS KONVERSI:</strong><br>
+                1 Juta KM (Globe) = ~625 Miliar Depa.<br>
+                <em>"Mengukur bumi dengan langkah dan rentangan tangan sendiri, bukan satelit."</em>
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="tag">NAVIGASI SPASIAL</span>
+            <h2>2. LAT/LONG vs RADIAL</h2>
+            <p>Karena bumi bukan bola, sistem Latitude/Longitude itu cacat logika. Kita ganti dengan sistem <strong>GUNUNGAN (POLAR)</strong>.</p>
+            
+            <table class="truth-table">
+                <tr>
+                    <th>LATITUDE (LINTANG)</th>
+                    <th>ZONA RADIUS (CINCIN)</th>
+                </tr>
+                <tr>
+                    <td class="false-col">Garis imajiner yang membelah bola utara-selatan.</td>
+                    <td class="true-col">Jarak murni dari PUSAT (Garut).<br>Contoh: Ring 1 (Puncak), Ring 2 (Lereng), Ring 3 (Dasar).</td>
+                </tr>
+                <tr>
+                    <th style="padding-top:10px;">LONGITUDE (BUJUR)</th>
+                    <th style="padding-top:10px;">AZIMUTH (ARAH JAM)</th>
+                </tr>
+                <tr>
+                    <td class="false-col">Garis yang bertemu di dua kutub (N/S).</td>
+                    <td class="true-col">Garis yang <strong>MEKAR (KIPAS)</strong> dari Pusat ke Dinding Es. Semakin jauh, semakin lebar.</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <span class="tag">BUKTI FISIK</span>
+            <h2>3. FLIGHT PATH REVEAL</h2>
+            <p>Kenapa penerbangan dari <span class="alert">Chile</span> ke <span class="alert">Australia</span> selalu transit ke Utara/Tengah?</p>
+            
+            <div class="flight-diagram" id="flightCanvas">
+                </div>
+            
+            <ul style="font-size: 12px; margin-top: 10px; color: #ccc;">
+                <li><span style="color:#555">---</span> <strong>Jalur Globe (Selatan):</strong> Terlihat dekat di peta kertas, tapi MUSTAHIL di realita karena jarak bibir luar (Outer Rim) sangat jauh.</li>
+                <li><span style="color:var(--green)">___</span> <strong>Jalur Realita:</strong> Pesawat harus masuk ke ZONA TENGAH (Ring 1/2) karena diameternya lebih kecil.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <span class="tag">VOCABULARY</span>
+            <h2>4. KAMUS KEBENARAN</h2>
+            
+            <div style="margin-bottom: 10px;">
+                <strong class="highlight">ANTARTIKA</strong><br>
+                <span class="false-col">Globalis:</span> Benua Es di pantat bumi.<br>
+                <span class="true-col">Kita:</span> <span class="highlight">THE BASE RING.</span> Pondasi/Tembok Es yang mengelilingi sistem air agar tidak tumpah.
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <strong class="highlight">KHATULISTIWA (EQUATOR)</strong><br>
+                <span class="false-col">Globalis:</span> Garis tengah bola.<br>
+                <span class="true-col">Kita:</span> <span class="highlight">THE PEAK (PUNCAK).</span> Area tertinggi yang paling dekat dengan Matahari/Ether.
+            </div>
+
+            <div style="margin-bottom: 10px;">
+                <strong class="highlight">KUTUB UTARA (ARCTIC)</strong><br>
+                <span class="false-col">Globalis:</span> Lautan Es di atas bola.<br>
+                <span class="true-col">Kita:</span> <span class="highlight">AXIS MUNDI.</span> Titik Langit/Bintang Pusat tepat tegak lurus di atas Sundaland.
+            </div>
+
+            <div>
+                <strong class="highlight">GRAVITASI</strong><br>
+                <span class="false-col">Globalis:</span> Tarikan inti massa.<br>
+                <span class="true-col">Kita:</span> <span class="highlight">DENSITAS & ALIRAN.</span> Air mengalir dari Puncak (Sunda) ke Dasar (Antartika).
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // SCRIPT VISUALISASI FLIGHT PATH (SIMPLE)
+        // Kita gambar skema Mangkuk/Gunungan dari atas
+        const fDiv = document.getElementById('flightCanvas');
+        const canvas = document.createElement('canvas');
+        canvas.width = fDiv.offsetWidth;
+        canvas.height = fDiv.offsetHeight;
+        fDiv.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        function drawFlight() {
+            // Background Grid
+            ctx.fillStyle = "#050505"; ctx.fillRect(0,0,canvas.width, canvas.height);
+            
+            // 1. Lingkaran Luar (Outer Rim/Antartika)
+            ctx.strokeStyle = "#333"; ctx.beginPath(); ctx.arc(cx, cy, 80, 0, Math.PI*2); ctx.stroke();
+            
+            // 2. Lingkaran Dalam (Sundaland)
+            ctx.fillStyle = "#ffaa00"; ctx.beginPath(); ctx.arc(cx, cy, 10, 0, Math.PI*2); ctx.fill();
+
+            // 3. Posisi Kota (Outer Rim)
+            // Chile (Kiri Bawah)
+            let ax = cx - 50; let ay = cy + 60;
+            // Australia (Kanan Bawah)
+            let bx = cx + 50; let by = cy + 60;
+
+            ctx.fillStyle = "#ff0055"; 
+            ctx.beginPath(); ctx.arc(ax, ay, 4, 0, Math.PI*2); ctx.fill(); // Chile
+            ctx.beginPath(); ctx.arc(bx, by, 4, 0, Math.PI*2); ctx.fill(); // Aus
+
+            // 4. JALUR GLOBE (MUSTAHIL) - Garis Putus Melengkung Bawah
+            ctx.strokeStyle = "#555";
+            ctx.setLineDash([5,5]);
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.quadraticCurveTo(cx, cy + 120, bx, by); // Melengkung lewat "selatan"
+            ctx.stroke();
+
+            // 5. JALUR REALITA (TRANSIT TENGAH) - Garis Solid Hijau
+            ctx.strokeStyle = "#00ff41";
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(cx, cy); // Ke Pusat
+            ctx.lineTo(bx, by); // Ke Tujuan
+            ctx.stroke();
+
+            // LABEL
+            ctx.fillStyle = "#fff"; ctx.font = "10px monospace";
+            ctx.fillText("CHILE", ax-20, ay+15);
+            ctx.fillText("AUS", bx, by+15);
+            ctx.fillStyle = "#ffaa00";
+            ctx.fillText("HUB PUSAT", cx-25, cy-15);
+        }
+        drawFlight();
+    </script>
+</body>
+</html>

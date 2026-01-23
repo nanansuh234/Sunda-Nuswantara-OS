@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - GeoSpatial System</title>
+    <style>
+        body {
+            background-color: #050505; /* Deep Void Black */
+            color: #00ff41; /* Terminal Green */
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 20, 0, 0.8);
+            padding: 15px;
+            border: 1px solid #00ff41;
+            box-shadow: 0 0 10px #00ff41;
+            max-width: 300px;
+        }
+
+        h1 { font-size: 18px; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px; }
+        p { font-size: 12px; margin: 5px 0; opacity: 0.8; }
+        .stat-value { font-weight: bold; color: #fff; }
+
+        canvas {
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.1);
+            background: radial-gradient(circle, #001a00 0%, #000000 100%);
+            cursor: crosshair;
+        }
+
+        .highlight { color: #ffff00; }
+        
+        /* Scanline effect */
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 5;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0, 255, 65, 0.05) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <h1>Sunda Nuswantara OS</h1>
+        <p>System: <span class="highlight">Geo-Spatial Kuba v1.0</span></p>
+        <p>Center Anchor: <span class="highlight">GARUT (The High Land)</span></p>
+        <hr style="border-color: #004400;">
+        <p>Target: <span id="target-name" class="stat-value">SCANNING...</span></p>
+        <p>Arah (Jam): <span id="target-angle" class="stat-value">--</span></p>
+        <p>Jarak (KM): <span id="target-km" class="stat-value">0</span></p>
+        <p>Jarak (Juta Depa): <span id="target-depa" class="stat-value" style="color: cyan;">0</span></p>
+        <p style="margin-top:10px; font-size: 10px; color: #888;">*Data Real-time Calculus based on Garut Centric Projection</p>
+    </div>
+
+    <div class="scanline"></div>
+    <canvas id="radarMap"></canvas>
+
+<script>
+    const canvas = document.getElementById('radarMap');
+    const ctx = canvas.getContext('2d');
+
+    // 1. KONFIGURASI PUSAT (GARUT)
+    const CENTER_LAT = -7.2278; 
+    const CENTER_LON = 107.9087; 
+    const DEPA_CONVERSION = 1.6; // 1 Depa = 1.6 Meter
+
+    // 2. DATA POIN (Simulasi Lokasi Dunia terhadap Garut)
+    // Koordinat Lat/Lon asli
+    const locations = [
+        { name: "GARUT (PUSAT)", lat: -7.2278, lon: 107.9087, type: "core" },
+        { name: "Jakarta", lat: -6.2088, lon: 106.8456, type: "local" },
+        { name: "Surabaya", lat: -7.2575, lon: 112.7521, type: "local" },
+        { name: "Bali", lat: -8.4095, lon: 115.1889, type: "local" },
+        { name: "Singapore", lat: 1.3521, lon: 103.8198, type: "regional" },
+        { name: "Mecca (Kaaba)", lat: 21.4225, lon: 39.8262, type: "regional" },
+        { name: "Tokyo", lat: 35.6762, lon: 139.6503, type: "outer" },
+        { name: "London", lat: 51.5074, lon: -0.1278, type: "outer" },
+        { name: "New York", lat: 40.7128, lon: -74.0060, type: "outer" },
+        { name: "Cape Town", lat: -33.9249, lon: 18.4241, type: "outer" },
+        { name: "Ice Wall (Antarctica)", lat: -82.8628, lon: 135.0000, type: "wall" } // Conceptual point
+    ];
+
+    let width, height, centerX, centerY, scaleFactor;
+
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        centerX = width / 2;
+        centerY = height / 2;
+        // Skala: Jarak terjauh (London/NY) harus muat di layar
+        scaleFactor = Math.min(width, height) / 2 / 16000; // 16000km radius max
+    }
+
+    // RUMUS HAVERSINE (Menghitung Jarak Lengkung Bumi)
+    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        var R = 6371; // Radius bumi km (konvensional, kita pakai untuk hitung jarak relatif)
+        var dLat = deg2rad(lat2-lat1);  
+        var dLon = deg2rad(lon2-lon1); 
+        var a = 
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c; 
+        return d;
+    }
+
+    // MENGHITUNG BEARING (ARAH SUDUT) DARI GARUT
+    function getBearing(startLat, startLng, destLat, destLng) {
+        startLat = deg2rad(startLat); startLng = deg2rad(startLng);
+        destLat = deg2rad(destLat); destLng = deg2rad(destLng);
+
+        y = Math.sin(destLng - startLng) * Math.cos(destLat);
+        x = Math.cos(startLat) * Math.sin(destLat) -
+            Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+        brng = Math.atan2(y, x);
+        return (toDegrees(brng) + 360) % 360;
+    }
+
+    function deg2rad(deg) { return deg * (Math.PI/180); }
+    function toDegrees(rad) { return rad * 180 / Math.PI; }
+
+    function draw() {
+        // Clear screen
+        ctx.fillStyle = "#050505";
+        ctx.fillRect(0, 0, width, height);
+
+        // 1. DRAW GRID (The Kuba Structure)
+        ctx.strokeStyle = "#004400";
+        ctx.lineWidth = 1;
+        
+        // Lingkaran Jarak (Setiap 2000km)
+        for(let i=1; i<=8; i++) {
+            ctx.beginPath();
+            let r = i * 2000 * scaleFactor;
+            ctx.arc(centerX, centerY, r, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            // Label Jarak
+            ctx.fillStyle = "#004400";
+            ctx.fillText(i * 2000 + "KM", centerX + 5, centerY - r + 10);
+        }
+
+        // Garis Arah Jam (Sinar)
+        for(let i=0; i<12; i++) {
+            ctx.beginPath();
+            let angle = (i * 30) * (Math.PI/180);
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + Math.cos(angle)*width, centerY + Math.sin(angle)*width);
+            ctx.stroke();
+        }
+
+        // 2. DRAW LOCATIONS
+        locations.forEach(loc => {
+            if(loc.type === 'core') {
+                // Gambar Garut (PUSAT)
+                ctx.fillStyle = "#ffff00";
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, 5, 0, 2*Math.PI);
+                ctx.fill();
+                
+                // Efek Pulse di Pusat
+                let pulse = (Date.now() % 1000) / 10;
+                ctx.strokeStyle = `rgba(255, 255, 0, ${1 - pulse/100})`;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, pulse/2, 0, 2*Math.PI);
+                ctx.stroke();
+                return;
+            }
+
+            // Hitung Posisi pada Peta Radar
+            let dist = getDistanceFromLatLonInKm(CENTER_LAT, CENTER_LON, loc.lat, loc.lon);
+            let bearing = getBearing(CENTER_LAT, CENTER_LON, loc.lat, loc.lon);
+            
+            // Konversi Bearing ke Radian Canvas (ingat canvas 0 dikanan, geo 0 diatas/Utara)
+            // Geo 0 (Utara) = Canvas -90 deg
+            let canvasAngle = (bearing - 90) * (Math.PI/180);
+
+            let x = centerX + (dist * scaleFactor) * Math.cos(canvasAngle);
+            let y = centerY + (dist * scaleFactor) * Math.sin(canvasAngle);
+
+            // Simpan posisi layar untuk interaksi mouse
+            loc.screenX = x;
+            loc.screenY = y;
+            loc.distKm = dist;
+            loc.angle = bearing;
+
+            // Gambar Titik
+            ctx.fillStyle = loc.type === 'outer' ? '#ff0055' : '#00ff41';
+            if(loc.type === 'wall') ctx.fillStyle = '#00ccff';
+
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, 2*Math.PI);
+            ctx.fill();
+
+            // Label
+            ctx.fillStyle = "#88ff88";
+            ctx.font = "10px Courier";
+            ctx.fillText(loc.name, x + 8, y + 3);
+
+            // Garis penghubung ke pusat (opsional, tipis)
+            ctx.strokeStyle = "rgba(0, 255, 65, 0.1)";
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    // INTERAKSI MOUSE (SIMULASI SCANNER)
+    window.addEventListener('mousemove', (e) => {
+        let mouseX = e.clientX;
+        let mouseY = e.clientY;
+        
+        let closestDist = 9999;
+        let activeLoc = null;
+
+        locations.forEach(loc => {
+            if (!loc.screenX) return;
+            let dx = mouseX - loc.screenX;
+            let dy = mouseY - loc.screenY;
+            let d = Math.sqrt(dx*dx + dy*dy);
+            if (d < 20) { // Jika mouse dekat titik
+                closestDist = d;
+                activeLoc = loc;
+            }
+        });
+
+        if (activeLoc) {
+            document.getElementById('target-name').innerText = activeLoc.name;
+            document.getElementById('target-km').innerText = activeLoc.distKm.toFixed(0);
+            
+            // Konversi ke DEPA (Format Juta)
+            let totalDepa = (activeLoc.distKm * 1000) / DEPA_CONVERSION;
+            document.getElementById('target-depa').innerText = (totalDepa / 1000000).toFixed(2) + " Jt";
+            
+            // Konversi Sudut ke Arah Jam (Kira-kira)
+            let clockHour = Math.round(activeLoc.angle / 30);
+            if (clockHour === 0) clockHour = 12;
+            document.getElementById('target-angle').innerText = "Jam " + clockHour;
+        }
+    });
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+
+</script>
+</body>
+</html>

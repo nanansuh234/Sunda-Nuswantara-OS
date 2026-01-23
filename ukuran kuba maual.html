@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Area Rectifier</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ff41;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            border-left: 2px solid #003300;
+            border-right: 2px solid #003300;
+            min-height: 100vh;
+        }
+
+        h1, h2 { text-transform: uppercase; border-bottom: 1px dashed #00ff41; padding-bottom: 10px; }
+        .subtitle { font-size: 12px; color: #88ff88; margin-bottom: 30px; }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) { .container { grid-template-columns: 1fr; } }
+
+        .card {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid #004400;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+        }
+
+        label { display: block; margin-top: 15px; font-size: 12px; color: #aaffaa; }
+        input {
+            width: 90%;
+            background: #001100;
+            border: 1px solid #00ff41;
+            color: #fff;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 15px;
+            background: #004400;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover { background: #00ff41; color: #000; box-shadow: 0 0 20px #00ff41; }
+
+        .result-box {
+            margin-top: 20px;
+            border: 1px solid #ff0055; /* Default inactive */
+            padding: 15px;
+            display: none;
+        }
+        .result-box.active { display: block; border-color: #00ff41; animation: flash 0.5s; }
+
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dotted #003300; padding-bottom: 4px; }
+        .big-val { font-size: 20px; font-weight: bold; color: #ffff00; }
+        
+        .explanation { font-size: 12px; line-height: 1.6; color: #ccc; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; }
+        .highlight { color: #ffff00; }
+
+        @keyframes flash {
+            0% { background-color: #00ff41; color: #000; }
+            100% { background-color: transparent; color: #00ff41; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sunda Nuswantara OS</h1>
+    <div class="subtitle">System Module: Geo-Spatial Truth Calculator v1.0</div>
+
+    <div class="explanation">
+        <p><strong>LOGIKA SISTEM:</strong> Peta dunia konvensional (Globe/Mercator) adalah <span class="highlight">ILUSI OPTIK</span>. Mereka mengecilkan wilayah Khatulistiwa (Pusat) dan membesarkan wilayah Kutub (Pinggiran) karena proyeksi bola.</p>
+        <p>Gunakan kalkulator ini untuk menghitung <strong>LUAS SEBENARNYA</strong> (Realita Peta Cekung/Kuba) berdasarkan jarak wilayah tersebut dari Titik Nol Semesta (Garut).</p>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Input Data Wilayah</h2>
+            
+            <label>Nama Wilayah / Negara</label>
+            <input type="text" id="regionName" placeholder="Contoh: Greenland / Kalimantan">
+
+            <label>Luas Versi Globe (KM Persegi)</label>
+            <input type="number" id="globeArea" placeholder="Cek Google, misal: 2166000">
+            <small style="color:#666; font-size:10px;">*Masukkan angka saja tanpa titik/koma</small>
+
+            <label>Jarak dari Garut (KM)</label>
+            <input type="number" id="distGarut" placeholder="Lihat di Peta Radar, misal: 12000">
+            
+            <button onclick="calculateTruth()">SCAN & RECTIFY</button>
+        </div>
+
+        <div class="card">
+            <h2>Hasil Analisa Dimensi</h2>
+            <div id="outputPanel" style="text-align: center; color: #555; padding-top: 50px;">
+                [MENUNGGU DATA INPUT...]
+            </div>
+
+            <div id="resultBox" class="result-box">
+                <div class="stat-row">
+                    <span>Target:</span>
+                    <span id="resName" style="color:#fff">--</span>
+                </div>
+                <div class="stat-row">
+                    <span>Zona Posisi:</span>
+                    <span id="resZone" style="font-weight:bold;">--</span>
+                </div>
+                <br>
+                <div class="stat-row">
+                    <span>Luas Globe (Ilusi):</span>
+                    <span id="resGlobe">0</span> km²
+                </div>
+                <div class="stat-row">
+                    <span>Faktor Distorsi:</span>
+                    <span id="resFactor" style="color:#ff0055">--</span>
+                </div>
+                <br>
+                <div style="text-align: center;">
+                    <span style="font-size: 10px; color: #88ff88;">LUAS REALITA (KUBA):</span><br>
+                    <span id="resReal" class="big-val">0</span> <span style="font-size:14px">km²</span>
+                </div>
+                <br>
+                <div style="text-align: center; border-top: 1px dashed #004400; padding-top: 10px;">
+                    <span style="font-size: 10px; color: cyan;">KONVERSI UNIT:</span><br>
+                    <span id="resDepa" style="font-size: 16px; color: cyan; font-weight: bold;">0</span> Juta Depa²
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function calculateTruth() {
+            // 1. AMBIL DATA
+            let name = document.getElementById('regionName').value;
+            let areaGlobe = parseFloat(document.getElementById('globeArea').value);
+            let dist = parseFloat(document.getElementById('distGarut').value);
+
+            if (!name || !areaGlobe || !dist) {
+                alert("ERR: Data tidak lengkap. Masukkan semua parameter.");
+                return;
+            }
+
+            // 2. LOGIKA KOREKSI (THE ALGORITHM)
+            let correctionFactor = 1;
+            let zoneName = "";
+            let zoneColor = "";
+
+            if (dist < 3500) {
+                // ZONE 1: SUNDALAND & SEKITARNYA (HIGH LAND)
+                // Di Globe dikecilkan drastis, jadi kita kali lipat.
+                // Semakin dekat Garut (0), semakin padat.
+                correctionFactor = 4.8; 
+                zoneName = "RING 1 (HIGH LAND - PUSAT)";
+                zoneColor = "#ffff00"; // Kuning
+            } else if (dist < 8500) {
+                // ZONE 2: ASIA DARATAN / AFRIKA TENGAH
+                // Relatif stabil, sedikit pembesaran.
+                correctionFactor = 1.25;
+                zoneName = "RING 2 (LERENG DALAM)";
+                zoneColor = "#00ff41"; // Hijau
+            } else {
+                // ZONE 3: EROPA / AMERIKA / RUSIA UTARA (OUTER RIM)
+                // Di Globe dibesarkan gila-gilaan (efek Mercator). Kita potong.
+                correctionFactor = 0.45; // Aslinya cuma 45% dari yg terlihat
+                zoneName = "RING 3 (OUTER RIM - DINDING LUAR)";
+                zoneColor = "#ff0055"; // Merah
+            }
+
+            // 3. HITUNG
+            let realArea = areaGlobe * correctionFactor;
+            // Rumus Depa Persegi: (AreaKM * 1000 * 1000) / (1.6 * 1.6) -> Disederhanakan untuk tampilan "Juta"
+            // Kita pakai konversi visual aja biar enak dilihat
+            let depaArea = (realArea / 1.6); 
+
+            // 4. TAMPILKAN
+            document.getElementById('outputPanel').style.display = 'none';
+            let box = document.getElementById('resultBox');
+            box.style.display = 'block';
+            box.classList.remove('active');
+            void box.offsetWidth; // trigger reflow
+            box.classList.add('active');
+
+            document.getElementById('resName').innerText = name;
+            
+            let zoneEl = document.getElementById('resZone');
+            zoneEl.innerText = zoneName;
+            zoneEl.style.color = zoneColor;
+
+            document.getElementById('resGlobe').innerText = formatNumber(areaGlobe);
+            
+            let factorText = "";
+            if(correctionFactor > 1) {
+                factorText = "DIKECILKAN " + correctionFactor + "x OLEH GLOBALIS";
+            } else {
+                factorText = "DIBESARKAN ILUSI (Realita cuma " + (correctionFactor*100) + "%)";
+            }
+            document.getElementById('resFactor').innerText = factorText;
+
+            document.getElementById('resReal').innerText = formatNumber(Math.round(realArea));
+            document.getElementById('resDepa').innerText = formatNumber((depaArea/1000000).toFixed(2));
+        }
+    </script>
+</body>
+</html>
