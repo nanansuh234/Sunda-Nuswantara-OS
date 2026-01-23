@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Aero-Metric: ULTIMATE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020202;
+            --panel: #0b0b0b;
+            --green: #00ff41;
+            --gold: #ffaa00;
+            --red: #ff0055;
+            --blue: #00ccff;
+            --gray: #333;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--green);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 { margin: 0; color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; }
+        .subtitle { font-size: 11px; color: #888; margin-bottom: 20px; margin-top: 5px; }
+
+        .container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+
+        /* INPUT PANEL */
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--gray);
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column;
+        }
+
+        .section-label { color: #fff; font-size: 12px; border-bottom: 1px dashed #444; margin-bottom: 10px; padding-bottom: 5px; font-weight: bold; }
+
+        select { 
+            width: 100%; background: #000; color: #fff; border: 1px solid var(--green); 
+            padding: 10px; font-family: inherit; font-size: 12px; cursor: pointer; margin-bottom: 15px;
+        }
+        optgroup { color: var(--gold); background: #111; font-style: normal; }
+
+        button {
+            width: 100%; background: var(--red); color: #fff; font-weight: bold;
+            border: none; padding: 15px; cursor: pointer; font-family: inherit; font-size: 16px;
+            transition: 0.2s; text-transform: uppercase; margin-top: 5px;
+        }
+        button:hover { background: #fff; color: #000; box-shadow: 0 0 20px var(--red); }
+
+        /* RESULT BOXES */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; text-align: center; }
+        .stat-box { border: 1px solid #333; padding: 10px; background: rgba(0,0,0,0.3); }
+        .stat-val { font-size: 18px; font-weight: bold; display: block; margin: 5px 0 2px 0; }
+        .stat-lbl { font-size: 9px; color: #aaa; text-transform: uppercase; }
+        .stat-time { font-size: 11px; color: #fff; display: block; border-top: 1px solid #333; margin-top: 5px; padding-top: 3px; }
+
+        .truth-meter {
+            margin-top: 15px;
+            border: 1px solid #333;
+            padding: 15px;
+            text-align: center;
+            display: none;
+            animation: pulse 1s ease-in-out;
+        }
+        @keyframes pulse { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        /* VISUAL CANVAS */
+        .map-container {
+            position: relative;
+            background: #000;
+            border: 1px solid var(--gray);
+            height: 600px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        canvas { width: 100%; height: 100%; cursor: crosshair; }
+
+        .legend {
+            position: absolute; bottom: 10px; right: 10px;
+            background: rgba(0,0,0,0.8); padding: 10px;
+            border: 1px solid #333; font-size: 10px; color: #ccc;
+            pointer-events: none;
+        }
+        .dot { width: 8px; height: 8px; display: inline-block; border-radius: 50%; margin-right: 5px; }
+
+        /* TABLE THE CRACK */
+        .crack-table-container {
+            margin-top: 30px;
+            border-top: 2px solid var(--red);
+            padding-top: 10px;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 10px; }
+        th { text-align: left; color: var(--gold); border-bottom: 1px solid #555; padding: 5px; }
+        td { border-bottom: 1px solid #222; padding: 8px 5px; color: #ddd; }
+        .fake-val { color: var(--blue); opacity: 0.7; }
+        .real-val { color: var(--green); font-weight: bold; }
+        .diff-val { color: var(--red); font-weight: bold; }
+        tr.clickable:hover { background: rgba(255, 255, 255, 0.1); cursor: pointer; }
+
+    </style>
+</head>
+<body>
+
+    <h1>AERO-METRIC REVEALER</h1>
+    <div class="subtitle">ZONA PENERBANGAN: GLOBE ILLUSION VS PLANAR REALITY</div>
+
+    <div class="container">
+        
+        <div class="panel">
+            <div class="section-label">MANUAL SCANNER</div>
+            
+            <label style="font-size:10px; color:#aaa;">BANDARA ASAL (ORIGIN)</label>
+            <select id="originSelect"></select>
+
+            <label style="font-size:10px; color:#aaa;">BANDARA TUJUAN (DESTINATION)</label>
+            <select id="destSelect"></select>
+
+            <button onclick="revealTruth()">SCAN JALUR</button>
+
+            <div id="results" style="display:none;">
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <span class="stat-lbl">KLAIM GLOBE</span>
+                        <span class="stat-val" style="color:var(--blue)" id="resGlobe">0 KM</span>
+                        <span class="stat-time" id="timeGlobe">-- jam</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-lbl">REALITA KUBA</span>
+                        <span class="stat-val" style="color:var(--green)" id="resFlat">0 KM</span>
+                        <span class="stat-time" id="timeFlat">-- jam</span>
+                    </div>
+                </div>
+                <div class="truth-meter" id="truthBox">
+                    <div style="font-size:10px; color:#fff;">TINGKAT KEBOHONGAN (DISTORSI)</div>
+                    <div style="font-size:24px; font-weight:bold; color:var(--red);" id="resDiff">0%</div>
+                    <div style="font-size:10px; color:#aaa; margin-top:5px; line-height:1.3;" id="resMsg">--</div>
+                    <div style="margin-top:10px; padding-top:5px; border-top:1px dashed #444; color:var(--gold); font-weight:bold;" id="resDepa">0 Jt Depa</div>
+                </div>
+            </div>
+
+            <div class="crack-table-container">
+                <div class="section-label" style="color:var(--red); border-color:var(--red);">⚠️ THE BIG CRACK (OUTER RIM)</div>
+                <p style="font-size:10px; color:#888; margin:0;">Klik baris untuk simulasi di atas:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>RUTE MUSTAHIL</th>
+                            <th>GLOBE</th>
+                            <th>REALITA</th>
+                            <th>DISTORSI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="clickable" onclick="autoScan('SCL','SYD')">
+                            <td>CHILE ➔ AUSTRALIA</td>
+                            <td class="fake-val">11.3k</td>
+                            <td class="real-val">25.1k</td>
+                            <td class="diff-val">+121%</td>
+                        </tr>
+                        <tr class="clickable" onclick="autoScan('CPT','SYD')">
+                            <td>AFRIKA ➔ AUSTRALIA</td>
+                            <td class="fake-val">10.9k</td>
+                            <td class="real-val">22.8k</td>
+                            <td class="diff-val">+109%</td>
+                        </tr>
+                        <tr class="clickable" onclick="autoScan('SCL','CPT')">
+                            <td>CHILE ➔ AFRIKA</td>
+                            <td class="fake-val">8.1k</td>
+                            <td class="real-val">18.5k</td>
+                            <td class="diff-val">+128%</td>
+                        </tr>
+                        <tr class="clickable" onclick="autoScan('EZE','SYD')">
+                            <td>ARGENTINA ➔ AUS</td>
+                            <td class="fake-val">11.8k</td>
+                            <td class="real-val">26.2k</td>
+                            <td class="diff-val">+122%</td>
+                        </tr>
+                         <tr class="clickable" onclick="autoScan('AKL','SCL')">
+                            <td>N.ZEALAND ➔ CHILE</td>
+                            <td class="fake-val">9.7k</td>
+                            <td class="real-val">21.5k</td>
+                            <td class="diff-val">+120%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <canvas id="mapCanvas"></canvas>
+            
+            <div class="legend">
+                <div><span class="dot" style="background:var(--gold)"></span> RING 1 (PUSAT)</div>
+                <div><span class="dot" style="background:var(--green)"></span> RING 2 (STABIL)</div>
+                <div><span class="dot" style="background:var(--red)"></span> RING 3 (OUTER RIM)</div>
+                <hr style="border:0; border-top:1px solid #444; margin:5px 0;">
+                <div><span style="color:var(--green)">━━━</span> Jarak Asli (Peta Datar)</div>
+                <div><span style="color:var(--blue)">- - -</span> Ilusi Globe (Lengkung)</div>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    // --- DATABASE ---
+    const airports = [
+        // RING 1
+        { cat: "PUSAT (High Land)", list: [
+            { id: "CGK", name: "Jakarta", lat: -6.12, lon: 106.65, type: 1 },
+            { id: "SUB", name: "Surabaya", lat: -7.37, lon: 112.78, type: 1 },
+            { id: "SIN", name: "Singapore", lat: 1.36, lon: 103.99, type: 1 },
+            { id: "BKK", name: "Bangkok", lat: 13.69, lon: 100.75, type: 1 }
+        ]},
+        // RING 2
+        { cat: "LERENG (Stabilized)", list: [
+            { id: "HND", name: "Tokyo", lat: 35.54, lon: 139.77, type: 2 },
+            { id: "DXB", name: "Dubai", lat: 25.25, lon: 55.36, type: 2 },
+            { id: "JED", name: "Mekkah/Jeddah", lat: 21.68, lon: 39.15, type: 2 },
+            { id: "PEK", name: "Beijing", lat: 40.07, lon: 116.60, type: 2 }
+        ]},
+        // RING 3 (OUTER)
+        { cat: "OUTER RIM (North)", list: [
+            { id: "LHR", name: "London", lat: 51.47, lon: -0.45, type: 3 },
+            { id: "JFK", name: "New York", lat: 40.64, lon: -73.77, type: 3 },
+            { id: "SVO", name: "Moscow", lat: 55.97, lon: 37.41, type: 3 }
+        ]},
+        // RING 3 (DEEP SOUTH)
+        { cat: "OUTER RIM (South - KRITIS)", list: [
+            { id: "SYD", name: "Sydney (AUS)", lat: -33.93, lon: 151.17, type: 3 },
+            { id: "AKL", name: "Auckland (NZ)", lat: -37.00, lon: 174.78, type: 3 },
+            { id: "CPT", name: "Cape Town (RSA)", lat: -33.97, lon: 18.60, type: 3 },
+            { id: "SCL", name: "Santiago (CHI)", lat: -33.39, lon: -70.78, type: 3 },
+            { id: "EZE", name: "Buenos Aires (ARG)", lat: -34.81, lon: -58.53, type: 3 },
+            { id: "GIG", name: "Rio De Janeiro (BRA)", lat: -22.81, lon: -43.24, type: 3 }
+        ]}
+    ];
+
+    const CENTER_LAT = -7.2278; 
+    const CENTER_LON = 107.9087;
+    const AVG_SPEED = 900; // km/h
+
+    // --- INIT ---
+    const oSel = document.getElementById('originSelect');
+    const dSel = document.getElementById('destSelect');
+    let flatData = [];
+
+    airports.forEach(g => {
+        let grp = document.createElement('optgroup'); grp.label = g.cat;
+        let grp2 = document.createElement('optgroup'); grp2.label = g.cat;
+        g.list.forEach(a => {
+            flatData.push(a);
+            let o = document.createElement('option'); o.value = a.id; o.innerText = a.name;
+            grp.appendChild(o);
+            let o2 = document.createElement('option'); o2.value = a.id; o2.innerText = a.name;
+            grp2.appendChild(o2);
+        });
+        oSel.appendChild(grp); dSel.appendChild(grp2);
+    });
+
+    // Default
+    oSel.value = "SCL"; dSel.value = "SYD";
+
+    const canvas = document.getElementById('mapCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, CX, CY;
+
+    function resize() {
+        W = canvas.parentElement.offsetWidth;
+        H = canvas.parentElement.offsetHeight;
+        canvas.width = W; canvas.height = H;
+        CX = W/2; CY = H/2;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // --- MATH ---
+    function getGlobeDist(lat1, lon1, lat2, lon2) {
+        const R = 6371; 
+        const dLat = (lat2-lat1)*Math.PI/180;
+        const dLon = (lon2-lon1)*Math.PI/180;
+        const a = Math.sin(dLat/2)*Math.sin(dLat/2) +
+                  Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)*Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function getFlatPoint(lat, lon) {
+        const r = getGlobeDist(CENTER_LAT, CENTER_LON, lat, lon);
+        let angleDeg = (lon - CENTER_LON);
+        let angleRad = (angleDeg - 90) * Math.PI / 180; 
+        return { x: r * Math.cos(angleRad), y: r * Math.sin(angleRad), r: r };
+    }
+
+    function formatTime(dist) {
+        let hours = dist / AVG_SPEED;
+        let h = Math.floor(hours);
+        let m = Math.round((hours - h) * 60);
+        return `${h}j ${m}m`;
+    }
+
+    // --- ACTIONS ---
+    function autoScan(orig, dest) {
+        oSel.value = orig;
+        dSel.value = dest;
+        revealTruth();
+        // Scroll to top mobile friendly
+        document.querySelector('.panel').scrollIntoView({behavior: 'smooth'});
+    }
+
+    function revealTruth() {
+        const p1 = flatData.find(x => x.id === oSel.value);
+        const p2 = flatData.find(x => x.id === dSel.value);
+        if(p1.id === p2.id) return alert("Pilih lokasi berbeda");
+
+        const dGlobe = getGlobeDist(p1.lat, p1.lon, p2.lat, p2.lon);
+        const fp1 = getFlatPoint(p1.lat, p1.lon);
+        const fp2 = getFlatPoint(p2.lat, p2.lon);
+        const dFlat = Math.sqrt(Math.pow(fp2.x-fp1.x, 2) + Math.pow(fp2.y-fp1.y, 2));
+
+        // UI UPDATE
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('resGlobe').innerText = format(dGlobe) + " KM";
+        document.getElementById('resFlat').innerText = format(dFlat) + " KM";
+
+        // TIME UPDATE
+        document.getElementById('timeGlobe').innerText = "Estimasi: " + formatTime(dGlobe);
+        document.getElementById('timeFlat').innerText = "Estimasi: " + formatTime(dFlat);
+
+        const diff = dFlat - dGlobe;
+        const perc = (diff / dGlobe) * 100;
+        const depa = (dFlat * 625) / 1000000;
+
+        document.getElementById('resDiff').innerText = (perc>0?"+":"") + perc.toFixed(0) + "%";
+        document.getElementById('resDepa').innerText = depa.toFixed(2) + " Juta Depa";
+
+        const msgBox = document.getElementById('resMsg');
+        const meter = document.getElementById('truthBox');
+        
+        if(perc > 80) {
+            meter.style.borderColor = "#ff0055";
+            document.getElementById('resDiff').style.color = "#ff0055";
+            msgBox.innerText = "MUSTAHIL TERBANG LURUS. Durasi terbang realita hampir 2x lipat. Ini alasan kenapa rute selatan selalu transit ke utara (Dubai/Singapura).";
+        } else if(perc > 20) {
+            meter.style.borderColor = "#ffaa00";
+            document.getElementById('resDiff').style.color = "#ffaa00";
+            msgBox.innerText = "DISTORSI WAKTU. Pesawat akan telat signifikan jika pilot menggunakan asumsi Globe.";
+        } else {
+            meter.style.borderColor = "#00ff41";
+            document.getElementById('resDiff').style.color = "#00ff41";
+            msgBox.innerText = "WAJAR. Durasi terbang sesuai standar internasional.";
+        }
+
+        drawMap(fp1, fp2, p1, p2);
+    }
+
+    function drawMap(start, end, p1, p2) {
+        ctx.fillStyle = "#020202"; ctx.fillRect(0,0,W,H);
+        
+        // Auto scale logic
+        const maxDist = Math.max(start.r, end.r, 10000);
+        const scale = Math.min(W, H) / 2 / (maxDist * 1.3);
+
+        ctx.save();
+        ctx.translate(CX, CY);
+        ctx.scale(scale, scale);
+
+        // GRID RINGS
+        ctx.lineWidth = 100;
+        ctx.strokeStyle = "#333";
+        ctx.beginPath(); ctx.arc(0,0, 5000, 0, 7); ctx.stroke(); // 5000km
+        ctx.beginPath(); ctx.arc(0,0, 10000, 0, 7); ctx.stroke(); // 10000km
+        ctx.strokeStyle = "rgba(255, 0, 85, 0.3)";
+        ctx.beginPath(); ctx.arc(0,0, 20000, 0, 7); ctx.stroke(); // ICE WALL
+
+        // CENTER
+        ctx.fillStyle = "#ffff00"; ctx.beginPath(); ctx.arc(0,0, 300, 0, 7); ctx.fill();
+
+        // POINTS
+        ctx.fillStyle = getColor(p1.type); ctx.beginPath(); ctx.arc(start.x, start.y, 400, 0, 7); ctx.fill();
+        ctx.fillStyle = getColor(p2.type); ctx.beginPath(); ctx.arc(end.x, end.y, 400, 0, 7); ctx.fill();
+
+        // LINE: REAL
+        ctx.strokeStyle = "#00ff41"; ctx.lineWidth = 150; ctx.setLineDash([]);
+        ctx.beginPath(); ctx.moveTo(start.x, start.y); ctx.lineTo(end.x, end.y); ctx.stroke();
+
+        // LINE: GLOBE FAKE
+        ctx.strokeStyle = "#00ccff"; ctx.lineWidth = 100; ctx.setLineDash([400, 400]);
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y);
+        ctx.quadraticCurveTo(0, 0, end.x, end.y); // Curve to center
+        ctx.stroke();
+
+        // TEXT
+        ctx.fillStyle = "#fff"; ctx.font = "1500px monospace";
+        ctx.fillText(p1.id, start.x + 600, start.y);
+        ctx.fillText(p2.id, end.x + 600, end.y);
+
+        ctx.restore();
+    }
+
+    function getColor(t) { return t==1?"#ffff00" : t==2?"#00ff41" : "#ff0055"; }
+    function format(n) { return n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+    
+    // Auto run first
+    revealTruth();
+</script>
+</body>
+</html>

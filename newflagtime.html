@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT: CHRONO-HACK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --term-green: #00ff41;
+            --term-red: #ff0055;
+            --term-gold: #ffaa00;
+            --glass: rgba(0, 20, 0, 0.8);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #ddd;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 40px;
+            background-image: radial-gradient(circle at 50% 50%, #111 0%, #000 80%);
+            min-height: 100vh;
+        }
+
+        h1 { color: var(--term-red); border-bottom: 2px solid var(--term-red); display: inline-block; padding-bottom: 5px; letter-spacing: 2px; }
+        .classified-stamp {
+            border: 2px solid var(--term-red);
+            color: var(--term-red);
+            padding: 5px 10px;
+            font-size: 12px;
+            display: inline-block;
+            transform: rotate(-5deg);
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        @media(max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+        /* CARD STYLE */
+        .dossier {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid #333;
+            padding: 25px;
+            position: relative;
+        }
+        .dossier::before {
+            content: "TOP SECRET // EYES ONLY";
+            position: absolute; top: -10px; left: 20px;
+            background: var(--bg); color: #555; font-size: 10px; padding: 0 5px;
+        }
+
+        h2 { color: var(--term-green); margin-top: 0; font-size: 18px; border-left: 3px solid var(--term-green); padding-left: 10px; }
+        p { font-size: 13px; line-height: 1.6; color: #ccc; }
+        
+        .highlight { color: var(--term-gold); font-weight: bold; }
+        .danger { color: var(--term-red); font-weight: bold; }
+
+        /* VISUALISASI JAM */
+        .clock-container {
+            position: relative;
+            width: 300px; height: 300px;
+            margin: 20px auto;
+            border-radius: 50%;
+            border: 1px dashed #444;
+            background: #000;
+        }
+        
+        /* Matahari */
+        .sun-hand {
+            position: absolute; top: 50%; left: 50%;
+            width: 140px; height: 2px;
+            background: linear-gradient(90deg, transparent 0%, var(--term-gold) 100%);
+            transform-origin: left center;
+            z-index: 2;
+        }
+        .sun-orb {
+            position: absolute; right: -10px; top: -5px;
+            width: 12px; height: 12px; background: var(--term-gold);
+            border-radius: 50%; box-shadow: 0 0 15px var(--term-gold);
+        }
+
+        /* Peta Mini */
+        .mini-map {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-radial-gradient(#001100 0, #001100 20px, #002200 21px);
+            border-radius: 50%; opacity: 0.5;
+        }
+
+        /* Zona Irisan (GMT) */
+        .gmt-slice {
+            position: absolute; top: 50%; left: 50%;
+            width: 150px; height: 150px;
+            border-right: 1px solid rgba(0, 204, 255, 0.3);
+            transform-origin: top left;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="classified-stamp">DE-CLASSIFIED: NUSWANTARA OS</div>
+    <br>
+    <h1>THE CHRONO-HACK: BONGKAR MANIPULASI WAKTU</h1>
+    <p>Dokumen ini menjelaskan bagaimana Sistem Waktu Global (GMT) dirancang untuk menutupi distorsi jarak di Outer Rim (Selatan).</p>
+
+    <div class="grid">
+        
+        <div class="dossier">
+            <h2>1. ALIBI "JET LAG"</h2>
+            <p>Sistem medis modern menciptakan istilah <span class="highlight">JET LAG</span> untuk merasionalisasi kelelahan ekstrem penumpang rute jauh.</p>
+            <ul style="font-size:13px; color:#aaa;">
+                <li><strong>Narasi Resmi:</strong> "Jam biologis tubuh bingung karena pindah zona waktu."</li>
+                <li><strong>Realita Kuba:</strong> "Tubuh lelah karena menempuh jarak fisik <span class="danger">2X LIPAT</span> dari yang tertera di tiket."</li>
+            </ul>
+            <p>Jika lo terbang dari Chile ke Australia, tiket bilang 12 jam. Realitanya lo butuh 20+ jam. Selisih energi yang hilang itu dilabeli sebagai "Jet Lag".</p>
+        </div>
+
+        <div class="dossier">
+            <h2>2. JEBAKAN TRANSIT (THE RESET)</h2>
+            <p>Kenapa jarang ada penerbangan <span class="highlight">DIRECT</span> antar benua selatan?</p>
+            <p>Penumpang selalu dipaksa transit ke Utara/Tengah (Dubai, Doha, Singapura). Ini adalah teknik <span class="danger">TIME WASHING</span>.</p>
+            <p>Saat transit, penumpang disuruh "reset jam tangan", tidur di lounge, dan ganti suasana. Ini memutus persepsi durasi. Jika mereka terbang lurus (tanpa transit), mereka akan sadar pesawat terbang terlalu lama untuk jarak yang "katanya" dekat.</p>
+        </div>
+
+        <div class="dossier">
+            <h2>3. VISUALISASI: IRISAN VS PUTARAN</h2>
+            <div style="text-align: center; font-size: 11px; margin-bottom: 10px;">
+                <span style="color:var(--term-gold)">● POSISI MATAHARI (REAL)</span> vs 
+                <span style="color:#00ccff">| JAM ZONA (GMT)</span>
+            </div>
+
+            <div class="clock-container" id="clockVis">
+                <div class="mini-map"></div>
+                <div class="sun-hand" id="sunHand"><div class="sun-orb"></div></div>
+                <div class="gmt-slice" style="transform: rotate(0deg)"></div>
+                <div class="gmt-slice" style="transform: rotate(30deg)"></div>
+                <div class="gmt-slice" style="transform: rotate(60deg)"></div>
+                <div class="gmt-slice" style="transform: rotate(90deg)"></div>
+                <div class="gmt-slice" style="transform: rotate(120deg)"></div>
+                <div class="gmt-slice" style="transform: rotate(150deg)"></div>
+                
+                <div style="position:absolute; top:45%; left:45%; color:#fff; font-size:10px;">PUSAT</div>
+                <div style="position:absolute; bottom:10px; right:40%; color:var(--term-red); font-size:10px;">OUTER RIM</div>
+            </div>
+
+            <div style="background:#222; padding:10px; border-left:3px solid var(--term-red);">
+                <strong>HACK EXPLAINED:</strong><br>
+                Di Outer Rim (Pinggir), jarak antar garis jam (GMT) di peta Globe itu sempit. Tapi di realita (Peta Datar), jaraknya SANGAT LEBAR.<br><br>
+                Akibatnya: <span class="danger">Matahari "terasa" bergerak lebih cepat/lambat</span> tidak sinkron dengan jam tangan lo. Inilah kenapa zona waktu di Selatan sering terasa "aneh" (Maghrib kecepetan atau kepagian drastis).
+            </div>
+        </div>
+
+        <div class="dossier">
+            <h2>4. KESIMPULAN</h2>
+            <p>Mereka tidak bisa mengubah bentuk bumi, jadi mereka <span class="highlight">MENGUBAH JAM TANGAN LO</span>.</p>
+            <p>Sistem Waktu 24 Jam GMT adalah "Software Patch" untuk menutupi bug pada "Hardware" (Bentuk Bumi) yang tidak sesuai dengan model Globe.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Animasi Matahari Muter buat efek visual
+        const sun = document.getElementById('sunHand');
+        let deg = 0;
+        setInterval(() => {
+            deg += 1;
+            sun.style.transform = `translateY(-50%) rotate(${deg}deg)`;
+        }, 50);
+    </script>
+
+</body>
+</html>
