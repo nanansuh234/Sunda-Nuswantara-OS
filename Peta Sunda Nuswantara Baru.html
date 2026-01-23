@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSWANTARA: THE HIDDEN GIANT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #0f0f0f;
+            --green: #00ff41;
+            --gold: #ffaa00;
+            --red: #ff0055;
+            --blue: #00ccff;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--green);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { margin: 0; color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 10px; letter-spacing: 2px; text-transform: uppercase; }
+        .subtitle { font-size: 12px; color: #888; margin-top: 5px; margin-bottom: 30px; }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--panel);
+            border: 1px solid #333;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px 10px;
+            border-bottom: 2px solid #444;
+            color: var(--gold);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #222;
+            vertical-align: middle;
+        }
+
+        tr:hover { background: rgba(255, 255, 255, 0.05); }
+
+        /* VISUAL BAR */
+        .bar-container {
+            width: 100%;
+            height: 6px;
+            background: #222;
+            margin-top: 5px;
+            position: relative;
+            border-radius: 3px;
+        }
+        
+        .bar-globe {
+            height: 100%;
+            background: var(--blue);
+            opacity: 0.5;
+            position: absolute; top: 0; left: 0;
+            border-radius: 3px 0 0 3px;
+        }
+        
+        .bar-kuba {
+            height: 100%;
+            background: var(--green);
+            position: absolute; top: 0; left: 0;
+            box-shadow: 0 0 5px var(--green);
+            border-radius: 3px;
+            opacity: 0.8;
+            z-index: 2;
+        }
+
+        .island-name { font-size: 16px; font-weight: bold; color: #fff; }
+        .island-desc { font-size: 10px; color: #888; }
+
+        .val-globe { color: var(--blue); text-decoration: line-through; font-size: 12px; }
+        .val-real { color: var(--green); font-size: 18px; font-weight: bold; }
+        .val-depa { color: var(--gold); font-size: 12px; }
+        
+        .correction-badge {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 2px 6px;
+            font-size: 10px;
+            border-radius: 4px;
+        }
+
+        .total-row {
+            background: rgba(0, 255, 65, 0.05);
+            border-top: 2px solid var(--green);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>NUSWANTARA: THE HIDDEN GIANT</h1>
+    <div class="subtitle">PERBANDINGAN LUAS DARATAN: ILUSI MERCATOR VS REALITA AZIMUTHAL (RING 1)</div>
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th width="25%">PULAU UTAMA</th>
+                    <th width="20%">LUAS GLOBE (KM²)</th>
+                    <th width="25%">LUAS KUBA (KM²)</th>
+                    <th width="20%">UKURAN DEPA</th>
+                    <th width="10%">KOREKSI</th>
+                </tr>
+            </thead>
+            <tbody id="islandTable">
+                </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="2" style="text-align:right; color:#888;">TOTAL LUAS DARATAN UTAMA:</td>
+                    <td class="val-real" id="totalReal">0 KM²</td>
+                    <td class="val-depa" id="totalDepa">0 Jt Depa²</td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div style="margin-top: 20px; font-size: 11px; color: #666; padding: 10px; border: 1px dashed #333;">
+            <strong>CATATAN SISTEM:</strong><br>
+            * Faktor Koreksi Ring 1 (Pusat) = <strong>4.8x</strong> (Globe mengecilkan Khatulistiwa agar muat di bola).<br>
+            * Bar Grafik: <span style="color:var(--blue)">BIRU (Globe)</span> vs <span style="color:var(--green)">HIJAU (Realita)</span>.<br>
+            * Indonesia di Peta Kuba adalah <strong>BENUA</strong>, bukan sekadar negara kepulauan.
+        </div>
+    </div>
+
+<script>
+    // DATA BASE (Angka Globe diambil dari data umum Google/Wiki)
+    const islands = [
+        { 
+            name: "KALIMANTAN", 
+            desc: "The Heart / Jantung Benua", 
+            globe: 743330 
+        },
+        { 
+            name: "SUMATERA", 
+            desc: "The Gold Land (Swarnadwipa)", 
+            globe: 473481 
+        },
+        { 
+            name: "PAPUA", 
+            desc: "The Eastern Gate / Gerbang Timur", 
+            globe: 786000 // Termasuk PNG (Satu pulau utuh)
+        },
+        { 
+            name: "SULAWESI", 
+            desc: "The Iron Orchid", 
+            globe: 174600 
+        },
+        { 
+            name: "JAWA", 
+            desc: "The Anchor Point (Garut Core)", 
+            globe: 128297 
+        }
+    ];
+
+    // FAKTOR KOREKSI RING 1
+    const FACTOR = 4.8; 
+    // KONVERSI DEPA (1 KM = 625 Depa Linear -> Area butuh rumus kuadratik sederhana visual)
+    // Kita pakai konversi "Juta Unit" visual
+    const DEPA_CONV = 1.6;
+
+    const tbody = document.getElementById('islandTable');
+    let totalR = 0;
+    let totalD = 0;
+
+    // FIND MAX FOR BAR CHART SCALE
+    // Papua Realita akan jadi patokan 100% bar width visual
+    const maxVal = 786000 * FACTOR; 
+
+    islands.forEach(isl => {
+        let realArea = isl.globe * FACTOR;
+        let depaArea = (realArea / 1.6) / 1000000; // Juta Depa Persegi
+
+        totalR += realArea;
+        totalD += depaArea;
+
+        // Hitung % Bar
+        let pctGlobe = (isl.globe / maxVal) * 100;
+        let pctReal = (realArea / maxVal) * 100;
+
+        let row = `
+            <tr>
+                <td>
+                    <div class="island-name">${isl.name}</div>
+                    <div class="island-desc">${isl.desc}</div>
+                </td>
+                <td>
+                    <span class="val-globe">${format(isl.globe)}</span>
+                    <div class="bar-container">
+                        <div class="bar-globe" style="width:${pctGlobe * 5}%"></div> 
+                        </div>
+                </td>
+                <td>
+                    <span class="val-real">${format(realArea)}</span>
+                    <div class="bar-container">
+                        <div class="bar-kuba" style="width:${pctReal}%"></div>
+                    </div>
+                </td>
+                <td>
+                    <span class="val-depa">${depaArea.toFixed(2)} Juta²</span>
+                </td>
+                <td>
+                    <span class="correction-badge">EXPAND 4.8x</span>
+                </td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+
+    // UPDATE FOOTER
+    document.getElementById('totalReal').innerText = format(totalR) + " KM²";
+    document.getElementById('totalDepa').innerText = totalD.toFixed(2) + " Jt Depa²";
+
+    function format(n) {
+        return n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+</script>
+</body>
+</html>
