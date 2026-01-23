@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sunda Nuswantara OS</title>
+    <title>Sunda Nuswantara OS v3.1 (Fixed)</title>
     <style>
         :root {
             --bg-color: #050505;
             --card-bg: #111;
             --border: #333;
             --text-main: #00ff41; /* Hacker Green */
-            --text-dim: #008f11;
             --accent: #00ff41;
-            --danger: #ff3333;
-            --nav: #00bcd4;
-            --eng: #ff9800;
+            --bio-color: #d4af37; /* Gold */
+            --time-gold: #ffb700; /* Warna Jam Cakra */
+            --date-blue: #38bdf8; /* Warna Tanggal Pasaran */
         }
 
         body {
@@ -36,7 +35,7 @@
             align-items: center;
         }
 
-        h1 {
+        .brand-section h1 {
             margin: 0;
             font-size: 1.5rem;
             letter-spacing: 2px;
@@ -44,13 +43,46 @@
             text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
         }
 
+        /* --- TAMPILAN JAM UTAMA (STYLE BARU) --- */
         .sys-info {
-            font-size: 0.8rem;
-            color: var(--text-dim);
             text-align: right;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        /* Categories Filter */
+        .clock-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            line-height: 1.2;
+        }
+
+        .time-cakra {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--time-gold);
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(255, 183, 0, 0.4);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .date-sunda {
+            font-size: 0.95rem;
+            color: var(--date-blue);
+            font-weight: 600;
+            margin-top: 2px;
+            text-transform: capitalize;
+        }
+
+        .time-masehi {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 5px;
+            border-top: 1px solid #222;
+            padding-top: 2px;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* Filter & Grid */
         .filter-bar {
             display: flex;
             gap: 10px;
@@ -78,15 +110,19 @@
             color: var(--accent);
             background: rgba(0, 255, 65, 0.1);
         }
+        
+        .filter-btn.bio-btn:hover, .filter-btn.bio-btn.active {
+            border-color: var(--bio-color);
+            color: var(--bio-color);
+            background: rgba(212, 175, 55, 0.1);
+        }
 
-        /* Grid Layout */
         .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 15px;
         }
 
-        /* App Card */
         .app-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -111,26 +147,17 @@
             box-shadow: 0 5px 15px rgba(0, 255, 65, 0.2);
         }
 
-        .icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
-        }
+        .icon { font-size: 2.5rem; margin-bottom: 10px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+        .label { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
 
-        .label {
-            font-size: 0.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        /* Color Coding by Category */
+        /* Kategori Warna */
         .cat-comms { border-top: 3px solid #d0f; }
         .cat-sensor { border-top: 3px solid #0ff; }
         .cat-nav { border-top: 3px solid #ff0; }
         .cat-eng { border-top: 3px solid #f90; }
         .cat-sec { border-top: 3px solid #f00; }
+        .cat-bio { border-top: 3px solid var(--bio-color); color: #ffeeb0; }
 
-        /* Footer */
         footer {
             margin-top: 50px;
             text-align: center;
@@ -139,45 +166,54 @@
             border-top: 1px solid #111;
             padding-top: 10px;
         }
-
     </style>
 </head>
 <body>
 
     <header>
-        <div>
+        <div class="brand-section">
             <h1>Multi Tools Sunda OS</h1>
-            <div style="font-size: 0.7rem; color: #666;">v1.0.4 [OFFLINE MODE]</div>
+            <div style="font-size: 0.7rem; color: #666;">v3.1 [SYSTEM RESTORED]</div>
         </div>
         <div class="sys-info">
-            <div id="clock">00:00</div>
-            <div>BATT: <span id="batt">--%</span></div>
+            <div class="clock-box" id="status-panel">
+                <div class="time-cakra">--:--:--</div>
+                <div class="date-sunda">Loading System...</div>
+                <div class="time-masehi">...</div>
+            </div>
         </div>
     </header>
 
     <div class="filter-bar">
         <button class="filter-btn active" onclick="filterApps('all')">ALL SYSTEMS</button>
+        <button class="filter-btn bio-btn" onclick="filterApps('cat-bio')">BIO-FREQUENCY</button>
         <button class="filter-btn" onclick="filterApps('cat-eng')">ENGINEERING</button>
         <button class="filter-btn" onclick="filterApps('cat-sensor')">SENSORS</button>
         <button class="filter-btn" onclick="filterApps('cat-comms')">COMMS</button>
-        <button class="filter-btn" onclick="filterApps('cat-nav')">NAV & FIELD</button>
         <button class="filter-btn" onclick="filterApps('cat-sec')">SECURITY</button>
     </div>
 
-    <div class="app-grid" id="grid">
-        </div>
+    <div class="app-grid" id="grid"></div>
 
     <footer>
         &copy; 2026 SUNDA NUSWANTARA SURVIVAL SYSTEMS
     </footer>
 
     <script>
-        // --- DATA APLIKASI ---
-        // Pastikan nama file (url) SAMA PERSIS dengan file yang lu save
+        // --- DATABASE APLIKASI ---
         const tools = [
+            // BIO MODULE
+            { url: 'Brown Noise.html', label: 'Anti-Resonance', icon: '🛡️', cat: 'cat-bio' },
+            { url: 'Schumann Resonance Generator (7.83 Hz).html', label: 'Earth Pulse', icon: '🌍', cat: 'cat-bio' },
+            { url: 'Pendamping Air Doa.html', label: 'Water Charger', icon: '💧', cat: 'cat-bio' },
+            { url: 'Frequency of Gods.html', label: '963Hz God Freq', icon: '✨', cat: 'cat-bio' },
+            { url: 'Decalcify Pineal Gland.html', label: 'Pineal Decalc', icon: '🧠', cat: 'cat-bio' },
+            { url: 'Cymatic Organ with Live Sound Wave.html', label: 'Cymatic Gen', icon: '🌀', cat: 'cat-bio' },
+            { url: 'Cymatic Organ Pineal Activator Edition.html', label: 'Tartarian Cyma', icon: '💠', cat: 'cat-bio' },
+            // SURVIVAL MODULE
             { url: 'kalkulator.html', label: 'Scientific Calc', icon: '🧮', cat: 'cat-eng' },
             { url: 'multi converter.html', label: 'Unit Converter', icon: '⚖️', cat: 'cat-eng' },
-            { url: 'freq gen.html', label: 'Freq Generator', icon: '〰️', cat: 'cat-sensor' },
+            { url: 'freq gen.html', label: 'Signal Gen', icon: '〰️', cat: 'cat-sensor' },
             { url: 'spectrum_analyzer.html', label: 'Spectrum Eye', icon: '👁️', cat: 'cat-sensor' },
             { url: 'seismometer.html', label: 'Vibro Analyzer', icon: '📉', cat: 'cat-sensor' },
             { url: 'sentry cctv.html', label: 'Sentry Watch', icon: '📹', cat: 'cat-sec' },
@@ -187,9 +223,91 @@
             { url: 'rangefinder.html', label: 'Sniper Scope', icon: '🔭', cat: 'cat-nav' }
         ];
 
-        const grid = document.getElementById('grid');
+        // --- 1. LOGIKA JAM (Cakra) ---
+        function getNuswantaraClock(now) {
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
 
-        // Render Icons
+            // 12 Jam Masehi = 8 Jam Nuswantara
+            let mTotalMin = ((h % 12) * 60) + m + (s/60);
+            let nTotalHours = mTotalMin / 90;
+            
+            let dHour = Math.floor(nTotalHours) || 8; 
+            let dMin = Math.floor((nTotalHours % 1) * 90);
+            let dSec = Math.floor(((nTotalHours * 90) % 1) * 60);
+
+            // Padding 0
+            const fH = String(dHour).padStart(2, '0');
+            const fM = String(dMin).padStart(2, '0');
+            const fS = String(dSec).padStart(2, '0');
+
+            return `${fH}:${fM}:${fS}`;
+        }
+
+        // --- 2. LOGIKA KALENDER (Fix Tahun 001) ---
+        const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+        const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+        
+        // Config Tahun Era Baru
+        const yearConfig = {
+            "2025": { label: "001" },
+            "2026": { label: "002" },
+            "2027": { label: "003" }
+        };
+
+        function getNuswantaraDate(now) {
+            const yr = now.getFullYear();
+            
+            // Anchor: Tahun Baru adalah 21 Maret
+            let anchor = new Date(yr, 2, 21); 
+            
+            // FIX: Jika tanggal sekarang < 21 Maret, berarti masih ikut tahun sebelumnya
+            if (now < anchor) {
+                anchor = new Date(yr - 1, 2, 21);
+            }
+            
+            // Hitung selisih hari
+            let diff = Math.floor((now - anchor) / 86400000);
+            
+            // Hitung Bulan (1 Bulan = 28 Hari)
+            let nMonthIdx = Math.floor(diff / 28);
+            let nDate = (diff % 28) + 1;
+            if (nMonthIdx > 12) nMonthIdx = 12;
+
+            // Hitung Pasaran
+            let totalDays = ((yr - 2025) * 365) + diff; 
+            if (yr < 2025) totalDays = diff;
+            let pIdx = (2 + (totalDays % 5)) % 5;
+            if (pIdx < 0) pIdx += 5;
+
+            // FIX: Ambil Label Tahun dari ANCHOR, bukan tahun sekarang
+            let anchorYear = anchor.getFullYear(); // Ini bakal dapet 2025 kalau sekarang Jan 2026
+            let eraYear = yearConfig[String(anchorYear)] ? yearConfig[String(anchorYear)].label : "---";
+
+            return `${pasarans[pIdx]}, ${nDate} ${months[nMonthIdx]} ${eraYear}`;
+        }
+
+        // --- MAIN UPDATE LOOP ---
+        function updateSystem() {
+            const now = new Date();
+            
+            const nusClock = getNuswantaraClock(now);
+            const nusDate = getNuswantaraDate(now);
+            const masehi = now.toLocaleDateString('id-ID', { 
+                weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' 
+            }) + " " + now.toLocaleTimeString('id-ID', {hour12: false});
+
+            const panel = document.getElementById('status-panel');
+            panel.innerHTML = `
+                <div class="time-cakra">${nusClock}</div>
+                <div class="date-sunda">${nusDate}</div>
+                <div class="time-masehi">${masehi}</div>
+            `;
+        }
+
+        // --- RENDER APPS ---
+        const grid = document.getElementById('grid');
         function render(filter) {
             grid.innerHTML = '';
             tools.forEach(tool => {
@@ -197,44 +315,20 @@
                     const a = document.createElement('a');
                     a.href = tool.url;
                     a.className = `app-card ${tool.cat}`;
-                    a.innerHTML = `
-                        <div class="icon">${tool.icon}</div>
-                        <div class="label">${tool.label}</div>
-                    `;
+                    a.innerHTML = `<div class="icon">${tool.icon}</div><div class="label">${tool.label}</div>`;
                     grid.appendChild(a);
                 }
             });
         }
-
-        // Filter Logic
         function filterApps(category) {
-            // Visual Active State
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
-            
             render(category);
         }
 
-        // System Clock & Battery
-        function updateStatus() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
-        setInterval(updateStatus, 1000);
-        updateStatus();
-
-        // Battery Status (Modern Browsers)
-        if ('getBattery' in navigator) {
-            navigator.getBattery().then(batt => {
-                const updateBatt = () => {
-                    document.getElementById('batt').innerText = Math.round(batt.level * 100) + "%";
-                };
-                updateBatt();
-                batt.addEventListener('levelchange', updateBatt);
-            });
-        }
-
-        // Initial Render
+        // INIT
+        setInterval(updateSystem, 1000);
+        updateSystem();
         render('all');
 
     </script>
