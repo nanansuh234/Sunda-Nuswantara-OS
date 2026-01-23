@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Mainframe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020202;
+            --green: #00ff41;
+            --gold: #ffaa00;
+            --red: #ff0055;
+            --glass: rgba(0, 20, 0, 0.9);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--green);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, #0a1a0a 0%, #000 70%);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        h1 { font-size: 32px; color: var(--gold); margin: 0; text-shadow: 0 0 20px var(--gold); letter-spacing: 4px; }
+        .subtitle { color: #888; font-size: 12px; margin-top: 5px; }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .panel-group {
+            margin-bottom: 20px;
+        }
+
+        .group-title {
+            color: #fff;
+            border-left: 4px solid var(--red);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 4px;
+            transition: 0.3s;
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--green);
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .card h3 { margin: 0 0 5px 0; color: var(--green); font-size: 16px; }
+        .card p { margin: 0; font-size: 11px; color: #aaa; line-height: 1.4; }
+        .card .status { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; border-radius: 50%; background: #333; }
+        .card:hover .status { background: var(--green); box-shadow: 0 0 10px var(--green); }
+
+        /* Icon sederhana menggunakan text */
+        .icon { font-size: 24px; display: block; margin-bottom: 10px; color: var(--gold); }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>NUSWANTARA OS</h1>
+        <div class="subtitle">SYSTEM INTERFACE: GARUT ANCHOR POINT [ACTIVE]</div>
+    </header>
+
+    <div class="grid-container">
+
+        <div style="grid-column: 1 / -1;">
+            <div class="group-title">MODULE 01: GEO-SPATIAL VISUALIZATION</div>
+        </div>
+
+        <a href="Peta Dunia Kubah.html" class="card">
+            <span class="status"></span>
+            <span class="icon">⌖</span>
+            <h3>MASTER INTERFACE</h3>
+            <p>Peta visual statis dengan pembagian 3 Zona Ring (High Land, Stable Zone, Outer Rim). Mode Zonal Scanning.</p>
+        </a>
+
+        <a href="newflagmapsim.html" class="card">
+            <span class="status"></span>
+            <span class="icon">✈</span>
+            <h3>FLIGHT PATH SIM (v2.0)</h3>
+            <p><strong>[RECOMMENDED]</strong> Peta Radar interaktif dengan simulasi jalur penerbangan & distorsi jarak real-time.</p>
+        </a>
+
+        <a href="new geomap.html" class="card">
+            <span class="status"></span>
+            <span class="icon">◎</span>
+            <h3>RADAR SCANNER (v1.0)</h3>
+            <p>Versi ringan pemindai radial. Memindai jarak dan posisi negara berdasarkan arah jam dari Garut.</p>
+        </a>
+
+        <div style="grid-column: 1 / -1; margin-top: 20px;">
+            <div class="group-title">MODULE 02: CHRONOMETRICS</div>
+        </div>
+
+        <a href="time orbit.html" class="card">
+            <span class="status"></span>
+            <span class="icon">☀</span>
+            <h3>ORBIT & WAKTU</h3>
+            <p>Simulasi perputaran Matahari/Bulan. Termasuk Jam Nuswantara (8 Fase), Kalender Saka, dan Pasaran.</p>
+        </a>
+
+        <div style="grid-column: 1 / -1; margin-top: 20px;">
+            <div class="group-title">MODULE 03: CALCULUS & RECTIFIER</div>
+        </div>
+
+        <a href="ukuran kuba depa.html" class="card">
+            <span class="status"></span>
+            <span class="icon">⚡</span>
+            <h3>AREA RECTIFIER (v2.0)</h3>
+            <p>Kalkulator koreksi luas wilayah. Membandingkan "Ilusi Globe" vs "Realita Kuba" dengan preset negara lengkap.</p>
+        </a>
+        
+            <a href="ukuran kuba maual.html" class="card">
+            <span class="status"></span>
+            <span class="icon">⚡</span>
+            <h3>AREA RECTIFIER (v2.0)</h3>
+            <p>Kalkulator koreksi luas wilayah. Membandingkan "Ilusi Globe" vs "Realita Kuba" dengan preset negara lengkap.</p>
+        </a>
+
+        <a href="kalkulator depa.html" class="card">
+            <span class="status"></span>
+            <span class="icon">#</span>
+            <h3>DEPA CONVERTER</h3>
+            <p>Alat konversi satuan Kilometer (KM) ke Depa. Analisis matriks selisih jarak antar benua (The Crack).</p>
+        </a>
+
+        <div style="grid-column: 1 / -1; margin-top: 20px;">
+            <div class="group-title">MODULE 04: KNOWLEDGE BASE</div>
+        </div>
+
+        <a href="infomap.html" class="card">
+            <span class="status"></span>
+            <span class="icon">?</span>
+            <h3>THE TRUTH ARCHIVE</h3>
+            <p>Dokumentasi teori. Penjelasan "Kamus Kebenaran", logika penerbangan, dan perbandingan sistem ukur.</p>
+        </a>
+
+    </div>
+
+    <footer style="margin-top: 50px; color: #444; font-size: 10px; text-align: center;">
+        NUSWANTARA OS // SYSTEM READY // ACCESS LEVEL: ADMIN
+    </footer>
+
+</body>
+</html>
