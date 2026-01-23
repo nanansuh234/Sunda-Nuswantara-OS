@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSWANTARA DOMESTIC SCANNER [SAT-LINK]</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --green: #00ff41;
+            --gold: #ffaa00;
+            --red: #ff0055;
+            --blue: #00ccff;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--green);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Biar full app feel */
+            box-sizing: border-box;
+        }
+
+        h1 { margin: 0; color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; width: 100%; max-width: 1200px;}
+        .subtitle { font-size: 11px; color: #888; margin-top: 5px; margin-bottom: 20px; text-align: center; }
+
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            height: 100%; 
+            min-height: 0; /* Penting untuk grid overflow */
+        }
+
+        /* LEFT PANEL */
+        .panel {
+            background: var(--panel);
+            border: 1px solid #333;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .label { color: #fff; font-size: 10px; margin-bottom: 5px; display: block; border-left: 2px solid var(--green); padding-left: 5px; margin-top: 15px;}
+        
+        select { 
+            width: 100%; background: #000; color: #fff; border: 1px solid var(--green); 
+            padding: 10px; font-family: inherit; font-size: 13px; cursor: pointer;
+        }
+        option.anchor { color: var(--gold); font-weight: bold; background: #220000; }
+
+        button {
+            width: 100%; background: var(--green); color: #000; font-weight: bold;
+            border: none; padding: 15px; cursor: pointer; font-family: inherit; font-size: 16px;
+            transition: 0.2s; text-transform: uppercase; margin-top: 20px;
+        }
+        button:hover { background: #fff; box-shadow: 0 0 15px var(--green); }
+        button.reset-btn { background: #333; color: #fff; margin-top: 5px; font-size: 12px; padding: 10px;}
+
+        /* RESULT AREA */
+        .result-box {
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+            border-top: 1px dashed #444;
+            padding-top: 15px;
+        }
+
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
+        .val-fake { color: var(--blue); text-decoration: line-through; opacity: 0.7; font-size: 12px;}
+        .val-real { color: var(--gold); font-size: 24px; font-weight: bold; text-shadow: 0 0 10px rgba(255, 170, 0, 0.3); }
+        
+        .road-analysis {
+            background: rgba(255, 0, 85, 0.1);
+            border: 1px solid var(--red);
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 11px;
+            color: #ddd;
+        }
+
+        /* MAP AREA */
+        .map-wrapper {
+            position: relative;
+            border: 1px solid var(--green);
+            background: #000;
+            overflow: hidden;
+        }
+        
+        #map { height: 100%; width: 100%; background: #000; }
+
+        /* Custom Leaflet Tooltips & Markers */
+        .leaflet-popup-content-wrapper { background: rgba(0,0,0,0.9); border: 1px solid var(--green); color: var(--green); font-family: 'Share Tech Mono'; border-radius: 0; }
+        .leaflet-popup-tip { background: var(--green); }
+        
+        .mode-badge {
+            display: inline-block; padding: 2px 5px; background: #333; color: #fff; font-size: 10px; border-radius: 3px; margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>NUSWANTARA DOMESTIC SCANNER</h1>
+    <div class="subtitle">SAT-LINK LOCKED: INDONESIA REGION ONLY | LOGIC: 4.8X EXPANSION</div>
+
+    <div class="container">
+        
+        <div class="panel">
+            <div style="color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:5px; font-weight:bold;">
+                INPUT NAVIGASI
+            </div>
+            <div style="font-size: 10px; color: #aaa; margin-bottom: 15px;">
+                STATUS: WILAYAH TERKUNCI (INDONESIA)
+            </div>
+
+            <label class="label">TITIK BERANGKAT (A)</label>
+            <select id="origin"></select>
+
+            <label class="label">TITIK TUJUAN (B)</label>
+            <select id="dest"></select>
+
+            <button onclick="calcFromDropdown()">ANALISA RUTE (LIST)</button>
+            <button class="reset-btn" onclick="resetMap()">RESET / HAPUS PETA</button>
+
+            <div id="output" class="result-box">
+                <div class="mode-badge" id="modeIndicator">MODE: DATABASE</div>
+                
+                <div class="stat-row">
+                    <span style="font-size:11px;">SATELIT (UMUM):</span>
+                    <span class="val-fake" id="resGlobe">0 KM</span>
+                </div>
+                <div class="stat-row">
+                    <span style="font-size:11px;">REALITA (4.8x):</span>
+                    <span class="val-real" id="resReal">0 KM</span>
+                </div>
+                <div style="text-align:right; font-size:11px; color:var(--green); margin-top:-5px; margin-bottom:10px;" id="resDepa">
+                    0 Juta Depa
+                </div>
+
+                <div class="road-analysis">
+                    <strong style="color:var(--red)">ANALISA MANIPULASI:</strong><br>
+                    <span id="routeMsg">--</span>
+                    <div style="margin-top:5px; border-top:1px dashed var(--red); padding-top:5px;">
+                        ESTIMASI WAKTU (60km/jam):<br>
+                        <span style="font-size:16px; color:#fff; font-weight:bold;" id="timeReal">-- Jam</span> 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-wrapper">
+            <div id="map"></div>
+            <div style="position: absolute; bottom: 10px; left: 10px; z-index: 999; background: rgba(0,0,0,0.7); padding: 5px; border: 1px solid #333; font-size: 10px; pointer-events: none;">
+                <span style="color:var(--gold)">●</span> ANCHOR (GARUT) &nbsp; 
+                <span style="color:var(--red)">●</span> TITIK UKUR
+            </div>
+        </div>
+    </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // --- 1. DATA KOTA (ANCHOR: GARUT) ---
+    const cities = [
+        { id: "GRT", name: "GARUT (PUSAT ANCHOR)", lat: -7.22, lon: 107.90, type: "anchor" },
+        { id: "BNA", name: "Banda Aceh", lat: 5.54, lon: 95.32 },
+        { id: "KNO", name: "Medan", lat: 3.59, lon: 98.67 },
+        { id: "PDG", name: "Padang", lat: -0.94, lon: 100.41 },
+        { id: "PLM", name: "Palembang", lat: -2.97, lon: 104.77 },
+        { id: "JKT", name: "Jakarta", lat: -6.20, lon: 106.84 },
+        { id: "BDG", name: "Bandung", lat: -6.91, lon: 107.61 },
+        { id: "SMG", name: "Semarang", lat: -6.96, lon: 110.42 },
+        { id: "JOG", name: "Yogyakarta", lat: -7.79, lon: 110.36 },
+        { id: "SUB", name: "Surabaya", lat: -7.25, lon: 112.75 },
+        { id: "DPS", name: "Denpasar (Bali)", lat: -8.67, lon: 115.21 },
+        { id: "LOP", name: "Lombok", lat: -8.65, lon: 116.32 },
+        { id: "BPN", name: "Balikpapan", lat: -1.23, lon: 116.88 },
+        { id: "PNK", name: "Pontianak", lat: -0.02, lon: 109.33 },
+        { id: "MKS", name: "Makassar", lat: -5.14, lon: 119.41 },
+        { id: "MDC", name: "Manado", lat: 1.47, lon: 124.84 },
+        { id: "AMQ", name: "Ambon", lat: -3.65, lon: 128.18 },
+        { id: "DJJ", name: "Jayapura", lat: -2.54, lon: 140.70 },
+        { id: "IKN", name: "IKN (Nusantara)", lat: -0.97, lon: 116.70 }
+    ];
+
+    // --- 2. INIT LEAFLET MAP (LOCKED) ---
+    
+    // DEFINISI BATAS (BOUNDS) NUSWANTARA
+    // Format: [[LatSelatan, LonBarat], [LatUtara, LonTimur]]
+    var nuswantaraBounds = [
+        [-15, 90], // Pojok Kiri Bawah (Samudra Hindia)
+        [10, 150]  // Pojok Kanan Atas (Pasifik)
+    ];
+
+    var map = L.map('map', {
+        attributionControl: false,
+        zoomControl: false,
+        maxBounds: nuswantaraBounds, // KUNCI 1: Batasi area geser
+        maxBoundsViscosity: 1.0,     // KUNCI 2: Bikin batasnya 'keras' (gak bisa ditarik keluar)
+        minZoom: 5                   // KUNCI 3: Gak bisa zoom out kejauhan sampai lihat dunia
+    }).setView([-2.5, 118], 5);
+    
+    L.control.zoom({ position: 'topright' }).addTo(map);
+
+    // LAYER: ESRI SATELIT
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 18,
+        minZoom: 5, // Pastikan tile layer juga gak load zoom level rendah
+        attribution: 'Esri Satellite'
+    }).addTo(map);
+
+    // Variables
+    var markers = []; 
+    var polyline = null;
+    var manualMode = false;
+
+    // --- 3. POPULATE DROPDOWN & MARKERS ---
+    const oSel = document.getElementById('origin');
+    const dSel = document.getElementById('dest');
+
+    cities.forEach(c => {
+        // Dropdown
+        let o1 = document.createElement('option'); o1.value = c.id; o1.innerText = c.name;
+        let o2 = document.createElement('option'); o2.value = c.id; o2.innerText = c.name;
+        if(c.type === "anchor") { 
+            o1.className = "anchor"; o2.className = "anchor"; 
+            
+            // Tambah Marker Permanen untuk Anchor (Garut)
+            var anchorIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: "<div style='background-color:#ffaa00; width:12px; height:12px; border-radius:50%; box-shadow:0 0 15px #ffaa00; border:2px solid #fff;'></div>",
+                iconSize: [16, 16]
+            });
+            L.marker([c.lat, c.lon], {icon: anchorIcon}).addTo(map).bindPopup("<b>ANCHOR POINT:</b> " + c.name);
+        }
+        oSel.appendChild(o1); dSel.appendChild(o2);
+    });
+    
+    // Set Default
+    oSel.value = "JKT"; dSel.value = "GRT"; 
+
+    // --- 4. LOGIC UKUR (HYBRID) ---
+
+    // A. Fungsi Klik Manual di Peta
+    map.on('click', function(e) {
+        if(!manualMode && markers.length > 0) resetMap();
+        manualMode = true;
+
+        if (markers.length >= 2) resetMap();
+
+        var clickIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#ff0055; width:10px; height:10px; border-radius:50%; box-shadow:0 0 10px #ff0055; border:2px solid #fff;'></div>",
+            iconSize: [14, 14], iconAnchor: [7,7]
+        });
+        
+        var marker = L.marker(e.latlng, {icon: clickIcon}).addTo(map);
+        markers.push(marker);
+
+        if (markers.length === 2) {
+            calculateDistance(markers[0].getLatLng(), markers[1].getLatLng(), "MANUAL SCAN");
+        }
+    });
+
+    // B. Fungsi Tombol Dropdown
+    function calcFromDropdown() {
+        resetMap();
+        manualMode = false;
+
+        const c1 = cities.find(c => c.id === oSel.value);
+        const c2 = cities.find(c => c.id === dSel.value);
+
+        if(c1.id === c2.id) { alert("Pilih lokasi yang berbeda!"); return; }
+
+        var p1 = L.latLng(c1.lat, c1.lon);
+        var p2 = L.latLng(c2.lat, c2.lon);
+
+        var icon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color:#00ff41; width:10px; height:10px; border-radius:50%; box-shadow:0 0 10px #00ff41; border:2px solid #fff;'></div>",
+            iconSize: [14, 14]
+        });
+        markers.push(L.marker(p1, {icon: icon}).addTo(map));
+        markers.push(L.marker(p2, {icon: icon}).addTo(map));
+
+        calculateDistance(p1, p2, "DATABASE SCAN");
+    }
+
+    // --- 5. CORE CALCULATION (THEORY 4.8x) ---
+    function calculateDistance(p1, p2, modeName) {
+        polyline = L.polyline([p1, p2], {
+            color: '#00ff41',
+            weight: 3,
+            opacity: 0.9,
+            dashArray: '10, 10'
+        }).addTo(map);
+
+        map.fitBounds(polyline.getBounds(), {padding: [50, 50]});
+
+        var dGlobe = (p1.distanceTo(p2) / 1000); 
+        
+        // TERAPKAN TEORI NUSWANTARA OS (x4.8)
+        var dReal = dGlobe * 4.8;
+        var depa = (dReal * 625) / 1000000;
+        var hours = dReal / 60;
+
+        document.getElementById('output').style.display = 'block';
+        document.getElementById('modeIndicator').innerText = "MODE: " + modeName;
+        
+        document.getElementById('resGlobe').innerText = format(dGlobe) + " KM";
+        document.getElementById('resReal').innerText = format(dReal) + " KM";
+        document.getElementById('resDepa').innerText = depa.toFixed(2) + " Juta Depa";
+        document.getElementById('timeReal').innerText = hours.toFixed(0) + " Jam";
+
+        let msg = "";
+        if (dReal > 2500) {
+            msg = "JARAK EKSTREM. Distorsi ruang sangat tinggi. Rute laut wajib digunakan.";
+        } else if (dReal > 1000) {
+            msg = "JARAK MENENGAH. Jalan darat dibuat berkelok untuk memanipulasi persepsi.";
+        } else {
+            msg = "JARAK LOKAL. Manipulasi minor melalui kemacetan buatan.";
+        }
+        document.getElementById('routeMsg').innerText = msg;
+    }
+
+    function format(n) { 
+        return n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
+    }
+
+    function resetMap() {
+        markers.forEach(m => map.removeLayer(m));
+        markers = [];
+        if(polyline) { map.removeLayer(polyline); polyline = null; }
+        document.getElementById('output').style.display = 'none';
+        if(!manualMode) map.setView([-2.5, 118], 5);
+    }
+</script>
+</body>
+</html>
