@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHRONO-SPATIAL VALIDATOR: FINAL PROOF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --green: #00ff41;
+            --gold: #ffaa00;
+            --red: #ff0055;
+            --blue: #00ccff;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--green);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--gold);
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 10px;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        /* CARD SYSTEM */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid #333;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 170, 0, 0.2); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #444;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .city-name { font-size: 16px; font-weight: bold; color: #fff; }
+        .time-diff { font-size: 14px; font-weight: bold; }
+        .diff-pos { color: var(--gold); }
+        
+        .stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 12px; }
+        .label { color: #888; }
+        .val { font-weight: bold; }
+        .val-globe { color: var(--blue); }
+        .val-kuba { color: var(--red); font-size: 14px; }
+
+        .zone-center { border-left: 3px solid var(--gold); }
+        .zone-mid { border-left: 3px solid var(--green); }
+        .zone-outer { border-left: 3px solid var(--red); }
+
+        /* DECODING PANEL (BAGIAN BAWAH) */
+        .decoding-panel {
+            width: 100%;
+            max-width: 1000px;
+            background: #0f0f0f;
+            border: 1px solid var(--gold);
+            padding: 30px;
+            position: relative;
+        }
+
+        .decoding-title {
+            color: var(--gold);
+            font-size: 18px;
+            border-bottom: 1px dashed var(--gold);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .decoding-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .logic-point { margin-bottom: 15px; }
+        .logic-head { color: #fff; font-weight: bold; margin-bottom: 5px; display: block; }
+        .logic-body { color: #aaa; font-size: 13px; line-height: 1.5; }
+
+        .conclusion {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            text-align: center;
+            font-size: 14px;
+            color: var(--red);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>CHRONO-SPATIAL VALIDATOR</h1>
+    <div class="subtitle">
+        ALAT BUKTI GEOMETRI: MENGGUNAKAN SELISIH WAKTU UNTUK MEMBONGKAR JARAK ASLI
+    </div>
+
+    <div class="grid-container" id="cardContainer">
+        </div>
+
+    <div class="decoding-panel">
+        <div class="decoding-title">/// DECODING DATA: APA ARTINYA? ///</div>
+        
+        <div class="decoding-grid">
+            <div>
+                <div class="logic-point">
+                    <span class="logic-head" style="color:var(--gold)">1. ANOMALI KECEPATAN MATAHARI</span>
+                    <div class="logic-body">
+                        Lihat data di atas. Di <strong>Zona Pusat (Indonesia)</strong>, kecepatan Matahari relatif rendah (~1.600 km/jam). Namun di <strong>Zona Luar (Eropa/Amerika)</strong>, Matahari harus bergerak dengan kecepatan gila (~5.000 - 8.000 km/jam) untuk menempuh jarak Kuba yang raksasa dalam selisih waktu yang sama.
+                    </div>
+                </div>
+                <div class="logic-point">
+                    <span class="logic-head" style="color:var(--green)">2. HUKUM FISIKA "TRACK BALAP"</span>
+                    <div class="logic-body">
+                        Bayangkan pelari di lintasan dalam (Pusat) vs pelari di lintasan luar (Pinggir). Agar bisa satu putaran dalam waktu 24 jam yang sama, pelari di lintasan luar harus lari jauh lebih cepat karena lintasannya jauh lebih panjang. Ini membuktikan Bumi melebar ke pinggir.
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="logic-point">
+                    <span class="logic-head" style="color:var(--red)">3. KEBOHONGAN GLOBE</span>
+                    <div class="logic-body">
+                        Peta Globe memaksa semua wilayah punya ukuran "standar" (1 derajat = 111 km). Akibatnya, mereka harus memalsukan luas benua Afrika, Amerika, dan Eropa menjadi kecil agar muat di bola. Realitanya? Mereka RAKSASA.
+                    </div>
+                </div>
+                <div class="logic-point">
+                    <span class="logic-head" style="color:var(--blue)">4. BUKTI PENERBANGAN</span>
+                    <div class="logic-body">
+                        Kenapa penerbangan di belahan selatan (misal Sydney ke Santiago) sering transit ke Utara (Dubai/LA)? Karena jarak lurus di peta Kuba (Zona Luar) itu SANGAT JAUH. Mereka harus memotong jalan lewat tengah agar lebih hemat bahan bakar.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="conclusion">
+            KESIMPULAN: WAKTU TIDAK BOHONG. JARAK DI PINGGIRAN (OUTER RIM) ADALAH MELAR SECARA EKSTREM.<br>
+            NUSWANTARA ADALAH SATU-SATUNYA WILAYAH DENGAN GEOMETRI "NORMAL".
+        </div>
+    </div>
+
+<script>
+    // PUSAT: GARUT (WIB = UTC+7)
+    const ANCHOR = { name: "GARUT (PUSAT)", utc: 7, lat: -7.22, lon: 107.9 };
+
+    // DATA KOTA & ZONA WAKTU
+    const locations = [
+        { name: "JAYAPURA (TIMUR)", utc: 9, lat: -2.5, lon: 140.7, zone: "center" },
+        { name: "SABANG (BARAT)", utc: 7, lat: 5.8, lon: 95.3, zone: "center" },
+        { name: "TOKYO (JEPANG)", utc: 9, lat: 35.6, lon: 139.6, zone: "mid" },
+        { name: "MEKKAH (SAUDI)", utc: 3, lat: 21.4, lon: 39.8, zone: "mid" },
+        { name: "LONDON (UK)", utc: 0, lat: 51.5, lon: -0.1, zone: "outer" },
+        { name: "NEW YORK (USA)", utc: -5, lat: 40.7, lon: -74.0, zone: "outer" },
+        { name: "CAPE TOWN (AFRIKA)", utc: 2, lat: -33.9, lon: 18.4, zone: "outer" },
+        { name: "SYDNEY (AUS)", utc: 11, lat: -33.8, lon: 151.2, zone: "mid" }
+    ];
+
+    const container = document.getElementById('cardContainer');
+
+    function getDistGlobe(lat1, lon1, lat2, lon2) {
+        const R = 6371; 
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    locations.forEach(loc => {
+        let diff = loc.utc - ANCHOR.utc;
+        let diffStr = diff > 0 ? "+" + diff + " JAM" : diff + " JAM";
+        if(diff === 0) diffStr = "SAMA (0)";
+        
+        let distGlobe = getDistGlobe(ANCHOR.lat, ANCHOR.lon, loc.lat, loc.lon);
+
+        let factor = 1.0;
+        let zoneClass = "";
+        let zoneLabel = "";
+
+        if(loc.zone === "center") { factor = 1.2; zoneClass = "zone-center"; zoneLabel="ZONA 1 (PUSAT)"; }
+        else if(loc.zone === "mid") { factor = 2.5; zoneClass = "zone-mid"; zoneLabel="ZONA 2 (TRANSIT)"; }
+        else { factor = 4.8; zoneClass = "zone-outer"; zoneLabel="ZONA 3 (PINGGIRAN)"; }
+
+        let distKuba = distGlobe * factor;
+
+        let timeDivisor = Math.abs(diff);
+        if(timeDivisor < 1) timeDivisor = 1; 
+
+        let speedGlobe = distGlobe / timeDivisor;
+        let speedKuba = distKuba / timeDivisor;
+
+        let html = `
+            <div class="card ${zoneClass}">
+                <div class="card-header">
+                    <span class="city-name">${loc.name}</span>
+                    <span class="time-diff diff-pos">${diffStr}</span>
+                </div>
+                
+                <div class="stat-row">
+                    <span class="label">POSISI:</span>
+                    <span class="val" style="color:#aaa">${zoneLabel}</span>
+                </div>
+                
+                <div class="stat-row">
+                    <span class="label">JARAK GLOBE:</span>
+                    <span class="val val-globe">${distGlobe.toFixed(0)} KM</span>
+                </div>
+
+                <div class="stat-row">
+                    <span class="label">JARAK KUBA (REAL):</span>
+                    <span class="val val-kuba">${distKuba.toFixed(0)} KM</span>
+                </div>
+
+                <div style="margin-top:15px; border-top:1px dashed #333; padding-top:10px;">
+                    <span class="label" style="font-size:10px;">KECEPATAN ORBIT (KM/JAM):</span>
+                    
+                    <div style="display:flex; align-items:center; margin-top:5px;">
+                        <span style="font-size:10px; width:40px; color:var(--blue)">GLOBE</span>
+                        <div style="flex-grow:1; background:#222; height:4px; margin:0 5px;">
+                            <div style="width:${(speedGlobe/8000)*100}%; background:var(--blue); height:100%;"></div>
+                        </div>
+                        <span style="font-size:10px; color:var(--blue)">${speedGlobe.toFixed(0)}</span>
+                    </div>
+
+                    <div style="display:flex; align-items:center; margin-top:5px;">
+                        <span style="font-size:10px; width:40px; color:var(--red)">KUBA</span>
+                        <div style="flex-grow:1; background:#222; height:4px; margin:0 5px;">
+                            <div style="width:${(speedKuba/8000)*100}%; background:var(--red); height:100%;"></div>
+                        </div>
+                        <span style="font-size:10px; color:var(--red)">${speedKuba.toFixed(0)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.innerHTML += html;
+    });
+</script>
+
+</body>
+</html>

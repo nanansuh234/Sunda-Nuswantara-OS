@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATABASE LUAS BUMI: TRUE 2D GEOMETRY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020202;
+            --panel: #0a0a0a;
+            --text: #00ff41;
+            --gold: #ffaa00;
+            --red: #ff0055;
+            --dim: #444;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--gold);
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 10px;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--dim);
+            font-size: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .math-box {
+            border: 1px dashed var(--dim);
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 11px;
+            color: #aaa;
+            text-align: center;
+            background: rgba(255, 170, 0, 0.05);
+        }
+
+        /* SEARCH BAR */
+        .search-box {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            background: #111;
+            border: 1px solid var(--text);
+            color: var(--gold);
+            font-family: inherit;
+            font-size: 16px;
+            text-transform: uppercase;
+            outline: none;
+        }
+        input[type="text"]:focus { box-shadow: 0 0 15px rgba(0,255,65,0.2); }
+
+        /* TABLE */
+        .data-container {
+            width: 100%;
+            max-width: 1200px;
+            overflow-x: auto;
+            border: 1px solid #333;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--panel);
+            text-align: left;
+        }
+
+        th {
+            background: #0f1f0f;
+            color: var(--gold);
+            padding: 15px;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 2px solid var(--text);
+            white-space: nowrap;
+            font-size: 12px;
+        }
+        th:hover { background: #1a2f1a; }
+
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #222;
+        }
+
+        tr:hover { background: rgba(0, 255, 65, 0.05); }
+
+        .num { font-family: monospace; text-align: right; }
+        .globe-val { color: #888; text-decoration: line-through; font-size: 12px; }
+        .kuba-val { color: var(--text); font-weight: bold; font-size: 14px; }
+        .depa-val { color: var(--gold); font-size: 14px; text-shadow: 0 0 5px rgba(255,170,0,0.2); }
+        
+        /* SPECIAL ROWS */
+        .row-indo { background: rgba(0, 255, 65, 0.1) !important; border-left: 3px solid var(--gold); }
+        .row-wall { background: rgba(255, 0, 85, 0.1) !important; color: var(--red); border-left: 3px solid var(--red); }
+        .row-wall .kuba-val { color: var(--red); }
+
+        .badge {
+            display: inline-block; padding: 2px 5px; font-size: 10px; border-radius: 2px; margin-right: 5px; background: #333; color: #fff;
+        }
+        .rank { color: #555; font-size: 10px; margin-right: 5px; }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text); }
+    </style>
+</head>
+<body>
+
+    <h1>DATABASE LUAS BUMI: TRUE GEOMETRY</h1>
+    <div class="subtitle">
+        METODE: 2D EXPANSION (AREA) | KONVERSI: KUBA PERSEGI
+    </div>
+
+    <div class="math-box">
+        <strong>RUMUS KOREKSI DIMENSI 2D:</strong><br>
+        Expansi Linear = 4.8x  ➔  Expansi Luas = (4.8)² = <strong>23.04x</strong><br>
+        1 KM² = (625 x 625) Depa² = <strong>390.625 Depa Persegi</strong>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="CARI NEGARA..." onkeyup="filterTable()">
+    </div>
+
+    <div class="data-container">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">NEGARA / WILAYAH</th>
+                    <th onclick="sortTable(1)" style="text-align:right;">LUAS SATELIT (KM²)</th>
+                    <th onclick="sortTable(2)" style="text-align:right;">LUAS KUBA (KM²)<br><span style="font-size:9px; opacity:0.7;">(EXPAND 23x)</span></th>
+                    <th onclick="sortTable(3)" style="text-align:right;">LUAS (MILYAR DEPA²)<br><span style="font-size:9px; opacity:0.7;">(UNIT KUBA)</span></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+    </div>
+
+<script>
+    // DATABASE NEGARA (NAMA, AREA GLOBE KM2)
+    const db = [
+        {n: "Rusia", a: 17098242},
+        {n: "Kanada", a: 9984670},
+        {n: "China", a: 9706961},
+        {n: "Amerika Serikat (USA)", a: 9372610},
+        {n: "Brasil", a: 8515767},
+        {n: "Australia", a: 7692024},
+        {n: "India", a: 3287590},
+        {n: "Argentina", a: 2780400},
+        {n: "Kazakhstan", a: 2724900},
+        {n: "Aljazair", a: 2381741},
+        {n: "Kongo (DRC)", a: 2344858},
+        {n: "Greenland (Es Utara)", a: 2166086},
+        {n: "Arab Saudi", a: 2149690},
+        {n: "Meksiko", a: 1964375},
+        {n: "INDONESIA (NUSWANTARA)", a: 1904569, special: "indo"}, // Highlight Indo
+        {n: "Sudan", a: 1886068},
+        {n: "Libya", a: 1759540},
+        {n: "Iran", a: 1648195},
+        {n: "Mongolia", a: 1564110},
+        {n: "Peru", a: 1285216},
+        {n: "Chad", a: 1284000},
+        {n: "Niger", a: 1267000},
+        {n: "Angola", a: 1246700},
+        {n: "Mali", a: 1240192},
+        {n: "Afrika Selatan", a: 1221037},
+        {n: "Kolombia", a: 1141748},
+        {n: "Ethiopia", a: 1104300},
+        {n: "Bolivia", a: 1098581},
+        {n: "Mauritania", a: 1030700},
+        {n: "Mesir", a: 1002450},
+        {n: "Tanzania", a: 945087},
+        {n: "Nigeria", a: 923768},
+        {n: "Venezuela", a: 916445},
+        {n: "Pakistan", a: 881912},
+        {n: "Namibia", a: 825615},
+        {n: "Mozambik", a: 801590},
+        {n: "Turki", a: 783562},
+        {n: "Chili", a: 756102},
+        {n: "Zambia", a: 752612},
+        {n: "Myanmar", a: 676578},
+        {n: "Afghanistan", a: 652230},
+        {n: "Prancis", a: 640679},
+        {n: "Somalia", a: 637657},
+        {n: "Republik Afrika Tengah", a: 622984},
+        {n: "Sudan Selatan", a: 619745},
+        {n: "Ukraina", a: 603500},
+        {n: "Madagaskar", a: 587041},
+        {n: "Botswana", a: 581730},
+        {n: "Kenya", a: 580367},
+        {n: "Yaman", a: 527968},
+        {n: "Thailand", a: 513120},
+        {n: "Spanyol", a: 505992},
+        {n: "Turkmenistan", a: 488100},
+        {n: "Kamerun", a: 475442},
+        {n: "Papua Nugini", a: 462840},
+        {n: "Swedia", a: 450295},
+        {n: "Uzbekistan", a: 447400},
+        {n: "Maroko", a: 446550},
+        {n: "Irak", a: 438317},
+        {n: "Paraguay", a: 406752},
+        {n: "Zimbabwe", a: 390757},
+        {n: "Norwegia", a: 385207},
+        {n: "Jepang", a: 377975},
+        {n: "Jerman", a: 357022},
+        {n: "Kongo", a: 342000},
+        {n: "Finlandia", a: 338424},
+        {n: "Vietnam", a: 331212},
+        {n: "Malaysia", a: 330803},
+        {n: "Polandia", a: 312696},
+        {n: "Oman", a: 309500},
+        {n: "Italia", a: 301340},
+        {n: "Filipina", a: 300000},
+        {n: "Ekuador", a: 276841},
+        {n: "Burkina Faso", a: 272967},
+        {n: "Selandia Baru", a: 268838},
+        {n: "Gabon", a: 267668},
+        {n: "Sahara Barat", a: 266000},
+        {n: "Guinea", a: 245857},
+        {n: "Inggris (UK)", a: 242495},
+        {n: "Uganda", a: 241550},
+        {n: "Ghana", a: 238533},
+        {n: "Rumania", a: 238391},
+        {n: "Laos", a: 236800},
+        {n: "Guyana", a: 214969},
+        {n: "Belarus", a: 207600},
+        {n: "Kirgistan", a: 199951},
+        {n: "Senegal", a: 196722},
+        {n: "Suriah", a: 185180},
+        {n: "Kamboja", a: 181035},
+        {n: "Uruguay", a: 176215},
+        {n: "Suriname", a: 163820},
+        {n: "Tunisia", a: 163610},
+        {n: "Bangladesh", a: 147570},
+        {n: "Nepal", a: 147181},
+        {n: "Tajikistan", a: 143100},
+        {n: "Yunani", a: 131957},
+        {n: "Nikaragua", a: 130373},
+        {n: "Korea Utara", a: 120540},
+        {n: "Malawi", a: 118484},
+        {n: "Eritrea", a: 117600},
+        {n: "Benin", a: 114763},
+        {n: "Honduras", a: 112492},
+        {n: "Liberia", a: 111369},
+        {n: "Bulgaria", a: 110879},
+        {n: "Kuba", a: 109884},
+        {n: "Guatemala", a: 108889},
+        {n: "Islandia", a: 103000},
+        {n: "Korea Selatan", a: 100210},
+        {n: "Hungaria", a: 93028},
+        {n: "Portugal", a: 92090},
+        {n: "Yordania", a: 89342},
+        {n: "Azerbaijan", a: 86600},
+        {n: "Austria", a: 83871},
+        {n: "Uni Emirat Arab", a: 83600},
+        {n: "Republik Ceko", a: 78865},
+        {n: "Serbia", a: 77474},
+        {n: "Panama", a: 75417},
+        {n: "Sierra Leone", a: 71740},
+        {n: "Irlandia", a: 70273},
+        {n: "Georgia", a: 69700},
+        {n: "Sri Lanka", a: 65610},
+        {n: "Lithuania", a: 65300},
+        {n: "Latvia", a: 64589},
+        {n: "Togo", a: 56785},
+        {n: "Kroasia", a: 56594},
+        {n: "Bosnia & Herzegovina", a: 51197},
+        {n: "Kosta Rika", a: 51100},
+        {n: "Slovakia", a: 49035},
+        {n: "Republik Dominika", a: 48670},
+        {n: "Estonia", a: 45228},
+        {n: "Denmark", a: 43094},
+        {n: "Belanda", a: 41850},
+        {n: "Swiss", a: 41284},
+        {n: "Bhutan", a: 38394},
+        {n: "Taiwan", a: 36193},
+        {n: "Guinea-Bissau", a: 36125},
+        {n: "Moldova", a: 33846},
+        {n: "Belgia", a: 30528},
+        {n: "Lesotho", a: 30355},
+        {n: "Armenia", a: 29743},
+        {n: "Kepulauan Solomon", a: 28896},
+        {n: "Albania", a: 28748},
+        {n: "Guinea Ekuatorial", a: 28051},
+        {n: "Burundi", a: 27834},
+        {n: "Haiti", a: 27750},
+        {n: "Rwanda", a: 26338},
+        {n: "Makedonia", a: 25713},
+        {n: "Djibouti", a: 23200},
+        {n: "Belize", a: 22966},
+        {n: "El Salvador", a: 21041},
+        {n: "Israel", a: 20770},
+        {n: "Slovenia", a: 20273},
+        {n: "Fiji", a: 18274},
+        {n: "Kuwait", a: 17818},
+        {n: "Eswatini", a: 17364},
+        {n: "Timor Leste", a: 14874},
+        {n: "Bahama", a: 13943},
+        {n: "Montenegro", a: 13812},
+        {n: "Vanuatu", a: 12189},
+        {n: "Qatar", a: 11586},
+        {n: "Gambia", a: 10689},
+        {n: "Jamaika", a: 10991},
+        {n: "Kosovo", a: 10887},
+        {n: "Lebanon", a: 10452},
+        {n: "Siprus", a: 9251},
+        {n: "Puerto Riko", a: 8870},
+        {n: "Palestina", a: 6020},
+        {n: "Brunei Darussalam", a: 5765},
+        {n: "Trinidad & Tobago", a: 5130},
+        {n: "Tanjung Verde", a: 4033},
+        {n: "Samoa", a: 2842},
+        {n: "Luksemburg", a: 2586},
+        {n: "Komoro", a: 1862},
+        {n: "Mauritius", a: 2040},
+        {n: "Hong Kong", a: 1104},
+        {n: "Sao Tome & Principe", a: 964},
+        {n: "Bahrain", a: 765},
+        {n: "Dominika", a: 751},
+        {n: "Singapura", a: 719},
+        {n: "Mikronesia", a: 702},
+        {n: "Saint Lucia", a: 616},
+        {n: "Andorra", a: 468},
+        {n: "Palau", a: 459},
+        {n: "Seychelles", a: 452},
+        {n: "Barbados", a: 430},
+        {n: "Saint Vincent", a: 389},
+        {n: "Grenada", a: 344},
+        {n: "Malta", a: 316},
+        {n: "Maladewa", a: 300},
+        {n: "Saint Kitts & Nevis", a: 261},
+        {n: "Kepulauan Marshall", a: 181},
+        {n: "Liechtenstein", a: 160},
+        {n: "San Marino", a: 61},
+        {n: "Tuvalu", a: 26},
+        {n: "Nauru", a: 21},
+        {n: "Monako", a: 2},
+        {n: "Vatikan", a: 0.44},
+        
+        // SPECIAL
+        {n: "ANTARTIKA (DINDING ES / RING)", a: 45000000, special: "wall"} // Perimeter Logic
+    ];
+
+    const tbody = document.getElementById('tableBody');
+
+    // FUNGSI FORMAT ANGKA (TITIK)
+    function fmt(n) {
+        return n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // RENDER TABLE
+    function renderTable(data) {
+        tbody.innerHTML = "";
+        data.forEach((item, index) => {
+            let row = document.createElement('tr');
+            if(item.special === "indo") row.className = "row-indo";
+            if(item.special === "wall") row.className = "row-wall";
+
+            // LOGIKA HITUNG KUBA (TRUE 2D GEOMETRY)
+            // 1. Luas Satelit (Globe)
+            let globe = item.a;
+            
+            // 2. Luas Kuba (Expanded Area = Linear^2)
+            // Jika Linear Expand = 4.8x, maka Luas = 4.8^2 = 23.04x
+            let kuba = globe * (4.8 * 4.8); 
+            
+            // 3. Konversi ke Milyar Depa Persegi
+            // 1 KM^2 = 390.625 Depa^2
+            // Total Depa = KubaKM2 * 390.625
+            // Kita bagi 1.000.000.000 untuk dapat "Milyar" karena angkanya bakal super besar
+            let depaTotal = kuba * 390625;
+            let depaMilyar = depaTotal / 1000000000;
+
+            let nameHtml = item.n;
+            if(item.special === "indo") nameHtml = "<span class='badge'>PUSAT</span> " + item.n;
+            if(item.special === "wall") nameHtml = "<span class='badge' style='background:var(--red)'>BATAS</span> " + item.n;
+
+            row.innerHTML = `
+                <td style="font-weight:bold;">
+                    <span class="rank">#${index+1}</span> ${nameHtml}
+                </td>
+                <td class="num globe-val">${fmt(globe)}</td>
+                <td class="num kuba-val">${fmt(kuba)}</td>
+                <td class="num depa-val">${depaMilyar.toFixed(2)} M</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // FILTER SEARCH
+    function filterTable() {
+        let input = document.getElementById('searchInput').value.toUpperCase();
+        let filtered = db.filter(item => item.n.toUpperCase().includes(input));
+        renderTable(filtered);
+    }
+
+    // SORTING
+    let sortDir = false;
+    function sortTable(n) {
+        sortDir = !sortDir;
+        let sorted = [...db]; // Copy array
+        if(n === 0) { // Nama
+            sorted.sort((a, b) => sortDir ? a.n.localeCompare(b.n) : b.n.localeCompare(a.n));
+        } else { // Angka (Area)
+            sorted.sort((a, b) => sortDir ? b.a - a.a : a.a - b.a);
+        }
+        renderTable(sorted);
+    }
+
+    // INIT
+    renderTable(db);
+
+</script>
+
+</body>
+</html>

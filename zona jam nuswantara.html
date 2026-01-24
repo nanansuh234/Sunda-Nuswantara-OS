@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSWANTARA WORLD CLOCK - GLOBAL NMT SYNC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon: #d4af37;
+            --bg: #050505;
+            --panel: #111;
+            --green: #00ff41;
+            --blue: #00ccff;
+            --red: #ff0055;
+            /* Warna Sesi Jam (8 Jam Nuswantara) */
+            --pagi: rgba(255, 215, 0, 0.2);   /* Sesi 1 */
+            --siang: rgba(255, 69, 0, 0.2);  /* Sesi 2 */
+            --sore: rgba(0, 255, 127, 0.2);   /* Sesi 3 */
+            --malam: rgba(30, 144, 255, 0.2); /* Sesi 4 */
+        }
+
+        body {
+            background: var(--bg); color: var(--neon);
+            font-family: 'Share Tech Mono', monospace;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px; margin: 0;
+        }
+
+        .header { text-align: center; margin-bottom: 10px; }
+        .header h1 { margin: 0; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 10px var(--neon); }
+        .year-label { font-size: 12px; color: #888; margin-top: 5px; }
+
+        /* --- JAM ANALOG NUSWANTARA (8 JAM) --- */
+        .clock-frame {
+            position: relative; width: 340px; height: 340px;
+            border: 6px solid var(--neon); border-radius: 50%;
+            margin: 20px auto; background: #000; overflow: hidden;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .zones-bg {
+            position: absolute; width: 100%; height: 100%;
+            background: conic-gradient(
+                var(--pagi) 0deg 90deg,
+                var(--siang) 90deg 180deg,
+                var(--sore) 180deg 270deg,
+                var(--malam) 270deg 360deg
+            );
+        }
+
+        .tick { position: absolute; width: 100%; height: 100%; }
+        .tick::after {
+            content: ''; position: absolute; top: 6px; left: 50%;
+            width: 2px; height: 12px; background: rgba(255,255,255,0.2); transform: translateX(-50%);
+        }
+        .tick-main::after { height: 20px; width: 4px; background: #fff; opacity: 1; }
+
+        .number {
+            position: absolute; width: 100%; height: 100%;
+            text-align: center; font-size: 1.6rem; font-weight: bold;
+            padding-top: 25px; color: #fff; z-index: 5;
+        }
+
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; border-radius: 10px; z-index: 10; }
+        .hour-hand { width: 10px; height: 90px; background: var(--neon); box-shadow: 0 0 15px var(--neon); }
+        .min-hand { width: 4px; height: 135px; background: #fff; box-shadow: 0 0 10px #fff; opacity: 0.9; }
+        .center-dot {
+            position: absolute; top: 50%; left: 50%; width: 18px; height: 18px;
+            background: var(--neon); border-radius: 50%; transform: translate(-50%, -50%);
+            z-index: 11; border: 3px solid #000;
+        }
+
+        /* --- SCANNER PANEL --- */
+        .scanner-panel {
+            width: 100%; max-width: 700px; background: var(--panel);
+            border: 1px solid #333; padding: 25px; border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+        }
+
+        .search-group { margin-bottom: 20px; }
+        select {
+            width: 100%; background: #000; color: var(--neon); border: 1px solid var(--neon);
+            padding: 15px; font-family: inherit; font-size: 16px;
+            text-transform: uppercase; border-radius: 8px; cursor: pointer;
+            box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.1);
+        }
+
+        .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: #000; border: 1px solid #222; padding: 20px; text-align: center; border-radius: 12px; }
+        .card small { display: block; font-size: 11px; color: #666; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .time-val { font-size: 38px; font-weight: bold; margin-bottom: 8px; }
+        .date-val { font-size: 12px; color: var(--neon); line-height: 1.5; }
+
+        .center-card { border-top: 5px solid var(--green); }
+        .center-card .time-val { color: var(--green); text-shadow: 0 0 15px rgba(0, 255, 65, 0.3); }
+        
+        .target-card { border-top: 5px solid var(--blue); }
+        .target-card .time-val { color: var(--blue); text-shadow: 0 0 15px rgba(0, 204, 255, 0.3); }
+
+        .analysis-box {
+            grid-column: span 2; border: 1px solid #333; background: rgba(255, 0, 85, 0.05);
+            margin-top: 15px; padding: 15px; border-radius: 10px;
+        }
+        .analysis-title { color: var(--red); font-size: 12px; font-weight: bold; margin-bottom: 5px; display: block; }
+        .analysis-text { font-size: 11px; color: #aaa; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>NUSWANTARA MASTER CLOCK</h1>
+        <div id="yearLabel" class="year-label">--</div>
+    </div>
+
+    <div class="clock-frame">
+        <div class="zones-bg"></div>
+        <div class="center-dot"></div>
+        <div class="hand hour-hand" id="hrHand"></div>
+        <div class="hand min-hand" id="minHand"></div>
+    </div>
+
+    <div class="scanner-panel">
+        <div class="search-group">
+            <select id="zoneSelector" onchange="update()"></select>
+        </div>
+        
+        <div class="res-grid">
+            <div class="card center-card">
+                <small>TITIK NOL (GARUT / NMT+0)</small>
+                <div id="timePusat" class="time-val">--:--</div>
+                <div id="datePusat" class="date-val">--</div>
+            </div>
+
+            <div class="card target-card">
+                <small id="targetName">TARGET LOKAL</small>
+                <div id="timeTarget" class="time-val">--:--</div>
+                <div id="dateTarget" class="date-val">--</div>
+            </div>
+
+            <div class="analysis-box">
+                <span class="analysis-title">ANALISA GEOMETRI MATAHARI (KUBA CORRECTED):</span>
+                <div id="analysisText" class="analysis-text">Mengkalkulasi koordinat sektor...</div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // --- DATABASE GLOBAL NMT (NUSWANTARA MEAN TIME) ---
+    // NMT 0 = Garut/Jakarta (UTC+7)
+    const WorldNMT = [
+        { name: "GARUT (PUSAT)", nmt: 0 },
+        { name: "SINGAPORE / HK / DENPASAR", nmt: 1 },
+        { name: "TOKYO / SEOUL / JAYAPURA", nmt: 2 },
+        { name: "SYDNEY / MELBOURNE", nmt: 4 },
+        { name: "AUCKLAND (NZ)", nmt: 6 },
+        { name: "BANGKOK / HANOI", nmt: 0 },
+        { name: "INDIA (DELHI)", nmt: -1.5 },
+        { name: "DUBAI (UAE)", nmt: -3 },
+        { name: "MEKKAH / MOSKOW", nmt: -4 },
+        { name: "BERLIN / PARIS / ROMA", nmt: -6 },
+        { name: "LONDON / CASABLANCA", nmt: -7 },
+        { name: "AZORES (PORTUGAL)", nmt: -8 },
+        { name: "RIO DE JANEIRO", nmt: -10 },
+        { name: "NEW YORK / TORONTO", nmt: -12 },
+        { name: "CHICAGO / MEXICO CITY", nmt: -13 },
+        { name: "LOS ANGELES / VANCOUVER", nmt: -15 },
+        { name: "HONOLULU (HAWAII)", nmt: -17 }
+    ].sort((a, b) => b.nmt - a.nmt); // Urutkan dari Timur ke Barat
+
+    const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+
+    // Inisialisasi Analog Ticks & Numbers
+    const clockFrame = document.querySelector('.clock-frame');
+    for(let i=0; i<48; i++) {
+        let t = document.createElement('div');
+        t.className = (i % 6 === 0) ? 'tick tick-main' : 'tick';
+        t.style.transform = `rotate(${i * 7.5}deg)`;
+        clockFrame.appendChild(t);
+    }
+    [8, 1, 2, 3, 4, 5, 6, 7].forEach((num, i) => {
+        let n = document.createElement('div');
+        n.className = 'number';
+        n.style.transform = `rotate(${i * 45}deg)`;
+        n.innerHTML = `<div style="transform: rotate(-${i * 45}deg)">${num}</div>`;
+        clockFrame.appendChild(n);
+    });
+
+    // Populate Selector
+    const sel = document.getElementById('zoneSelector');
+    WorldNMT.forEach((city, i) => {
+        const offsetLabel = city.nmt === 0 ? "PUSAT" : (city.nmt > 0 ? `+${city.nmt}` : city.nmt);
+        sel.innerHTML += `<option value="${i}">${city.name} [NMT ${offsetLabel}]</option>`;
+    });
+
+    function getFullNuswantaraData(date) {
+        // 1. Waktu 8 Jam (Siklus 12 Jam Masehi = 8 Jam Nuswantara)
+        let h = date.getHours();
+        let m = date.getMinutes();
+        let s = date.getSeconds();
+        let totalMasehiMin = ((h % 12) * 60) + m + (s/60);
+        let nHoursRaw = totalMasehiMin / 90;
+        
+        let nH = Math.floor(nHoursRaw) || 8;
+        let nM = Math.floor((nHoursRaw % 1) * 90);
+
+        // 2. Kalender (Acuan 21 Maret)
+        let year = date.getFullYear();
+        let anchor = new Date(year, 2, 21);
+        if (date < anchor) anchor = new Date(year - 1, 2, 21);
+        let diffDays = Math.floor((date - anchor) / 86400000);
+        
+        let mIdx = Math.min(Math.floor(diffDays / 28), 12);
+        let dNum = (diffDays % 28) + 1;
+        
+        // 3. Pasaran
+        let base = new Date(2025, 2, 21);
+        let totalSinceBase = Math.floor((date - base) / 86400000);
+        let pIdx = (0 + (totalSinceBase % 5 + 5)) % 5;
+
+        return {
+            timeStr: `${String(nH).padStart(2,'0')}:${String(nM).padStart(2,'0')}`,
+            dateStr: `Tgl ${dNum} ${months[mIdx]}, ${pasarans[pIdx]}`,
+            rawH: nHoursRaw,
+            nusYear: year - 2024
+        };
+    }
+
+    function update() {
+        const now = new Date();
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        
+        // Data Pusat (NMT 0 = UTC+7)
+        const pusatData = getFullNuswantaraData(new Date(utc + (7 * 3600000)));
+        document.getElementById('timePusat').innerText = pusatData.timeStr;
+        document.getElementById('datePusat').innerText = pusatData.dateStr;
+        document.getElementById('yearLabel').innerText = `NUSWANTARA ERA - TAHUN ${pusatData.nusYear}`;
+
+        // Jarum Analog (Master Sync ke Pusat)
+        document.getElementById('hrHand').style.transform = `translateX(-50%) rotate(${pusatData.rawH * 45}deg)`;
+        document.getElementById('minHand').style.transform = `translateX(-50%) rotate(${(pusatData.rawH % 1) * 360}deg)`;
+
+        // Data Target
+        const city = WorldNMT[sel.value];
+        const targetDate = new Date(utc + ((city.nmt + 7) * 3600000));
+        const targetData = getFullNuswantaraData(targetDate);
+        
+        document.getElementById('targetName').innerText = city.name;
+        document.getElementById('timeTarget').innerText = targetData.timeStr;
+        document.getElementById('dateTarget').innerText = targetData.dateStr;
+
+        // Kalkulasi KUBA (The Truth of Distance)
+        let nmt = city.nmt;
+        let dist = Math.abs(nmt) * 2500; // Estimasi per jam nmt
+        let status = nmt === 0 ? "VERTICAL CORE (TITIK NOL)" : (Math.abs(nmt) < 6 ? "INNER SECTOR" : "OUTER RIM");
+        
+        document.getElementById('analysisText').innerHTML = 
+            `LOKASI: ${status}.<br>` +
+            `DEVIASI DARI PUSAT: ${nmt} JAM NUSWANTARA.<br>` +
+            `ESTIMASI RADIUS MATAHARI: ±${dist.toLocaleString()} KM DARI VERTIKAL GARUT.`;
+    }
+
+    setInterval(update, 1000);
+    update();
+</script>
+</body>
+</html>
