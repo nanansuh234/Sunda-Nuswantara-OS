@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATA BENUA - METODE KUBA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --green: #00ff41;
+            --gold: #ffaa00;
+            --red: #ff0055;
+            --blue: #00ccff;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--green);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { 
+            color: var(--gold); 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            border-bottom: 2px solid var(--gold); 
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #888; margin-bottom: 30px; font-size: 12px; text-align: center;
+        }
+
+        /* TABLE STYLING */
+        .cyber-table {
+            width: 100%;
+            max-width: 1000px;
+            border-collapse: collapse;
+            background: var(--panel);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            border: 1px solid #333;
+        }
+
+        .cyber-table thead {
+            background: #0f1f0f;
+            border-bottom: 2px solid var(--green);
+        }
+
+        .cyber-table th {
+            padding: 15px;
+            text-align: left;
+            color: var(--gold);
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .cyber-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #222;
+            font-size: 13px;
+        }
+
+        .cyber-table tr:hover {
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .val-fake { color: #555; text-decoration: line-through; }
+        .val-real { color: var(--green); font-weight: bold; font-size: 14px; }
+        .val-kuba { color: var(--gold); font-weight: bold; font-size: 16px; text-shadow: 0 0 5px rgba(255, 170, 0, 0.3); }
+        
+        /* SPECIAL ROW FOR ANTARCTICA */
+        .ring-row td {
+            border-top: 2px solid var(--red);
+            background: rgba(255, 0, 85, 0.05);
+            color: var(--red);
+        }
+
+        .info-box {
+            margin-top: 30px;
+            border: 1px dashed #444;
+            padding: 15px;
+            max-width: 600px;
+            text-align: center;
+            font-size: 11px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SCANNER BENUA NUSWANTARA</h1>
+    <div class="subtitle">METODE UKUR: SKALA 4.8X | KONVERSI: KUBA (DEPA)</div>
+
+    <table class="cyber-table">
+        <thead>
+            <tr>
+                <th>WILAYAH / BENUA</th>
+                <th>UKURAN GLOBE (KM)<br><span style="font-size:9px; color:#666;">(DATA PUBLIK)</span></th>
+                <th>REALITA NUSWANTARA (KM)<br><span style="font-size:9px; color:#666;">(EXPANSION 4.8x)</span></th>
+                <th>UKURAN KUBA<br><span style="font-size:9px; color:#666;">(JUTA DEPA)</span></th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+
+    <div class="info-box">
+        <strong style="color:var(--gold)">CATATAN LOGIKA:</strong><br>
+        1 KM REAL = 625 DEPA.<br>
+        Antartika dikalkulasi sebagai LINGKAR PINGGIR (Perimeter), bukan pulau tengah.<br>
+        Data Globe hanyalah proyeksi mini dari hamparan tanah yang sebenarnya.
+    </div>
+
+<script>
+    // DATA MENTAH (Estimasi Panjang Bentang Terluas dalam KM Standard Globe)
+    const continents = [
+        { name: "ASIA (BENTANG TIMUR-BARAT)", baseKM: 11000 },
+        { name: "AFRIKA (BENTANG UTARA-SELATAN)", baseKM: 8000 },
+        { name: "AMERIKA UTARA (UTARA-SELATAN)", baseKM: 8000 },
+        { name: "AMERIKA SELATAN (UTARA-SELATAN)", baseKM: 7500 },
+        { name: "EROPA (BARAT-TIMUR)", baseKM: 4000 },
+        { name: "AUSTRALIA (BARAT-TIMUR)", baseKM: 4000 },
+        { name: "NUSWANTARA (BENTANG KEPULAUAN)", baseKM: 5200 }, // Sabang-Merauke Standard
+        // Antartika di Globe kelilingnya ~17.000km, tapi di Flat Earth/Nuswantara dia dinding luar. 
+        // Keliling Bumi Globe ~40.000km -> Jadi Tembok Es panjangnya minimal segitu atau lebih.
+        { name: "LINGKAR ES ANTARTIKA (DINDING LUAR)", baseKM: 45000, isRing: true } 
+    ];
+
+    const tbody = document.getElementById('tableBody');
+
+    function format(n) { return n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+
+    continents.forEach(c => {
+        // 1. Rumus Expansion
+        let realKM = c.baseKM * 4.8;
+        
+        // 2. Rumus Kuba (Depa)
+        // 1 KM Real = 625 Depa
+        let totalDepa = realKM * 625;
+        let jutaDepa = totalDepa / 1000000;
+
+        // Render HTML
+        let tr = document.createElement('tr');
+        if(c.isRing) tr.className = "ring-row";
+
+        tr.innerHTML = `
+            <td style="font-weight:bold;">${c.name}</td>
+            <td class="val-fake">${format(c.baseKM)} KM</td>
+            <td class="val-real">${format(realKM)} KM</td>
+            <td class="val-kuba">${jutaDepa.toFixed(2)} <span style="font-size:10px">JT DEPA</span></td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+</script>
+
+</body>
+</html>

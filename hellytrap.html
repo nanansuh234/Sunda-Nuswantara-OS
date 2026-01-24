@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELICOPTER TRUTH REVEAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #111;
+            --green: #00ff41;
+            --gold: #ffaa00;
+            --red: #ff0055;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--green);
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--gold);
+            background: rgba(20, 0, 0, 0.5);
+        }
+        h1 { margin: 0; color: var(--gold); letter-spacing: 3px; font-size: 24px; }
+        .subtitle { font-size: 11px; color: #888; margin-top: 5px; }
+
+        /* VISUAL SIMULATOR CONTAINER */
+        .sim-container {
+            position: relative;
+            width: 100%;
+            height: 60vh; /* 60% layar buat peta */
+            background: #000;
+            border-bottom: 2px solid #333;
+            overflow: hidden;
+        }
+
+        canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+
+        .hud-overlay {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(0, 10, 0, 0.9);
+            border: 1px solid var(--green);
+            padding: 15px;
+            width: 250px;
+            pointer-events: none;
+        }
+        .hud-overlay h3 { margin: 0 0 10px 0; color: #fff; font-size: 14px; border-bottom: 1px dashed #555; padding-bottom: 5px; }
+        .stat-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+
+        .instruction {
+            position: absolute; bottom: 20px; right: 20px;
+            text-align: right; font-size: 10px; color: #aaa;
+            background: rgba(0,0,0,0.8); padding: 5px;
+        }
+
+        /* EXPLANATION SECTION (SCROLLABLE) */
+        .content-section {
+            max-width: 900px;
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        .dossier-card {
+            background: #111;
+            border: 1px solid #333;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .dossier-card::before {
+            content: "RESTRICTED KNOWLEDGE";
+            position: absolute; top: -10px; left: 15px;
+            background: var(--bg); color: var(--red); font-size: 10px; padding: 0 5px; font-weight: bold;
+        }
+
+        h2 { color: var(--gold); font-size: 18px; margin-top: 0; border-left: 3px solid var(--gold); padding-left: 10px; }
+        p { color: #ccc; font-size: 13px; line-height: 1.6; text-align: justify; }
+        
+        .highlight { color: #fff; font-weight: bold; }
+        .danger { color: var(--red); font-weight: bold; }
+
+        ul { margin: 0; padding-left: 20px; color: #aaa; font-size: 13px; }
+        li { margin-bottom: 8px; }
+
+        footer {
+            padding: 20px; font-size: 10px; color: #444; text-align: center; width: 100%; border-top: 1px solid #222;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>HELICOPTER LEASH</h1>
+        <div class="subtitle">VISUALISASI BATAS JELAJAH & KENDALI UDARA</div>
+    </header>
+
+    <div class="sim-container">
+        <div class="hud-overlay">
+            <h3>STATUS: PRIVATE HELI</h3>
+            <div class="stat-row">
+                <span>Fuel Range:</span>
+                <span style="color:var(--gold)">600 KM</span>
+            </div>
+            <div class="stat-row">
+                <span>Safe Radius:</span>
+                <span style="color:var(--green)">300 KM</span>
+            </div>
+            <div class="stat-row">
+                <span>Distance to AUS:</span>
+                <span style="color:var(--red)" id="distTarget">-- KM</span>
+            </div>
+            <div style="margin-top:10px; font-size:10px; color:#888; border-top:1px dashed #333; padding-top:5px;">
+                WARNING: Tidak ada titik isi ulang bahan bakar di laut lepas.
+            </div>
+        </div>
+
+        <div class="instruction">
+            [KLIK PETA UNTUK POSISIKAN HELIKOPTER]<br>
+            Lihat betapa kecilnya jangkauan Anda dibanding lautan.
+        </div>
+        
+        <canvas id="simCanvas"></canvas>
+    </div>
+
+    <div class="content-section">
+        
+        <div class="dossier-card">
+            <h2>1. THE FUEL TRAP (JEBAKAN BENSIN)</h2>
+            <p>Banyak yang berpikir helikopter bisa terbang bebas ("Free Roam") untuk membuktikan bentuk bumi. Ini adalah kesalahan fatal. Helikopter sipil rata-rata hanya memiliki jangkauan <span class="highlight">600 KM</span> sekali isi tangki.</p>
+            <p>Di <span class="highlight">Peta Nuswantara (Kuba)</span>, jarak antar daratan di selatan (Outer Rim) sangat masif. Contoh: Jarak dari Pulau Rote (Indonesia) ke Australia Utara memang terlihat dekat di peta sekolah, tapi realitanya butuh bahan bakar yang melebihi kapasitas tangki standar.</p>
+            <ul>
+                <li>Jika Anda nekat terbang lurus ke selatan, Anda akan mati mesin di tengah laut (Dead Zone).</li>
+                <li>Tidak ada "Pom Bensin" di tengah samudra. Kapal tanker hanya melayani rute resmi globalis.</li>
+            </ul>
+        </div>
+
+        <div class="dossier-card">
+            <h2>2. VFR LIMITATION (ATURAN MATA)</h2>
+            <p>Helikopter terbang dengan aturan <span class="highlight">Visual Flight Rules (VFR)</span>. Artinya, pilot harus melihat daratan/landmark untuk navigasi.</p>
+            <p>Globalis memanfaatkan ini. Lautan luas diciptakan tanpa "Landmark". Tanpa GPS (yang dikontrol satelit/menara mereka), pilot akan kehilangan orientasi dalam hitungan menit di atas air yang seragam.</p>
+            <p><span class="danger">HACK FAILED:</span> Anda tidak bisa "mengintip" ujung dunia jika mata Anda sendiri buta arah di tengah lautan kosong.</p>
+        </div>
+
+        <div class="dossier-card">
+            <h2>3. CEILING & RADAR (ATAP KACA)</h2>
+            <p>Helikopter terbang rendah (Low Altitude). Ini bagus untuk melihat horizon datar, TAPI buruk untuk strategi pelarian.</p>
+            <ul>
+                <li><strong>Terbang Rendah:</strong> Anda tidak bisa melihat gambaran besar (Big Picture). Pandangan Anda terbatas horizon lokal.</li>
+                <li><strong>Terbang Tinggi:</strong> Jika Anda mencoba naik tinggi untuk melihat lebih jauh, Anda masuk radar militer. Anda akan dianggap ancaman udara tak dikenal (Unidentified) dan dipaksa turun.</li>
+            </ul>
+        </div>
+
+        <div class="dossier-card" style="border-color: var(--red);">
+            <h2 style="color:var(--red); border-color:var(--red);">KESIMPULAN TAKTIS</h2>
+            <p>Helikopter bukan alat pembebasan. Helikopter adalah <span class="highlight">RANTAI ANJING (LEASH)</span> yang panjang. Anda boleh terbang berputar-putar di "halaman rumah" (lokal), tapi begitu Anda mencoba melompati pagar (samudra), fisika mesin dan bahan bakar akan menarik Anda jatuh.</p>
+        </div>
+
+    </div>
+
+    <footer>
+        NUSWANTARA OS // ACCESS LEVEL: DECLASSIFIED
+    </footer>
+
+<script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    // Load Gambar Peta (Pastikan file peta_indo.jpg ada di folder sama)
+    const mapImg = new Image();
+    mapImg.src = 'peta_indo.jpg'; 
+    let imgLoaded = false;
+    mapImg.onload = () => { imgLoaded = true; draw(); };
+
+    // Posisi Heli & Target
+    let heli = { x: 0, y: 0 };
+    let target = { x: 0, y: 0 }; // Target (Australia/Outer Rim)
+    
+    // Konfigurasi Skala
+    // Asumsi lebar canvas mewakili 4000 KM (Zoom Regional)
+    let kmPerPixel = 4; 
+
+    function resize() {
+        const container = document.querySelector('.sim-container');
+        width = container.offsetWidth;
+        height = container.offsetHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        // Posisi Default
+        heli.x = width * 0.3; 
+        heli.y = height * 0.4;
+        
+        target.x = width * 0.8;
+        target.y = height * 0.8;
+
+        draw();
+    }
+    window.addEventListener('resize', resize);
+
+    function draw() {
+        // Clear
+        ctx.fillStyle = "#000"; ctx.fillRect(0,0,width,height);
+        
+        // Draw Map Image
+        if(imgLoaded) {
+            ctx.globalAlpha = 0.5;
+            // Center crop fit
+            let scale = Math.max(width / mapImg.width, height / mapImg.height);
+            let x = (width / 2) - (mapImg.width / 2) * scale;
+            let y = (height / 2) - (mapImg.height / 2) * scale;
+            ctx.drawImage(mapImg, x, y, mapImg.width * scale, mapImg.height * scale);
+            ctx.globalAlpha = 1.0;
+        } else {
+            // Grid Fallback
+            ctx.strokeStyle = "#111"; ctx.lineWidth = 1;
+            ctx.beginPath();
+            for(let i=0; i<width; i+=50) { ctx.moveTo(i,0); ctx.lineTo(i,height); }
+            for(let j=0; j<height; j+=50) { ctx.moveTo(0,j); ctx.lineTo(width,j); }
+            ctx.stroke();
+            ctx.fillStyle = "#222"; ctx.fillText("MAP IMAGE NOT LOADED", 20, height-20);
+        }
+
+        // --- VISUALISASI RANGE ---
+        let maxRangeKm = 600;
+        let safeRangeKm = 300; // Pulang pergi
+        let rMax = maxRangeKm / kmPerPixel;
+        let rSafe = safeRangeKm / kmPerPixel;
+
+        // Lingkaran Merah (Batas Mati)
+        ctx.beginPath();
+        ctx.arc(heli.x, heli.y, rMax, 0, Math.PI*2);
+        ctx.strokeStyle = "rgba(255, 0, 85, 0.8)";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5,5]);
+        ctx.stroke();
+
+        // Lingkaran Hijau (Aman)
+        ctx.beginPath();
+        ctx.arc(heli.x, heli.y, rSafe, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(0, 255, 65, 0.1)";
+        ctx.fill();
+        ctx.strokeStyle = "#00ff41";
+        ctx.lineWidth = 1;
+        ctx.setLineDash([]);
+        ctx.stroke();
+
+        // --- ICON HELI ---
+        ctx.fillStyle = "#fff";
+        ctx.beginPath(); ctx.arc(heli.x, heli.y, 4, 0, Math.PI*2); ctx.fill();
+        ctx.font = "12px monospace";
+        ctx.fillText("🚁 YOU", heli.x + 8, heli.y - 8);
+
+        // --- TARGET (OUTER RIM) ---
+        ctx.fillStyle = "#888";
+        ctx.beginPath(); ctx.arc(target.x, target.y, 4, 0, Math.PI*2); ctx.fill();
+        ctx.fillText("TARGET (AUSTRALIA)", target.x - 100, target.y + 20);
+
+        // --- GARIS PENGHUBUNG ---
+        ctx.strokeStyle = "#555"; ctx.setLineDash([2,2]);
+        ctx.beginPath(); ctx.moveTo(heli.x, heli.y); ctx.lineTo(target.x, target.y); ctx.stroke();
+
+        // --- UPDATE HUD ---
+        let distPixel = Math.sqrt(Math.pow(target.x - heli.x, 2) + Math.pow(target.y - heli.y, 2));
+        let distKm = distPixel * kmPerPixel;
+        
+        let distEl = document.getElementById('distTarget');
+        distEl.innerText = distKm.toFixed(0) + " KM";
+        
+        if(distKm > maxRangeKm) {
+            distEl.style.color = "#ff0055"; // Merah
+            ctx.fillStyle = "#ff0055";
+            ctx.fillText("⚠️ OUT OF RANGE", heli.x + rMax + 5, heli.y);
+        } else {
+            distEl.style.color = "#00ff41"; // Hijau
+        }
+    }
+
+    // INTERAKSI KLIK
+    canvas.addEventListener('mousedown', e => {
+        const rect = canvas.getBoundingClientRect();
+        heli.x = e.clientX - rect.left;
+        heli.y = e.clientY - rect.top;
+        draw();
+    });
+
+    resize();
+</script>
+</body>
+</html>
