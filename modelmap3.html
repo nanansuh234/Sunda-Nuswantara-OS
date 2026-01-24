@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSWANTARA REALITY BENDER [LOCKED 1.5x]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #000;
+            color: #00ff41;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #ui-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 20, 0, 0.9);
+            border: 1px solid #00ff41;
+            padding: 20px;
+            pointer-events: none;
+            user-select: none;
+            max-width: 350px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            z-index: 10;
+        }
+
+        h1 { margin: 0; color: #ffaa00; font-size: 20px; border-bottom: 2px solid #ffaa00; padding-bottom: 5px; letter-spacing: 2px; }
+        .hint { font-size: 11px; color: #aaa; margin-top: 10px; line-height: 1.5; }
+        .val-display { font-size: 18px; color: #fff; font-weight: bold; margin-top: 5px; }
+
+        canvas {
+            cursor: grab;
+            /* Efek Glow di Canvas */
+            filter: drop-shadow(0 0 10px rgba(0,255,65,0.2)); 
+        }
+        canvas:active { cursor: grabbing; }
+
+        /* Grid Background untuk referensi mata */
+        .grid-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-overlay"></div>
+
+    <div id="ui-panel">
+        <h1>REALITY BENDER</h1>
+        <div class="hint">
+            ► DRAG KIRI-KANAN: LENGKUNGAN (BEND)<br>
+            ► DRAG BAWAH: EKSPANSI (STRETCH)
+        </div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:20px;">
+            <div style="border-left: 2px solid #00ccff; padding-left:10px;">
+                <div class="hint" style="color:#00ccff">LENGKUNGAN</div>
+                <div id="valBend" class="val-display">0%</div>
+            </div>
+            <div style="border-left: 2px solid #ffaa00; padding-left:10px;">
+                <div class="hint" style="color:#ffaa00">EKSPANSI</div>
+                <div id="valStretch" class="val-display">1.00x</div>
+            </div>
+        </div>
+        
+        <div class="hint" style="margin-top:15px; color:#555; border-top:1px dashed #333; padding-top:10px;">
+            STATUS: SYSTEM LOCKED<br>
+            DEFAULT: 100:100 (1.0x)<br>
+            MAX LIMIT: 150:150 (1.5x)
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // --- KONFIGURASI KUNCI (LOCKED) ---
+    // Default Start
+    let bendFactor = 0;       // 0% (Datar)
+    let stretchFactor = 1.0;  // 100% (Normal 1:1)
+    
+    // Limits
+    const MAX_STRETCH = 1.5;  // 150% Max Limit
+    const MIN_STRETCH = 0.8;  // Bisa dipenyet dikit ke 80%
+    const MAX_BEND = 1.0;     // Limit lengkungan
+    
+    // Load Peta
+    const img = new Image();
+    // Pastikan file gambar lo bernama 'peta_indo.jpg' dan satu folder
+    img.src = 'peta_indo.jpg'; 
+    let imgLoaded = false;
+
+    img.onload = function() {
+        imgLoaded = true;
+        resize();
+    };
+
+    // --- MOUSE CONTROLS ---
+    let isDragging = false;
+    let startX, startY;
+    let startBend, startStretch;
+
+    window.addEventListener('mousedown', e => {
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startBend = bendFactor;
+        startStretch = stretchFactor;
+        canvas.style.cursor = "grabbing";
+    });
+
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+        canvas.style.cursor = "grab";
+    });
+
+    window.addEventListener('mousemove', e => {
+        if(!isDragging) return;
+
+        let dx = e.clientX - startX;
+        let dy = e.clientY - startY;
+
+        // Sensitivitas Control
+        // Kiri-Kanan ubah Bend
+        bendFactor = startBend + (dx * 0.003);
+        
+        // Atas-Bawah ubah Stretch
+        // (dy positif kalau geser ke bawah -> tambah stretch)
+        stretchFactor = startStretch + (dy * 0.003); 
+
+        // --- PENERAPAN LOCK / LIMIT ---
+        if(stretchFactor > MAX_STRETCH) stretchFactor = MAX_STRETCH; // Lock Max 1.5
+        if(stretchFactor < MIN_STRETCH) stretchFactor = MIN_STRETCH; // Lock Min 0.8
+        
+        if(bendFactor > MAX_BEND) bendFactor = MAX_BEND;
+        if(bendFactor < -MAX_BEND) bendFactor = -MAX_BEND;
+
+        updateUI();
+        draw();
+    });
+
+    function updateUI() {
+        // Bend Text
+        let bVal = (bendFactor * 100).toFixed(0);
+        document.getElementById('valBend').innerText = `${bVal}%`;
+        
+        // Stretch Text
+        document.getElementById('valStretch').innerText = `${stretchFactor.toFixed(2)}x`;
+        
+        // Visual Feedback Warna
+        document.getElementById('valBend').style.color = Math.abs(bendFactor) < 0.05 ? "#fff" : "#00ccff";
+        document.getElementById('valStretch').style.color = stretchFactor === 1.0 ? "#fff" : "#ffaa00";
+    }
+
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        draw();
+    }
+    window.addEventListener('resize', resize);
+
+    // --- ENGINE VISUALISASI (SLICER) ---
+    function draw() {
+        // Clear Screen
+        ctx.fillStyle = "#050505";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        if(!imgLoaded) return;
+
+        const numSlices = 150; // Resolusi Slicing (Lebih halus dikit dari 100)
+        const sliceW = img.width / numSlices; 
+        
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        for(let i = 0; i < numSlices; i++) {
+            // Posisi relatif (-1 kiri, 0 tengah, 1 kanan)
+            let relX = (i - numSlices/2) / (numSlices/2); 
+            
+            // Logika Parabolic Bend
+            // Semakin jauh dari tengah (dist besar), semakin terpengaruh scale
+            let dist = Math.abs(relX);
+            
+            // Rumus: 1 + (Power * Jarak^2)
+            // Ini bikin efek melengkung kayak mangkok/bola
+            let scaleMod = 1 + (bendFactor * (dist * dist)); 
+            
+            // Mencegah glitch scale negatif
+            if(scaleMod < 0.1) scaleMod = 0.1;
+
+            // Hitung Dimensi Akhir
+            // Lebar di layar (overlap 10% biar gak bolong)
+            let destW = (canvas.width / numSlices) * 1.1; 
+            
+            // Tinggi di layar = (Tinggi Asli * StretchUser) * EfekLengkung
+            let destH = (img.height * stretchFactor) * scaleMod;
+            
+            // Posisi X di layar
+            let destX = (i * (canvas.width / numSlices));
+            
+            // Posisi Y di layar (Center Vertikal)
+            let destY = cy - (destH / 2);
+
+            // Render Slice
+            ctx.drawImage(
+                img, 
+                i * sliceW, 0, sliceW, img.height, // Source Crop
+                destX, destY, destW, destH         // Dest Draw
+            );
+            
+            // Shading 3D (Bayangan)
+            // Biar kerasa kedalamannya pas dilengkungin
+            if(Math.abs(bendFactor) > 0.1) {
+                let shade = dist * 0.8 * Math.abs(bendFactor);
+                ctx.fillStyle = `rgba(0,0,0, ${shade})`;
+                ctx.fillRect(destX, destY, destW, destH);
+            }
+        }
+
+        // Crosshair Center
+        ctx.strokeStyle = "rgba(0, 255, 65, 0.5)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(cx - 50, cy); ctx.lineTo(cx + 50, cy);
+        ctx.moveTo(cx, cy - 50); ctx.lineTo(cx, cy + 50);
+        ctx.stroke();
+    }
+    
+    // Start
+    updateUI();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PETA DATAR NUSWANTARA - PUSAT DUNIA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #050505;
+            --ice-wall: #e0f7fa;
+            --gold: #ffaa00;
+            --green: #00ff41;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--ice-wall);
+            font-family: 'Share Tech Mono', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+            z-index: 10;
+        }
+
+        /* WADAH PETA (THE BOX) */
+        .map-container {
+            position: relative;
+            width: 90vw;
+            height: 60vh;
+            /* BINGKAI ES ANTARTIKA */
+            border: 25px solid var(--ice-wall);
+            border-radius: 4px; /* Sedikit curve biar organik dikit */
+            box-shadow: 
+                0 0 30px rgba(224, 247, 250, 0.6), /* Glow Es Luar */
+                inset 0 0 50px rgba(0,0,0,0.8); /* Shadow Dalam */
+            overflow: hidden; /* Masking */
+        }
+
+        /* TEKSTUR ES PADA BINGKAI (CSS TRICK) */
+        .map-container::before {
+            content: '';
+            position: absolute;
+            top: -25px; left: -25px; right: -25px; bottom: -25px;
+            border: 25px solid rgba(255,255,255,0.3);
+            pointer-events: none;
+            z-index: 5;
+            filter: url('#noise'); /* Kalau mau texture noise */
+        }
+
+        /* GAMBAR PETA */
+        .world-map {
+            width: 100%;
+            height: 100%;
+            /* Ganti 'peta_indo.jpg' dengan nama file lo */
+            background-image: url('peta_indo.jpg'); 
+            background-size: cover; 
+            background-repeat: repeat-x; /* KUNCI: Ulang peta horizontal */
+            
+            /* Posisi Awal: Kita atur via Slider nanti */
+            background-position: 50% center; 
+            transition: background-position 0.1s ease-out;
+        }
+
+        /* HUD / OVERLAY */
+        .hud-line {
+            position: absolute;
+            top: 0; bottom: 0; width: 1px;
+            background: rgba(0, 255, 65, 0.3);
+            pointer-events: none;
+        }
+        .center-line { left: 50%; border-left: 1px dashed var(--gold); }
+        
+        .marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            text-shadow: 0 0 4px #000;
+        }
+        .marker-indo {
+            top: 50%; left: 50%;
+            color: var(--gold);
+        }
+
+        /* CONTROLS */
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+        
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .desc { font-size: 12px; color: #888; }
+
+    </style>
+</head>
+<body>
+
+    <h1>NUSWANTARA: PUSAT BENUA</h1>
+
+    <div class="map-container">
+        <div class="world-map" id="mapView"></div>
+
+        <div class="hud-line center-line"></div>
+        
+        <div class="marker marker-indo">
+            <div style="font-size:20px;">◉</div>
+            <div>NUSWANTARA</div>
+            <div style="font-size:10px; color:#aaa;">TITIK NOL</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <label>GESER POSISI BENUA (CARI AFRIKA DI KANAN)</label>
+        <input type="range" id="shiftMap" min="0" max="200" value="35">
+        <div class="desc">Geser slider ini sampai Afrika muncul di sebelah kanan Indonesia.</div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('shiftMap');
+        const map = document.getElementById('mapView');
+
+        // Fungsi Update Posisi Background
+        function updateMap() {
+            // Nilai slider merepresentasikan persentase posisi X
+            // Kita pakai satuan % agar responsif
+            const val = slider.value;
+            map.style.backgroundPosition = `${val}% center`;
+        }
+
+        slider.addEventListener('input', updateMap);
+        
+        // Inisialisasi awal
+        updateMap();
+    </script>
+
+</body>
+</html>
