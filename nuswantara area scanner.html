@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NAS v1.3: THE CUBE DETECTOR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --blue: #00ccff; --green: #00ff41; --red: #ff4444; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono', monospace; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        .map-container { width: 100%; max-width: 1000px; height: 500px; border: 2px solid var(--neon); border-radius: 15px; overflow: hidden; position: relative; }
+        #map { width: 100%; height: 100%; cursor: crosshair; }
+        .control-panel { width: 100%; max-width: 1000px; background: var(--panel); padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid #333; }
+        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        input { flex: 1; background: #000; border: 1px solid var(--neon); color: #fff; padding: 10px; border-radius: 5px; font-family: inherit; }
+        button { flex: 1; background: var(--neon); color: #000; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; }
+        .result-box { width: 100%; max-width: 1000px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .stat-card { background: #000; border: 1px solid #222; padding: 12px; border-radius: 8px; text-align: center; }
+        .val { display: block; font-size: 1.2rem; color: #fff; margin-top: 5px; }
+        .label-sm { font-size: 0.65rem; color: #888; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <h1 style="margin:0 0 10px 0; letter-spacing: 5px;">NUSWANTARA AREA SCANNER</h1>
+
+    <div class="control-panel">
+        <div class="input-row">
+            <input type="text" id="smartInput" placeholder="Cari Lokasi atau Koordinat..." onkeypress="if(event.key==='Enter') smartSearch()">
+            <input type="number" id="depthInput" placeholder="Kedalaman (Meter)..." style="width:150px;" value="2" oninput="calculateAll()">
+        </div>
+        <div style="display:flex; gap:8px;">
+            <button onclick="smartSearch()">PINDAH LOKASI</button>
+            <button style="background:var(--red); color:#fff;" onclick="clearMap()">RESET TITIK</button>
+            <button style="background:var(--blue);" onclick="copyCoords()">COPY COORD</button>
+        </div>
+    </div>
+
+    <div class="map-container"><div id="map"></div></div>
+
+    <div class="result-box" style="margin-top:10px;">
+        <div class="stat-card" style="border-top:3px solid var(--blue)">
+            <span class="label-sm">LUAS REAL (M²)</span>
+            <span class="val" id="areaReal" style="color:var(--green)">0</span>
+        </div>
+        <div class="stat-card" style="border-top:3px solid var(--neon)">
+            <span class="label-sm">VOLUME REAL (M³)</span>
+            <span class="val" id="volReal" style="color:var(--neon)">0</span>
+        </div>
+        <div class="stat-card" style="border-top:3px solid var(--red)">
+            <span class="label-sm">JUMLAH TITIK</span>
+            <span class="val" id="pointCount">0</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script>
+        const map = L.map('map', { minZoom: 5 }).setView([-6.7027, 106.9491], 15);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { crossOrigin: true }).addTo(map);
+
+        let points = [], markers = [];
+        let polygon = L.polygon([], {color: '#00ff41', weight: 2, fillColor: '#00ff41', fillOpacity: 0.3}).addTo(map);
+
+        map.on('click', function(e) {
+            let marker = L.circleMarker(e.latlng, { radius: 5, color: '#d4af37', fillColor: '#fff', fillOpacity: 1 }).addTo(map);
+            markers.push(marker);
+            points.push([e.latlng.lng, e.latlng.lat]);
+            polygon.addLatLng(e.latlng);
+            
+            document.getElementById('pointCount').innerText = points.length;
+            if (points.length >= 3) calculateAll();
+        });
+
+        function calculateAll() {
+            let poly = turf.polygon([[...points, points[0]]]);
+            let areaMasehi = turf.area(poly);
+            let depthMasehi = parseFloat(document.getElementById('depthInput').value) || 0;
+            
+            // LOGIKA 4.8x (Iman = Ukuran)
+            let areaReal = areaMasehi * (4.8 * 4.8);
+            let depthReal = depthMasehi * 4.8;
+            let volReal = areaReal * depthReal;
+
+            document.getElementById('areaReal').innerText = Math.round(areaReal).toLocaleString('id-ID');
+            document.getElementById('volReal').innerText = Math.round(volReal).toLocaleString('id-ID');
+        }
+
+        function clearMap() {
+            markers.forEach(m => map.removeLayer(m));
+            markers = []; points = []; polygon.setLatLngs([]);
+            document.getElementById('areaReal').innerText = "0";
+            document.getElementById('volReal').innerText = "0";
+            document.getElementById('pointCount').innerText = "0";
+        }
+
+        async function smartSearch() {
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(document.getElementById('smartInput').value)}`);
+            const data = await res.json();
+            if(data.length > 0) map.flyTo([data[0].lat, data[0].lon], 16);
+        }
+
+        function loadClipboard() { navigator.clipboard.readText().then(t => { document.getElementById('smartInput').value = t; smartSearch(); }); }
+        function copyCoords() { 
+            let c = map.getCenter(); 
+            navigator.clipboard.writeText(`${c.lat.toFixed(6)}, ${c.lng.toFixed(6)}`);
+            alert("Koordinat Disalin!");
+        }
+    </script>
+</body>
+</html>
