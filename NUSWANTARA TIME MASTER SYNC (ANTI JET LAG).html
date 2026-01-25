@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA BIOLOGICAL SIMULATOR - REVERSE v1.4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon: #d4af37; --bg: #050505; --panel: #111;
+            --green: #00ff41; --blue: #00ccff; --red: #ff0055;
+            --pagi: rgba(255, 215, 0, 0.15); --siang: rgba(255, 69, 0, 0.15);
+            --sore: rgba(0, 255, 127, 0.15); --malam: rgba(30, 144, 255, 0.15);
+        }
+        body { background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono', monospace; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        .clock-frame { position: relative; width: 320px; height: 320px; border: 5px solid var(--neon); border-radius: 50%; margin: 20px auto; background: #000; overflow: hidden; box-shadow: 0 0 30px rgba(212,175,55,0.3); }
+        .zones-bg { position: absolute; width: 100%; height: 100%; background: conic-gradient(var(--pagi) 0deg 90deg, var(--siang) 90deg 180deg, var(--sore) 180deg 270deg, var(--malam) 270deg 360deg); }
+        .number { position: absolute; width: 100%; height: 100%; text-align: center; font-size: 1.5rem; font-weight: bold; padding-top: 25px; color: #fff; z-index: 5; }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; border-radius: 10px; z-index: 10; }
+        .hour-hand { width: 10px; height: 85px; background: var(--neon); box-shadow: 0 0 15px var(--neon); }
+        .min-hand { width: 4px; height: 120px; background: #fff; opacity: 0.8; }
+        .scanner-panel { width: 100%; max-width: 800px; background: var(--panel); border: 1px solid #333; padding: 25px; border-radius: 15px; }
+        .sim-controls { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 20px; width: 100%; }
+        .sim-controls div { flex: 1; }
+        .rev-btn { background: #000; border: 1px solid var(--neon); color: var(--neon); padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+        .rev-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+        .card { background: #000; border: 1px solid #222; padding: 15px; text-align: center; border-radius: 10px; }
+        .formula-lab { grid-column: span 2; border: 1px solid #444; padding: 15px; background: #0a0a0a; margin-top: 20px; border-radius: 8px; font-size: 12px; }
+        .rec-box { border-left: 4px solid var(--red); padding-left: 15px; margin-top: 10px; color: #fff; line-height: 1.6; }
+        select { width: 100%; background: #000; color: var(--neon); border: 1px solid var(--neon); padding: 10px; font-family: inherit; }
+        .math { color: var(--blue); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div style="text-align: center;">
+        <h1 style="letter-spacing:5px; margin:0;">NUSWANTARA TIME MASTER SYNC (ANTI JET LAG)</h1>
+        <div id="yearLabel" style="font-size:14px; color:#888; font-weight:bold;">TAHUN --</div>
+    </div>
+
+    <div class="clock-frame" id="analogClock">
+        <div class="zones-bg"></div>
+        <div class="hand hour-hand" id="hrHand"></div>
+        <div class="hand min-hand" id="minHand"></div>
+    </div>
+
+    <div class="scanner-panel">
+        <div class="sim-controls">
+            <div>
+                <label style="font-size:10px;">TITIK ASAL (BASE):</label>
+                <select id="baseSelect" onchange="update()"></select>
+            </div>
+            <button class="rev-btn" onclick="reverseSync()" title="Reverse Direction">⇄</button>
+            <div>
+                <label style="font-size:10px;">TITIK TUJUAN (DESTINATION):</label>
+                <select id="destSelect" onchange="update()"></select>
+            </div>
+        </div>
+        
+        <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="card" style="border-top:4px solid var(--green)">
+                <small>WAKTU BIOLOGIS (BASE)</small>
+                <div id="timeBase" style="font-size:32px; font-weight:bold; color:var(--green)">--:--</div>
+                <div id="dateBase" style="font-size:11px">--</div>
+            </div>
+            <div class="card" style="border-top:4px solid var(--blue)">
+                <small>WAKTU LOKAL (DEST)</small>
+                <div id="timeDest" style="font-size:32px; font-weight:bold; color:var(--blue)">--:--</div>
+                <div id="dateDest" style="font-size:11px">--</div>
+            </div>
+
+            <div class="formula-lab">
+                <strong style="color:var(--neon)">🔬 FORMULA KALIBRASI FREKUENSI:</strong>
+                <div id="mathLogic" style="margin: 10px 0; font-family: 'Courier New', monospace;">--</div>
+                <div id="recAction" class="rec-box">--</div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const WorldNMT = [
+        { name: "GARUT/WIB", nmt: 0 },
+        { name: "TOKYO", nmt: 2 },
+        { name: "SYDNEY", nmt: 4 },
+        { name: "MEKKAH", nmt: -4 },
+        { name: "LONDON", nmt: -7 },
+        { name: "NEW YORK", nmt: -12 },
+        { name: "LOS ANGELES", nmt: -15 }
+    ];
+
+    const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+
+    // Init Numbers (1-8)
+    const clock = document.getElementById('analogClock');
+    [8, 1, 2, 3, 4, 5, 6, 7].forEach((num, i) => {
+        let n = document.createElement('div');
+        n.className = 'number';
+        n.style.transform = `rotate(${i * 45}deg)`;
+        n.innerHTML = `<div style="transform: rotate(-${i * 45}deg)">${num}</div>`;
+        clock.appendChild(n);
+    });
+
+    const bSel = document.getElementById('baseSelect');
+    const dSel = document.getElementById('destSelect');
+    WorldNMT.forEach((c, i) => {
+        bSel.innerHTML += `<option value="${i}">${c.name}</option>`;
+        dSel.innerHTML += `<option value="${i}" ${i==5?'selected':''}>${c.name}</option>`;
+    });
+
+    function reverseSync() {
+        let temp = bSel.value;
+        bSel.value = dSel.value;
+        dSel.value = temp;
+        update();
+    }
+
+    function getNSData(date) {
+        let totalMasehiMin = ((date.getHours() % 12) * 60) + date.getMinutes() + (date.getSeconds()/60);
+        let nRaw = totalMasehiMin / 90;
+        let nH = Math.floor(nRaw) || 8;
+        let nM = Math.floor((nRaw % 1) * 90);
+        
+        let anchor = new Date(date.getFullYear(), 2, 21);
+        if (date < anchor) anchor = new Date(date.getFullYear() - 1, 2, 21);
+        let diffDays = Math.floor((date - anchor) / 86400000);
+        
+        // Fix Tahun 1 (sampai 21 Maret 2026)
+        let nYear = 1;
+        if (date >= new Date(2026, 2, 21)) nYear = 2;
+
+        return { 
+            h: nH, m: nM, raw: nRaw, nYear: nYear,
+            dateStr: `Tgl ${ (diffDays % 28) + 1 } ${months[Math.min(Math.floor(diffDays/28), 12)]}`
+        };
+    }
+
+    function update() {
+        const utc = new Date().getTime() + (new Date().getTimezoneOffset() * 60000);
+        const baseCity = WorldNMT[bSel.value];
+        const destCity = WorldNMT[dSel.value];
+
+        const dataBase = getNSData(new Date(utc + ((baseCity.nmt + 7) * 3600000)));
+        const dataDest = getNSData(new Date(utc + ((destCity.nmt + 7) * 3600000)));
+
+        document.getElementById('yearLabel').innerText = `NUSWANTARA ERA - TAHUN ${dataBase.nYear}`;
+        document.getElementById('timeBase').innerText = `${String(dataBase.h).padStart(2,'0')}:${String(dataBase.m).padStart(2,'0')}`;
+        document.getElementById('dateBase').innerText = dataBase.dateStr;
+        document.getElementById('timeDest').innerText = `${String(dataDest.h).padStart(2,'0')}:${String(dataDest.m).padStart(2,'0')}`;
+        document.getElementById('dateDest').innerText = dataDest.dateStr;
+
+        document.getElementById('hrHand').style.transform = `translateX(-50%) rotate(${dataBase.raw * 45}deg)`;
+        document.getElementById('minHand').style.transform = `translateX(-50%) rotate(${(dataBase.raw % 1) * 360}deg)`;
+
+        let delta = destCity.nmt - baseCity.nmt;
+        document.getElementById('mathLogic').innerHTML = `[NMT ${baseCity.nmt}] ➔ [NMT ${destCity.nmt}] | <span class="math">Δ = ${delta > 0 ? '+'+delta : delta} JAM NUSWANTARA</span>`;
+
+        let advice = "";
+        if (delta === 0) {
+            advice = "REKOMENDASI: Frekuensi selaras. Tidak perlu adaptasi khusus.";
+        } else if (Math.abs(delta) >= 8) { // Beda 12 jam masehi
+            advice = "<strong>KRITIS:</strong> Beda frekuensi ekstrem (Terbalik). Tubuh akan mengalami 'Void' biologis. Gunakan protokol puasa air putih selama 8 jam pertama di tujuan untuk reset DNA lokal.";
+        } else if (delta < 0) {
+            advice = "<strong>MUNDUR (Ke Barat):</strong> Hari memanjang. Tubuh membawa 'Masa Depan'. Gunakan paparan sinar matahari sore lebih lama untuk menunda pelepasan melatonin tubuh.";
+        } else {
+            advice = "<strong>MAJU (Ke Timur):</strong> Hari memendek. Tubuh tertinggal di 'Masa Lalu'. Mandi air dingin saat pagi lokal tiba untuk memicu adrenalin biologis agar cepat menyusul frekuensi lokal.";
+        }
+        document.getElementById('recAction').innerHTML = advice;
+    }
+
+    setInterval(update, 1000);
+    update();
+</script>
+</body>
+</html>
