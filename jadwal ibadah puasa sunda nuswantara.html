@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>SINKRONISASI IBADAH NUSWANTARA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon: #d4af37; --bg: #050505; --panel: #111;
+            --green: #00ff41; --blue: #00ccff; --red: #ff0055;
+            --pagi: #ffd700;
+        }
+        body { 
+            background: var(--bg); color: #ccc; 
+            font-family: 'Segoe UI', sans-serif; padding: 20px; 
+        }
+        .container { max-width: 950px; margin: auto; background: var(--panel); padding: 30px; border-radius: 15px; border: 1px solid #333; }
+        h1, h2 { font-family: 'Share Tech Mono', monospace; color: var(--neon); text-align: center; text-transform: uppercase; }
+        
+        .grid-schedule { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+        .session-card { background: #000; border: 1px solid #333; padding: 20px; border-radius: 10px; position: relative; }
+        .session-card h3 { color: var(--blue); margin-top: 0; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        
+        .time-row { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 5px; border-bottom: 1px dashed #222; }
+        .n-time { color: var(--green); font-weight: bold; font-family: 'Share Tech Mono', monospace; }
+        .m-time { color: #666; font-size: 0.8rem; }
+        .activity { font-size: 0.9rem; color: #eee; }
+
+        .highlight-box { background: rgba(212, 175, 55, 0.05); border: 1px solid var(--neon); padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.85rem; }
+        .tag { background: var(--red); color: #fff; font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; margin-left: 5px; vertical-align: middle; }
+        .tag-blue { background: var(--blue); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>SINKRONISASI JADWAL IBADAH & AKTIVITAS</h1>
+    <p style="text-align: center;">Mengunci frekuensi spiritual berdasarkan <strong>Konversi Presisi Nuswantara</strong>.</p>
+
+    <div class="grid-schedule">
+        <div class="session-card" style="border-left: 5px solid var(--red);">
+            <h3>🌙 SIKLUS SAHUR & TANGGAL BARU</h3>
+            <div class="time-row">
+                <span class="activity"><strong>RESET TANGGAL BARU</strong></span>
+                <span class="n-time">Waktu 08:00</span>
+                <span class="m-time">00:00 WIB</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Tahajud & Muhasabah</span>
+                <span class="n-time">Waktu 02:30</span>
+                <span class="m-time">03:45 WIB</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Persiapan Bahan Sahur <span class="tag tag-blue">RUTINITAS</span></span>
+                <span class="n-time">Waktu 03:00</span>
+                <span class="m-time">04:30 WIB</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Sahur & Imsak</span>
+                <span class="n-time">Sesuai Zona Waktu Ibadah</span>
+                <span class="m-time">Sesuai Zona Waktu Ibadah</span>
+            </div>
+        </div>
+
+        <div class="session-card" style="border-left: 5px solid var(--pagi);">
+            <h3>☀️ SIKLUS FAJAR & KARYA</h3>
+            <div class="time-row">
+                <span class="activity"><strong>SHALAT SUBUH</strong> <span class="tag">FIX</span></span>
+                <span class="n-time">Sesuai Zona Waktu Ibadah</span>
+                <span class="m-time">Sesuai Zona Waktu Ibadah</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Zikir & Persiapan Kerja <span class="tag tag-blue">RUTINITAS</span></span>
+                <span class="n-time">Waktu 04:30</span>
+                <span class="m-time">06:45 WIB</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Shalat Duha (Venus Energy)</span>
+                <span class="n-time">Waktu 05:30</span>
+                <span class="m-time">08:15 WIB</span>
+            </div>
+            <div class="time-row">
+                <span class="activity"><strong>FASE KARYA (EKSEKUSI)</strong></span>
+                <span class="n-time">Waktu 06:00</span>
+                <span class="m-time">09:00 WIB</span>
+            </div>
+        </div>
+
+        <div class="session-card" style="border-left: 5px solid var(--neon);">
+            <h3>🍲 SIKLUS DZUHUR & TRANSISI</h3>
+            <div class="time-row">
+                <span class="activity"><strong>SHALAT DZUHUR</strong> <span class="tag">FIX</span></span>
+                <span class="n-time">Sesuai Zona Waktu Ibadah</span>
+                <span class="m-time">Sesuai Zona Waktu Ibadah</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Istirahat / Qailulah <span class="tag tag-blue">RUTINITAS</span></span>
+                <span class="n-time">Waktu 08:30</span>
+                <span class="m-time">12:45 WIB</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Lanjut Eksekusi Sore</span>
+                <span class="n-time">Waktu 01:30</span>
+                <span class="m-time">14:15 WIB</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Shalat Ashar</span>
+                <span class="n-time">Waktu 02:00</span>
+                <span class="m-time">15:00 WIB</span>
+            </div>
+        </div>
+
+        <div class="session-card" style="border-left: 5px solid var(--blue);">
+            <h3>✨ SIKLUS IFTHAR & ISTIRAHAT</h3>
+            <div class="time-row">
+                <span class="activity">Persiapan Takjil <span class="tag tag-blue">RUTINITAS</span></span>
+                <span class="n-time">Waktu 03:30</span>
+                <span class="m-time">17:15 WIB</span>
+            </div>
+            <div class="time-row">
+                <span class="activity"><strong>MAGHRIB / BUKA PUASA</strong> <span class="tag">FIX</span></span>
+                <span class="n-time">Sesuai Zona Waktu Ibadah</span>
+                <span class="m-time">Sesuai Zona Waktu Ibadah</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Isya & Tarawih</span>
+                <span class="n-time">Sesuai Zona Waktu Ibadah</span>
+                <span class="m-time">Sesuai Zona Waktu Ibadah</span>
+            </div>
+            <div class="time-row">
+                <span class="activity">Deep Sleep (Recovery)</span>
+                <span class="n-time">Waktu 07:00</span>
+                <span class="m-time">22:30 WIB</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>PANDUAN INDUKSI:</strong> Ibadah wajib (Subuh, Dzuhur, Maghrib) Sesuai Zona Waktu Ibadah. sesuai jadwal ibadah. Rutinitas lainnya seperti persiapan masak atau takjil bersifat fleksibel dan dapat disesuaikan dengan durasi persiapan masing-masing individu. Ingat, <strong>Iman adalah Ukuran</strong>; ketepatan waktu pada titik frekuensi alam adalah kunci sinkronisasi sel tubuh.
+    </div>
+
+    <p style="text-align: center; color: #444; font-size: 0.7rem; margin-top: 30px;">NUSWANTARA INDUCTION PORTAL v15.1 - SINKRONISASI HARIAN</p>
+</div>
+
+</body>
+</html>

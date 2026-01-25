@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>MANUAL PENGGUNAAN JAM NUSWANTARA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon: #d4af37; --bg: #050505; --panel: #111;
+            --pagi: #ffd700; --siang: #ff4500; --sore: #00ff7f; --malam: #1e90ff;
+        }
+        body { 
+            background: var(--bg); color: #ccc; 
+            font-family: 'Segoe UI', sans-serif; padding: 20px; 
+        }
+        .container { max-width: 900px; margin: auto; background: var(--panel); padding: 30px; border-radius: 15px; border: 1px solid #333; }
+        h1, h2 { font-family: 'Share Tech Mono', monospace; color: var(--neon); text-transform: uppercase; text-align: center; }
+        
+        /* Layout Pembagian Jam */
+        .cycle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0; }
+        .cycle-card { padding: 15px; border-radius: 10px; border: 1px solid #444; text-align: center; transition: 0.3s; }
+        .cycle-card:hover { transform: translateY(-5px); border-color: var(--neon); }
+        
+        .pagi { border-top: 5px solid var(--pagi); }
+        .siang { border-top: 5px solid var(--siang); }
+        .sore { border-top: 5px solid var(--sore); }
+        .malam { border-top: 5px solid var(--malam); }
+
+        .time-box { font-size: 1.5rem; font-weight: bold; margin: 10px 0; color: #fff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 12px; text-align: left; font-size: 0.9rem; }
+        th { background: #1a1a1a; color: var(--neon); }
+        
+        .formula-box { background: #000; border: 1px dashed var(--neon); padding: 15px; margin: 20px 0; font-family: 'Share Tech Mono', monospace; color: var(--green); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>MANUAL MANAJEMEN ENERGI (JAM NUSWANTARA)</h1>
+    <p style="text-align: center;">Mengganti sistem 24 jam industrial menjadi <strong>Siklus 8 Jam Frekuensi Alam</strong>.</p>
+
+    <div class="formula-box">
+        <strong>RUMUS DASAR:</strong><br>
+        1 Jam Nuswantara = 90 Menit Masehi (1.5 Jam)<br>
+        Siklus 8 Jam Nuswantara = 12 Jam Masehi (Setengah Hari)<br>
+        Total 2 Siklus/Hari = 16 Jam Nuswantara (Siklus Terbit & Siklus Terbenam)
+    </div>
+
+    <h2>PANDUAN 4 SESI ENERGI</h2>
+    <div class="cycle-grid">
+        <div class="cycle-card pagi">
+            <h3 style="color:var(--pagi)">SESI PAGI (8 - 2)</h3>
+            <div class="time-box">VENUS ENERGY</div>
+            <p>06:00 - 09:00 WIB</p>
+            <small>Waktu terbaik untuk pembersihan diri, meditasi, dan perencanaan strategis.</small>
+        </div>
+        <div class="cycle-card siang">
+            <h3 style="color:var(--siang)">SESI SIANG (2 - 4)</h3>
+            <div class="time-box">SATURN ENERGY</div>
+            <p>09:00 - 12:00 WIB</p>
+            <small>Puncak eksekusi fisik dan kerja keras. Metabolisme berada di titik tertinggi.</small>
+        </div>
+        <div class="cycle-card sore">
+            <h3 style="color:var(--sore)">SESI SORE (4 - 6)</h3>
+            <div class="time-box">SOLAR ENERGY</div>
+            <p>12:00 - 15:00 WIB</p>
+            <small>Masa transisi. Evaluasi hasil kerja dan mulai menurunkan tempo aktivitas.</small>
+        </div>
+        <div class="cycle-card malam">
+            <h3 style="color:var(--malam)">SESI MALAM (6 - 8)</h3>
+            <div class="time-box">LUNAR ENERGY</div>
+            <p>15:00 - 18:00 WIB</p>
+            <small>Persiapan penutupan hari. Waktu sosial dengan keluarga sebelum istirahat total.</small>
+        </div>
+    </div>
+
+    <h2>PANDUAN AKTIVITAS BERDASARKAN ASPEK</h2>
+    <table>
+        <tr>
+            <th>Aspek Kehidupan</th>
+            <th>Rekomendasi Jam (Nuswantara)</th>
+            <th>Alasan Biologis</th>
+        </tr>
+        <tr>
+            <td><strong>Pekerjaan Berat</strong></td>
+            <td>Jam 2 sampai Jam 4</td>
+            <td>Fokus mental dan kekuatan fisik sedang optimal.</td>
+        </tr>
+        <tr>
+            <td><strong>Olahraga / Fisik</strong></td>
+            <td>Jam 1 atau Jam 5</td>
+            <td>Suhu tubuh sedang menyesuaikan dengan radiasi matahari.</td>
+        </tr>
+        <tr>
+            <td><strong>Makan Berat</strong></td>
+            <td>Maksimal Jam 4</td>
+            <td>Memberi waktu sistem pencernaan sebelum siklus energi turun.</td>
+        </tr>
+        <tr>
+            <td><strong>Ibadah / Meditasi</strong></td>
+            <td>Jam 8 (Titik Nol)</td>
+            <td>Peralihan frekuensi dari gelap ke terang atau sebaliknya.</td>
+        </tr>
+    </table>
+
+    <div style="background:#1a1a1a; padding:20px; border-radius:10px; margin-top:30px;">
+        <h3 style="color:var(--neon); margin-top:0;">KENAPA HARUS PINDAH KE 8 JAM?</h3>
+        <ul>
+            <li><strong>Anti-Overwork:</strong> Kerja 4 jam Nuswantara terasa lebih manusiawi daripada 6 jam Masehi, padahal durasinya sama (360 menit).</li>
+            <li><strong>Sinkronisasi Tidur:</strong> Tubuh manusia lebih mudah mengenali 8 tahapan daripada 24 angka yang terlalu kecil.</li>
+            <li><strong>Presisi Biologis:</strong> Setiap "Jam" Nuswantara mewakili satu fase organ tubuh tertentu yang sedang aktif bekerja.</li>
+        </ul>
+    </div>
+
+    <p style="text-align: center; color: #555; font-size: 0.8rem; margin-top: 20px;">
+        NUSWANTARA OS - TIME MANAGEMENT MANUAL - v1.4
+    </p>
+</div>
+
+</body>
+</html>
