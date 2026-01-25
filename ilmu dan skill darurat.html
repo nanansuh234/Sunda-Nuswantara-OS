@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA: SURVIVAL CURRICULUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --green: #00ff41; --blue: #00ccff; --red: #ff3333; }
+        body { background: var(--bg); color: #ccc; font-family: 'Share Tech Mono', monospace; padding: 15px; }
+        .container { max-width: 1200px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 15px; margin-bottom: 25px; }
+        
+        .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .skill-card { background: var(--panel); border: 1px solid #333; padding: 20px; border-radius: 12px; }
+        .skill-card h3 { color: var(--neon); text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 8px; margin-top: 0; }
+        
+        .level-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; background: rgba(0, 255, 65, 0.1); color: var(--green); margin-bottom: 10px; display: inline-block; }
+        
+        .skill-list { list-style: none; padding: 0; font-size: 0.9rem; }
+        .skill-list li { margin-bottom: 12px; padding-left: 20px; position: relative; }
+        .skill-list li::before { content: '>'; position: absolute; left: 0; color: var(--green); }
+        .skill-list b { color: #fff; }
+
+        .note-box { background: rgba(255, 51, 51, 0.05); border-left: 4px solid var(--red); padding: 15px; margin-top: 30px; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>SURVIVAL CURRICULUM: DARI PEKERJA KE PENGERJA</h1>
+        <p style="color: #666; font-size: 0.8rem;">DAFTAR KEAHLIAN JANGKAR UNTUK MENGHADAPI KRISIS TOTAL</p>
+    </div>
+
+    <div class="skill-grid">
+        <div class="skill-card">
+            <span class="level-tag">VITAL / UTAMA</span>
+            <h3>🌱 ILMU TANAH & TERNAK</h3>
+            <ul class="skill-list">
+                <li><b>Propagasi Bibit:</b> Keahlian menyemai, mencangkok, dan menyimpan benih tanpa beli di toko.</li>
+                <li><b>Manajemen Hama Alami:</b> Membuat pestisida nabati agar kebun tidak hancur saat pestisida kimia hilang.</li>
+                <li><b>Anatomi Hewan:</b> Keahlian merawat indukan ayam/kambing hingga teknik penyembelihan yang benar.</li>
+                <li><b>Bio-Fertilizer:</b> Mengolah kotoran hewan dan limbah dapur menjadi pupuk super (EM4 lokal).</li>
+            </ul>
+        </div>
+
+        <div class="skill-card">
+            <span class="level-tag">INFRASTRUKTUR</span>
+            <h3>🔧 TEKNIK OFF-GRID</h3>
+            <ul class="skill-list">
+                <li><b>Sistem DC & Accu:</b> Paham instalasi listrik searah (panel surya ke aki) untuk lampu & radio.</li>
+                <li><b>Mekanik Sepeda/Becak:</b> Menjaga satu-satunya alat transportasi otot tetap jalan tanpa suku cadang pabrik.</li>
+                <li><b>Tungku Biomassa:</b> Membuat kompor hemat kayu bakar dengan aliran udara efisien (Rocket Stove).</li>
+                <li><b>Penjernihan Air:</b> Teknik filtrasi gravitasi dan destilasi matahari untuk air minum.</li>
+            </ul>
+        </div>
+
+        <div class="skill-card">
+            <span class="level-tag">INTELLIGENCE</span>
+            <h3>📻 SIGNAL & MAPPING</h3>
+            <ul class="skill-list">
+                <li><b>Radio HT/SW:</b> Operasional radio gelombang pendek untuk mencari kabar luar wilayah.</li>
+                <li><b>Navigasi Bintang & Matahari:</b> Menentukan arah dan waktu (Sunda Nuswantara Time) tanpa GPS.</li>
+                <li><b>Kriptografi Fisik:</b> Kode sandi/morse sederhana untuk keamanan pesan antar pos ronda.</li>
+                <li><b>Logistik Manual:</b> Manajemen stok lumbung agar tidak ada kebocoran nutrisi komunitas.</li>
+            </ul>
+        </div>
+
+        <div class="skill-card">
+            <span class="level-tag">SURVIVAL MURNI</span>
+            <h3>🛡️ MEDIS & JAGABAYA</h3>
+            <ul class="skill-list">
+                <li><b>Herbalisme Lokal:</b> Mengenal tanaman obat keluarga (TOGA) untuk antibiotik & antiseptik alami.</li>
+                <li><b>First Aid Darurat:</b> Menjahit luka, membalut tulang patah, dan penanganan dehidrasi berat.</li>
+                <li><b>Bela Diri Praktis:</b> Penggunaan tongkat/parang untuk perlindungan aset pangan dari penjarah.</li>
+                <li><b>Psikologi Massa:</b> Teknik menenangkan warga yang panik (de-eskalasi konflik).</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="note-box">
+        <h4 style="color: var(--red); margin-top: 0;">PESAN UNTUK GENERASI LUNTANG-LANTUNG:</h4>
+        <p>
+            "Dunia tidak butuh lagi 'Skill Menjual' jika tidak ada yang bisa diproduksi secara fisik. Jadilah <strong>PENGERJA</strong> yang tangan dan kakinya menghasilkan nilai nyata. Ingat, di masa gelap, satu orang yang bisa memperbaiki pompa air manual lebih dihargai daripada sepuluh orang yang punya gelar pemasaran digital."
+        </p>
+        <p style="text-align: center; color: var(--neon); font-weight: bold; margin-top: 10px;">
+            IMAN ADALAH UKURAN: UKURANMU ADALAH APA YANG BISA KAU KERJAKAN.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

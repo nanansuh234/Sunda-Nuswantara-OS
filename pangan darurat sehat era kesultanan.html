@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>KULINER KESULTANAN: KEDAULATAN PANGAN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --green: #00ff41; --orange: #ff9800; }
+        body { background: var(--bg); color: #ccc; font-family: 'Share Tech Mono', monospace; padding: 15px; }
+        .container { max-width: 1200px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 15px; margin-bottom: 25px; }
+        
+        .food-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .food-card { background: var(--panel); border: 1px solid #333; padding: 20px; border-radius: 12px; border-left: 5px solid var(--neon); }
+        
+        h3 { color: var(--neon); text-transform: uppercase; margin-top: 0; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .benefit { font-size: 0.8rem; color: var(--green); margin: 10px 0; font-weight: bold; }
+        .ingredients { font-size: 0.85rem; color: #aaa; line-height: 1.5; }
+        .tradition { font-size: 0.75rem; color: var(--orange); font-style: italic; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>KULINER KESULTANAN: KEDAULATAN RASA & GIZI</h1>
+        <p style="color: #666; font-size: 0.8rem;">MELAWAN PENYERAGAMAN PANGAN DENGAN KERAGAMAN LOKAL</p>
+    </div>
+
+    <div class="food-grid">
+        <div class="food-card">
+            <h3>🥩 DENDENG & PINDANG SALAI</h3>
+            <div class="benefit">KEUNGGULAN: Tahan Berbulan-bulan Tanpa Kulkas</div>
+            <p class="ingredients"><b>Bahan:</b> Daging sapi/kerbau, ketumbar, gula aren, garam, & teknik pengasapan (Salai).</p>
+            <p class="tradition">"Teknologi pengawetan protein hewani agar lumbung protein tetap terjaga saat krisis energi."</p>
+        </div>
+
+        <div class="food-card">
+            <h3>🌾 NASI TIWUL & AMPYANG</h3>
+            <div class="benefit">KEUNGGULAN: Rendah Gula, Tinggi Serat & Daya Tahan</div>
+            <p class="ingredients"><b>Bahan:</b> Tepung Gaplek (Singkong kering), Jagung pipil, & kelapa parut.</p>
+            <p class="tradition">"Pangan utama rakyat jelata hingga punggawa kesultanan saat musim paceklik melanda."</p>
+        </div>
+
+        <div class="food-card">
+            <h3>🦠 KEDELE & BENGKO (FERMENTASI)</h3>
+            <div class="benefit">KEUNGGULAN: Probiotik Alami & Gizi Berlipat</div>
+            <p class="ingredients"><b>Bahan:</b> Kedelai lokal, ragi pasar, daun pisang/jati sebagai pembungkus.</p>
+            <p class="tradition">"Kekuatan gizi rakyat Nuswantara yang tidak bisa ditiru oleh pabrik susu global."</p>
+        </div>
+
+        <div class="food-card">
+            <h3>🍵 WEDANG UWUH & REMPAH</h3>
+            <div class="benefit">KEUNGGULAN: Imunitas Tubuh & Penghangat Sel</div>
+            <p class="ingredients"><b>Bahan:</b> Jahe, kayu secang, cengkeh, kayu manis, & gula batu.</p>
+            <p class="tradition">"Minuman para Sultan untuk menjaga frekuensi energi tubuh tetap stabil."</p>
+        </div>
+
+        <div class="food-card">
+            <h3>💧 SUP KELOR (THE MIRACLE LEAF)</h3>
+            <div class="benefit">KEUNGGULAN: Multi-Vitamin & Detoks Alami</div>
+            <p class="ingredients"><b>Bahan:</b> Daun kelor, kunci, jagung muda, & bumbu bening.</p>
+            <p class="tradition">"Sayuran wajib untuk pembersihan darah dan pemenuhan nutrisi anak-anak."</p>
+        </div>
+    </div>
+
+    <div style="background: rgba(212, 175, 55, 0.05); border: 1px dashed var(--neon); padding: 15px; border-radius: 10px; margin-top: 25px; font-size: 0.85rem;">
+        <h4 style="color: var(--neon); margin-top: 0;">FILOSOFI PANGAN: IMAN = UKURAN</h4>
+        <p>
+            Pangan era Kesultanan didasarkan pada <span style="color:var(--green)">Ketersediaan Alam</span>, bukan impor logistik. 
+            Setiap olahan mengandung **Teknologi Biologi**: Fermentasi (Tempe/Tape) adalah cara menggandakan gizi, Pengasapan (Salai/Dendeng) adalah cara mengunci waktu (energi), dan Rempah adalah cara menjaga frekuensi tubuh. 
+            Kembali ke pola makan ini berarti memutus rantai ketergantungan pada "Pangan Plastik" yang diciptakan para elit global.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

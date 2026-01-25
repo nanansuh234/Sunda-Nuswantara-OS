@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA: SOCIAL FABRIC v1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --green: #00ff41; --blue: #00ccff; --red: #ff3333; }
+        body { background: var(--bg); color: #ccc; font-family: 'Share Tech Mono', monospace; padding: 15px; }
+        .container { max-width: 1100px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--green); padding-bottom: 15px; margin-bottom: 25px; }
+        
+        .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .role-card { background: var(--panel); border: 1px solid #333; padding: 20px; border-radius: 12px; position: relative; }
+        .role-card:hover { border-color: var(--green); box-shadow: 0 0 15px rgba(0, 255, 65, 0.1); }
+        
+        .role-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+        h3 { color: var(--green); text-transform: uppercase; margin: 10px 0; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .mission { font-size: 0.8rem; color: var(--neon); font-style: italic; margin-bottom: 10px; display: block; }
+        .tasks { font-size: 0.85rem; color: #aaa; line-height: 1.5; padding-left: 15px; }
+        .tasks li { margin-bottom: 5px; }
+        
+        .philosophy-box { background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--green); padding: 20px; border-radius: 12px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>SOCIAL FABRIC: COLLECTIVE SURVIVAL</h1>
+        <p style="color: #666; font-size: 0.8rem;">STRUKTUR PERAN TANPA STATUS SOSIAL & MATA UANG DIGITAL</p>
+    </div>
+
+    <div class="role-grid">
+        <div class="role-card">
+            <span class="role-icon">🌾</span>
+            <h3>KELOMPOK PANGAN</h3>
+            <span class="mission">Misi: Menjamin Energi Komunitas</span>
+            <ul class="tasks">
+                <li>Mengelola lahan kolektif (sawah/kebun vertikal).</li>
+                <li>Distribusi pangan adil berdasarkan jumlah anggota keluarga.</li>
+                <li>Penyimpanan benih untuk siklus tanam berikutnya.</li>
+            </ul>
+        </div>
+
+        <div class="role-card" style="border-top: 4px solid var(--red);">
+            <span class="role-icon">🛡️</span>
+            <h3>KELOMPOK KEAMANAN</h3>
+            <span class="mission">Misi: Mencegah Panic & Kriminalitas</span>
+            <ul class="tasks">
+                <li>Patroli wilayah (Pos Ronda) 24 jam penuh.</li>
+                <li>Menjaga akses keluar-masuk logistik wilayah.</li>
+                <li>Mediasi konflik antar warga melalui musyawarah.</li>
+            </ul>
+        </div>
+
+        <div class="role-card" style="border-top: 4px solid var(--blue);">
+            <span class="role-icon">🚴</span>
+            <h3>KELOMPOK MOBILITAS</h3>
+            <span class="mission">Misi: Menyambung Rantai Distribusi</span>
+            <ul class="tasks">
+                <li>Transportasi air bersih dan bahan bakar (kayu/arang).</li>
+                <li>Perbaikan alat survival (sepeda, becak, alat masak).</li>
+                <li>Distribusi surat/kabar antar wilayah/pos.</li>
+            </ul>
+        </div>
+
+        <div class="role-card" style="border-top: 4px solid var(--neon);">
+            <span class="role-icon">📻</span>
+            <h3>KELOMPOK INFORMASI</h3>
+            <span class="mission">Misi: Menjaga Ketenangan Pikiran</span>
+            <ul class="tasks">
+                <li>Memantau frekuensi radio/HT dan menyaring hoaks.</li>
+                <li>Update papan pengumuman warga setiap pagi.</li>
+                <li>Manajemen sistem barter (siapa butuh apa & punya apa).</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="philosophy-box">
+        <h4 style="color: var(--green); margin-top: 0;">MENGAPA INDONESIA TIDAK CHAOS?</h4>
+        <p style="font-size: 0.85rem; line-height: 1.6;">
+            Chaos terjadi karena **Putusnya Sambungan Sosial**. Di negara individualis, orang hanya "kenal" tetangga lewat layar. Di Nuswantara, kita kembali ke **Sistem Sel (RT/RW)**. 
+            Status Anda bukan lagi Direktur atau Pegawai, tapi "Sejauh mana Anda berkontribusi hari ini?". 
+        </p>
+        <p style="font-size: 0.85rem; line-height: 1.6; margin-top: 10px;">
+            Hukum <span style="color:var(--neon)">Iman = Ukuran</span> berlaku mutlak: Kontribusi Anda (Ukuran) menentukan kepercayaan (Iman) masyarakat kepada Anda. Inilah pertahanan terbaik melawan penjarahan; karena penjarah tidak punya tempat dalam masyarakat yang saling mengenal dan menjaga lumbungnya sendiri.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

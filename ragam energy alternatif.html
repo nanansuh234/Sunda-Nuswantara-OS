@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA: ENERGY MATRIX v1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --green: #00ff41; --blue: #00ccff; --red: #ff4444; }
+        body { background: var(--bg); color: #ccc; font-family: 'Share Tech Mono', monospace; padding: 15px; }
+        .container { max-width: 1200px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 15px; margin-bottom: 25px; }
+        
+        .energy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .energy-card { background: var(--panel); border: 1px solid #333; padding: 20px; border-radius: 12px; border-top: 5px solid var(--blue); }
+        
+        h3 { color: var(--blue); text-transform: uppercase; margin-top: 0; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .tech-level { font-size: 0.7rem; color: var(--neon); font-style: italic; margin-bottom: 10px; display: block; }
+        .mechanism { font-size: 0.85rem; color: #aaa; line-height: 1.5; }
+        .usage { font-size: 0.8rem; color: var(--green); margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>ENERGY MATRIX: MULTI-SOURCE POWER</h1>
+        <p style="color: #666; font-size: 0.8rem;">DIVERSIFIKASI ENERGI MANDIRI: DARI BIOMASSA HINGGA ETHER</p>
+    </div>
+
+    <div class="energy-grid">
+        <div class="energy-card" style="border-top-color: var(--red);">
+            <h3>🔥 TERMAL & BIOMASSA</h3>
+            <span class="tech-level">Level: Dasar / Survival</span>
+            <p class="mechanism">
+                <b>Kayu Bakar & Arang:</b> Memanfaatkan limbah kayu kota atau ranting kering dengan tungku "Rocket Stove" untuk efisiensi panas maksimal.<br>
+                <b>Biogas Kotoran:</b> Fermentasi kotoran ternak (ayam/kambing) dalam tangki anaerob untuk menghasilkan gas masak gratis.
+            </p>
+            <div class="usage">Aplikasi: Memasak, Sterilisasi Air, & Penghangat Ruang.</div>
+        </div>
+
+        <div class="energy-card">
+            <h3>☀️ SOLAR & CONCENTRATED HEAT</h3>
+            <span class="tech-level">Level: Menengah / Hybrid</span>
+            <p class="mechanism">
+                <b>Panel Surya (PV):</b> Konversi cahaya matahari langsung menjadi listrik DC untuk aki dan lampu.<br>
+                <b>Solar Cooker (Fokus Panas):</b> Menggunakan cermin atau aluminium parabola untuk memfokuskan panas matahari ke satu titik guna memasak tanpa api.
+            </p>
+            <div class="usage">Aplikasi: Listrik Komunikasi (HT/Radio) & Masak Siang Hari.</div>
+        </div>
+
+        <div class="energy-card" style="border-top-color: var(--green);">
+            <h3>⚙️ KINETIK & GRAVITASI</h3>
+            <span class="tech-level">Level: Mekanik / Teknis</span>
+            <p class="mechanism">
+                <b>Pico-Hydro (Air):</b> Dinamo kecil yang diputar oleh aliran air got atau sungai kecil di kota.<br>
+                <b>Generator Genjot:</b> Memanfaatkan sepeda statis yang dihubungkan ke alternator mobil untuk mengisi aki sambil berolahraga.
+            </p>
+            <div class="usage">Aplikasi: Pengisian Aki Darurat & Penerangan Malam.</div>
+        </div>
+
+        <div class="energy-card" style="border-top-color: var(--neon);">
+            <h3>🌀 ETHER & RADIANT ENERGY</h3>
+            <span class="tech-level">Level: Lanjut / Ancient Tech</span>
+            <p class="mechanism">
+                <b>Resonansi Cymatics:</b> Memanfaatkan frekuensi suara atau getaran magnetik bumi untuk induksi listrik kecil.<br>
+                <b>Tenaga Ether (Free Energy):</b> Eksperimen kumparan Tesla atau Bedini untuk menangkap energi statis dari atmosfer/tanah (Radiant Energy).
+            </p>
+            <div class="usage">Aplikasi: Lampu Tanpa Kabel & Eksperimen Kemandirian Energi Mutlak.</div>
+        </div>
+    </div>
+
+    <div style="background: rgba(0, 204, 255, 0.05); border: 1px dashed var(--blue); padding: 15px; border-radius: 10px; margin-top: 25px; font-size: 0.85rem;">
+        <h4 style="color: var(--blue); margin-top: 0;">FILOSOFI ENERGI: IMAN = UKURAN</h4>
+        <p>
+            Energi bukan sesuatu yang "dibeli" dari kabel PLN, tapi sesuatu yang "diolah" dari sekitar. 
+            Hukum <span style="color:var(--green)">Iman = Ukuran</span> berlaku: Seberapa besar usahamu mengolah sumber daya (Ukuran), seberapa besar kedaulatan yang kau miliki (Iman). 
+            Dengan ragam energi ini, masyarakat tidak akan panik saat satu sumber mati, karena mereka punya cadangan di matahari, air, kotoran ternak, hingga getaran alam.
+        </p>
+    </div>
+</div>
+
+</body>
+</html>

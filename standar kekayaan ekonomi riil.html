@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA: VALUE UNLOCKER v1.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --green: #00ff41; --blue: #00ccff; --red: #ff3333; --locked: #1a1a1a; }
+        body { background: var(--bg); color: #ccc; font-family: 'Share Tech Mono', monospace; padding: 15px; }
+        .container { max-width: 1100px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 15px; margin-bottom: 25px; }
+        
+        /* INPUT AREA */
+        .input-section { background: var(--panel); padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: center; margin-bottom: 25px; }
+        input { width: 90%; max-width: 500px; background: #000; border: 2px solid var(--neon); color: var(--green); padding: 12px; font-size: 1.5rem; text-align: center; border-radius: 10px; font-family: inherit; }
+        
+        /* CARDS GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
+        .card { 
+            background: var(--locked); border: 1px solid #222; padding: 15px; border-radius: 12px; 
+            opacity: 0.3; filter: grayscale(1); transition: 0.4s; position: relative;
+        }
+        .card.unlocked { opacity: 1; filter: grayscale(0); border: 2px solid var(--green); background: var(--panel); box-shadow: 0 0 10px rgba(0, 255, 65, 0.1); }
+        .card.active-now { border-color: var(--blue); transform: scale(1.02); z-index: 10; }
+        
+        .badge { position: absolute; top: 10px; right: 10px; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; background: #222; }
+        .unlocked .badge { background: var(--green); color: #000; font-weight: bold; }
+        
+        h3 { margin: 0 0 10px 0; color: var(--neon); font-size: 1rem; text-transform: uppercase; }
+        .item-list { font-size: 0.8rem; color: #aaa; margin: 0; padding-left: 15px; line-height: 1.4; }
+        .item-list li { margin-bottom: 3px; }
+        .price-tag { display: block; margin-top: 12px; font-size: 0.9rem; color: var(--blue); border-top: 1px solid #333; padding-top: 8px; }
+
+        .social-alert { margin-top: 30px; padding: 20px; border: 1px solid var(--red); background: rgba(255, 51, 51, 0.05); border-radius: 10px; }
+        .social-alert h4 { color: var(--red); margin: 0 0 10px 0; text-transform: uppercase; }
+        .social-alert p { font-size: 0.85rem; line-height: 1.5; color: #ddd; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>VALUE UNLOCKER NUSWANTARA</h1>
+        <p style="color: #666; font-size: 0.8rem;">STANDARD NILAI FISIK: PENGAMAN DARI KEPANIKAN MASSA</p>
+    </div>
+
+    <div class="input-section">
+        <label style="display:block; margin-bottom:8px; font-size: 0.9rem;">MASUKKAN NOMINAL UANG KERTAS (RP):</label>
+        <input type="number" id="moneyInput" placeholder="Masukkan Angka..." oninput="unlockLogic()">
+        <div style="margin-top:8px; font-size: 1rem; color: var(--neon);" id="formattedMoney">Rp 0</div>
+    </div>
+
+    <div class="grid">
+        <div class="card" id="tier0">
+            <span class="badge">LOCKED</span>
+            <h3>🛡️ DAPUR DARURAT</h3>
+            <ul class="item-list">
+                <li>Beras Medium 5 Kg</li>
+                <li>Minyak Goreng 1 Liter</li>
+                <li>Garam & Gula 1/2 Kg</li>
+                <li>Telur Ayam 5 Butir</li>
+            </ul>
+            <span class="price-tag">Target: Rp 100.000</span>
+        </div>
+
+        <div class="card" id="tier1">
+            <span class="badge">LOCKED</span>
+            <h3>📦 STOK AMAN</h3>
+            <ul class="item-list">
+                <li>Beras 25 Kg (Stok 1 Bln)</li>
+                <li>Minyak 2L + Ikan Asin</li>
+                <li>1 Kotak Mie + Bumbu Dasar</li>
+                <li>Alat Masak Kayu/Lilin</li>
+            </ul>
+            <span class="price-tag">Target: Rp 500.000</span>
+        </div>
+
+        <div class="card" id="tier2">
+            <span class="badge">LOCKED</span>
+            <h3>🐣 MESIN PROTEIN</h3>
+            <ul class="item-list">
+                <li>5 Ayam Betina + 1 Jantan</li>
+                <li>Pakan Starter 10 Kg</li>
+                <li>Kandang Bambu Rakitan</li>
+                <li>Bibit Sayur & Media Tanam</li>
+            </ul>
+            <span class="price-tag">Target: Rp 2.000.000</span>
+        </div>
+
+        <div class="card" id="tier3">
+            <span class="badge">LOCKED</span>
+            <h3>🌾 LUMBUNG DESA</h3>
+            <ul class="item-list">
+                <li>Sewa Sawah/Kebun 1 Tahun</li>
+                <li>Bibit Padi/Palawija</li>
+                <li>Pupuk Organik & Parang</li>
+                <li>Upah Tanam (Kemitraan)</li>
+            </ul>
+            <span class="price-tag">Target: Rp 15.000.000</span>
+        </div>
+
+        <div class="card" id="tier4">
+            <span class="badge">LOCKED</span>
+            <h3>🐑 ASSET TERNAK</h3>
+            <ul class="item-list">
+                <li>5 Ekor Domba/Kambing</li>
+                <li>Bangun Kandang Standar</li>
+                <li>Penyimpanan Rumput Awet</li>
+                <li>Modal Pengobatan Hewan</li>
+            </ul>
+            <span class="price-tag">Target: Rp 40.000.000</span>
+        </div>
+
+        <div class="card" id="tier5" style="border-style: dashed;">
+            <span class="badge">LOCKED</span>
+            <h3>🪙 LOGAM MULIA</h3>
+            <p style="font-size: 0.75rem; color: #888;">Digunakan hanya jika SEMUA Tier di atas sudah terpenuhi.</p>
+            <ul class="item-list">
+                <li>Perak Murni (Barter Volume)</li>
+                <li>Emas Antam (Simpan Nilai)</li>
+            </ul>
+            <span class="price-tag" id="goldAlloc">Sisa: Rp 0</span>
+        </div>
+    </div>
+
+    <div class="social-alert">
+        <h4>🚨 PANDUAN KETENANGAN SOSIAL</h4>
+        <p>
+            Jika internet/listrik padam, jangan fokus pada angka di saldo bank yang tidak bisa ditarik. Gunakan sisa uang tunai terakhir untuk <span class="highlight" style="color:var(--green)">MENGUNCI TIER 0 (Dapur Darurat)</span> terlebih dahulu.
+        </p>
+        <p>
+            Kepanikan muncul karena orang tidak tahu berapa "harga nyawa" mereka dalam fisik. Dengan uang <strong>Rp 100.000</strong>, Anda sudah bisa mengamankan karbohidrat dan energi untuk beberapa hari ke depan. <span style="color:var(--neon)">Jangan Kalap!</span> Fokuslah pada aset yang bisa dimakan atau dikembangbiakkan.
+        </p>
+        <p style="font-style: italic; font-size: 0.8rem; border-top: 1px solid var(--red); padding-top: 10px; margin-top: 10px;">
+            "Seseorang yang memiliki beras di rumah tidak akan berpikir untuk merampas milik tetangganya. Kedaulatan pangan adalah kunci kedamaian." - Nuswantara OS Philosophy
+        </p>
+    </div>
+</div>
+
+<script>
+    function unlockLogic() {
+        const input = document.getElementById('moneyInput').value || 0;
+        document.getElementById('formattedMoney').innerText = "Rp " + parseInt(input).toLocaleString('id-ID');
+        
+        const tiers = [
+            { id: 'tier0', cost: 100000 },
+            { id: 'tier1', cost: 500000 },
+            { id: 'tier2', cost: 2000000 },
+            { id: 'tier3', cost: 15000000 },
+            { id: 'tier4', cost: 40000000 }
+        ];
+
+        let balance = input;
+        let unlockedIndex = -1;
+
+        // Reset
+        document.querySelectorAll('.card').forEach(c => {
+            c.classList.remove('unlocked', 'active-now');
+            c.querySelector('.badge').innerText = "LOCKED";
+        });
+
+        // Chained Unlock
+        for (let i = 0; i < tiers.length; i++) {
+            if (balance >= tiers[i].cost) {
+                const el = document.getElementById(tiers[i].id);
+                el.classList.add('unlocked');
+                el.querySelector('.badge').innerText = "UNLOCKED";
+                balance -= tiers[i].cost;
+                unlockedIndex = i;
+            } else {
+                if (balance > 0) document.getElementById(tiers[i].id).classList.add('active-now');
+                break;
+            }
+        }
+
+        // Logic Tier 5 (Gold/Silver)
+        if (unlockedIndex === (tiers.length - 1) && balance > 0) {
+            const t5 = document.getElementById('tier5');
+            t5.classList.add('unlocked');
+            t5.querySelector('.badge').innerText = "PROTECTING";
+            document.getElementById('goldAlloc').innerText = "Investasi: Rp " + balance.toLocaleString('id-ID');
+        } else {
+            document.getElementById('goldAlloc').innerText = "Sisa: Rp 0";
+        }
+    }
+</script>
+
+</body>
+</html>

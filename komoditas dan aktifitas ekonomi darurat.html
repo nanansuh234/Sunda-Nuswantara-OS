@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA: SURVIVAL ECONOMY v1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --green: #00ff41; --blue: #00ccff; --orange: #ff9800; }
+        body { background: var(--bg); color: #ccc; font-family: 'Share Tech Mono', monospace; padding: 15px; }
+        .container { max-width: 1200px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 15px; margin-bottom: 25px; }
+        
+        h2, h3 { color: var(--neon); text-transform: uppercase; margin-bottom: 15px; border-left: 4px solid var(--neon); padding-left: 10px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .card { background: var(--panel); border: 1px solid #333; padding: 20px; border-radius: 12px; transition: 0.3s; }
+        .card:hover { border-color: var(--green); transform: translateY(-5px); }
+        
+        .label { color: var(--green); font-size: 0.75rem; display: block; margin-bottom: 5px; }
+        .title { color: #fff; font-size: 1.1rem; font-weight: bold; display: block; margin-bottom: 10px; }
+        .list { font-size: 0.85rem; color: #aaa; padding-left: 15px; }
+        .list li { margin-bottom: 8px; }
+
+        .highlight-box { background: rgba(0, 255, 65, 0.05); border: 1px dashed var(--green); padding: 15px; border-radius: 10px; margin-top: 10px; font-size: 0.8rem; }
+        
+        .urban-rural-info { background: rgba(255, 152, 0, 0.05); border-left: 4px solid var(--orange); padding: 20px; margin-top: 30px; border-radius: 0 10px 10px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>SURVIVAL ECONOMY: CITY-TO-VILLAGE REVERSE</h1>
+        <p style="color: #666; font-size: 0.8rem;">PANDUAN KOMODITAS & PROFESI PENUNJANG SAAT INFRASTRUKTUR MATI</p>
+    </div>
+
+    <h3>💎 KOMODITAS DARURAT (THE NEW ASSETS)</h3>
+    <div class="grid">
+        <div class="card">
+            <span class="label">ENERGY SOURCE</span>
+            <span class="title">UMBI-UMBIAN & PALAWIJA</span>
+            <ul class="list">
+                <li><strong>Singkong & Ubi:</strong> Mudah disimpan, tahan lama, kalori tinggi.</li>
+                <li><strong>Jagung Pipil:</strong> Cadangan karbohidrat pengganti beras.</li>
+                <li><strong>Talasan:</strong> Sumber energi yang bisa tumbuh di pot/lahan sempit.</li>
+            </ul>
+            <div class="highlight-box">Status: Pengganti Beras & Roti Utama.</div>
+        </div>
+
+        <div class="card">
+            <span class="label">PROTEIN SOURCE</span>
+            <span class="title">IKAN AWETAN & TERNAK HIDUP</span>
+            <ul class="list">
+                <li><strong>Ikan Asin/Asap:</strong> Protein yang bisa disimpan berbulan-bulan tanpa listrik.</li>
+                <li><strong>Telur Asin:</strong> Pengawetan alami untuk stok protein harian.</li>
+                <li><strong>Indukan Ayam/Bebek:</strong> "Mesin" protein yang memproduksi telur setiap hari.</li>
+            </ul>
+            <div class="highlight-box">Status: Pengganti Daging Beku (Frozen Food).</div>
+        </div>
+
+        <div class="card">
+            <span class="label">FUEL SOURCE</span>
+            <span class="title">KAYU BAKAR & ARANG</span>
+            <ul class="list">
+                <li><strong>Ranting Pohon Kota:</strong> Dikumpulkan dari taman-taman kota.</li>
+                <li><strong>Arang Batok Kelapa:</strong> Energi panas tinggi untuk memasak lama.</li>
+                <li><strong>Limbah Kayu Palet:</strong> Sumber bahan bakar melimpah di area gudang.</li>
+            </ul>
+            <div class="highlight-box">Status: Pengganti Gas LPG & Kompor Listrik.</div>
+        </div>
+    </div>
+
+    <h3>⚒️ PROFESI PENUNJANG (THE NEW JOBS)</h3>
+    <div class="grid">
+        <div class="card">
+            <span class="label">LOGISTICS</span>
+            <span class="title">KUSIR & KURIR OTOT</span>
+            <p style="font-size: 0.85rem; color: #aaa;">Membawa komoditas dari pinggiran kota ke pusat pemukiman menggunakan Delman, Becak, atau Sepeda Cargo.</p>
+            <div class="highlight-box">Tugas: Menjaga distribusi pangan tetap berjalan antar wilayah.</div>
+        </div>
+
+        <div class="card">
+            <span class="label">PROCESSING</span>
+            <span class="title">JURU PENGAWET ALAMI</span>
+            <p style="font-size: 0.85rem; color: #aaa;">Ahli pengasinan ikan, pembuatan dendeng, dan pengasapan. Menjamin pangan tidak busuk saat tidak ada kulkas.</p>
+            <div class="highlight-box">Tugas: Memperpanjang usia simpan stok pangan warga.</div>
+        </div>
+
+        <div class="card">
+            <span class="label">ENERGY GATHERER</span>
+            <span class="title">SCOUT KAYU & ENERGI</span>
+            <p style="font-size: 0.85rem; color: #aaa;">Tim yang mengumpulkan dan memproses limbah organik/kayu kota menjadi bahan bakar siap pakai untuk dapur umum.</p>
+            <div class="highlight-box">Tugas: Mensuplai "Bahan Bakar" untuk kebutuhan masak massal.</div>
+        </div>
+
+        <div class="card">
+            <span class="label">TRADE</span>
+            <span class="title">MAKELAR BARTER (DIRHAM-DINAR)</span>
+            <p style="font-size: 0.85rem; color: #aaa;">Menghubungkan orang yang butuh obat dengan orang yang punya beras. Mengelola nilai tukar berbasis Perak/Emas/Barter.</p>
+            <div class="highlight-box">Tugas: Mencegah kekacauan nilai tukar di pasar lokal.</div>
+        </div>
+    </div>
+
+    <div class="urban-rural-info">
+        <h4>🌆 LOGIKA KOTA MERANGKAP DESA</h4>
+        <p style="font-size: 0.9rem; line-height: 1.6;">
+            Dalam kondisi internet & listrik mati, **Gedung Parkir** bisa berubah menjadi **Kandang Ternak Vertikal**, dan **Taman Kota** berubah menjadi **Sawah Darurat**. Profesi penunjang di atas adalah kunci agar masyarakat kota tidak saling rebutan sumber daya (chaos).
+        </p>
+        <p style="font-size: 0.9rem; line-height: 1.6; margin-top: 10px;">
+            Ekonomi akan kembali ke bentuk paling murninya: **Ketersediaan Barang Fisik vs Kebutuhan Biologis**. Siapa yang memiliki akses ke Kayu Bakar dan Umbi-umbian, dialah yang memegang kendali stabilitas sosial di lingkungannya.
+        </p>
+    </div>
+
+    <p style="text-align: center; color: #444; font-size: 0.7rem; margin-top: 30px;">NUSWANTARA SURVIVAL STRUCTURE - v1.0 [OFFLINE READY]</p>
+</div>
+
+</body>
+</html>
