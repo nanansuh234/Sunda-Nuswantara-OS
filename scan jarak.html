@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA SAT UKURAN JARAK KUBA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --blue: #00ccff; --green: #00ff41; --red: #ff4444; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono', monospace; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .map-container { width: 100%; max-width: 1000px; height: 500px; border: 2px solid var(--neon); border-radius: 15px; overflow: hidden; position: relative; }
+        #map { width: 100%; height: 100%; cursor: crosshair; }
+        .control-panel { width: 100%; max-width: 1000px; background: var(--panel); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #333; }
+        .input-box { display: flex; gap: 5px; margin-bottom: 10px; }
+        input { flex: 1; background: #000; border: 1px solid var(--neon); color: #fff; padding: 10px; border-radius: 5px; font-family: inherit; }
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        button { flex: 1; background: var(--neon); color: #000; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; }
+        .measurement-box { width: 100%; max-width: 1000px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .stat-card { background: #000; border: 1px solid #222; padding: 10px; border-radius: 8px; text-align: center; }
+        .val { display: block; font-size: 1.1rem; color: #fff; margin-top: 5px; }
+        .sub-val { font-size: 0.7rem; color: #888; }
+    </style>
+</head>
+<body>
+
+    <h1 style="margin:0 0 10px 0; letter-spacing: 5px;">NUSWANTARA SAT UKURAN JARAK KUBA</h1>
+
+    <div class="control-panel">
+        <div class="input-box">
+            <input type="text" id="smartInput" placeholder="Alamat atau Paste Koordinat..." onkeypress="if(event.key==='Enter') smartSearch()">
+            <input type="number" id="travelSpeed" placeholder="Speed (KM/H)..." style="flex:0; width:120px;" value="80" oninput="calculateAll()">
+            <button style="flex:0; background:var(--green); width:60px;" onclick="loadClipboard()">LOAD</button>
+        </div>
+        <div class="btn-group">
+            <button onclick="smartSearch()">SCAN TARGET</button>
+            <button style="background:var(--red); color:#fff;" onclick="clearMarkers()">RESET DOTS</button>
+            <button style="background:#333; color:#fff;" onclick="rotateMap()">ROTATE 90°</button>
+            <button style="background:var(--blue);" onclick="copyCoords()">COPY CENTER</button>
+        </div>
+    </div>
+
+    <div class="map-container" id="captureArea">
+        <div id="map"></div>
+    </div>
+
+    <div class="measurement-box">
+        <div class="stat-card" style="border-top:3px solid var(--blue)">
+            <small>JARAK GLOBE (MASEHI)</small>
+            <span class="val" id="distGlobe">0.00 KM</span>
+            <span class="sub-val" id="timeMasehi">Est. Waktu: 0j 0m</span>
+        </div>
+        <div class="stat-card" style="border-top:3px solid var(--green)">
+            <small>JARAK REAL (NUSWANTARA 4.8x)</small>
+            <span class="val" id="distReal" style="color:var(--green)">0.00 KM</span>
+            <span class="sub-val" id="timeNus" style="color:var(--green)">Est. Waktu: 0j 0m (Nus)</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-rotate@0.2.8/dist/leaflet-rotate.js"></script>
+    <script>
+        const bounds = [[-11.0, 94.0], [7.0, 141.0]];
+        const map = L.map('map', { rotate: true, minZoom: 5, maxBounds: bounds }).setView([-7.2278, 107.9087], 13);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { crossOrigin: true }).addTo(map);
+
+        let dots = [];
+        let polyline = L.polyline([], {color: '#00ff41', weight: 3, dashArray: '5, 10'}).addTo(map);
+
+        map.on('click', function(e) {
+            if (dots.length >= 2) return;
+
+            let dot = L.circleMarker(e.latlng, { radius: 6, color: '#d4af37', fillColor: '#fff', fillOpacity: 1 }).addTo(map);
+            dots.push({marker: dot, pos: e.latlng});
+            polyline.addLatLng(e.latlng);
+
+            if (dots.length === 2) calculateAll();
+        });
+
+        function calculateAll() {
+            // Cek jika titik belum lengkap, jangan lanjut hitung
+            if (dots.length < 2) return;
+
+            let dGlobe = dots[0].pos.distanceTo(dots[1].pos) / 1000;
+            let dReal = dGlobe * 4.8;
+            let speed = parseFloat(document.getElementById('travelSpeed').value) || 1;
+
+            let hoursM = dGlobe / speed;
+            let mntM = Math.round((hoursM % 1) * 60);
+            
+            let totalMinM = hoursM * 60;
+            let hoursN = totalMinM / 90; // 1 Jam Nus = 90 Menit Masehi
+            let mntN = Math.round((hoursN % 1) * 90);
+
+            document.getElementById('distGlobe').innerText = dGlobe.toFixed(2) + " KM";
+            document.getElementById('timeMasehi').innerText = `Est. Waktu: ${Math.floor(hoursM)}j ${mntM}m`;
+            
+            document.getElementById('distReal').innerText = dReal.toFixed(2) + " KM";
+            document.getElementById('timeNus').innerText = `Est. Waktu: ${Math.floor(hoursN)}j ${mntN}m (Nus)`;
+        }
+
+        function clearMarkers() {
+            dots.forEach(d => map.removeLayer(d.marker));
+            dots = [];
+            polyline.setLatLngs([]);
+            document.getElementById('distGlobe').innerText = "0.00 KM";
+            document.getElementById('distReal').innerText = "0.00 KM";
+            document.getElementById('timeMasehi').innerText = "Est. Waktu: 0j 0m";
+            document.getElementById('timeNus').innerText = "Est. Waktu: 0j 0m (Nus)";
+        }
+
+        async function smartSearch() {
+            const input = document.getElementById('smartInput').value;
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(input)}&viewbox=94,-11,141,7&bounded=1`);
+            const data = await res.json();
+            if(data.length > 0) map.flyTo([data[0].lat, data[0].lon], 15);
+        }
+
+        function rotateMap() { map.setBearing((map.getBearing() + 90) % 360); }
+        function loadClipboard() { navigator.clipboard.readText().then(t => { document.getElementById('smartInput').value = t; smartSearch(); }); }
+        function copyCoords() { 
+            let c = map.getCenter(); 
+            navigator.clipboard.writeText(`${c.lat.toFixed(6)}, ${c.lng.toFixed(6)}`);
+            alert("Center Copied!");
+        }
+    </script>
+</body>
+</html>

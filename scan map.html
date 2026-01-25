@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA FOTO SAT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --blue: #00ccff; --green: #00ff41; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Share Tech Mono', monospace; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .map-container { width: 100%; max-width: 1000px; height: 550px; border: 2px solid var(--neon); border-radius: 15px; overflow: hidden; position: relative; }
+        #map { width: 100%; height: 100%; cursor: crosshair; background: #000; }
+        .map-container::before { content: '+'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--neon); font-size: 24px; z-index: 1000; pointer-events: none; }
+        .control-panel { width: 100%; max-width: 1000px; background: var(--panel); padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; }
+        .input-box { display: flex; gap: 5px; margin-bottom: 15px; }
+        input { flex: 1; background: #000; border: 1px solid var(--neon); color: #fff; padding: 12px; border-radius: 5px; font-family: inherit; }
+        .btn-group { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 10px; }
+        button { background: var(--neon); color: #000; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.75rem; }
+        .info-overlay { position: absolute; top: 10px; right: 10px; z-index: 1000; background: rgba(0,0,0,0.85); padding: 15px; border: 1px solid var(--blue); border-radius: 8px; font-size: 0.8rem; }
+        .copy-tag { display: block; margin-top: 8px; padding: 4px; background: var(--blue); color: #000; text-align: center; border-radius: 3px; cursor: pointer; font-weight: bold; }
+        .compass-box { position: absolute; bottom: 25px; left: 25px; z-index: 1000; width: 60px; height: 60px; background: rgba(0,0,0,0.8); border-radius: 50%; border: 2px solid var(--neon); display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+
+    <h1 style="margin:0 0 15px 0; letter-spacing: 5px;">NUSWANTARA FOTO SAT</h1>
+
+    <div class="control-panel">
+        <div class="input-box">
+            <input type="text" id="smartInput" placeholder="Alamat atau Paste Koordinat..." onkeypress="if(event.key==='Enter') smartSearch()">
+            <button style="background:var(--green); width: 80px;" onclick="loadClipboard()">LOAD</button>
+        </div>
+        <div class="btn-group">
+            <button onclick="smartSearch()">CARI LOKASI</button>
+            <button style="background:#333; color:#fff;" onclick="rotateMap()">PUTAR PETA 90°</button>
+            <button style="background:#555; color:#fff;" onclick="captureMap()">SIMPAN FOTO</button>
+        </div>
+    </div>
+
+    <div class="map-container" id="captureArea">
+        <div id="map"></div>
+        <div class="compass-box"><div id="compassNeedle">N</div></div>
+        <div class="info-overlay">
+            <strong>DATA POSISI:</strong><br>
+            LAT: <span id="latVal" style="color:var(--blue)">--</span><br>
+            LON: <span id="lonVal" style="color:var(--blue)">--</span><br>
+            ROT: <span id="rotVal" style="color:var(--neon)">0°</span>
+            <div class="copy-tag" id="copyBtn" onclick="copyCoords()">COPY COORD</div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-rotate@0.2.8/dist/leaflet-rotate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // KUNCI REGIONAL
+        const bounds = [[-11.0, 94.0], [7.0, 141.0]]; 
+        
+        const map = L.map('map', { 
+            rotate: true, 
+            bearing: 0, 
+            maxBounds: bounds, 
+            maxBoundsViscosity: 1.0,
+            minZoom: 5,  // KUNCI ZOOM OUT MAXIMAL (Agar dinding es nggak bocor)
+            maxZoom: 18  // Detail maksimal
+        }).setView([-2.5, 118.0], 5);
+
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
+            attribution: 'Nuswantara Foto Sat', 
+            crossOrigin: true 
+        }).addTo(map);
+
+        async function smartSearch() {
+            const input = document.getElementById('smartInput').value;
+            const coordRegex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
+
+            if (coordRegex.test(input)) {
+                const [lat, lon] = input.split(',').map(Number);
+                map.flyTo([lat, lon], 16);
+            } else {
+                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(input)}&viewbox=94,-11,141,7&bounded=1`);
+                const data = await res.json();
+                if(data.length > 0) map.flyTo([data[0].lat, data[0].lon], 16);
+            }
+        }
+
+        function rotateMap() {
+            let b = (map.getBearing() + 90) % 360;
+            map.setBearing(b);
+            document.getElementById('rotVal').innerText = b + "°";
+            document.getElementById('compassNeedle').style.transform = `rotate(${-b}deg)`;
+        }
+
+        function copyCoords() {
+            const val = document.getElementById('latVal').innerText + ", " + document.getElementById('lonVal').innerText;
+            navigator.clipboard.writeText(val).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "COPIED!";
+                btn.style.background = "#00ff41";
+                setTimeout(() => { btn.innerText = "COPY COORD"; btn.style.background = "#00ccff"; }, 1500);
+            });
+        }
+
+        function loadClipboard() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('smartInput').value = text;
+            });
+        }
+
+        function captureMap() {
+            html2canvas(document.getElementById('captureArea'), {useCORS: true}).then(c => {
+                const a = document.createElement('a'); a.download = `nus-map-${Date.now()}.png`; a.href = c.toDataURL(); a.click();
+            });
+        }
+
+        map.on('move rotate', () => {
+            const c = map.getCenter();
+            document.getElementById('latVal').innerText = c.lat.toFixed(6);
+            document.getElementById('lonVal').innerText = c.lng.toFixed(6);
+        });
+    </script>
+</body>
+</html>

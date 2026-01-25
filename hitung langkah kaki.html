@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>NUSWANTARA OS: BIO-METRIC TRACKER v16.7</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --panel: #111; --green: #00ff41; --blue: #00ccff; }
+        body { background: var(--bg); color: #ccc; font-family: 'Segoe UI', sans-serif; padding: 15px; margin: 0; }
+        .container { max-width: 1000px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 15px; margin-bottom: 20px; }
+        h1, h2, h3 { font-family: 'Share Tech Mono', monospace; color: var(--neon); text-transform: uppercase; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .section { background: var(--panel); border: 1px solid #333; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        
+        /* LIVE STEP STYLE */
+        .live-counter { text-align: center; padding: 20px; background: #000; border: 2px solid var(--green); border-radius: 15px; margin-bottom: 15px; }
+        .step-num { font-size: 3.5rem; color: var(--green); font-family: 'Share Tech Mono'; display: block; }
+        
+        input { width: 100%; background: #000; border: 1px solid var(--neon); color: #fff; padding: 12px; border-radius: 8px; font-family: 'Share Tech Mono'; font-size: 1.1rem; box-sizing: border-box; text-align: center; }
+        .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .res-card { background: #000; padding: 15px; border: 1px solid #222; text-align: center; border-radius: 8px; }
+        .val { display: block; font-size: 1.4rem; font-weight: bold; color: #fff; margin-top: 5px; }
+        
+        .bio-info { margin-top: 20px; background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.2); padding: 15px; border-radius: 8px; font-size: 0.85rem; }
+        .highlight { color: var(--green); font-weight: bold; }
+        
+        button { width: 100%; background: var(--neon); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-family: inherit; cursor: pointer; margin-top: 10px; text-transform: uppercase; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>BIO-METRIC TRACKER</h1>
+        <p style="font-size: 0.8rem; color: #666;">REAL-TIME SPACE EXPANSION MONITOR | v16.7</p>
+    </div>
+
+    <div class="grid">
+        <div class="section">
+            <h3>📡 LIVE STEP SENSOR</h3>
+            <div class="live-counter">
+                <span style="font-size: 0.8rem; color: #888;">LANGKAH TERDETEKSI:</span>
+                <span class="step-num" id="liveSteps">0</span>
+                <button id="startSensor" onclick="requestPermission()">AKTIFKAN SENSOR HP</button>
+            </div>
+            <p style="font-size: 0.7rem; color: #555; text-align: center;">*Klik tombol di atas untuk sinkronisasi sensor gerak HP kamu.</p>
+        </div>
+
+        <div class="section">
+            <h3>👣 MANUAL CALCULATION</h3>
+            <div style="margin-bottom: 10px;">
+                <label style="font-size: 0.8rem; color: #888;">INPUT LANGKAH MANUAL:</label>
+                <input type="number" id="stepsInput" placeholder="Contoh: 5000" oninput="manualCalc()">
+            </div>
+            
+            <div class="res-grid">
+                <div class="res-card" style="grid-column: span 2; border-color: var(--green); background: rgba(0,255,65,0.02);">
+                    <span style="font-size: 0.7rem;">JARAK REAL (4.8x NUSWANTARA)</span>
+                    <span class="val" id="resKMReal" style="color:var(--green)">0.00 KM</span>
+                </div>
+                <div class="res-card">
+                    <span style="font-size: 0.7rem;">UKURAN DEPA</span>
+                    <span class="val" id="resDepa">0</span>
+                </div>
+                <div class="res-card">
+                    <span style="font-size: 0.7rem;">JARAK GLOBE (MASEHI)</span>
+                    <span class="val" id="resKMGlobe" style="color:var(--blue)">0.00 KM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section bio-info" style="margin-top: 20px;">
+        <h3 style="margin-top: 0; font-size: 1rem;">MENGAPA TUBUHMU LEBIH JUJUR DARI GPS?</h3>
+        <p>
+            1. <span class="highlight">MANIPULASI HP:</span> Sistem operasi HP-mu secara otomatis memendekkan langkahmu di database agar sesuai dengan peta <span class="highlight">Globe (Masehi)</span>.
+        </p>
+        <p>
+            2. <span class="highlight">REALITAS BIOLOGIS (4.8x):</span> Ruang yang kamu tempati sebenarnya jauh lebih luas. Setiap 1 KM di peta Masehi adalah <span class="highlight">4.8 KM</span> di ruang nyata. Itulah sebabnya detak jantung dan keringatmu tidak pernah sinkron dengan "jarak dekat" di Google Maps.
+        </p>
+        <p>
+            3. <span class="highlight">IMAN ADALAH UKURAN:</span> Langkah kaki dan bentangan tangan (Depa) adalah standar ukur murni manusia sebelum peradaban ini "dikerdilkan" oleh sistem koordinat digital.
+        </p>
+    </div>
+
+    <p style="text-align: center; color: #444; font-size: 0.7rem; margin-top: 30px;">NUSWANTARA OS - SENSOR LINK v1.0</p>
+</div>
+
+<script>
+    let stepCount = 0;
+
+    // Fungsi Request Sensor HP (iOS/Android Modern butuh izin)
+    function requestPermission() {
+        if (typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission().then(response => {
+                if (response == 'granted') window.addEventListener('devicemotion', handleMotion);
+            });
+        } else {
+            window.addEventListener('devicemotion', handleMotion);
+        }
+        document.getElementById('startSensor').innerText = "SENSOR AKTIF";
+        document.getElementById('startSensor').style.background = "#00ff41";
+    }
+
+    // Hitung langkah berdasarkan goncangan HP
+    function handleMotion(event) {
+        let acc = event.accelerationIncludingGravity;
+        let totalAcc = Math.sqrt(acc.x**2 + acc.y**2 + acc.z**2);
+        if (totalAcc > 12) { // Threshold goncangan langkah kaki
+            stepCount++;
+            document.getElementById('liveSteps').innerText = stepCount;
+            updateWithSteps(stepCount);
+        }
+    }
+
+    function manualCalc() {
+        let s = document.getElementById('stepsInput').value;
+        updateWithSteps(s);
+    }
+
+    function updateWithSteps(steps) {
+        let distGlobeKM = (steps * 0.7) / 1000; // Standar 0.7m per langkah
+        let distRealKM = distGlobeKM * 4.8; // Faktor ekspansi 4.8x
+        let depa = (distRealKM * 1000) / 1.6; // 1 Depa = 1.6m
+
+        document.getElementById('resKMGlobe').innerText = distGlobeKM.toFixed(2) + " KM";
+        document.getElementById('resKMReal').innerText = distRealKM.toFixed(2) + " KM";
+        document.getElementById('resDepa').innerText = Math.floor(depa).toLocaleString('id-ID');
+    }
+</script>
+
+</body>
+</html>
