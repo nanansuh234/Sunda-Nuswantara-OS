@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root {
+    --primary: #d35400; /* Warna Daging */
+    --secondary: #27ae60; /* Warna Rumput */
+    --accent: #f1c40f; /* Warna Telur/Susu */
+    --bg: #1a1a1a;
+    --card: #2d2d2d;
+    --text: #ecf0f1;
+  }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    margin: 0;
+  }
+  .calc-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--card);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border: 1px solid #444;
+  }
+  h2 {
+    color: var(--primary);
+    text-align: center;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+    margin-top: 0;
+  }
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  .tab-btn {
+    background: #444;
+    border: none;
+    color: #aaa;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  .tab-btn.active {
+    background: var(--primary);
+    color: white;
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 8px;
+  }
+  .input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--accent);
+  }
+  .input-group input, .input-group select {
+    width: 100%;
+    padding: 10px;
+    background: #222;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Fix padding issue */
+  }
+  .input-group small {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+    font-size: 0.85rem;
+  }
+
+  .result-box {
+    background: #222;
+    border-left: 4px solid var(--secondary);
+    padding: 15px;
+    margin-top: 20px;
+    display: none;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+  }
+  .result-val {
+    font-weight: bold;
+    color: var(--secondary);
+    text-align: right;
+  }
+  .highlight {
+    color: var(--accent);
+    font-size: 1.1em;
+  }
+  
+  .btn-calc {
+    width: 100%;
+    padding: 12px;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .btn-calc:hover {
+    background: #219150;
+  }
+</style>
+</head>
+<body>
+
+<div class="calc-container">
+  <h2>Ternak & Pangan Calculator</h2>
+  
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('meat')">🥩 Daging</button>
+    <button class="tab-btn" onclick="switchTab('milk')">🥛 Susu</button>
+    <button class="tab-btn" onclick="switchTab('egg')">🥚 Telur</button>
+  </div>
+
+  <div id="meat-inputs" class="input-section">
+    <div class="input-group">
+      <label>Jenis Ternak</label>
+      <select id="meatType" onchange="updateMeatDefaults()">
+        <option value="sapi">Sapi Potong (Penggemukan)</option>
+        <option value="kambing">Kambing/Domba</option>
+        <option value="ayam">Ayam Broiler (Pedaging)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Jumlah Populasi (Ekor)</label>
+      <input type="number" id="meatCount" value="10">
+    </div>
+    <div class="input-group">
+      <label>Estimasi Hasil Daging Bersih per Ekor (Kg)</label>
+      <input type="number" id="meatYield" value="150">
+      <small id="meatYieldInfo">Rata-rata Sapi Lokal: 150-170 Kg Daging Murni</small>
+    </div>
+    <div class="input-group">
+      <label>Siklus Panen (Bulan)</label>
+      <input type="number" id="meatCycle" value="4">
+      <small id="meatCycleInfo">Penggemukan Sapi (Bakalan): 3-5 Bulan</small>
+    </div>
+  </div>
+
+  <div id="milk-inputs" class="input-section" style="display:none;">
+    <div class="input-group">
+      <label>Jenis Ternak</label>
+      <select id="milkType" onchange="updateMilkDefaults()">
+        <option value="sapi_perah">Sapi Perah (FH)</option>
+        <option value="kambing_perah">Kambing Perah (Etawa/Sanen)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Jumlah Ternak Produktif (Ekor)</label>
+      <input type="number" id="milkCount" value="5">
+    </div>
+    <div class="input-group">
+      <label>Produksi Susu per Hari (Liter/Ekor)</label>
+      <input type="number" id="milkYield" value="12">
+      <small id="milkYieldInfo">Rata-rata Sapi Perah Rakyat: 10-15 Liter/hari</small>
+    </div>
+  </div>
+
+  <div id="egg-inputs" class="input-section" style="display:none;">
+    <div class="input-group">
+      <label>Jenis Unggas</label>
+      <select id="eggType">
+        <option value="ayam_ras">Ayam Ras Petelur (Layer)</option>
+        <option value="ayam_kampung">Ayam Kampung/Bebek</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Jumlah Populasi (Ekor)</label>
+      <input type="number" id="eggCount" value="100">
+    </div>
+    <div class="input-group">
+      <label>Produktivitas (Butir per Tahun/Ekor)</label>
+      <input type="number" id="eggYield" value="280">
+      <small>Ayam Ras optimal: 280-300 butir/tahun</small>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>Target Konsumsi per Orang/Tahun</label>
+    <input type="number" id="targetConsumption" value="15">
+    <small id="consumptionUnit">Kg Daging/Tahun (Standar Sehat)</small>
+  </div>
+
+  <button class="btn-calc" onclick="calculate()">HITUNG HASIL</button>
+
+  <div id="result" class="result-box">
+    <div class="result-row">
+      <span>Total Produksi per Siklus/Tahun:</span>
+      <span class="result-val highlight" id="resTotal">0 Kg</span>
+    </div>
+    <div class="result-row">
+      <span>Kecukupan Pangan (1 Tahun):</span>
+      <span class="result-val highlight" id="resPeople">0 Orang</span>
+    </div>
+    <div class="result-row" id="resNoteRow">
+      <span>Catatan Waktu:</span>
+      <span class="result-val" id="resNote">-</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentMode = 'meat';
+
+  function switchTab(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.input-section').forEach(el => el.style.display = 'none');
+    document.getElementById(mode + '-inputs').style.display = 'block';
+    document.getElementById('result').style.display = 'none';
+
+    // Update Label Konsumsi
+    const consLabel = document.getElementById('consumptionUnit');
+    const consInput = document.getElementById('targetConsumption');
+    
+    if(mode === 'meat') {
+        consLabel.innerText = "Kg Daging/Tahun (Standar: 15-20kg)";
+        consInput.value = 15;
+        updateMeatDefaults();
+    } else if(mode === 'milk') {
+        consLabel.innerText = "Liter Susu/Tahun (Standar: 30-40L)";
+        consInput.value = 30;
+        updateMilkDefaults();
+    } else {
+        consLabel.innerText = "Kg Telur/Tahun (Standar: 10-12kg)";
+        consInput.value = 10;
+    }
+  }
+
+  function updateMeatDefaults() {
+    const type = document.getElementById('meatType').value;
+    const yieldInput = document.getElementById('meatYield');
+    const cycleInput = document.getElementById('meatCycle');
+    const yieldInfo = document.getElementById('meatYieldInfo');
+    const cycleInfo = document.getElementById('meatCycleInfo');
+
+    if(type === 'sapi') {
+        yieldInput.value = 150; 
+        yieldInfo.innerText = "Sapi Lokal: ~150kg Daging Murni (Karkas ~200kg)";
+        cycleInput.value = 4;
+        cycleInfo.innerText = "Penggemukan Bakalan: 3-5 Bulan";
+    } else if(type === 'kambing') {
+        yieldInput.value = 10;
+        yieldInfo.innerText = "Kambing/Domba: ~10-12kg Daging Murni";
+        cycleInput.value = 10;
+        cycleInfo.innerText = "Pembesaran: 8-12 Bulan";
+    } else {
+        yieldInput.value = 1.2;
+        yieldInfo.innerText = "Ayam Broiler: ~1.0 - 1.4kg Karkas";
+        cycleInput.value = 1.2; // 35 hari
+        cycleInfo.innerText = "Panen: 35-40 Hari (~1.2 Bulan)";
+    }
+  }
+
+  function updateMilkDefaults() {
+    const type = document.getElementById('milkType').value;
+    const yieldInput = document.getElementById('milkYield');
+    const yieldInfo = document.getElementById('milkYieldInfo');
+
+    if(type === 'sapi_perah') {
+        yieldInput.value = 12;
+        yieldInfo.innerText = "Sapi: 10-15 Liter/hari (Laktasi 305 hari)";
+    } else {
+        yieldInput.value = 1.5;
+        yieldInfo.innerText = "Kambing Etawa: 1-2 Liter/hari";
+    }
+  }
+
+  function calculate() {
+    const consumption = parseFloat(document.getElementById('targetConsumption').value) || 1;
+    let total = 0;
+    let people = 0;
+    let note = "";
+    let unit = "";
+
+    if (currentMode === 'meat') {
+        const count = parseFloat(document.getElementById('meatCount').value);
+        const yieldPerHead = parseFloat(document.getElementById('meatYield').value);
+        const cycle = parseFloat(document.getElementById('meatCycle').value);
+        
+        // Total Daging sekali panen
+        total = count * yieldPerHead;
+        
+        // Jika siklus < 12 bulan, kita hitung potensi setahun (opsional)
+        // Tapi di sini kita hitung "Yield per Batch" saja biar aman
+        // Jumlah orang = Total Daging / Konsumsi per Tahun
+        people = total / consumption;
+        
+        unit = "Kg Daging";
+        note = `Panen tiap ${cycle} bulan.`;
+
+    } else if (currentMode === 'milk') {
+        const count = parseFloat(document.getElementById('milkCount').value);
+        const dailyYield = parseFloat(document.getElementById('milkYield').value);
+        
+        // Asumsi laktasi efektif 300 hari setahun (sapi butuh masa kering)
+        const daysActive = 300; 
+        total = count * dailyYield * daysActive; // Total Liter per tahun
+        
+        people = total / consumption;
+        unit = "Liter Susu";
+        note = "Estimasi produksi setahun (Laktasi 300 hari).";
+
+    } else {
+        const count = parseFloat(document.getElementById('eggCount').value);
+        const yearlyYield = parseFloat(document.getElementById('eggYield').value); // butir
+        
+        // Konversi Butir ke Kg (Rata-rata 16 butir = 1 kg)
+        const totalButir = count * yearlyYield;
+        total = totalButir / 16; 
+        
+        people = total / consumption;
+        unit = "Kg Telur";
+        note = `Setara dengan ${totalButir.toLocaleString()} butir telur/tahun.`;
+    }
+
+    document.getElementById('resTotal').innerText = total.toLocaleString('id-ID', {maximumFractionDigits:1}) + " " + unit;
+    document.getElementById('resPeople').innerText = Math.floor(people).toLocaleString('id-ID') + " Orang";
+    document.getElementById('resNote').innerText = note;
+    document.getElementById('result').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

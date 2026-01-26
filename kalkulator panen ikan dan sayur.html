@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root {
+    --veg: #27ae60; /* Hijau Sayur */
+    --tuber: #d35400; /* Warna Umbi/Tanah */
+    --fish: #2980b9; /* Biru Ikan */
+    --bg: #1a1a1a;
+    --card: #252525;
+    --text: #ecf0f1;
+    --input-bg: #333;
+  }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    margin: 0;
+  }
+  .calc-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--card);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border: 1px solid #444;
+  }
+  h2 {
+    color: var(--veg);
+    text-align: center;
+    border-bottom: 2px solid var(--veg);
+    padding-bottom: 10px;
+    margin-top: 0;
+  }
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  .tab-btn {
+    background: #444;
+    border: none;
+    color: #aaa;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+    font-size: 0.95rem;
+  }
+  .tab-btn.active {
+    background: var(--veg);
+    color: white;
+  }
+  
+  /* Input Styles */
+  .input-section { display: none; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from {opacity:0} to {opacity:1} }
+  
+  .input-group {
+    margin-bottom: 15px;
+    background: rgba(255,255,255,0.03);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+  }
+  .input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #ccc;
+  }
+  .input-group input, .input-group select {
+    width: 100%;
+    padding: 12px;
+    background: var(--input-bg);
+    border: 1px solid #555;
+    color: white;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  .input-group small {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+    font-size: 0.85rem;
+    font-style: italic;
+  }
+
+  /* Result Box */
+  .result-box {
+    background: #222;
+    border-left: 5px solid var(--veg);
+    padding: 20px;
+    margin-top: 25px;
+    display: none;
+    border-radius: 0 8px 8px 0;
+  }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+  }
+  .result-val {
+    font-weight: bold;
+    color: var(--veg);
+    text-align: right;
+    font-size: 1.1em;
+  }
+  
+  .btn-calc {
+    width: 100%;
+    padding: 15px;
+    background: var(--veg);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 10px;
+  }
+  .btn-calc:hover { filter: brightness(1.1); }
+
+  /* Theme Colors */
+  .theme-fish .tab-btn.active { background: var(--fish); }
+  .theme-fish h2 { color: var(--fish); border-color: var(--fish); }
+  .theme-fish .btn-calc { background: var(--fish); }
+  .theme-fish .result-box { border-left-color: var(--fish); }
+  .theme-fish .result-val { color: var(--fish); }
+
+  .theme-veg .tab-btn.active { background: var(--veg); }
+  .theme-veg h2 { color: var(--veg); border-color: var(--veg); }
+  .theme-veg .btn-calc { background: var(--veg); }
+  .theme-veg .result-box { border-left-color: var(--veg); }
+  .theme-veg .result-val { color: var(--veg); }
+</style>
+</head>
+<body class="theme-veg">
+
+<div class="calc-container">
+  <h2 id="mainTitle">Kalkulator Pangan Nabati</h2>
+  
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('veg')">🥬 Sayur & Umbi</button>
+    <button class="tab-btn" onclick="switchTab('fish')">🐟 Ikan & Udang</button>
+  </div>
+
+  <div id="veg-inputs" class="input-section" style="display:block;">
+    <div class="input-group">
+      <label>Jenis Tanaman</label>
+      <select id="vegType" onchange="updateVegDefaults()">
+        <option value="daun">Sayur Daun (Kangkung/Bayam/Sawi)</option>
+        <option value="buah">Sayur Buah (Cabai/Terong/Tomat)</option>
+        <option value="singkong">Singkong (Karbohidrat)</option>
+        <option value="ubi">Ubi Jalar (Karbohidrat Cepat)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Luas Lahan Tanam (Meter Persegi)</label>
+      <input type="number" id="vegArea" value="10">
+      <small>Contoh: Pekarangan 2x5 meter = 10 m²</small>
+    </div>
+    <div class="input-group">
+      <label>Estimasi Panen per m² (Kg)</label>
+      <input type="number" id="vegYield" value="1.5">
+      <small id="vegYieldInfo">Sayur Daun: 1.0 - 2.0 Kg/m² per panen</small>
+    </div>
+    <div class="input-group">
+      <label>Siklus Panen (Hari/Bulan)</label>
+      <input type="text" id="vegCycleDisplay" value="25 Hari" readonly style="background:#222; border:none; color:#aaa;">
+      <input type="hidden" id="vegCycleMonth" value="0.8"> </div>
+  </div>
+
+  <div id="fish-inputs" class="input-section">
+    <div class="input-group">
+      <label>Komoditas</label>
+      <select id="fishType" onchange="updateFishDefaults()">
+        <option value="lele">Lele (Sangkuriang/Dumbo)</option>
+        <option value="nila">Nila / Mujair</option>
+        <option value="mas">Ikan Mas</option>
+        <option value="udang">Udang Vaname</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label>Jumlah Tebar Bibit (Ekor)</label>
+      <input type="number" id="fishCount" value="1000">
+    </div>
+    <div class="input-group">
+      <label>Target Size Panen (Ekor per Kg)</label>
+      <input type="number" id="fishSize" value="8">
+      <small id="fishSizeInfo">Lele konsumsi: 8-10 ekor/kg</small>
+    </div>
+    <div class="input-group">
+      <label>Survival Rate (SR %)</label>
+      <input type="number" id="fishSR" value="90">
+    </div>
+    <div class="input-group">
+      <label>Siklus Panen (Bulan)</label>
+      <input type="number" id="fishCycle" value="2.5">
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label id="lblCons">Target Konsumsi per Orang/Tahun</label>
+    <input type="number" id="targetConsumption" value="40">
+    <small id="lblConsUnit">Kg Sayur/Tahun (Standar Sehat WHO ~140kg, Minimal ~40kg)</small>
+  </div>
+
+  <button class="btn-calc" onclick="calculate()">HITUNG ESTIMASI</button>
+
+  <div id="result" class="result-box">
+    <div class="result-row">
+      <span>Total Estimasi Panen:</span>
+      <span class="result-val" id="resTotal" style="font-size:1.3em">0 Kg</span>
+    </div>
+
+    <div class="result-row">
+      <span>Estimasi Waktu Panen:</span>
+      <span class="result-val" id="resTime" style="color:#aaa;">-</span>
+    </div>
+
+    <div class="result-row">
+      <span>Kecukupan Pangan (1 Tahun):</span>
+      <span class="result-val" id="resPeople">0 Orang</span>
+    </div>
+    
+    <div class="result-row" style="border:none; margin-top:10px;">
+      <small id="resNote" style="color:#aaa; font-style:italic; line-height:1.4;">-</small>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentMode = 'veg';
+
+  function switchTab(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.input-section').forEach(el => el.style.display = 'none');
+    document.getElementById(mode + '-inputs').style.display = 'block';
+    
+    // Ganti Tema Warna
+    const body = document.body;
+    const title = document.getElementById('mainTitle');
+    
+    if(mode === 'fish') {
+        body.className = 'theme-fish';
+        title.innerText = "Kalkulator Pangan Hewani (Air)";
+        
+        document.getElementById('lblCons').innerText = "Target Protein Ikan per Orang/Tahun";
+        document.getElementById('lblConsUnit').innerText = "Kg Ikan/Tahun (Nasional ~30-50kg)";
+        document.getElementById('targetConsumption').value = 30;
+        updateFishDefaults();
+    } else {
+        body.className = 'theme-veg';
+        title.innerText = "Kalkulator Pangan Nabati (Lahan)";
+        
+        document.getElementById('lblCons').innerText = "Target Konsumsi Sayur/Umbi per Orang/Tahun";
+        document.getElementById('lblConsUnit').innerText = "Kg/Tahun (Sayur ~40kg, Karbo ~100kg)";
+        document.getElementById('targetConsumption').value = 40;
+        updateVegDefaults();
+    }
+
+    document.getElementById('result').style.display = 'none';
+  }
+
+  function updateVegDefaults() {
+    const type = document.getElementById('vegType').value;
+    const yieldInput = document.getElementById('vegYield');
+    const info = document.getElementById('vegYieldInfo');
+    const cycleDisplay = document.getElementById('vegCycleDisplay');
+    const cycleMonth = document.getElementById('vegCycleMonth');
+    const consInput = document.getElementById('targetConsumption');
+
+    if(type === 'daun') {
+        yieldInput.value = 1.5;
+        info.innerText = "Kangkung/Bayam: 1.5 kg/m² (Panen Cepat)";
+        cycleDisplay.value = "20 - 25 Hari";
+        cycleMonth.value = 0.8; 
+        consInput.value = 40; 
+    } else if(type === 'buah') {
+        yieldInput.value = 2.5;
+        info.innerText = "Cabai/Terong: ~2-3 kg/m² (Total Panen Berkali-kali)";
+        cycleDisplay.value = "3 - 4 Bulan";
+        cycleMonth.value = 3.5;
+        consInput.value = 10; 
+    } else if(type === 'singkong') {
+        yieldInput.value = 3;
+        info.innerText = "Singkong: 3 - 4 kg/m² (Umbi Besar)";
+        cycleDisplay.value = "8 - 10 Bulan";
+        cycleMonth.value = 9;
+        consInput.value = 80; 
+    } else { // Ubi Jalar
+        yieldInput.value = 2;
+        info.innerText = "Ubi Jalar: 2 - 2.5 kg/m²";
+        cycleDisplay.value = "3.5 - 4 Bulan";
+        cycleMonth.value = 4;
+        consInput.value = 80; 
+    }
+  }
+
+  function updateFishDefaults() {
+    const type = document.getElementById('fishType').value;
+    const size = document.getElementById('fishSize');
+    const sr = document.getElementById('fishSR');
+    const cycle = document.getElementById('fishCycle');
+    
+    if(type === 'lele') { size.value = 8; cycle.value = 2.5; sr.value = 90; }
+    else if(type === 'nila') { size.value = 4; cycle.value = 4; sr.value = 85; }
+    else if(type === 'mas') { size.value = 3; cycle.value = 3.5; sr.value = 80; }
+    else { size.value = 40; cycle.value = 3.5; sr.value = 70; }
+  }
+
+  function calculate() {
+    const consumption = parseFloat(document.getElementById('targetConsumption').value) || 1;
+    let totalKg = 0;
+    let note = "";
+    let timeInfo = "";
+
+    if (currentMode === 'veg') {
+        const area = parseFloat(document.getElementById('vegArea').value);
+        const yieldPerM2 = parseFloat(document.getElementById('vegYield').value);
+        const cycleMonth = parseFloat(document.getElementById('vegCycleMonth').value);
+        const cycleStr = document.getElementById('vegCycleDisplay').value;
+        
+        totalKg = area * yieldPerM2;
+        timeInfo = cycleStr; // Ambil text "20-25 Hari"
+
+        let freq = 12 / cycleMonth;
+        let totalYearly = totalKg * freq;
+        let people = totalYearly / consumption;
+        
+        note = `Lahan ${area} m² panen ${freq.toFixed(1)}x setahun. Total Produksi Setahun: ${totalYearly.toFixed(0)} Kg.`;
+        
+        document.getElementById('resTotal').innerText = totalKg.toFixed(1) + " Kg (per Panen)";
+        document.getElementById('resPeople').innerText = Math.floor(people).toLocaleString('id-ID') + " Orang";
+
+    } else {
+        const tebar = parseFloat(document.getElementById('fishCount').value);
+        const sizePerKg = parseFloat(document.getElementById('fishSize').value);
+        const sr = parseFloat(document.getElementById('fishSR').value);
+        const cycle = parseFloat(document.getElementById('fishCycle').value);
+
+        let alive = tebar * (sr / 100);
+        totalKg = alive / sizePerKg;
+        timeInfo = cycle + " Bulan"; // Set waktu panen ikan
+
+        let freq = 12 / cycle;
+        let totalYearly = totalKg * freq;
+        let people = totalYearly / consumption;
+
+        note = `Estimasi hidup: ${alive.toFixed(0)} ekor. Pakan butuh ± ${(totalKg*1.1).toFixed(0)} Kg sampai panen.`;
+        
+        document.getElementById('resTotal').innerText = totalKg.toFixed(1) + " Kg (per Panen)";
+        document.getElementById('resPeople').innerText = Math.floor(people).toLocaleString('id-ID') + " Orang";
+    }
+
+    // UPDATE DATA WAKTU PANEN
+    document.getElementById('resTime').innerText = timeInfo;
+    
+    // UPDATE WARNA TEXT WAKTU
+    const timeEl = document.getElementById('resTime');
+    if(currentMode === 'fish') timeEl.style.color = 'var(--fish)';
+    else timeEl.style.color = 'var(--veg)';
+
+    document.getElementById('resNote').innerText = note;
+    document.getElementById('result').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

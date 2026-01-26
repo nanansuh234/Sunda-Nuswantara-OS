@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Pangan Mandiri</title>
+<style>
+  :root {
+    --bg: #1a150e;       /* Background Gelap */
+    --panel: #2b2218;    /* Warna Panel */
+    --gold: #d4af37;     /* Warna Emas */
+    --text: #e0dacc;     /* Warna Teks Terang */
+    --input-bg: #12100e; /* Background Input */
+    --accent: #8b5a2b;   /* Aksen Coklat */
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center; /* Tengah Horizontal */
+    align-items: center;     /* Tengah Vertikal */
+    min-height: 100vh;       /* Tinggi minimal selayar penuh */
+  }
+
+  .calc-container {
+    background: var(--panel);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5); /* Efek bayangan glow */
+  }
+
+  h2 {
+    text-align: center;
+    color: var(--gold);
+    margin-top: 0;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+  }
+
+  .calc-group {
+    margin-bottom: 20px;
+  }
+
+  .calc-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--gold);
+    font-size: 0.95em;
+  }
+
+  .calc-group input {
+    width: 100%;
+    padding: 12px;
+    background: var(--input-bg);
+    border: 1px solid #554433;
+    color: #fff;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1em;
+    outline: none;
+    transition: border 0.3s;
+  }
+
+  .calc-group input:focus {
+    border-color: var(--gold);
+  }
+
+  .calc-group small {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+    font-size: 0.8em;
+    font-style: italic;
+  }
+
+  button.calc-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--gold);
+    color: #1a150e;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 10px;
+  }
+
+  button.calc-btn:hover {
+    background: #b8962e;
+  }
+
+  button.calc-btn:active {
+    transform: scale(0.98);
+  }
+
+  .calc-result {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px dashed var(--gold);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 25px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .calc-result h4 {
+    margin-top: 0;
+    color: var(--text);
+    border-bottom: 1px solid #443322;
+    padding-bottom: 10px;
+    font-size: 1em;
+  }
+
+  .res-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.95em;
+    align-items: center;
+  }
+
+  .res-val {
+    font-weight: bold;
+    color: var(--gold);
+    font-size: 1.1em;
+  }
+
+  /* Responsive untuk layar HP */
+  @media (max-width: 480px) {
+    .calc-container {
+      padding: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="calc-container">
+  <h2>Kalkulator Lahan Padi</h2>
+  
+  <div class="calc-group">
+    <label>Target Gabah (Ton)</label>
+    <input type="number" id="inputGabah" value="1" step="0.1">
+    <small>Target panen gabah basah/kering (GKG)</small>
+  </div>
+  
+  <div class="calc-group">
+    <label>Produktivitas Lahan (Ton/Ha)</label>
+    <input type="number" id="inputYield" value="5.2" step="0.1">
+    <small>Nasional: 5.2 Ton/Ha (BPS 2024)</small>
+  </div>
+
+  <div class="calc-group">
+    <label>Rendemen Beras (%)</label>
+    <input type="number" id="inputRendemen" value="64" step="1">
+    <small>Konversi Gabah ke Beras (63-65%)</small>
+  </div>
+
+  <div class="calc-group">
+    <label>Konsumsi per Orang (Kg/Tahun)</label>
+    <input type="number" id="inputKonsumsi" value="92" step="1">
+    <small>Nasional: 92 Kg/kapita/tahun</small>
+  </div>
+
+  <button class="calc-btn" onclick="hitungPangan()">Hitung Estimasi</button>
+
+  <div class="calc-result" id="resultBox" style="display:none;">
+    <h4>Hasil Perhitungan:</h4>
+    <div class="res-row">
+      <span>Luas Tanah Diperlukan:</span>
+      <span class="res-val" id="resLand">0 Ha</span>
+    </div>
+    <div class="res-row">
+      <span>Beras Bersih:</span>
+      <span class="res-val" id="resRice">0 Kg</span>
+    </div>
+    <div class="res-row">
+      <span>Stok Pangan 1 Orang:</span>
+      <span class="res-val" id="resTime">0 Tahun</span>
+    </div>
+     <div class="res-row" style="margin-top:15px; border-top:1px dashed #443322; padding-top:10px;">
+      <span>Atau Cukup Untuk:</span>
+      <span class="res-val" id="resPeople">0 Orang</span>
+    </div>
+    <div style="text-align: right; font-size: 0.8em; color: #888; margin-top: -5px;">(Selama 1 tahun)</div>
+  </div>
+</div>
+
+<script>
+function hitungPangan() {
+  // Ambil nilai input
+  let gabah = parseFloat(document.getElementById('inputGabah').value) || 0;
+  let hasilPerHa = parseFloat(document.getElementById('inputYield').value) || 1;
+  let rendemen = parseFloat(document.getElementById('inputRendemen').value) || 0;
+  let konsumsi = parseFloat(document.getElementById('inputKonsumsi').value) || 1;
+
+  // Rumus
+  let luasTanah = gabah / hasilPerHa;
+  let berasKg = gabah * 1000 * (rendemen / 100);
+  let durasiTahun = berasKg / konsumsi;
+  let jumlahOrang = berasKg / konsumsi;
+
+  // Tampilkan hasil
+  document.getElementById('resLand').innerText = luasTanah.toFixed(3) + " Ha";
+  document.getElementById('resRice').innerText = berasKg.toFixed(0) + " Kg";
+  
+  // Format Durasi Waktu
+  let tahun = Math.floor(durasiTahun);
+  let bulan = Math.round((durasiTahun - tahun) * 12);
+  let durasiText = "";
+  
+  if (tahun > 0) durasiText += tahun + " Tahun ";
+  if (bulan > 0) durasiText += bulan + " Bulan";
+  if (tahun === 0 && bulan === 0) durasiText = "< 1 Bulan";
+  
+  document.getElementById('resTime').innerText = durasiText;
+  document.getElementById('resPeople').innerText = Math.floor(jumlahOrang) + " Orang";
+
+  document.getElementById('resultBox').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
