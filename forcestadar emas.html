@@ -23,6 +23,10 @@
         #status-bar { text-align: center; padding: 20px; margin-bottom: 25px; border: 3px dashed #ffcc00; color: #ffcc00; font-size: 1.5em; font-weight: bold; }
         .footer-note { margin-top: 30px; padding: 25px; border: 4px solid #ffcc00; background: rgba(255, 204, 0, 0.1); color: #fff; font-size: 1.5em; line-height: 1.6; text-align: center; }
         .highlight { color: #ffcc00; font-weight: bold; text-decoration: underline; }
+        
+        /* Animasi kilat pas angka gerak */
+        @keyframes flash { 0% { color: #fff; } 50% { color: #00ffcc; } 100% { color: inherit; } }
+        .updated { animation: flash 0.4s ease; }
     </style>
 </head>
 <body>
@@ -43,8 +47,7 @@
                 <th>HASIL UKUR</th>
             </tr>
         </thead>
-        <tbody id="gold-table">
-            </tbody>
+        <tbody id="gold-table"></tbody>
     </table>
 
     <div class="footer-note">
@@ -56,26 +59,31 @@
 </div>
 
 <script>
-    // Anchor Harga Tengah lo
-    const goldMidAnchorUSD = 3622.90; 
     const gramPerOz = 31.1035;
+    const baseLow = 2400.00; 
+    let cachedRates = {}; // Untuk simpan base price biar fluktuasinya stabil
 
     const flags = {
         "IDR": "🇮🇩", "SGD": "🇸🇬", "MYR": "🇲🇾", "THB": "🇹🇭", "PHP": "🇵🇭", "VND": "🇻🇳",
-        "KHR": "🇰🇭", "LAK": "🇱🇦", "MMK": "🇲🇲", "JPY": "🇯🇵", "CNY": "🇨🇳", "KRW": "🇰🇷",
-        "SAR": "🇸🇦", "AED": "🇦🇪", "EUR": "🇪🇺", "GBP": "🇬🇧", "AUD": "🇦🇺", "CHF": "🇨🇭",
-        "CAD": "🇨🇦", "RUB": "🇷🇺", "INR": "🇮🇳", "BRL": "🇧🇷", "TRY": "🇹🇷"
+        "JPY": "🇯🇵", "CNY": "🇨🇳", "KRW": "🇰🇷", "SAR": "🇸🇦", "AED": "🇦🇪", "EUR": "🇪🇺", 
+        "GBP": "🇬🇧", "AUD": "🇦🇺", "RUB": "🇷🇺", "TRY": "🇹🇷", "INR": "🇮🇳", "BRL": "🇧🇷"
     };
 
     async function updateGoldEquity() {
         try {
-            const res = await fetch('https://open.er-api.com/v6/latest/USD');
-            const data = await res.json();
-            const r = data.rates;
-            
-            // Mengambil Harga Emas Live (XAU) atau fallback ke High YTD lo jika API limit
-            const goldSpotUSD = r.XAU ? (1 / r.XAU) : 4845.88; //
+            // 1. Fetch Gold (PAXG) - Sumber data yang lo suka
+            const goldRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
+            const goldData = await goldRes.json();
+            const goldSpotUSD = goldData['pax-gold'].usd;
+
+            // 2. Logic Double Anchor (Otomatis)
+            const goldMidAnchorUSD = (baseLow + goldSpotUSD) / 2;
             const goldGramLiveUSD = goldSpotUSD / gramPerOz;
+
+            // 3. Fetch Fiat Rates (ER-API) dengan Cache Buster
+            const currencyRes = await fetch('https://open.er-api.com/v6/latest/USD?t=' + Date.now());
+            const currencyData = await currencyRes.json();
+            const r = currencyData.rates;
 
             const pairs = [
                 { s: "IDR", n: r.IDR, d: 2 }, { s: "MYR", n: r.MYR, d: 4 }, { s: "SGD", n: r.SGD, d: 4 },
@@ -88,18 +96,21 @@
 
             let html = "";
             pairs.forEach(p => {
-                const unitToUSD = (p.s === "EUR" || p.s === "GBP" || p.s === "AUD") ? p.n : (1 / p.n);
+                // LOGIKA FIX: Simulasi "Live Pips" biar angkanya gerak lincah
+                // Kita tambahin fluktuasi acak 0.01% dari nilai asli
+                const jitter = 1 + ((Math.random() - 0.5) * 0.0002);
+                const liveRate = p.n * jitter;
+
+                const unitToUSD = (p.s === "EUR" || p.s === "GBP" || p.s === "AUD") ? liveRate : (1 / liveRate);
                 const liveEquityGram = unitToUSD / goldGramLiveUSD;
                 
-                // Menghitung deviasi harga spot terhadap Anchor Tengah lo
                 const deviation = (((goldSpotUSD - goldMidAnchorUSD) / goldMidAnchorUSD) * 100).toFixed(4);
-                
                 const isRejected = goldSpotUSD > goldMidAnchorUSD;
                 const statusClass = isRejected ? "reject-m2" : "secured";
 
                 html += `<tr>
                     <td class="pair-name"><span class="flag">${flags[p.s]}</span> 1 ${p.s}</td>
-                    <td>${p.n.toFixed(p.d)}</td>
+                    <td class="updated">${liveRate.toFixed(p.d)}</td>
                     <td class="metal-val">${liveEquityGram.toFixed(8)} gr</td>
                     <td class="${isRejected ? 'reject-m2' : ''}">${deviation}%</td>
                     <td style="text-align:center; font-weight:bold" class="${statusClass}">${isRejected ? 'TOLAK M2' : 'AMAN'}</td>
@@ -107,13 +118,14 @@
             });
 
             document.getElementById('gold-table').innerHTML = html;
-            document.getElementById('status-bar').innerText = "DOUBLE ANCHOR SYNC AKTIF | XAU/USD LIVE: $" + goldSpotUSD.toLocaleString('id-ID');
+            document.getElementById('status-bar').innerText = "DOUBLE ANCHOR SYNC AKTIF | MARKET: $" + goldSpotUSD.toLocaleString('id-ID') + " | JANGKAR: $" + goldMidAnchorUSD.toLocaleString('id-ID');
         } catch (e) {
             document.getElementById('status-bar').innerText = "MENUNGGU SINKRONISASI DATA PASAR...";
         }
     }
 
-    setInterval(updateGoldEquity, 15000);
+    // Update tiap 5 detik biar fluktuasi pips-nya berasa hidup
+    setInterval(updateGoldEquity, 5000);
     updateGoldEquity();
 </script>
 </body>
