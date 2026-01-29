@@ -24,6 +24,10 @@
         #status-bar { text-align: center; padding: 15px; margin-bottom: 20px; border: 3px dashed #ffcc00; color: #ffcc00; font-size: 1.3em; font-weight: bold; }
         .footer-note { margin-top: 30px; padding: 25px; border: 4px solid #ffcc00; background: rgba(255, 204, 0, 0.1); color: #fff; font-size: 1.4em; line-height: 1.6; text-align: center; }
         .highlight { color: #ffcc00; font-weight: bold; text-decoration: underline; }
+
+        /* Animasi kedip saat harga update */
+        @keyframes flash { 0% { color: #fff; } 50% { color: #00ffcc; } 100% { color: inherit; } }
+        .updated { animation: flash 0.5s ease; }
     </style>
 </head>
 <body>
@@ -44,22 +48,22 @@
                 <th>DEVIASI & STATUS</th>
             </tr>
         </thead>
-        <tbody id="ratio-table">
-            </tbody>
+        <tbody id="ratio-table"></tbody>
     </table>
 
-    <div class="footer-note">
+    <div class="footer-note" id="dynamic-footer">
         <span class="highlight">HUKUM KESETARAAN DINAR-DIRHAM:</span><br>
         Jika <span style="color:#ff4d4d">TOLAK FIAT</span> menyala, martabat uang fiat Anda sedang dihancurkan.<br>
         Wajib Pertahankan: <span class="highlight">30% CASH</span> & <span class="highlight">70% NILAI RIIL (FISIK)</span>.<br>
-        Gunakan "Ukuran" Harga Tengah ($3.622,9) sebagai benteng pertahanan terakhir!
+        Gunakan "Ukuran" <span id="footer-anchor-val" class="highlight">Harga Tengah ($---)</span> sebagai benteng pertahanan terakhir!
     </div>
 </div>
 
 <script>
-    // Database Anchor & Rasio
-    const goldMidAnchorUSD = 3622.90; 
+    // --- KONFIGURASI DASAR ---
+    const baseLow = 2400.00; // Harga Lantai Induk
     const gramPerOz = 31.1035;
+    const GOLD_SILVER_RATIO = 27; // Rasio Dinar-Dirham lo
 
     const flags = {
         "IDR": "🇮🇩", "SGD": "🇸🇬", "MYR": "🇲🇾", "THB": "🇹🇭", "PHP": "🇵🇭", "VND": "🇻🇳",
@@ -70,13 +74,19 @@
 
     async function updateRatioEquity() {
         try {
-            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            // 1. Ambil Emas Live (Coingecko)
+            const goldRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
+            const goldData = await goldRes.json();
+            const goldSpotUSD = goldData['pax-gold'].usd;
+
+            // 2. Logic AUTO ANCHOR (Ikut Induk)
+            const goldMidAnchorUSD = (baseLow + goldSpotUSD) / 2;
+            const goldGramLiveUSD = goldSpotUSD / gramPerOz;
+
+            // 3. Ambil Kurs Fiat (ER-API)
+            const res = await fetch('https://open.er-api.com/v6/latest/USD?t=' + Date.now());
             const data = await res.json();
             const r = data.rates;
-            
-            // Driver Emas Live
-            const goldSpotUSD = r.XAU ? (1 / r.XAU) : 4845.88; 
-            const goldGramLiveUSD = goldSpotUSD / gramPerOz;
 
             const list = [
                 { s: "IDR", n: r.IDR, d: 2 }, { s: "MYR", n: r.MYR, d: 4 }, { s: "SGD", n: r.SGD, d: 4 },
@@ -90,14 +100,17 @@
 
             let html = "";
             list.forEach(p => {
-                const unitToUSD = (p.s === "EUR" || p.s === "GBP" || p.s === "AUD") ? p.n : (1 / p.n);
+                // Simulasi pips biar gerak lincah
+                const jitter = 1 + ((Math.random() - 0.5) * 0.0001);
+                const liveRate = p.n * jitter;
+
+                const unitToUSD = (p.s === "EUR" || p.s === "GBP" || p.s === "AUD") ? liveRate : (1 / liveRate);
                 
                 // KESETARAAN GRAM EMAS
                 const liveGoldGram = unitToUSD / goldGramLiveUSD;
                 
-                // KESETARAAN GRAM PERAK (FIX RATIO 1:27) [cite: 2026-01-21]
-                // 1 unit uang harus dapet 27x lipat lebih banyak berat perak daripada emas
-                const liveSilverGram = liveGoldGram * 27; 
+                // KESETARAAN GRAM PERAK (FIX RATIO 1:27)
+                const liveSilverGram = liveGoldGram * GOLD_SILVER_RATIO; 
                 
                 const deviation = (((goldSpotUSD - goldMidAnchorUSD) / goldMidAnchorUSD) * 100).toFixed(4);
                 const isRejected = goldSpotUSD > goldMidAnchorUSD;
@@ -105,7 +118,7 @@
 
                 html += `<tr>
                     <td class="pair-name"><span class="flag">${flags[p.s]}</span> 1 ${p.s}</td>
-                    <td>${p.n.toFixed(p.d)}</td>
+                    <td class="updated">${liveRate.toFixed(p.d)}</td>
                     <td class="gold-val">${liveGoldGram.toFixed(8)} gr</td>
                     <td class="silver-val">${liveSilverGram.toFixed(7)} gr</td>
                     <td style="text-align:center; font-weight:bold" class="${statusClass}">
@@ -115,12 +128,15 @@
             });
 
             document.getElementById('ratio-table').innerHTML = html;
-            document.getElementById('status-bar').innerText = "DOUBLE ANCHOR AKTIF | XAU LIVE: $" + goldSpotUSD.toFixed(2);
+            document.getElementById('status-bar').innerText = "DOUBLE ANCHOR AKTIF | MARKET: $" + goldSpotUSD.toFixed(2) + " | JANGKAR: $" + goldMidAnchorUSD.toFixed(2);
+            document.getElementById('footer-anchor-val').innerText = `Harga Tengah ($${goldMidAnchorUSD.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})})`;
+
         } catch (e) {
             document.getElementById('status-bar').innerText = "MENUNGGU SINKRONISASI DATA PASAR...";
         }
     }
 
+    // Update tiap 15 detik biar gak kena limit
     setInterval(updateRatioEquity, 15000);
     updateRatioEquity();
 </script>
