@@ -16,12 +16,17 @@
         .dinar-val { color: #ffcc00; font-weight: bold; }
         .dirham-val { color: #e0e0e0; font-weight: bold; }
         .reject-m2 { color: #ff4d4d !important; font-weight: bold; }
+        .secured { color: #00ffcc !important; font-weight: bold; }
         
         .pair-name { text-align: left; color: #fff; font-weight: bold; display: flex; align-items: center; gap: 8px; }
         .flag { font-size: 1.6em; }
         
         #status-bar { text-align: center; padding: 15px; margin-bottom: 20px; border: 3px dashed #ffcc00; color: #ffcc00; font-size: 1.3em; font-weight: bold; }
         .footer-note { margin-top: 30px; padding: 20px; border: 4px solid #ffcc00; background: rgba(255, 204, 0, 0.1); color: #fff; font-size: 1.3em; line-height: 1.5; text-align: center; }
+
+        /* Animasi kedip saat harga update */
+        @keyframes flash { 0% { color: #fff; } 50% { color: #00ffcc; } 100% { color: inherit; } }
+        .updated { animation: flash 0.5s ease; }
     </style>
 </head>
 <body>
@@ -42,24 +47,24 @@
                 <th>STATUS</th>
             </tr>
         </thead>
-        <tbody id="dinar-table">
-            </tbody>
+        <tbody id="dinar-table"></tbody>
     </table>
 
     <div class="footer-note">
         <span style="color:#ffcc00; font-weight:bold;">INSTRUKSI PERLAWANAN:</span><br>
         Gunakan tabel ini sebagai acuan <span style="color:#00ffcc">NILAI RIIL</span> transaksi Anda.<br>
         Wajib amankan <span style="color:#ffcc00">70% FISIK</span> jika status <span style="color:#ff4d4d">TOLAK FIAT</span> menyala aktif.<br>
-        Kembalikan martabat Anda dengan ukuran yang jujur! 
+        Jangkar saat ini: <span id="footer-anchor" style="color:#ffcc00">Mencari...</span> | Kembalikan martabat Anda! 
     </div>
 </div>
 
 <script>
-    const goldMidAnchorUSD = 3622.90; //
+    // --- KONFIGURASI DASAR ---
+    const baseLow = 2400.00; // Harga Lantai Induk
     const gramPerOz = 31.1035;
-    const beratDinar = 4.25;    // [cite: 2025-12-21]
-    const beratDirham = 2.975;  // [cite: 2025-12-21]
-    const ratioDinarDirham = 27; // [cite: 2025-12-21]
+    const beratDinar = 4.25;    
+    const beratDirham = 2.975;  
+    const ratioDinarDirham = 27; 
 
     const flags = {
         "IDR": "🇮🇩", "MYR": "🇲🇾", "SGD": "🇸🇬", "THB": "🇹🇭", "VND": "🇻🇳", "PHP": "🇵🇭",
@@ -70,13 +75,22 @@
 
     async function updateGlobalStandard() {
         try {
-            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            // 1. Ambil Emas Live (Coingecko) biar sinkron sama Double Anchor lo
+            const goldRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
+            const goldData = await goldRes.json();
+            const goldSpotUSD = goldData['pax-gold'].usd;
+
+            // 2. Logic AUTO ANCHOR (Ikut Induk)
+            const goldMidAnchorUSD = (baseLow + goldSpotUSD) / 2;
+            const goldPricePerGramUSD = goldSpotUSD / gramPerOz;
+            
+            // Rumus Dirham berdasarkan Rasio 1:27
+            const silverPricePerGramUSD = (goldPricePerGramUSD * beratDinar) / (ratioDinarDirham * beratDirham);
+
+            // 3. Ambil Kurs Fiat (ER-API) dengan Cache Buster
+            const res = await fetch('https://open.er-api.com/v6/latest/USD?t=' + Date.now());
             const data = await res.json();
             const r = data.rates;
-            
-            const goldSpotUSD = r.XAU ? (1 / r.XAU) : 4845.88; //
-            const goldPricePerGramUSD = goldSpotUSD / gramPerOz;
-            const silverPricePerGramUSD = (goldPricePerGramUSD * beratDinar) / (ratioDinarDirham * beratDirham);
 
             const list = [
                 { s: "IDR", n: r.IDR, d: 0 }, { s: "MYR", n: r.MYR, d: 2 }, { s: "SGD", n: r.SGD, d: 2 },
@@ -90,29 +104,37 @@
 
             let html = "";
             list.forEach(p => {
-                const kursLokal = (p.s === "EUR" || p.s === "GBP" || p.s === "AUD") ? (1 / p.n) : p.n;
+                // Simulasi pips biar angkanya lincah
+                const jitter = 1 + ((Math.random() - 0.5) * 0.0001);
+                const liveRate = p.n * jitter;
+
+                const kursLokal = (p.s === "EUR" || p.s === "GBP" || p.s === "AUD") ? (1 / liveRate) : liveRate;
                 const hargaDinar = goldPricePerGramUSD * beratDinar * kursLokal;
                 const hargaDirham = silverPricePerGramUSD * beratDirham * kursLokal;
+                
+                // Status berdasarkan Auto Anchor
                 const isRejected = goldSpotUSD > goldMidAnchorUSD;
 
                 html += `<tr>
                     <td class="pair-name"><span class="flag">${flags[p.s]}</span> ${p.s}</td>
-                    <td>${p.n.toLocaleString('id-ID')}</td>
+                    <td class="updated">${liveRate.toLocaleString('id-ID')}</td>
                     <td class="dinar-val">${hargaDinar.toLocaleString('id-ID', {maximumFractionDigits: p.d})}</td>
                     <td class="dirham-val">${hargaDirham.toLocaleString('id-ID', {maximumFractionDigits: p.d})}</td>
-                    <td style="text-align:center; font-size:12px" class="${isRejected ? 'reject-m2' : ''}">
+                    <td style="text-align:center; font-size:12px" class="${isRejected ? 'reject-m2' : 'secured'}">
                         ${isRejected ? 'TOLAK FIAT' : 'SECURED'}
                     </td>
                 </tr>`;
             });
 
             document.getElementById('dinar-table').innerHTML = html;
-            document.getElementById('status-bar').innerText = "LIVE ANCHOR SYNC | XAU/USD: $" + goldSpotUSD.toFixed(2);
+            document.getElementById('status-bar').innerText = "LIVE ANCHOR SYNC | MARKET: $" + goldSpotUSD.toFixed(2) + " | JANGKAR: $" + goldMidAnchorUSD.toFixed(2);
+            document.getElementById('footer-anchor').innerText = "Harga Tengah ($" + goldMidAnchorUSD.toFixed(2) + ")";
         } catch (e) {
             document.getElementById('status-bar').innerText = "MENUNGGU SINKRONISASI JANGKAR...";
         }
     }
 
+    // Update tiap 15 detik biar sinkron terus
     setInterval(updateGlobalStandard, 15000);
     updateGlobalStandard();
 </script>
