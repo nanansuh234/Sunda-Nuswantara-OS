@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunda Nuswantara OS - Edukasi Barter Kesetaraan Harga</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #050505; color: #ffcc00; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; border: 5px solid #ffcc00; padding: 30px; box-shadow: 0 0 50px rgba(255, 204, 0, 0.3); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 10px; }
+        .sub-header { text-align: center; color: #00ffcc; font-size: 1.2em; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+
+        /* Panel Utama */
+        .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .edu-card { background: #111; border: 3px solid #00ffcc; padding: 25px; border-radius: 10px; }
+        .card-title { font-size: 1.4em; font-weight: bold; color: #fff; margin-bottom: 15px; border-bottom: 2px solid #00ffcc; padding-bottom: 5px; text-transform: uppercase; }
+        
+        /* Simulasi Table */
+        table { width: 100%; border-collapse: collapse; background: #0d0d0d; font-size: 18px; margin-top: 10px; }
+        th, td { border: 1px solid #333; padding: 12px; text-align: center; }
+        th { background: #1a1a1a; color: #00ffcc; font-size: 0.8em; }
+        .price-tag { color: #ff4d4d; font-weight: bold; }
+        .ratio-tag { color: #ffcc00; font-weight: bold; font-size: 1.2em; }
+
+        /* Hasil Vonis */
+        .barter-formula { margin-top: 20px; background: #1a0000; border: 2px solid #ff4d4d; padding: 20px; text-align: center; font-size: 1.5em; font-weight: bold; color: #fff; }
+        .highlight { color: #00ffcc; }
+
+        #status-bar { text-align: center; padding: 10px; margin-bottom: 20px; border: 2px dashed #ffcc00; color: #ffcc00; font-weight: bold; }
+        .footer-note { margin-top: 30px; padding: 20px; border-left: 10px solid #ffcc00; background: rgba(255, 204, 0, 0.05); color: #fff; line-height: 1.6; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PROTOKOL BARTER: KESETARAAN HARGA</h1>
+    <div class="sub-header">SOLUSI TRANSAKSI SAAT KELANGKAAN UANG TUNAI - SUNDA NUSWANTARA OS</div>
+
+    <div id="status-bar">MENGAKTIFKAN MODE RECOVERY EKONOMI MIKRO...</div>
+
+    <div class="edu-grid">
+        <div class="edu-card">
+            <div class="card-title">Apa itu Kesetaraan Harga?</div>
+            <p style="color: #ccc; line-height: 1.6;">
+                Saat uang kertas sulit didapat, kita tidak boleh berhenti berdagang. Kita gunakan <strong>Harga Pasar</strong> sebagai alat ukur perbandingan. <br><br>
+                Jika Anda punya barang senilai <span style="color: #ff4d4d;">Rp 3.000</span> dan tetangga punya barang senilai <span style="color: #ff4d4d;">Rp 6.000</span>, maka secara otomatis terjadi kesepakatan bahwa <strong>2 unit barang Anda setara dengan 1 unit barang tetangga</strong>. <br><br>
+                Inilah "Iman = Ukuran" dalam praktek harian: Transaksi berdasarkan angka yang adil tanpa butuh fisik uang kertas.
+            </p>
+        </div>
+
+        <div class="edu-card" style="border-color: #ffcc00;">
+            <div class="card-title" style="color: #ffcc00;">Simulasi Barter Masyarakat</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item A (Penjual A)</th>
+                        <th>Item B (Penjual B)</th>
+                        <th>Rasio Tukar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1 Ikat Kangkung<br><span class="price-tag">Rp 3.000</span></td>
+                        <td>1 Papan Tempe<br><span class="price-tag">Rp 6.000</span></td>
+                        <td class="ratio-tag">2 : 1</td>
+                    </tr>
+                    <tr>
+                        <td>1 Kg Ikan Nila<br><span class="price-tag">Rp 35.000</span></td>
+                        <td>1 Kg Ayam Ras<br><span class="price-tag">Rp 35.000</span></td>
+                        <td class="ratio-tag">1 : 1</td>
+                    </tr>
+                    <tr>
+                        <td>1 Liter Bensin<br><span class="price-tag">Rp 13.000</span></td>
+                        <td>1 Kg Beras<br><span class="price-tag">Rp 16.000</span></td>
+                        <td class="ratio-tag">1.2 : 1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="barter-formula">
+        CONTOH: <span class="highlight">10 Ikat Kangkung</span> (Rp 30.000) ⇌ <span class="highlight">5 Papan Tempe</span> (Rp 30.000)
+    </div>
+
+    <div class="edu-section" style="margin-top: 30px;">
+        <div class="edu-card" style="width: auto; border-color: #ff4d4d;">
+            <div class="card-title" style="color: #ff4d4d;">Simulasi Jasa vs Barang</div>
+            <div style="font-size: 1.3em; line-height: 2; text-align: center;">
+                👉 <strong>Jasa Potong Rambut</strong> (Harga: Rp 20.000) <br>
+                setara dengan <br>
+                👉 <strong>1.25 Kg Telur Ayam</strong> (Harga: Rp 16.000/kg) <br><br>
+                <span style="color: #00ffcc;">"Tenaga Anda dihargai setara dengan gizi yang Anda terima!"</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        <strong>PENTING:</strong> Kesetaraan harga adalah langkah awal. Jika kondisi memburuk (Hiper-inflasi), segera pindah ke <strong>Kesetaraan Nilai (Dirham/Dinar)</strong>. Jangan biarkan kerja keras Anda dicuri oleh penyusutan nilai mata uang!.
+    </div>
+</div>
+
+<script>
+    // Animasi simulasi sinkronisasi sederhana
+    setTimeout(() => {
+        document.getElementById('status-bar').innerText = "PROTOKOL AKTIF: Masyarakat Berdikari Tanpa Ketergantungan Tunai";
+        document.getElementById('status-bar').style.color = "#00ffcc";
+        document.getElementById('status-bar').style.borderColor = "#00ffcc";
+    }, 3000);
+</script>
+</body>
+</html>

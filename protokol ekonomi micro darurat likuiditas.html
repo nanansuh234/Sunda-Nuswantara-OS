@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunda Nuswantara OS - Protokol Anti Inflasi & Deflasi</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #050505; color: #ffcc00; padding: 20px; }
+        .container { max-width: 1500px; margin: auto; border: 5px solid #ffcc00; padding: 30px; box-shadow: 0 0 60px rgba(255, 204, 0, 0.3); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 10px; }
+        .sub-header { text-align: center; color: #00ffcc; font-size: 1.2em; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+
+        /* Dashboard Simulasi */
+        .sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
+        .sim-card { background: #111; border: 3px solid #ff4d4d; padding: 20px; position: relative; overflow: hidden; }
+        .sim-card.deflation { border-color: #00e676; }
+        .sim-title { font-size: 1.5em; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; text-align: center; color: #fff; }
+        
+        .visual-flow { height: 120px; border: 1px dashed #444; margin: 15px 0; display: flex; align-items: center; justify-content: center; font-size: 0.9em; position: relative; }
+        .elite-box { width: 80px; height: 80px; background: #330000; border: 2px solid #ff4d4d; display: flex; align-items: center; text-align: center; padding: 5px; }
+        .people-box { width: 250px; height: 60px; border: 2px solid #00ffcc; display: flex; align-items: center; justify-content: space-around; }
+
+        /* Aturan Protokol */
+        .protocol-box { background: #1a1a00; border: 4px solid #00ffcc; padding: 30px; margin-top: 40px; }
+        .protocol-title { font-size: 2em; text-transform: uppercase; color: #fff; text-align: center; margin-bottom: 25px; }
+        .rule-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .rule-item { background: #000; border: 1px solid #00ffcc; padding: 15px; font-size: 1.1em; line-height: 1.5; }
+        .rule-item strong { color: #ffcc00; display: block; margin-bottom: 10px; text-transform: uppercase; }
+
+        #status-bar { text-align: center; padding: 10px; background: #000; border: 2px dashed #ff4d4d; color: #ff4d4d; font-weight: bold; margin-bottom: 30px; }
+        .manifesto { margin-top: 30px; padding: 25px; border-left: 10px solid #ffcc00; background: rgba(255, 204, 0, 0.05); color: #fff; line-height: 1.8; font-size: 1.2em; }
+        .highlight { color: #00ffcc; font-weight: bold; }
+        
+        /* Animasi */
+        @keyframes suck-money { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }
+        .money-particle { position: absolute; color: #00ffcc; font-weight: bold; animation: suck-money 2s infinite; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PROTOKOL ANTI INFLASI & DEFLASI</h1>
+    <div class="sub-header">MEMUTUS SIKLUS PENJARA MONETER ELIT - SUNDA NUSWANTARA OS</div>
+
+    <div id="status-bar">PERINGATAN: M2 TERAKUMULASI 5,85x LIPAT DI ELIT | STATUS: DARURAT LIKUIDITAS</div>
+
+    <div class="sim-grid">
+        <div class="sim-card">
+            <div class="sim-title" style="color: #ff4d4d;">Skenario A: Inflasi (Akumulasi M2)</div>
+            <div class="visual-flow">
+                <div class="people-box" style="border-color: #ff4d4d; opacity: 0.5;">RAKYAT (Hanya Konsumen)</div>
+                <div style="font-size: 2em; margin: 0 15px;">➔</div>
+                <div class="elite-box">ELIT (M2 Menumpuk)</div>
+                <span class="money-particle" style="left: 100px;">$$</span>
+                <span class="money-particle" style="left: 150px;">$$</span>
+            </div>
+            <p style="font-size: 0.9em; color: #ccc;">
+                Terjadi saat rakyat kehilangan <span class="highlight">Kemandirian Produksi</span>. Alat pembayaran tersita ke Elit. Karena uang tidak berputar di bawah, Elit mencetak lebih banyak "Kertas" (M2) untuk memancing aset fisik rakyat, mengakibatkan harga melonjak drastis.
+            </p>
+        </div>
+
+        <div class="sim-card deflation">
+            <div class="sim-title" style="color: #00e676;">Skenario B: Deflasi (Hoarding Krisis)</div>
+            <div class="visual-flow">
+                <div class="elite-box" style="border-color: #00e676; background: #001a00;">ELIT (Menahan Uang)</div>
+                <div style="font-size: 2em; margin: 0 15px; color: #ff4d4d;">✖</div>
+                <div class="people-box">RAKYAT (Krisis Likuiditas)</div>
+            </div>
+            <p style="font-size: 0.9em; color: #ccc;">
+                Terjadi saat Elit sengaja <span class="highlight">Menyimpan/Menimbun Uang</span> di bank untuk menciptakan kelangkaan. Tujuannya agar harga barang jatuh dan rakyat yang miskin terpaksa menjual aset fisik mereka dengan harga sangat murah. Ini adalah perampokan halus.
+            </p>
+        </div>
+    </div>
+
+    <div class="protocol-box">
+        <div class="protocol-title">Mandat Pertahanan Mikro</div>
+        <div class="rule-grid">
+            <div class="rule-item">
+                <strong>Anti-Hoarder & Anti-Saver</strong>
+                Dilarang menimbun uang receh (Cent/Koin). Uang wajib bergerak kembali ke pasar dalam <span class="highlight">24 jam</span> untuk menjaga sirkulasi tetap hidup.
+            </div>
+            <div class="rule-item">
+                <strong>Kedaulatan Receh</strong>
+                Jangan serahkan koin Anda ke bank atau kapitalis. Tuntut uang kembalian fisik. Uang receh adalah <span class="highlight">Benteng Terakhir</span> Hard Asset di tangan rakyat.
+            </div>
+            <div class="rule-item">
+                <strong>Mandat Prosumer</strong>
+                Konsumen <span style="text-decoration: underline;">Wajib</span> menjadi Produsen. Kemandirian yang kuat memastikan alat pembayaran tidak berpusat di elit, tapi berputar di antara rakyat.
+            </div>
+        </div>
+    </div>
+
+    <div class="manifesto">
+        <strong>KENAPA DILARANG MENABUNG DI BANK?</strong><br>
+        Menabung di bank berarti menyerahkan <span class="highlight">Alat Pembayaran</span> Anda kepada musuh untuk dijadikan senjata melawan Anda sendiri. Bank menggunakan tabungan Anda untuk menciptakan hutang baru (M2) yang mengencerkan nilai keringat Anda. <br><br>
+        Dengan menggunakan <span class="highlight">Double Anchor (1:27)</span> dan menjaga uang receh tetap berputar, M2 akan mandek di tangan elit karena mereka tidak bisa lagi menghisap likuiditas rakyat. <span class="highlight">Hidupkan kembali uang koin!</span> Jadikan ia darah ekonomi yang tak terjamah perbankan!.
+    </div>
+</div>
+
+<script>
+    const baseLow = 2400.00; 
+    async function updateSystem() {
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
+            const data = await res.json();
+            const goldSpotUSD = data['pax-gold'].usd;
+            const midAnchor = (baseLow + goldSpotUSD) / 2; 
+            
+            document.getElementById('status-bar').innerText = 
+                `MONITOR PERTAHANAN: JANGKAR INDUK $${midAnchor.toFixed(2)} | MARKET $${goldSpotUSD.toFixed(2)} | ANTI-HOARDING AKTIF`;
+        } catch (e) {}
+    }
+    updateSystem();
+    setInterval(updateSystem, 30000);
+</script>
+</body>
+</html>

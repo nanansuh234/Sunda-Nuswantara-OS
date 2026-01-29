@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunda Nuswantara OS - Protokol Kedaulatan Receh</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #050505; color: #00ffcc; padding: 20px; }
+        .container { max-width: 1450px; margin: auto; border: 5px solid #00ffcc; padding: 35px; box-shadow: 0 0 60px rgba(0, 255, 204, 0.2); }
+        h1 { text-align: center; color: #fff; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 10px; }
+        .sub-header { text-align: center; color: #ffcc00; font-size: 1.2em; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 15px; }
+
+        /* Status Darurat */
+        #status-bar { text-align: center; padding: 15px; background: #1a0000; border: 2px dashed #ff4d4d; color: #ff4d4d; font-weight: bold; margin-bottom: 30px; font-size: 1.2em; }
+
+        /* Grid Protokol */
+        .protocol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
+        .card { background: #0d0d0d; padding: 25px; border: 3px solid #333; position: relative; }
+        .card.lock { border-color: #ff4d4d; }
+        .card.flow { border-color: #00ffcc; }
+        
+        .card-title { font-size: 1.5em; font-weight: bold; text-transform: uppercase; margin-bottom: 20px; text-align: center; }
+        .card-title.lock { color: #ff4d4d; }
+        .card-title.flow { color: #00ffcc; }
+
+        .rule-list { list-style: none; padding: 0; }
+        .rule-list li { margin-bottom: 15px; padding-left: 30px; position: relative; line-height: 1.6; }
+        .rule-list li::before { content: "➔"; position: absolute; left: 0; color: #ffcc00; }
+
+        /* Panel Check Valve */
+        .valve-box { background: #111; border: 4px solid #ffcc00; padding: 25px; text-align: center; margin-bottom: 30px; }
+        .valve-title { font-size: 1.8em; font-weight: bold; color: #fff; text-transform: uppercase; margin-bottom: 15px; }
+        .valve-logic { display: flex; justify-content: space-around; align-items: center; font-size: 1.3em; }
+
+        .footer-note { margin-top: 30px; padding: 20px; border-left: 10px solid #00ffcc; background: rgba(0, 255, 204, 0.05); color: #fff; line-height: 1.8; font-size: 1.1em; }
+        .highlight { color: #ffcc00; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PROTOKOL KEDAULATAN RECEH</h1>
+    <div class="sub-header">BENTENG HARD ASSET MIKRO - SUNDA NUSWANTARA OS</div>
+
+    <div id="status-bar">MODE PERTAHANAN DARURAT: AKTIF | ANTI-DEVALUASI SYNC</div>
+
+    <div class="valve-box">
+        <div class="valve-title">LOGIKA KATUP SATU ARAH (CHECK VALVE)</div>
+        <div class="valve-logic">
+            <div style="color: #ff4d4d;">UANG BESAR<br>(Dilarang Pecah)</div>
+            <div style="font-size: 3em;">⇸</div>
+            <div style="color: #00ffcc;">UANG RECEH<br>(Likuiditas Rakyat)</div>
+            <div style="font-size: 3em;">⇌</div>
+            <div style="color: #ffcc00;">KOMODITAS<br>(Barang Riil)</div>
+        </div>
+        <p style="margin-top: 15px; color: #aaa;">"Mencegah Akumulasi M2 di Elit & Mengunci Energi di Desa"</p>
+    </div>
+
+    <div class="protocol-grid">
+        <div class="card lock">
+            <div class="card-title lock">PROSEDUR ISOLASI</div>
+            <ul class="rule-list">
+                <li><span class="highlight">Uang Besar dilarang tukar Receh:</span> Mencegah kapitalis menyedot unit terkecil kedaulatan Anda.</li>
+                <li><span class="highlight">Receh boleh tukar Besar:</span> Namun sangat tidak disarankan agar M2 tidak terakumulasi di puncak Ponzi.</li>
+                <li><span class="highlight">Anti-Bank:</span> Jangan simpan receh di bank. Bank adalah alat penghancur nilai melalui delusi digital.</li>
+                <li><span class="highlight">Budaya Menabung Fisik:</span> Simpan di rumah, tapi pastikan tetap beredar saat transaksi harian.</li>
+            </ul>
+        </div>
+
+        <div class="card flow">
+            <div class="card-title flow">SYARAT PROSUMER MIKRO</div>
+            <ul class="rule-list">
+                <li><span class="highlight">Wajib Merangkap:</span> Setiap konsumen <span style="text-decoration: underline;">WAJIB</span> menjadi produsen. Tidak ada tempat bagi benalu ekonomi.</li>
+                <li><span class="highlight">Perputaran Abadi:</span> Uang wajib terus bergerak di antara pelaku ekonomi komunitas. Diam berarti mati.</li>
+                <li><span class="highlight">Tuntut Kembalian:</span> Pastikan setiap transaksi menggunakan receh fisik untuk memaksa sistem tetap nyata.</li>
+                <li><span class="highlight">Integritas Fisik:</span> Koin adalah pertahanan terakhir hard asset yang tidak bisa di-devaluasi secara sepihak.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        <strong>VONIS PEMULIHAN EKONOMI:</strong><br>
+        Uang receh (Cent/Koin) adalah unit yang sengaja dibuat "tidak berharga" oleh sistem agar rakyat meninggalkan aset fisik. Menghidupkan kembali koin adalah cara tercepat memulihkan ekonomi saat Hiper-Inflasi atau Deflasi terjadi. Dengan rasio <span class="highlight">1 Dinar : 27 Dirham</span>, setiap keping receh Anda memiliki jangkar pada martabat bumi yang tidak bisa dihancurkan.
+    </div>
+</div>
+
+<script>
+    const baseLow = 2400.00;
+    async function updateDashboard() {
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
+            const data = await res.json();
+            const goldSpotUSD = data['pax-gold'].usd;
+            const midAnchor = (baseLow + goldSpotUSD) / 2; //
+            
+            document.getElementById('status-bar').innerText = 
+                `MONITOR PERTAHANAN: JANGKAR $${midAnchor.toFixed(2)} | MARKET $${goldSpotUSD.toFixed(2)} | KEDAULATAN RECEH AKTIF`;
+        } catch (e) {}
+    }
+    updateDashboard();
+    setInterval(updateDashboard, 30000);
+</script>
+</body>
+</html>
