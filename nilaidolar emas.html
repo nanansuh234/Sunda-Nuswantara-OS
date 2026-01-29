@@ -9,7 +9,6 @@
         h1 { text-align: center; font-size: 2.5em; text-transform: uppercase; margin-bottom: 5px; color: #fff; }
         .alert { text-align: center; background: #ff0000; color: #000; font-weight: bold; padding: 15px; font-size: 1.5em; margin-bottom: 25px; }
         
-        /* Statistik Beban Global [cite: 2026-01-21] */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
         .stat-card { background: #1a0000; border: 3px solid #ff0000; padding: 15px; text-align: center; }
         .stat-label { color: #fff; font-size: 0.9em; text-transform: uppercase; margin-bottom: 5px; }
@@ -26,7 +25,6 @@
 
         #status-bar { text-align: center; padding: 15px; margin-bottom: 20px; border: 2px dashed #ffcc00; color: #ffcc00; font-size: 1.3em; font-weight: bold; }
 
-        /* Keterangan 3 Level Martabat [cite: 2026-01-21] */
         .edu-section { margin-top: 40px; border-top: 4px solid #ffcc00; padding-top: 30px; }
         .level-card { background: #1a1a00; border: 2px solid #ffcc00; padding: 20px; margin-bottom: 20px; color: #fff; }
         .level-title { font-size: 1.5em; font-weight: bold; color: #ffcc00; text-transform: uppercase; margin-bottom: 10px; }
@@ -56,7 +54,7 @@
         </div>
     </div>
 
-    <div id="status-bar">MENGUKUR HARGA SEBENARNYA TERHADAP GUNUNG UTANG...</div>
+    <div id="status-bar">MENGHUBUNGKAN KE JANGKAR EMAS...</div>
 
     <table>
         <thead>
@@ -70,32 +68,8 @@
         <tbody id="ponzi-table"></tbody>
     </table>
 
-    <div class="edu-section">
-        <div class="level-card">
-            <div class="level-title">LEVEL 1: MARTABAT JANGKAR (ANCHOR)</div>
-            <div class="level-desc">
-                Ini adalah <span class="highlight">UKURAN JUJUR</span>. Titik adil yang dikunci sebagai penyeimbang antara titik rendah $2.400 dan High Running [cite: 2026-01-21]. 
-                Seharusnya 1 USD Anda setara dengan berat ini jika bank sentral tidak curang dalam mencetak M2 [cite: 2025-11-24, 2026-01-21].
-            </div>
+    <div class="edu-section" id="edu-dynamic">
         </div>
-
-        <div class="level-card" style="border-color: #ff4d4d;">
-            <div class="level-title" style="color: #ff4d4d;">LEVEL 2: MARTABAT PASAR (RUNNING MARKET)</div>
-            <div class="level-desc">
-                Ini adalah <span class="danger">HARGA HALUSINASI</span>. Selisih dari Jangkar membuktikan Dolar Anda sudah kehilangan dagingnya [cite: 2026-01-21]. 
-                Dolar Anda sedang <span class="danger">MENYUSUT</span> akibat injeksi M2 berlebihan sementara harga fisik tetap di tengah [cite: 2025-11-12, 2026-01-21].
-            </div>
-        </div>
-
-        <div class="level-card" style="border-color: #ff0000; background: #2a0000;">
-            <div class="level-title" style="color: #ff0000;">LEVEL 3: MARTABAT PONZI (60T) - HARGA SEBENARNYA</div>
-            <div class="level-desc">
-                Ini adalah <span class="danger">VONIS RUGI BANDAR</span>. Jika utang $60T dilikuidasi sekarang, harga <span class="highlight">1 Troy Ounce</span> seharusnya adalah <span class="highlight">$28.371,70</span>. 
-                Harga <span class="highlight">1 Dinar</span> meledak ke <span class="highlight">$3.876,72</span> dan <span class="highlight">1 Dirham</span> ke <span class="highlight">$143,58</span>. 
-                Martabat 1 USD Anda telah hancur, hanya tersisa debu emas <span class="danger">0,00109629 GRAM</span>.
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -105,48 +79,78 @@
     const baseLow = 2400.00; 
     const gramPerOz = 31.1035;
     const beratDinar = 4.25;
+    const RASIO_DIRHAM = 27; // Sesuai standar lo bro
 
     async function syncPonzi() {
         try {
-            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd');
             const data = await res.json();
-            const goldHighUSD = data.rates.XAU ? (1 / data.rates.XAU) : 4845.88; 
-            const anchorUSD = (baseLow + goldHighUSD) / 2;
-
-            const normalGramPerUSD = 1 / (goldHighUSD / gramPerOz);
-            const ponziGramPerUSD = normalGramPerUSD / dilutionFactor;
+            const goldHighUSD = data['pax-gold'].usd; 
             
-            // Perhitungan Harga Oz dan Dinar Sebenarnya (Dilusi 60T) [cite: 2026-01-21]
+            const anchorUSD = (baseLow + goldHighUSD) / 2;
             const realOzPrice = goldHighUSD * dilutionFactor;
             const ponziDinarUSD = (realOzPrice / gramPerOz) * beratDinar;
+            const ponziDirhamUSD = ponziDinarUSD / RASIO_DIRHAM;
+            const ponziGramPerUSD = 1 / (realOzPrice / gramPerOz);
 
+            // 1. Update Tabel Utama
             document.getElementById('ponzi-table').innerHTML = `
                 <tr style="color: #00ffcc; font-weight:bold;">
                     <td class="label-cell">1. MARTABAT JANGKAR</td>
-                    <td>$${anchorUSD.toFixed(2)}</td>
-                    <td>$${((anchorUSD / gramPerOz) * beratDinar).toFixed(2)}</td>
+                    <td>$${anchorUSD.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td>$${((anchorUSD / gramPerOz) * beratDinar).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
                     <td>${(1 / (anchorUSD / gramPerOz)).toFixed(8)} gr</td>
                 </tr>
                 <tr style="color: #ff4d4d; font-weight:bold;">
                     <td class="label-cell">2. MARTABAT PASAR</td>
-                    <td>$${goldHighUSD.toFixed(2)}</td>
-                    <td>$${((goldHighUSD / gramPerOz) * beratDinar).toFixed(2)}</td>
-                    <td class="danger">${normalGramPerUSD.toFixed(8)} gr</td>
+                    <td>$${goldHighUSD.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td>$${((goldHighUSD / gramPerOz) * beratDinar).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td class="danger">${(1 / (goldHighUSD / gramPerOz)).toFixed(8)} gr</td>
                 </tr>
                 <tr class="ponzi-row">
                     <td class="label-cell">3. MARTABAT PONZI (60T)</td>
-                    <td class="highlight-val">$${realOzPrice.toFixed(2)}</td>
-                    <td class="highlight-val">$${ponziDinarUSD.toFixed(2)}</td>
+                    <td class="highlight-val">$${realOzPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td class="highlight-val">$${ponziDinarUSD.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
                     <td class="danger-val">${ponziGramPerUSD.toFixed(8)} gr</td>
                 </tr>
             `;
 
-            document.getElementById('status-bar').innerText = "LIVE SYNC AKTIF | FAKTOR DILUSI: " + dilutionFactor.toFixed(2) + "x | BEBAN: $60,89T";
-        } catch (e) { }
+            // 2. Fix Logic di Keterangan (Edu Section)
+            document.getElementById('edu-dynamic').innerHTML = `
+                <div class="level-card">
+                    <div class="level-title">LEVEL 1: MARTABAT JANGKAR (ANCHOR)</div>
+                    <div class="level-desc">
+                        Ini adalah <span class="highlight">UKURAN JUJUR</span>. Titik adil yang dikunci sebagai penyeimbang antara titik rendah $2.400 dan High Running. 
+                        Seharusnya 1 USD Anda setara dengan berat <span class="highlight">${(1 / (anchorUSD / gramPerOz)).toFixed(8)} gram</span> jika bank sentral tidak curang.
+                    </div>
+                </div>
+
+                <div class="level-card" style="border-color: #ff4d4d;">
+                    <div class="level-title" style="color: #ff4d4d;">LEVEL 2: MARTABAT PASAR (RUNNING MARKET)</div>
+                    <div class="level-desc">
+                        Ini adalah <span class="danger">HARGA HALUSINASI</span>. Selisih dari Jangkar membuktikan Dolar Anda sudah kehilangan dagingnya. 
+                        Dolar Anda sedang menyusut karena harga pasar saat ini berada di <span class="danger">$${goldHighUSD.toLocaleString()}</span>.
+                    </div>
+                </div>
+
+                <div class="level-card" style="border-color: #ff0000; background: #2a0000;">
+                    <div class="level-title" style="color: #ff0000;">LEVEL 3: MARTABAT PONZI (60T) - HARGA SEBENARNYA</div>
+                    <div class="level-desc">
+                        Ini adalah <span class="danger">VONIS RUGI BANDAR</span>. Jika utang $60T dilikuidasi sekarang, harga <span class="highlight">1 Troy Ounce</span> seharusnya adalah <span class="highlight">$${realOzPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>. 
+                        Harga <span class="highlight">1 Dinar</span> meledak ke <span class="highlight">$${ponziDinarUSD.toLocaleString(undefined, {minimumFractionDigits: 2})}</span> dan <span class="highlight">1 Dirham</span> ke <span class="highlight">$${ponziDirhamUSD.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>. 
+                        Martabat 1 USD Anda telah hancur, hanya tersisa debu emas <span class="danger">${ponziGramPerUSD.toFixed(8)} GRAM</span>.
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('status-bar').innerText = "LIVE SYNC AKTIF | MARKET: $" + goldHighUSD.toLocaleString() + " | DILUSI: " + dilutionFactor.toFixed(2) + "x";
+        } catch (e) {
+            document.getElementById('status-bar').innerText = "MENCARI DATA PASAR...";
+        }
     }
 
     syncPonzi();
-    setInterval(syncPonzi, 30000);
+    setInterval(syncPonzi, 15000);
 </script>
 </body>
 </html>
