@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuswantara OS - Pro Editor</title>
+    <title>Nuswantara OS - Pro Editor v1.3</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     
@@ -34,11 +34,27 @@
         .toolbar button, .toolbar select { background: #ecf0f1; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
         .toolbar button:hover { background: #dcdde1; }
         
-        #editor { flex: 1; padding: 40px 60px; outline: none; line-height: 1.8; font-size: 17px; background: white; overflow-y: auto; color: #2d3436; }
+        /* FULL VIEW FIX */
+        #editor-container { flex: 1; background: white; overflow-y: auto; display: flex; flex-direction: column; }
+        #editor { 
+            flex: 1; 
+            width: 100%; 
+            min-height: 100%; /* Memastikan area ketik langsung memenuhi layar */
+            padding: 40px 60px; 
+            outline: none; 
+            line-height: 1.8; 
+            font-size: 17px; 
+            color: #2d3436; 
+            box-sizing: border-box;
+        }
         
         .save-group { margin-left: auto; display: flex; gap: 5px; }
         .btn-green { background: #27ae60 !important; color: white !important; }
+        .btn-blue { background: #2980b9 !important; color: white !important; }
         .status-bar { background: #eee; padding: 5px 20px; font-size: 12px; display: flex; justify-content: space-between; color: #636e72; }
+
+        /* Hidden file input */
+        #fileInput { display: none; }
     </style>
 </head>
 <body>
@@ -54,6 +70,9 @@
     <div class="toolbar">
         <button class="toggle-btn" onclick="toggleSidebar()" title="Hide/Show Sidebar">☰</button>
         
+        <input type="file" id="fileInput" accept=".txt,.html,.htm,.doc" onchange="openFile(event)">
+        <button class="btn-blue" onclick="document.getElementById('fileInput').click()">📂 Open File</button>
+
         <button onclick="execCmd('bold')">B</button>
         <button onclick="execCmd('italic')">I</button>
         <button onclick="execCmd('underline')">U</button>
@@ -72,12 +91,12 @@
         </div>
     </div>
 
-    <div id="editor" contenteditable="true" spellcheck="false">
-        
+    <div id="editor-container">
+        <div id="editor" contenteditable="true" spellcheck="false"></div>
     </div>
 
     <div class="status-bar">
-        <span>Nuswantara OS v1.2</span>
+        <span>Nuswantara OS v1.3</span>
         <span id="charCount">0 Karakter</span>
     </div>
 </div>
@@ -91,18 +110,35 @@
         document.execCommand(command, false, value);
     }
 
-    // --- FITUR HIDE/SHOW SIDEBAR ---
+    // --- FITUR OPEN FILE (Kaya Paint/MS Word) ---
+    function openFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const content = e.target.result;
+            // Jika file HTML, masukkan sebagai innerHTML, jika teks biasa masukkan sebagai innerText
+            if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
+                editor.innerHTML = content;
+            } else {
+                editor.innerText = content;
+            }
+            updateCharCount();
+        };
+        reader.readAsText(file);
+    }
+
     function toggleSidebar() {
         sidebar.classList.toggle('hidden');
     }
 
-    // --- FITUR HISTORY & RENAME ---
     function saveToHistory() {
         const content = editor.innerHTML;
-        const defaultTitle = editor.innerText.substring(0, 20) || "Tanpa Judul";
+        const defaultTitle = editor.innerText.substring(0, 20).trim() || "Tanpa Judul";
         const customTitle = prompt("Beri nama memo ini:", defaultTitle);
         
-        if (customTitle === null) return; // Batal simpan
+        if (customTitle === null) return;
 
         const memo = {
             id: Date.now(),
@@ -154,7 +190,10 @@
     function loadMemo(id) {
         let histories = JSON.parse(localStorage.getItem('nuswantara_memos')) || [];
         const memo = histories.find(m => m.id === id);
-        if (memo) editor.innerHTML = memo.body;
+        if (memo) {
+            editor.innerHTML = memo.body;
+            updateCharCount();
+        }
     }
 
     function deleteMemo(id) {
@@ -166,7 +205,6 @@
         }
     }
 
-    // --- EXPORT FILES ---
     function saveAsTXT() {
         const blob = new Blob([editor.innerText], { type: "text/plain;charset=utf-8" });
         saveAs(blob, "nuswantara_memo.txt");
@@ -180,13 +218,19 @@
 
     function saveAsPDF() {
         const element = document.getElementById('editor');
-        html2pdf().from(element).set({ margin: 1, filename: 'nuswantara_archive.pdf' }).save();
+        html2pdf().from(element).set({ 
+            margin: 1, 
+            filename: 'nuswantara_archive.pdf',
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        }).save();
     }
 
-    // Counter
-    editor.addEventListener('input', () => {
+    function updateCharCount() {
         document.getElementById('charCount').innerText = editor.innerText.length + " Karakter";
-    });
+    }
+
+    editor.addEventListener('input', updateCharCount);
 
     renderHistory();
 </script>
