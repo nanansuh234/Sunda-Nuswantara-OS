@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Paint v2 - Anti Melar</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #e67e22; --dark: #1a252f; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #34495e; display: flex; flex-direction: column; height: 100vh; }
+        
+        .toolbar { background: var(--primary); color: white; padding: 10px; display: flex; gap: 15px; align-items: center; border-bottom: 3px solid var(--accent); z-index: 10; flex-wrap: wrap; }
+        .tool-group { display: flex; gap: 8px; align-items: center; border-right: 1px solid #555; padding-right: 12px; }
+        
+        button { cursor: pointer; padding: 8px 15px; border-radius: 4px; border: none; font-weight: bold; transition: 0.2s; }
+        button:hover { background: #bdc3c7; }
+        .active { background: var(--accent) !important; color: white; }
+
+        /* Area Canvas */
+        .workspace { flex: 1; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 30px; }
+        canvas { background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.5); cursor: crosshair; display: block; }
+
+        /* Quick Size Circles */
+        .size-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; background: none; color: white; font-size: 10px; padding: 0; }
+        .size-btn:hover { background: rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+
+<div class="toolbar">
+    <div class="tool-group">
+        <input type="file" id="upload" accept="image/*" style="display:none">
+        <button onclick="document.getElementById('upload').click()">📂 Open Image</button>
+        <button onclick="saveImage()" style="background: #27ae60; color: white;">💾 Save</button>
+        <select id="saveFormat">
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPG</option>
+            <option value="image/webp">WebP</option>
+        </select>
+    </div>
+
+    <div class="tool-group">
+        <button id="brushBtn" class="active" onclick="setTool('brush')">🖌️ Brush</button>
+        <button id="eraserBtn" onclick="setTool('eraser')">🧽 Eraser</button>
+        <button onclick="clearCanvas()" style="background: #c0392b; color: white;">🗑️ Clear</button>
+    </div>
+
+    <div class="tool-group">
+        Color: <input type="color" id="colorPicker" value="#000000">
+        Size:
+        <button class="size-btn" onclick="setSize(5)">●</button>
+        <button class="size-btn" onclick="setSize(15)" style="font-size: 15px;">●</button>
+        <button class="size-btn" onclick="setSize(30)" style="font-size: 20px;">●</button>
+        <input type="range" id="sizePicker" min="1" max="100" value="5" style="width: 80px;">
+    </div>
+</div>
+
+<div class="workspace">
+    <canvas id="paintCanvas"></canvas>
+</div>
+
+<script>
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d');
+    const upload = document.getElementById('upload');
+    const colorPicker = document.getElementById('colorPicker');
+    const sizePicker = document.getElementById('sizePicker');
+
+    // Default Size
+    canvas.width = 800;
+    canvas.height = 500;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    let painting = false;
+    let currentTool = 'brush';
+
+    function setTool(tool) {
+        currentTool = tool;
+        document.getElementById('brushBtn').classList.toggle('active', tool === 'brush');
+        document.getElementById('eraserBtn').classList.toggle('active', tool === 'eraser');
+    }
+
+    function setSize(s) {
+        sizePicker.value = s;
+    }
+
+    // --- FITUR ANTI MELAR ---
+    upload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                // Set ukuran canvas sesuai ukuran ASLI gambar
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // Redraw setelah resize (karena resize canvas menghapus isi)
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.drawImage(img, 0, 0);
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function startPosition(e) {
+        painting = true;
+        draw(e);
+    }
+
+    function finishedPosition() {
+        painting = false;
+        ctx.beginPath();
+    }
+
+    function draw(e) {
+        if (!painting) return;
+
+        ctx.lineWidth = sizePicker.value;
+        ctx.strokeStyle = (currentTool === 'eraser') ? '#ffffff' : colorPicker.value;
+
+        // Koordinat mouse pada canvas
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+
+    function clearCanvas() {
+        if(confirm("Hapus semua coretan?")) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+
+    function saveImage() {
+        const format = document.getElementById('saveFormat').value;
+        const link = document.createElement('a');
+        link.download = `nuswantara_edit_${Date.now()}.${format.split('/')[1]}`;
+        link.href = canvas.toDataURL(format, 1.0);
+        link.click();
+    }
+
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', finishedPosition);
+    canvas.addEventListener('mousemove', draw);
+</script>
+
+</body>
+</html>

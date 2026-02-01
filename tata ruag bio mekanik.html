@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Visual Denah Kedaulatan - Sunda Nuswantara OS</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdfdfb; padding: 40px; color: #1a1a1a; }
+        .blueprint-container { background: #fff; border: 1px solid #d1d1d1; padding: 30px; max-width: 900px; margin: auto; box-shadow: 15px 15px 0px #eee; position: relative; }
+        .header { text-align: center; border-bottom: 2px solid #2e7d32; margin-bottom: 20px; }
+        h1 { color: #2e7d32; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+        
+        /* Denah Styling */
+        .map-area { border: 2px solid #555; background: #f1f8e9; height: 500px; position: relative; margin: 20px 0; overflow: hidden; }
+        .label { position: absolute; font-weight: bold; font-size: 0.75em; text-transform: uppercase; background: rgba(255,255,255,0.8); padding: 2px 5px; border-radius: 3px; }
+        
+        /* Elemen Visual */
+        .vetiver-belt { position: absolute; width: 100%; height: 25px; background: repeating-linear-gradient(45deg, #2e7d32, #2e7d32 10px, #1b5e20 10px, #1b5e20 20px); border: 1px solid #1b5e20; }
+        .vortex-drain { position: absolute; width: 100%; height: 15px; background: #81d4fa; border-top: 2px dashed #0277bd; border-bottom: 2px dashed #0277bd; }
+        .meander-drain { position: absolute; width: 100%; height: 15px; background: #81d4fa; clip-path: polygon(0% 50%, 10% 0%, 20% 50%, 30% 100%, 40% 50%, 50% 0%, 60% 50%, 70% 100%, 80% 50%, 90% 0%, 100% 50%); }
+        .house-block { position: absolute; top: 40%; left: 30%; width: 40%; height: 25%; background: #ffccbc; border: 2px solid #d84315; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #d84315; }
+        .grounding-zone { position: absolute; top: 40%; left: 10%; width: 80%; height: 35%; border: 2px dashed #ffab00; background: rgba(255, 171, 0, 0.05); pointer-events: none; }
+        
+        .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.8em; margin-top: 20px; padding: 15px; background: #fafafa; border: 1px solid #eee; }
+        .legend-item { display: flex; align-items: center; gap: 10px; }
+        .box { width: 20px; height: 20px; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+<div class="blueprint-container">
+    <div class="header">
+        <h1>Denah Visual Tata Ruang Bio-Mekanik</h1>
+        <p>SKALA LOKAL // SISTEM PERTAHANAN TANAH & FREKUENSI</p>
+    </div>
+
+    <div class="map-area">
+        <div class="vetiver-belt" style="top: 0;"></div>
+        <div class="label" style="top: 5px; left: 5px;">Sabuk Vetiver Atas (Pengunci Lereng)</div>
+        
+        <div class="vortex-drain" style="top: 10%;"></div>
+        <div class="label" style="top: 13%; right: 5px;">Kanal Spiral (Peredam Air)</div>
+        
+        <div class="grounding-zone"></div>
+        <div class="label" style="top: 66%; left: 40%;">Area Nyeker & Grounding (Reset Sel)</div>
+        
+        <div class="house-block">AREA HUNIAN (RUMAH)</div>
+        
+        <div class="meander-drain" style="top: 75%;"></div>
+        <div class="label" style="top: 80%; right: 5px;">Drainase Meander (Ular)</div>
+        
+        <div class="vetiver-belt" style="bottom: 0;"></div>
+        <div class="label" style="bottom: 5px; left: 5px;">Sabuk Vetiver Bawah (Penahan Akhir)</div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="box" style="background: #2e7d32;"></div> <b>Sabuk Vetiver:</b> Tanam rapat (15cm) sebagai paku bumi biologis.</div>
+        <div class="legend-item"><div class="box" style="background: #81d4fa;"></div> <b>Air (Vortex/Meander):</b> Jalur berkelok agar air tidak "menabrak" tanah.</div>
+        <div class="legend-item"><div class="box" style="border: 2px dashed #ffab00;"></div> <b>Zona Grounding:</b> Pasir & Garam krosok untuk kesehatan saraf.</div>
+        <div class="legend-item"><div class="box" style="background: #ffccbc;"></div> <b>Blok Bangunan:</b> Posisi rumah di area netral radiasi & banjir.</div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.7em; color: #888; margin-top: 20px;">
+        CATATAN: Air mengalir dari Atas (Lereng) ke Bawah (Jalan Desa). Sabuk Vetiver wajib mengelilingi seluruh perimeter jika tanah miring.
+    </p>
+</div>
+
+</body>
+</html>
