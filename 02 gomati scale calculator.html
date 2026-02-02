@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Gomati Scale Digital - Sunda Nuswantara OS</title>
+    <style>
+        :root { --gold: #cdaa7d; --brown: #5d4037; --bg: #fdfdfb; }
+        body { font-family: 'Courier New', monospace; background: var(--bg); padding: 40px; color: #1a1a1a; }
+        .tool-box { max-width: 600px; margin: auto; background: #fff; border: 2px solid var(--brown); padding: 30px; box-shadow: 10px 10px 0px #eee; }
+        h1 { color: var(--brown); text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 10px; font-size: 1.5em; }
+        .input-group { margin: 20px 0; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: var(--brown); }
+        input { width: 100%; padding: 10px; border: 1px solid var(--gold); border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: var(--brown); color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        button:hover { background: var(--gold); }
+        .result-box { margin-top: 30px; padding: 20px; background: #f1f8e9; border-left: 5px solid #2e7d32; display: none; }
+        .phi-note { font-size: 0.8em; color: #666; font-style: italic; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="tool-box">
+    <h1>GOMATI SCALE CALCULATOR</h1>
+    <p style="font-size: 0.8em; text-align: center;">"Sinkronisasi Dimensi Tubuh & Arsitektur Tartaria"</p>
+
+    <div class="input-group">
+        <label>Input Panjang Jengkal lo (cm):</label>
+        <input type="number" id="jengkal" placeholder="Contoh: 22">
+    </div>
+
+    <button onclick="calculateGomati()">HITUNG DIMENSI MODULAR</button>
+
+    <div id="results" class="result-box">
+        <strong>HASIL KALIBRASI GOMATI:</strong><br><br>
+        <div id="output"></div>
+        <p class="phi-note">*Rasio ini menggunakan Phi ($1.618$) untuk memastikan resonansi frekuensi Schumann di dalam ruangan tetap optimal.</p>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px; font-size: 0.7em; color: #888;">
+        SUNDA NUSWANTARA OS // 001 TAHUN SUNDA NUSWANTARA
+    </div>
+</div>
+
+<script>
+    function calculateGomati() {
+        const jengkal = parseFloat(document.getElementById('jengkal').value);
+        if (!jengkal) { alert("Masukkan ukuran jengkal dulu bro!"); return; }
+
+        const phi = 1.618;
+        
+        // Logika Gomati Scale: Menentukan dimensi bata & ruang
+        const bataPanjang = (jengkal * phi).toFixed(2);
+        const bataLebar = (jengkal).toFixed(2);
+        const bataTebal = (jengkal / phi).toFixed(2);
+        const tinggiPlafon = (jengkal * Math.pow(phi, 4) / 10).toFixed(2); // Skala Meter
+
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('output').innerHTML = `
+            - <b>Ukuran Bata Modular:</b> ${bataPanjang} x ${bataLebar} x ${bataTebal} cm<br>
+            - <b>Tinggi Ideal Plafon:</b> ${tinggiPlafon} meter<br>
+            - <b>Radius Grounding Bed:</b> ${(jengkal * 3).toFixed(2)} cm<br><br>
+            <i>Gunakan ukuran ini pada mesin 3D Printer Brahma-V1 lo agar setiap blok LEGO yang dicetak memiliki 'sidik jari' frekuensi tubuh lo sendiri.</i>
+        `;
+    }
+</script>
+
+</body>
+</html>

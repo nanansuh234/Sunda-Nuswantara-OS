@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Pusaka Digital Arsitek - Sunda Nuswantara OS</title>
+    <style>
+        :root { --accent: #b71c1c; --gold: #d4af37; --bg: #fdfcf8; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #333; margin: 0; padding: 20px; }
+        .dashboard { max-width: 1100px; margin: auto; display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; }
+        .tool-card { background: #fff; border: 2px solid var(--accent); padding: 20px; box-shadow: 8px 8px 0px #eee; }
+        h1, h2 { color: var(--accent); text-transform: uppercase; border-bottom: 2px solid var(--gold); }
+        
+        /* Cymatics Visualizer */
+        #cymatics-canvas { background: #1a1a1a; width: 100%; height: 300px; border-radius: 50%; border: 5px solid var(--gold); }
+        
+        input, button { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; }
+        button { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; }
+        .result { background: #f1f8e9; padding: 10px; margin-top: 10px; font-size: 0.9em; border-left: 4px solid #2e7d32; }
+    </style>
+</head>
+<body>
+
+<header style="text-align: center; margin-bottom: 30px;">
+    <h1>Pusaka Digital Arsitek Nuswantara</h1>
+    <p><i>Kedaulatan Geometri & Resonansi Alam</i> // 001 TAHUN SUNDA NUSWANTARA</p>
+</header>
+
+<div class="dashboard">
+    <div class="side-panel">
+        <div class="tool-card">
+            <h2>1. Gomati Phi Scaler</h2>
+            <label>Jengkal Pemilik (cm):</label>
+            <input type="number" id="jengkal" value="22" oninput="updateScales()">
+            <div id="scale-results" class="result"></div>
+        </div>
+
+        <div class="tool-card" style="margin-top:20px;">
+            <h2>2. Gnomon Alignment</h2>
+            <label>Sudut Bayangan Matahari (°):</label>
+            <input type="number" id="sun-angle" value="45" oninput="updateAlignment()">
+            <div id="align-results" class="result"></div>
+        </div>
+    </div>
+
+    <div class="tool-card">
+        <h2>3. Cymatics Blueprint (Denah Getar)</h2>
+        <p style="font-size:0.8em;">Gunakan slider untuk mencari frekuensi resonansi denah lo.</p>
+        <input type="range" id="freq" min="1" max="20" value="4" oninput="drawCymatics()">
+        <canvas id="cymatics-canvas"></canvas>
+        <div class="result">
+            <b>Analisis Struktur:</b> <span id="freq-desc">Pola Stabil 4-Simpul (Kekuatan Tanah)</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('cymatics-canvas');
+    const ctx = canvas.getContext('2d');
+    const phi = 1.61803398875;
+
+    function updateScales() {
+        const j = parseFloat(document.getElementById('jengkal').value);
+        const res = document.getElementById('scale-results');
+        res.innerHTML = `
+            <b>Modular Interlocking:</b><br>
+            - Panjang Batu: ${(j * phi).toFixed(2)} cm<br>
+            - Lebar Batu: ${j} cm<br>
+            - Tebal Batu: ${(j / phi).toFixed(2)} cm<br><br>
+            <b>Dimensi Ruang:</b><br>
+            - Tinggi Pintu (Ideal): ${(j * Math.pow(phi, 3)).toFixed(2)} cm
+        `;
+        drawCymatics();
+    }
+
+    function updateAlignment() {
+        const angle = document.getElementById('sun-angle').value;
+        const res = document.getElementById('align-results');
+        res.innerHTML = `
+            <b>Kalibrasi Gnomon:</b><br>
+            Gunakan bayangan sepanjang <b>${(100 / Math.tan(angle * Math.PI / 180)).toFixed(2)} cm</b> untuk menentukan titik Barat-Timur Sejati.
+        `;
+    }
+
+    function drawCymatics() {
+        const f = document.getElementById('freq').value;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = '#d4af37';
+        ctx.lineWidth = 2;
+        
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 100;
+
+        ctx.beginPath();
+        for (let i = 0; i <= 360; i++) {
+            let angle = i * Math.PI / 180;
+            let r = radius + Math.sin(angle * f) * 20; // Simulasi pola Chladni
+            let x = centerX + r * Math.cos(angle);
+            let y = centerY + r * Math.sin(angle);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        // Inner Patterns
+        if(f > 5) {
+            ctx.beginPath();
+            for (let i = 0; i < f; i++) {
+                ctx.moveTo(centerX, centerY);
+                let angle = (i / f) * Math.PI * 2;
+                ctx.lineTo(centerX + 80 * Math.cos(angle), centerY + 80 * Math.sin(angle));
+            }
+            ctx.stroke();
+        }
+
+        document.getElementById('freq-desc').innerText = `Pola Resonansi ${f}-Simpul (Mode: ${f % 2 === 0 ? 'Stabil' : 'Dinamis'})`;
+    }
+
+    // Initialize
+    canvas.width = 400;
+    canvas.height = 300;
+    updateScales();
+    updateAlignment();
+</script>
+
+</body>
+</html>

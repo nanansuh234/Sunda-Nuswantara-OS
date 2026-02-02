@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara OS - Universal Viewer v1.6</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+    
+    <style>
+        :root { --primary: #2c3e50; --accent: #e67e22; --bg: #2d2d2d; --toolbar: #1a1a1a; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* Toolbar */
+        .toolbar { background: var(--toolbar); padding: 10px 20px; display: flex; gap: 15px; align-items: center; border-bottom: 2px solid var(--accent); color: white; }
+        .toolbar button { background: #34495e; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; transition: 0.2s; }
+        .toolbar button:hover { background: var(--accent); }
+        .zoom-controls { display: flex; align-items: center; gap: 10px; border-left: 1px solid #444; padding-left: 15px; }
+        
+        /* Viewport Container */
+        #viewport { 
+            flex: 1; 
+            overflow: auto; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            padding: 20px; 
+            cursor: grab; /* Default cursor untuk crawl */
+            user-select: text; /* Tetap izinkan select text */
+        }
+        #viewport:active { cursor: grabbing; }
+
+        /* Content Render */
+        #render-area { 
+            background: white; 
+            box-shadow: 0 0 20px rgba(0,0,0,0.5); 
+            transform-origin: top center; 
+            transition: transform 0.1s ease-out;
+            min-width: 210mm; /* Standar A4 */
+            padding: 50px;
+            color: #333;
+        }
+
+        #pdf-frame { width: 100%; height: 90vh; border: none; }
+        .hidden { display: none !important; }
+        #fileInput { display: none; }
+        
+        /* Text selection highlight */
+        ::selection { background: var(--accent); color: white; }
+    </style>
+</head>
+<body>
+
+<div class="toolbar">
+    <strong style="color:var(--accent)">NS-VIEWER</strong>
+    <input type="file" id="fileInput" accept=".txt,.html,.pdf,.docx" onchange="handleFile(event)">
+    <button onclick="document.getElementById('fileInput').click()">📂 Buka Dokumen</button>
+
+    <div class="zoom-controls">
+        <button onclick="changeZoom(-0.1)">-</button>
+        <span id="zoomLabel">100%</span>
+        <button onclick="changeZoom(0.1)">+</button>
+        <button onclick="resetZoom()">Fit</button>
+    </div>
+    
+    <div style="font-size: 12px; color: #888; margin-left: auto;">
+        Mode: Read Only | Drag to Crawl | Select to Copy
+    </div>
+</div>
+
+<div id="viewport" onmousedown="startDragging(event)">
+    <div id="render-area">
+        <div id="msg" style="text-align:center; color:#888; margin-top:100px;">
+            <h2>Selamat Datang di Nuswantara Viewer</h2>
+            <p>Klik "Buka Dokumen" untuk memuat file PDF, DOCX, atau teks.</p>
+        </div>
+        <iframe id="pdf-frame" class="hidden"></iframe>
+        <div id="docx-html"></div>
+    </div>
+</div>
+
+<script>
+    let currentZoom = 1;
+    const renderArea = document.getElementById('render-area');
+    const zoomLabel = document.getElementById('zoomLabel');
+    const viewport = document.getElementById('viewport');
+    const pdfFrame = document.getElementById('pdf-frame');
+    const docxHtml = document.getElementById('docx-html');
+    const msg = document.getElementById('msg');
+
+    // 1. HANDLING FILE
+    function handleFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        msg.classList.add('hidden');
+        pdfFrame.classList.add('hidden');
+        docxHtml.innerHTML = '';
+        resetZoom();
+
+        const reader = new FileReader();
+
+        if (file.type === "application/pdf") {
+            const fileURL = URL.createObjectURL(file);
+            pdfFrame.src = fileURL;
+            pdfFrame.classList.remove('hidden');
+            renderArea.style.padding = "0"; // PDF punya padding sendiri
+        } 
+        else if (file.name.endsWith('.docx')) {
+            reader.onload = function(e) {
+                mammoth.convertToHtml({arrayBuffer: e.target.result})
+                    .then(result => {
+                        docxHtml.innerHTML = result.value;
+                        renderArea.style.padding = "50px";
+                    });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+        else {
+            reader.onload = function(e) {
+                docxHtml.innerHTML = `<pre style="white-space: pre-wrap;">${e.target.result}</pre>`;
+                renderArea.style.padding = "50px";
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    // 2. ZOOM SYSTEM
+    function changeZoom(delta) {
+        currentZoom += delta;
+        currentZoom = Math.min(Math.max(0.5, currentZoom), 3); // Limit 50% - 300%
+        applyZoom();
+    }
+
+    function resetZoom() {
+        currentZoom = 1;
+        applyZoom();
+    }
+
+    function applyZoom() {
+        renderArea.style.transform = `scale(${currentZoom})`;
+        zoomLabel.innerText = Math.round(currentZoom * 100) + "%";
+    }
+
+    // 3. CRAWL / DRAG SCROLL SYSTEM
+    let isDragging = false;
+    let startX, startY, scrollLeft, scrollTop;
+
+    function startDragging(e) {
+        // Jangan drag kalau lagi select text
+        if (window.getSelection().toString().length > 0) return;
+        
+        isDragging = true;
+        startX = e.pageX - viewport.offsetLeft;
+        startY = e.pageY - viewport.offsetTop;
+        scrollLeft = viewport.scrollLeft;
+        scrollTop = viewport.scrollTop;
+    }
+
+    window.addEventListener('mouseup', () => isDragging = false);
+    
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - viewport.offsetLeft;
+        const y = e.pageY - viewport.offsetTop;
+        const walkX = (x - startX) * 1.5; 
+        const walkY = (y - startY) * 1.5;
+        viewport.scrollLeft = scrollLeft - walkX;
+        viewport.scrollTop = scrollTop - walkY;
+    });
+
+</script>
+
+</body>
+</html>

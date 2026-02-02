@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizer Frekuensi - Sunda Nuswantara OS</title>
+    <style>
+        :root { --gold: #d4af37; --bg: #1a1a1a; --text: #fdfdfb; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 40px; text-align: center; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
+        
+        .pattern-card { background: #222; border: 1px solid var(--gold); padding: 20px; border-radius: 15px; position: relative; }
+        .pattern-card h3 { color: var(--gold); margin-bottom: 5px; font-size: 1.1em; }
+        .pattern-card p { font-size: 0.8em; opacity: 0.8; margin-bottom: 20px; }
+
+        /* CSS Cymatics Visualization */
+        .cymatics-shape {
+            width: 150px; height: 150px; margin: auto; border: 2px solid var(--gold); position: relative;
+            display: flex; align-items: center; justify-content: center; opacity: 0.9;
+        }
+
+        /* 7.83 Hz - Lingkaran (Earth) */
+        .earth { border-radius: 50%; box-shadow: 0 0 15px var(--gold); }
+        .earth::after { content: ''; width: 80%; height: 80%; border: 1px solid var(--gold); border-radius: 50%; position: absolute; }
+
+        /* 32 Hz - Segitiga/Bintang (Fire) */
+        .fire { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: rgba(212, 175, 55, 0.2); }
+
+        /* 52 Hz - Hexagon (Air) */
+        .air { clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); border: 2px solid var(--gold); }
+        .air::before { content: ''; width: 60%; height: 60%; border: 1px solid var(--gold); position: absolute; clip-path: inherit; }
+
+        /* 63 Hz - Mandala (Akasha) */
+        .akasha { border-radius: 50%; border-style: double; border-width: 5px; }
+        .akasha::before { content: '❄'; font-size: 80px; color: var(--gold); }
+
+        .footer { margin-top: 60px; font-size: 0.8em; border-top: 1px solid #444; padding-top: 20px; color: var(--gold); }
+    </style>
+</head>
+<body>
+
+    <h1>Visualisasi Denah Frekuensi</h1>
+    <p>Simulasi Bentuk Geometri Chladni untuk Struktur Bangunan</p>
+
+    <div class="grid-container">
+        <div class="pattern-card">
+            <h3>7.83 Hz (Tanah)</h3>
+            <p>Karakter: Grounding & Pemulihan</p>
+            <div class="cymatics-shape earth"></div>
+        </div>
+
+        <div class="pattern-card">
+            <h3>32 Hz (Api)</h3>
+            <p>Karakter: Transformasi & Kerja</p>
+            <div class="cymatics-shape fire"></div>
+        </div>
+
+        <div class="pattern-card">
+            <h3>52 Hz (Udara)</h3>
+            <p>Karakter: Inteligensia & Komunikasi</p>
+            <div class="cymatics-shape air"></div>
+        </div>
+
+        <div class="pattern-card">
+            <h3>63 Hz (Angkasa)</h3>
+            <p>Karakter: Spiritual & Hening</p>
+            <div class="cymatics-shape akasha"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        DOKUMEN VISUAL GENERATOR // SUNDA NUSWANTARA OS // 001 TAHUN SUNDA NUSWANTARA
+    </div>
+
+</body>
+</html>

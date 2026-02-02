@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulator Resonansi Brahma - Sunda Nuswantara OS</title>
+    <style>
+        :root { --gold: #d4af37; --bg: #121212; --panel: #1e1e1e; --accent: #b71c1c; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: #e0e0e0; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--gold); padding-bottom: 10px; width: 100%; max-width: 800px; }
+        h1 { color: var(--gold); margin: 0; letter-spacing: 3px; font-size: 1.5em; }
+        
+        .simulator-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; width: 100%; max-width: 1000px; }
+        
+        /* Visualizer Box */
+        .visualizer-box { background: var(--panel); padding: 20px; border: 2px solid var(--gold); border-radius: 50%; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); position: relative; width: 400px; height: 400px; display: flex; align-items: center; justify-content: center; }
+        canvas { background: #000; border-radius: 50%; width: 380px; height: 380px; }
+
+        /* Control Panel */
+        .control-panel { background: var(--panel); border-left: 5px solid var(--gold); padding: 30px; width: 350px; border-radius: 10px; }
+        .tuning-knob { width: 100%; margin: 20px 0; cursor: pointer; }
+        
+        .info-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 5px; margin-top: 20px; border-left: 3px solid var(--accent); }
+        .info-card b { color: var(--gold); display: block; margin-bottom: 5px; text-transform: uppercase; }
+        
+        .freq-display { font-size: 2.5em; font-weight: bold; color: var(--gold); text-align: center; font-family: 'Courier New', monospace; }
+        .unit { font-size: 0.4em; color: #888; margin-left: 5px; }
+
+        .footer { margin-top: auto; padding: 20px; font-size: 0.8em; color: var(--gold); font-weight: bold; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>SIMULATOR TUNING RESONANSI</h1>
+        <p><i>Kedaulatan Frekuensi Nusantara</i> // 001 TAHUN SUNDA NUSWANTARA</p>
+    </div>
+
+    <div class="simulator-container">
+        <div class="visualizer-box">
+            <canvas id="cymaticsCanvas"></canvas>
+        </div>
+
+        <div class="control-panel">
+            <div class="freq-display"><span id="freqVal">7.83</span><span class="unit">Hz</span></div>
+            
+            <label style="display:block; margin-top:10px; font-size:0.9em; text-align:center;">GESER UNTUK TUNING FREKUENSI</label>
+            <input type="range" id="tuningSlider" class="tuning-knob" min="7" max="65" step="0.01" value="7.83">
+
+            <div class="info-card">
+                <b>Elemen Dominan:</b>
+                <span id="elemName">Tanah (Pertiwi)</span>
+            </div>
+
+            <div class="info-card">
+                <b>Karakter Ruang:</b>
+                <span id="charDesc">Grounding, Pemulihan Sel, Tidur Nyenyak.</span>
+            </div>
+
+            <div style="font-size: 0.7em; color: #aaa; margin-top: 20px; line-height: 1.4;">
+                *Pola geometri (Chladni Figures) terbentuk di titik simpul getaran dimana pasir tidak bergerak.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        SUNDA NUSWANTARA OS // DIVISI BIO-MEKANIK // 001
+    </div>
+
+<script>
+    const canvas = document.getElementById('cymaticsCanvas');
+    const ctx = canvas.getContext('2d');
+    const slider = document.getElementById('tuningSlider');
+    const freqVal = document.getElementById('freqVal');
+    const elemName = document.getElementById('elemName');
+    const charDesc = document.getElementById('charDesc');
+
+    canvas.width = 400;
+    canvas.height = 400;
+
+    function drawPattern(f) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = '#d4af37';
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.8;
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        
+        // Simulasi Pola Pasir (Nodes)
+        // Semakin tinggi frekuensi, semakin banyak ring dan nodal lines
+        const rings = Math.floor(f / 10) + 2;
+        const nodes = Math.floor(f / 5) + 1;
+
+        for (let r_idx = 1; r_idx <= rings; r_idx++) {
+            ctx.beginPath();
+            let baseRadius = (r_idx * (150 / rings));
+            
+            for (let a = 0; a <= 360; a++) {
+                let angle = a * Math.PI / 180;
+                // Formula gangguan untuk mensimulasikan pola cymatics
+                let ripple = Math.sin(angle * nodes) * (f / 10);
+                let r = baseRadius + ripple;
+                
+                let x = centerX + r * Math.cos(angle);
+                let y = centerY + r * Math.sin(angle);
+                
+                if (a === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        // Draw radial lines (nodal lines)
+        if (f > 15) {
+            ctx.beginPath();
+            for (let i = 0; i < nodes; i++) {
+                let angle = (i / nodes) * Math.PI * 2;
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(centerX + 180 * Math.cos(angle), centerY + 180 * Math.sin(angle));
+            }
+            ctx.stroke();
+        }
+    }
+
+    function updateInfo(f) {
+        freqVal.innerText = f.toFixed(2);
+        
+        if (f < 10) {
+            elemName.innerText = "Tanah (Pertiwi)";
+            charDesc.innerText = "Grounding, Pemulihan Sel, Tidur Nyenyak.";
+        } else if (f < 20) {
+            elemName.innerText = "Air (Apah)";
+            charDesc.innerText = "Kreativitas, Aliran Energi, Fleksibilitas.";
+        } else if (f < 35) {
+            elemName.innerText = "Api (Teja)";
+            charDesc.innerText = "Semangat, Transformasi, Dapur, Kerja Keras.";
+        } else if (f < 55) {
+            elemName.innerText = "Udara (Bayu)";
+            charDesc.innerText = "Komunikasi, Inteligensia, Ruang Tamu.";
+        } else {
+            elemName.innerText = "Angkasa (Akasha)";
+            charDesc.innerText = "Meditasi, Koneksi Spiritual, Hening.";
+        }
+    }
+
+    slider.addEventListener('input', (e) => {
+        let f = parseFloat(e.target.value);
+        updateInfo(f);
+        drawPattern(f);
+    });
+
+    // Initial Draw
+    drawPattern(7.83);
+</script>
+</body>
+</html>

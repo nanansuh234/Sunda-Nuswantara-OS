@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Maglev Driver Blueprint - Sunda Nuswantara OS</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #fdfdfb; padding: 30px; }
+        .blueprint-card { border: 2px solid #b71c1c; padding: 25px; background: #fff; box-shadow: 10px 10px 0px #eee; }
+        .component { color: #b71c1c; font-weight: bold; }
+        .logic { font-size: 0.9em; border-left: 3px solid #ffcc00; padding-left: 15px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="blueprint-card">
+        <h3>BRAHMA-V1: MAGNETIC LEVITATION DRIVER</h3>
+        <p><i>"Menghilangkan Gesekan, Menghasilkan Kehalusan Sempurna."</i></p>
+        
+        <div class="logic">
+            <b>Prinsip:</b> Mengganti roda/bearing fisik dengan <b>Medan Magnet Toroidal</b>. Nozzle printer akan "melayang" saat bergerak.
+        </div>
+
+        <ul>
+            <li><span class="component">Rel:</span> Baris Magnet Neodymium N-S yang saling berhadapan.</li>
+            <li><span class="component">Driver:</span> Arduino/ESP32 dengan sistem <b>PID Controller</b> untuk menjaga jarak apung tetap di 0.5mm.</li>
+            <li><span class="component">Smoothing:</span> Motor getar piezoelektrik frekuensi tinggi di ujung nozzle untuk meratakan pasta secara atomik.</li>
+        </ul>
+    </div>
+</body>
+</html>

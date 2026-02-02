@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Vastu-Gomati Planner - Sunda Nuswantara OS</title>
+    <style>
+        :root { --accent: #e67e22; --dark: #2c3e50; --gold: #d4af37; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f1ea; padding: 20px; color: var(--dark); }
+        .planner-box { max-width: 800px; margin: auto; background: white; border: 3px solid var(--dark); padding: 30px; box-shadow: 15px 15px 0px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: var(--accent); border-bottom: 2px solid var(--gold); padding-bottom: 10px; }
+        
+        /* Grid Vastu */
+        .vastu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin: 20px 0; 
+            background: #eee; 
+            padding: 10px; 
+            border: 2px solid var(--dark);
+        }
+        .vastu-cell { 
+            background: white; 
+            aspect-ratio: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 10px; 
+            font-size: 0.8em; 
+            border: 1px solid #ccc;
+        }
+        .vastu-cell b { color: var(--accent); display: block; margin-bottom: 5px; }
+        
+        .input-section { background: #fff8f0; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed var(--accent); }
+        .footer { text-align: center; margin-top: 30px; font-weight: bold; color: var(--dark); font-size: 0.8em; }
+    </style>
+</head>
+<body>
+
+<div class="planner-box">
+    <h1>VASTU-PURUSHA MANDALA</h1>
+    <p style="text-align: center; font-style: italic;">"Sinkronisasi 8 Arah Mata Angin & Elemen Dasar"</p>
+
+    <div class="input-section">
+        <label>Input Skala Gomati (Jengkal cm):</label>
+        <input type="number" id="jengkalInput" value="22" style="padding: 5px; width: 60px;">
+        <p id="gomatiNote" style="font-size: 0.75em; margin-top: 5px; color: #666;"></p>
+    </div>
+
+    <div class="vastu-grid">
+        <div class="vastu-cell"><b>BARAT LAUT</b>(Vayu/Udara)<br>Kamar Tamu / Gudang</div>
+        <div class="vastu-cell"><b>UTARA</b>(Kubera/Air)<br>Ruang Kerja / Kas</div>
+        <div class="vastu-cell"><b>TIMUR LAUT</b>(Isana/Air)<br>Ruang Meditasi / Sumur</div>
+        
+        <div class="vastu-cell"><b>BARAT</b>(Varuna/Angkasa)<br>Ruang Makan / Belajar</div>
+        <div class="vastu-cell" style="background:#fff9c4; border: 2px solid var(--gold);"><b>PUSAT</b>(Brahmasthan)<br>Ruang Kosong / Taman Dalam</div>
+        <div class="vastu-cell"><b>TIMUR</b>(Aditya/Cahaya)<br>Pintu Utama / Beranda</div>
+        
+        <div class="vastu-cell"><b>BARAT DAYA</b>(Nairitya/Tanah)<br>Kamar Utama (Stabil)</div>
+        <div class="vastu-cell"><b>SELATAN</b>(Yama/Tanah)<br>Kamar Tidur Anak</div>
+        <div class="vastu-cell"><b>TENGGARA</b>(Agni/Api)<br>Dapur / Panel Listrik</div>
+    </div>
+
+    <div class="logic-note" style="font-size: 0.85em; background: #e3f2fd; padding: 15px; border-left: 5px solid #2196f3;">
+        <b>ALGORITMA VASTU:</b><br>
+        1. <b>Dapur (Api)</b> wajib di Tenggara agar energi panas tidak merusak sirkulasi udara.<br>
+        2. <b>Sumur/Air</b> di Timur Laut untuk menyerap energi matahari pagi.<br>
+        3. <b>Pusat Rumah (Brahmasthan)</b> harus kosong/plong agar energi gravitasi bisa 'grounding' dengan sempurna ke sistem paku bumi kita.
+    </div>
+
+    <div class="footer">
+        LAYOUT STRUKTUR MODULAR // SUNDA NUSWANTARA OS // 001 TAHUN SUNDA NUSWANTARA
+    </div>
+</div>
+
+<script>
+    document.getElementById('jengkalInput').addEventListener('input', function() {
+        let j = this.value;
+        document.getElementById('gomatiNote').innerText = `Dimensi Blok LEGO: ${(j * 1.618).toFixed(1)}cm x ${j}cm x ${(j / 1.618).toFixed(1)}cm`;
+    });
+</script>
+
+</body>
+</html>
