@@ -2,25 +2,27 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Nuswantara Explorer - Fixed Connection</title>
+    <title>Nuswantara Explorer v2.0 - Friendster Mode</title>
     <style>
         :root {
             --win-blue: #0078d7;
             --bg-main: #ffffff;
-            --sidebar-bg: #f3f3f3;
+            --sidebar-bg: rgba(243, 243, 243, 0.7);
             --border: #d2d2d2;
             --text: #333;
-            --taskbar-bg: #f0f0f0;
-            --hover: #e5e5e5;
+            --taskbar-bg: rgba(240, 240, 240, 0.8);
+            --hover: rgba(229, 229, 229, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.7);
         }
 
         body.dark-mode {
             --bg-main: #1a1a1a;
-            --sidebar-bg: #252525;
+            --sidebar-bg: rgba(37, 37, 37, 0.7);
             --border: #444;
             --text: #e0e0e0;
-            --taskbar-bg: #111;
-            --hover: #333;
+            --taskbar-bg: rgba(17, 17, 17, 0.8);
+            --hover: rgba(51, 51, 51, 0.5);
+            --card-bg: rgba(0, 0, 0, 0.6);
         }
 
         body {
@@ -28,105 +30,138 @@
             color: var(--text);
             font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            background-size: 120%; /* Ukuran lebih besar dikit buat ruang drag */
+            background-repeat: no-repeat;
+            background-position: 0px 0px;
+            transition: background-image 0.3s ease;
+            user-select: none; /* Biar gak keganggu block text pas lagi drag */
         }
 
-        /* --- TOOLBAR --- */
-        .toolbar {
-            height: 40px; background: var(--bg-main); border-bottom: 1px solid var(--border);
-            display: flex; align-items: center; padding: 0 10px; gap: 10px;
-        }
-        .btn-nav { background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--win-blue); }
-        .btn-nav:disabled { color: #ccc; cursor: default; }
-        .address-bar { 
-            flex: 1; border: 1px solid var(--border); padding: 4px 10px; 
-            font-size: 0.85rem; color: #666; background: var(--bg-main);
-        }
-        .search-box {
-            width: 250px; border: 1px solid var(--border); padding: 4px 10px;
-            display: flex; align-items: center; gap: 8px; background: var(--bg-main);
-        }
+        body.dragging-bg { cursor: move !important; }
+
+/* --- FIXED SEARCH BOX & TOOLBAR --- */
+.toolbar {
+    height: 45px; 
+    background: var(--bg-main); 
+    border-bottom: 1px solid var(--border);
+    display: flex; 
+    align-items: center; 
+    padding: 0 15px; 
+    gap: 15px; 
+    flex-shrink: 0; 
+    z-index: 100;
+}
+
+.address-bar { 
+    flex: 1; 
+    min-width: 100px; /* Biar gak maruk makan tempat */
+    border: 1px solid var(--border); 
+    padding: 6px 12px; 
+    font-size: 0.85rem; 
+    color: var(--text); 
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-box {
+    width: 250px; 
+    min-width: 150px; /* Kuncinya di sini biar gak hilang */
+    border: 1px solid var(--win-blue); 
+    padding: 5px 10px;
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    background: var(--card-bg); /* Biar ngikutin tema glass */
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+}
+
+.search-box input {
+    border: none; 
+    outline: none; 
+    background: none; 
+    width: 100%; 
+    color: var(--text); /* Biar teksnya kelihatan di dark/light mode */
+    font-size: 0.85rem;
+}
+
+.search-box input::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+}
 
         /* --- LAYOUT --- */
         .explorer-container { display: flex; flex: 1; overflow: hidden; position: relative; }
         
-        /* Update Sidebar lo jadi begini biar bisa scroll */
-.sidebar { 
-    width: 230px; 
-    background: var(--sidebar-bg); 
-    border-right: 1px solid var(--border); 
-    font-size: 0.85rem;
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 85px); /* Potong tinggi toolbar & taskbar */
-    overflow-y: auto; /* INI KUNCINYA */
-}
+        .sidebar { 
+            width: 250px; background: var(--sidebar-bg); 
+            backdrop-filter: blur(15px); border-right: 1px solid var(--border); 
+            font-size: 0.85rem; display: flex; flex-direction: column;
+        }
 
-/* Biar scrollbar-nya tipis dan gak ngerusak pemandangan */
-.sidebar::-webkit-scrollbar { width: 4px; }
-.sidebar::-webkit-scrollbar-thumb { background: var(--win-blue); border-radius: 10px; }
-
-/* Tambahan dikit biar Grid App gak kepotong */
-.explorer-view { 
-    flex: 1; 
-    padding: 20px; 
-    overflow-y: auto; 
-    height: calc(100vh - 85px); 
-}
+        .sidebar-scroll { flex: 1; overflow-y: auto; padding-top: 10px; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--win-blue); border-radius: 10px; }
 
         .nav-group { 
-            margin: 5px 10px 15px 10px; 
-            border: 1px solid var(--border); 
-            border-radius: 4px;
-            overflow: hidden;
+            margin: 5px 10px 15px 10px; border: 1px solid var(--border); 
+            border-radius: 4px; overflow: hidden; background: rgba(255,255,255,0.1);
         }
-        .nav-title { padding: 5px 15px; font-weight: bold; font-size: 0.75rem; color: #666; background: rgba(0,0,0,0.03); }
-        .nav-item { 
-            padding: 6px 15px; display: flex; align-items: center; 
-            gap: 10px; cursor: pointer; transition: 0.1s;
-        }
+        .nav-title { padding: 5px 15px; font-weight: bold; font-size: 0.75rem; color: var(--win-blue); background: rgba(0,0,0,0.05); }
+        .nav-item { padding: 8px 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.1s; color: var(--text); }
         .nav-item:hover { background: var(--hover); }
-        .nav-item.active { background: #cce8ff !important; color: #000 !important; border-left: 3px solid var(--win-blue); }
+        .nav-item.active { background: var(--win-blue) !important; color: #fff !important; }
 
-        .explorer-view { flex: 1; padding: 20px; overflow-y: auto; }
+        .explorer-view { 
+            flex: 1; padding: 20px; overflow-y: auto; 
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(3px);
+        }
 
-        .view-section-title { font-size: 0.9rem; margin-bottom: 15px; color: var(--win-blue); border-bottom: 1px solid var(--border); padding-bottom: 5px; }
-        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
-        .item-card { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; padding: 10px; border-radius: 4px; }
-        .item-card:hover { background: #cce8ff; }
-        .item-icon { font-size: 2.5rem; margin-bottom: 5px; }
-        .item-label { font-size: 0.7rem; font-weight: 500; }
+        .view-section-title { font-size: 0.9rem; margin-bottom: 15px; color: var(--win-blue); border-bottom: 1px solid var(--border); padding-bottom: 5px; font-weight: bold; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 15px; }
+        
+        .item-card { 
+            display: flex; flex-direction: column; align-items: center; text-align: center; 
+            cursor: pointer; padding: 12px; border-radius: 8px; background: var(--card-bg);
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); transition: 0.2s;
+        }
+        .item-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: var(--win-blue); color: #fff; }
+        .item-icon { font-size: 2.5rem; margin-bottom: 8px; }
+        .item-label { font-size: 0.75rem; font-weight: 500; }
 
-        /* --- TASKBAR & POPUP --- */
+        /* --- TASKBAR --- */
         .taskbar {
             height: 45px; background: var(--taskbar-bg); border-top: 1px solid var(--border);
-            display: flex; align-items: center; padding: 0 10px; z-index: 2000;
+            display: flex; align-items: center; padding: 0 10px; z-index: 2000; flex-shrink: 0; backdrop-filter: blur(20px);
         }
         .start-btn {
-            background: var(--win-blue); color: #fff; border: none;
-            padding: 8px 18px; font-weight: bold; border-radius: 3px; cursor: pointer;
-            display: flex; align-items: center; gap: 8px;
+            background: var(--win-blue); color: #fff; border: none; padding: 8px 18px; 
+            font-weight: bold; border-radius: 3px; cursor: pointer; display: flex; align-items: center; gap: 8px;
         }
 
         #startMenuPopup {
-            display: none; position: fixed; bottom: 50px; left: 10px;
-            width: 220px; background: var(--bg-main); border: 2px solid var(--win-blue);
-            box-shadow: 0 0 20px rgba(0,0,0,0.3); border-radius: 8px; z-index: 9999;
+            display: none; position: fixed; bottom: 55px; left: 10px; width: 280px; 
+            background: var(--sidebar-bg); backdrop-filter: blur(20px); border: 2px solid var(--win-blue);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); border-radius: 8px; z-index: 9999;
         }
-        .menu-item {
-            padding: 12px 15px; font-size: 0.85rem; cursor: pointer;
-            display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border);
-        }
+        .menu-item { padding: 12px 15px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); color: var(--text); }
         .menu-item:hover { background: var(--win-blue); color: #fff; }
 
         .theme-mode-btn {
-            margin-left: auto; cursor: pointer; font-size: 0.85rem;
-            display: flex; align-items: center; gap: 5px; color: var(--text);
+            margin-left: auto; display: flex; align-items: center; gap: 15px; 
+            background: rgba(0,0,0,0.1); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;
+            color: var(--text); font-weight: bold;
         }
 
         .hidden { display: none !important; }
+        #bgInput { display: none; }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
     <div class="toolbar">
         <div style="display:flex; gap:5px;">
@@ -135,21 +170,26 @@
         </div>
         <div class="address-bar" id="pathDisp">📁 This PC > Devices and drives</div>
         <div class="search-box">
-            🔍 <input type="text" placeholder="Search Index..." oninput="search(this.value)" style="border:none; outline:none; background:none; width:100%; color:inherit;">
+            🔍 <input type="text" placeholder="Cari di Nuswantara..." oninput="search(this.value)" style="border:none; outline:none; background:none; width:100%; color:inherit;">
         </div>
     </div>
 
     <div class="explorer-container">
         <div class="sidebar">
-            <div class="nav-group">
-                <div class="nav-title">Quick access</div>
-                <div class="nav-item" id="nav-all" onclick="navigate('apps', 'all', true, this)">⭐ All Applications</div>
-                <div class="nav-item" onclick="parent.showDashboard()">🖥️ Desktop</div>
-            </div>
+            <div class="sidebar-scroll">
+                <div class="nav-group">
+                    <div class="nav-title">Quick access</div>
+                    <div class="nav-item" id="nav-all" onclick="navigate('apps', 'all', true, this)">⭐ Semua Aplikasi</div>
+                    <div class="nav-item" onclick="parent.showDashboard()">🖥️ Desktop</div>
+                </div>
 
-            <div class="nav-group">
-                <div class="nav-title">This PC</div>
-                <div class="nav-item active" id="nav-root" onclick="navigate('root', 'all', true, this)">💻 This PC</div>
+                <div class="nav-group">
+                    <div class="nav-title">Sistem OS</div>
+                    <div class="nav-item active" id="nav-root" onclick="navigate('root', 'all', true, this)">💻 This PC</div>
+                </div>
+
+                <div class="nav-group">
+                <div class="nav-title">Kategori Berkas</div>
                 <div class="nav-item" id="cat-future" onclick="navigate('apps', 'cat-future', true, this)" style="padding-left:35px;">📁 Astronomi</div>
                 <div class="nav-item" id="cat-human" onclick="navigate('apps', 'cat-human', true, this)" style="padding-left:35px;">📁 Kemanusiaan</div>
                 <div class="nav-item" id="nav-fin" onclick="navigate('apps', 'cat-fin', true, this)" style="padding-left:35px;">📁 Ekonomi</div>
@@ -163,10 +203,11 @@
                 <div class="nav-item" id="cat-culture" onclick="navigate('apps', 'cat-culture', true, this)" style="padding-left:35px;">📁 Budaya</div>
                 <div class="nav-item" id="cat-nature" onclick="navigate('apps', 'cat-nature', true, this)" style="padding-left:35px;">📁 Alami</div>
                 <div class="nav-item" id="cat-blue" onclick="navigate('apps', 'cat-blue', true, this)" style="padding-left:35px;">📁 Arsip Nilai</div>
+                </div>
             </div>
         </div>
 
-        <div class="explorer-view">
+        <div class="explorer-view" id="scrollArea">
             <div id="driveView">
                 <div class="view-section-title">Devices and drives (2)</div>
                 <div class="grid-layout">
@@ -174,9 +215,9 @@
                         <div class="item-icon">💾</div>
                         <div class="item-label">System (C:)</div>
                     </div>
-                    <div class="item-card" onclick="navigate('apps', 'cat-blue', true, null)">
+                    <div class="item-card" onclick="navigate('apps', 'cat-blue', true, document.getElementById('cat-blue'))">
                         <div class="item-icon">💾</div>
-                        <div class="item-label">Data Dokument (E:)</div>
+                        <div class="item-label">Arsip Nilai (E:)</div>
                     </div>
                 </div>
             </div>
@@ -189,22 +230,26 @@
     </div>
 
     <div id="startMenuPopup">
-        <div style="background:var(--win-blue); color:white; padding:10px; font-weight:bold; font-size:0.8rem;">NUSWANTARA EXPLORER</div>
+        <div style="background:var(--win-blue); color:white; padding:10px; font-weight:bold; font-size:0.8rem;">NUSWANTARA SETTINGS</div>
+        <div class="menu-item" onclick="document.getElementById('bgInput').click()"><span>🖼️</span> Ganti Wall (Friendster Mode)</div>
+        <div class="menu-item" onclick="resetBG()"><span>🔄</span> Reset Posisi & Gambar</div>
         <div class="menu-item" onclick="location.reload();"><span>🔄</span> Refresh Explorer</div>
     </div>
+
+    <input type="file" id="bgInput" accept="image/*" onchange="changeBG(event)">
 
     <div class="taskbar">
         <button class="start-btn" onclick="toggleStart()">
             <span>💠</span> START
         </button>
-        <div class="theme-mode-btn" onclick="toggleTheme()">
-            <span id="themeIcon">🌓</span> Theme Mode
+        <div class="theme-mode-btn">
+            <span onclick="toggleTheme()" style="cursor:pointer">🌓 Mode</span>
+            <span onclick="document.getElementById('bgInput').click()" style="cursor:pointer">🖼️ Wall</span>
         </div>
     </div>
 
     <script>
-        // Database aplikasi sinkron dengan index.html
-      const appDatabase = [
+        const appDatabase = [
     { url: 'Readme.html', label: 'Tentang', icon: 'ℹ️', cat: 'cat-time' },
     { url: 'kesetaraan harga emas perak.html', label: 'Kesetaraan Harga Emas dan Perak', icon: '📝', cat: 'cat-blue' },
     { url: 'kesetaraan nilai.html', label: 'Kesetaraan Nilai', icon: '📝', cat: 'cat-blue' },
@@ -344,25 +389,57 @@
 
         let historyStack = [{target: 'root', cat: 'all'}];
         let curIdx = 0;
+        let bgPosX = 0, bgPosY = 0, isDragging = false, startX, startY;
 
-        // FUNGSI UTAMA UNTUK MEMBUKA APLIKASI DI PANEL UTAMA
-        function openAppInOS(url, label, icon) {
-            // Kita coba berbagai cara untuk mencapai parent.launchApp
-            if (typeof parent.launchApp === "function") {
-                parent.launchApp(url, label, icon);
-            } else if (window.parent && typeof window.parent.launchApp === "function") {
-                window.parent.launchApp(url, label, icon);
-            } else {
-                console.error("Gagal terhubung ke Nuswantara OS utama.");
-                window.open(url, '_blank');
+        // --- BACKGROUND DRAG SYSTEM ---
+        window.addEventListener('mousedown', (e) => {
+            if (e.target.id === 'scrollArea' || e.target.id === 'driveView' || e.target.id === 'mainBody') {
+                isDragging = true;
+                document.body.classList.add('dragging-bg');
+                startX = e.clientX - bgPosX;
+                startY = e.clientY - bgPosY;
             }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            bgPosX = e.clientX - startX;
+            bgPosY = e.clientY - startY;
+            document.body.style.backgroundPosition = `${bgPosX}px ${bgPosY}px`;
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.body.classList.remove('dragging-bg');
+            localStorage.setItem('bgX', bgPosX);
+            localStorage.setItem('bgY', bgPosY);
+        });
+
+        // --- CORE FUNCTIONS ---
+        function changeBG(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                document.body.style.backgroundImage = `url(${event.target.result})`;
+                localStorage.setItem('customBG', event.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetBG() {
+            localStorage.removeItem('customBG');
+            localStorage.removeItem('bgX');
+            localStorage.removeItem('bgY');
+            location.reload();
         }
 
         function navigate(target, cat = 'all', push = true, navEl = null) {
             const dv = document.getElementById('driveView');
             const av = document.getElementById('appView');
-            const path = document.getElementById('pathDisp');
             const grid = document.getElementById('appGrid');
+            const path = document.getElementById('pathDisp');
+
+            document.getElementById('scrollArea').scrollTop = 0;
 
             if(navEl) {
                 document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -383,47 +460,20 @@
                     </div>`;
                 });
             }
-
-            if (push) {
-                historyStack = historyStack.slice(0, curIdx + 1);
-                historyStack.push({target, cat});
-                curIdx++;
-            }
+            if (push) { historyStack.push({target, cat}); curIdx++; }
             updateBtns();
         }
 
-        function goBack() { 
-            if(curIdx > 0) { 
-                curIdx--; 
-                let s = historyStack[curIdx]; 
-                let el = (s.target === 'root') ? document.getElementById('nav-root') : null;
-                navigate(s.target, s.cat, false, el); 
-            } 
+        function openAppInOS(url, label, icon) {
+            if (window.parent && typeof window.parent.launchApp === "function") {
+                window.parent.launchApp(url, label, icon);
+            } else { window.open(url, '_blank'); }
         }
 
-        function goForward() { 
-            if(curIdx < historyStack.length - 1) { 
-                curIdx++; 
-                let s = historyStack[curIdx]; 
-                navigate(s.target, s.cat, false); 
-            } 
-        }
-        
-        function updateBtns() {
-            document.getElementById('btnBack').disabled = curIdx === 0;
-            document.getElementById('btnForward').disabled = curIdx === historyStack.length - 1;
-        }
-
-        function toggleStart() {
-            const m = document.getElementById('startMenuPopup');
-            m.style.display = (m.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌓';
-        }
+        function goBack() { if(curIdx > 0) { curIdx--; let s = historyStack[curIdx]; navigate(s.target, s.cat, false); } }
+        function updateBtns() { document.getElementById('btnBack').disabled = curIdx === 0; }
+        function toggleStart() { const m = document.getElementById('startMenuPopup'); m.style.display = (m.style.display === 'block') ? 'none' : 'block'; }
+        function toggleTheme() { document.body.classList.toggle('dark-mode'); localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); }
 
         function search(q) {
             if(q.length > 0) navigate('apps', 'all', false);
@@ -432,11 +482,19 @@
             });
         }
 
-        window.addEventListener('click', (e) => {
-            if (!e.target.closest('.start-btn') && !e.target.closest('#startMenuPopup')) {
-                document.getElementById('startMenuPopup').style.display = 'none';
-            }
-        });
+        // --- INIT LOAD ---
+        window.onload = () => {
+            const bg = localStorage.getItem('customBG');
+            const x = localStorage.getItem('bgX');
+            const y = localStorage.getItem('bgY');
+            const theme = localStorage.getItem('theme');
+
+            if(bg) document.body.style.backgroundImage = `url(${bg})`;
+            if(x && y) { bgPosX = parseInt(x); bgPosY = parseInt(y); document.body.style.backgroundPosition = `${x}px ${y}px`; }
+            if(theme === 'dark') document.body.classList.add('dark-mode');
+        };
+
+        window.onclick = (e) => { if (!e.target.closest('.start-btn') && !e.target.closest('#startMenuPopup')) document.getElementById('startMenuPopup').style.display = 'none'; };
     </script>
 </body>
 </html>
