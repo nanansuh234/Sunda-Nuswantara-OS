@@ -49,11 +49,29 @@
         /* --- LAYOUT --- */
         .explorer-container { display: flex; flex: 1; overflow: hidden; position: relative; }
         
-        .sidebar { 
-            width: 230px; background: var(--sidebar-bg); 
-            border-right: 1px solid var(--border); font-size: 0.85rem;
-            padding-top: 10px;
-        }
+        /* Update Sidebar lo jadi begini biar bisa scroll */
+.sidebar { 
+    width: 230px; 
+    background: var(--sidebar-bg); 
+    border-right: 1px solid var(--border); 
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 85px); /* Potong tinggi toolbar & taskbar */
+    overflow-y: auto; /* INI KUNCINYA */
+}
+
+/* Biar scrollbar-nya tipis dan gak ngerusak pemandangan */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--win-blue); border-radius: 10px; }
+
+/* Tambahan dikit biar Grid App gak kepotong */
+.explorer-view { 
+    flex: 1; 
+    padding: 20px; 
+    overflow-y: auto; 
+    height: calc(100vh - 85px); 
+}
 
         .nav-group { 
             margin: 5px 10px 15px 10px; 
@@ -422,3 +440,4 @@
     </script>
 </body>
 </html>
+
