@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Audit Baitul Mal v1.5 - Sunda Nuswantara OS</title>
+    <style>
+        :root { 
+            --gold: #d4af37; --silver: #c0c0c0; --bg: #121212; 
+            --panel: rgba(255, 255, 255, 0.08); --text: #e0e0e0; --red: #b71c1c; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .audit-container { width: 100%; max-width: 1000px; background: var(--panel); backdrop-filter: blur(20px); border: 2px solid var(--gold); padding: 35px; border-radius: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        h1 { color: var(--gold); text-align: center; text-transform: uppercase; border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .perspective-bar { background: var(--red); color: white; padding: 15px; border-radius: 10px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
+        .input-section { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 25px; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 12px; }
+        input, select, button { padding: 12px; border-radius: 6px; border: 1px solid var(--gold); background: rgba(255,255,255,0.1); color: white; outline: none; }
+        
+        table { width: 100%; border-collapse: collapse; text-align: center; margin-top: 10px; }
+        th { background: var(--gold); color: #000; padding: 15px; text-transform: uppercase; font-size: 0.8em; }
+        td { padding: 15px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+        .debit { color: #4caf50; font-weight: bold; }
+        .credit { color: #ff5252; font-weight: bold; }
+
+        /* Summary Panel */
+        .summary-panel { margin-top: 35px; border-top: 2px dashed var(--gold); padding-top: 25px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .sum-card { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; border: 1px solid var(--gold); text-align: center; }
+        .sum-card h3 { font-size: 0.75rem; margin: 0; color: #aaa; text-transform: uppercase; }
+        .sum-val { font-size: 1.5rem; font-weight: bold; margin-top: 5px; }
+        
+        .edu-note { margin-top: 20px; padding: 15px; background: rgba(212, 175, 55, 0.1); border-left: 5px solid var(--gold); font-size: 0.85em; }
+        .btn-print { background: #2e7d32; color: white; width: 100%; margin-top: 20px; font-weight: bold; border: none; cursor: pointer; padding: 15px; }
+
+        @media print { .no-print { display: none !important; } body { background: white; color: black; } .audit-container { border: none; box-shadow: none; background: white !important; } td, th { border: 1px solid #ddd; } }
+    </style>
+</head>
+<body>
+
+    <div class="audit-container">
+        <h1>Audit Finansial Baitul Mal</h1>
+        
+        <div class="perspective-bar no-print">
+            <span>MODE AUDIT:</span>
+            <select id="perspectiveMode" onchange="renderAll()" style="background: white; color: black;">
+                <option value="asset">ASSET MODE (Brankas Fisik)</option>
+                <option value="creditor">CREDITOR MODE (Buku Piutang)</option>
+            </select>
+        </div>
+
+        <div class="input-section no-print">
+            <input type="text" id="desc" placeholder="Keterangan Item">
+            <input type="number" id="amt" placeholder="Berat (g)" step="0.01">
+            <select id="curr">
+                <option value="Emas">Emas (Au)</option>
+                <option value="Perak">Perak (Ag)</option>
+            </select>
+            <select id="type">
+                <option value="debit">DEBIT (+)</option>
+                <option value="credit">KREDIT (-)</option>
+            </select>
+            <button onclick="saveTransaction()" style="background: var(--gold); color: black; grid-column: span 4; font-weight: bold;">CATAT TRANSAKSI</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Satuan</th>
+                    <th id="labelDebit">Debit (+)</th>
+                    <th id="labelCredit">Kredit (-)</th>
+                    <th>Saldo Berjalan</th>
+                </tr>
+            </thead>
+            <tbody id="ledger"></tbody>
+        </table>
+
+        <div class="summary-panel">
+            <div class="sum-card" style="border-color: var(--gold);">
+                <h3>Saldo Emas (Au)</h3>
+                <div class="sum-val" style="color: var(--gold);"><span id="totalGold">0.00</span> <small>g</small></div>
+            </div>
+            <div class="sum-card" style="border-color: var(--silver);">
+                <h3>Saldo Perak (Ag)</h3>
+                <div class="sum-val" style="color: var(--silver);"><span id="totalSilver">0.00</span> <small>g</small></div>
+            </div>
+            <div class="sum-card">
+                <h3>Zakat Emas (2.5%)</h3>
+                <div class="sum-val" id="zakatDisplay">0.00 <small>g</small></div>
+            </div>
+        </div>
+
+        <div class="edu-note" id="eduNote">
+            Gunakan mode Asset untuk memantau fisik emas/perak di brankas lo.
+        </div>
+
+        <button class="btn-print no-print" onclick="window.print()">🖨️ CETAK LAPORAN</button>
+    </div>
+
+    <script>
+        let db = [];
+
+        function saveTransaction() {
+            const desc = document.getElementById('desc').value;
+            const amt = parseFloat(document.getElementById('amt').value);
+            const curr = document.getElementById('curr').value;
+            const type = document.getElementById('type').value;
+            if(!desc || isNaN(amt)) return;
+            db.push({ desc, amt, curr, type });
+            renderAll();
+            // Reset input
+            document.getElementById('desc').value = "";
+            document.getElementById('amt').value = "";
+        }
+
+        function renderAll() {
+            const mode = document.getElementById('perspectiveMode').value;
+            const ledger = document.getElementById('ledger');
+            const note = document.getElementById('eduNote');
+            ledger.innerHTML = "";
+
+            // Update Labels
+            if (mode === 'asset') {
+                document.getElementById('labelDebit').innerText = "Debit (Masuk)";
+                document.getElementById('labelCredit').innerText = "Kredit (Keluar)";
+                note.innerHTML = "<b>MODE ASSET:</b> Lo melihat brankas fisik lo. <b>Debit</b> = Emas/Perak bertambah.";
+            } else {
+                document.getElementById('labelDebit').innerText = "Debit (Pemberian)";
+                document.getElementById('labelCredit').innerText = "Kredit (Pelunasan)";
+                note.innerHTML = "<b>MODE KREDITUR:</b> Lo melihat buku piutang. <b>Debit</b> = Lo kasih pinjaman ke orang lain.";
+            }
+
+            let balGold = 0, balSilver = 0;
+            db.forEach(t => {
+                let change = (t.type === 'debit' ? t.amt : -t.amt);
+                if(t.curr === 'Emas') balGold += change; else balSilver += change;
+                
+                ledger.innerHTML += `<tr>
+                    <td>${t.desc}</td>
+                    <td>${t.curr}</td>
+                    <td class="debit">${t.type==='debit' ? '+'+t.amt : '-'}</td>
+                    <td class="credit">${t.type==='credit' ? '-'+t.amt : '-'}</td>
+                    <td><b>${t.curr === 'Emas' ? balGold.toFixed(2) : balSilver.toFixed(2)} g</b></td>
+                </tr>`;
+            });
+
+            // UPDATE TOTALS
+            document.getElementById('totalGold').innerText = balGold.toFixed(2);
+            document.getElementById('totalSilver').innerText = balSilver.toFixed(2);
+            
+            // Perhitungan Zakat (Khusus Emas > 85g)
+            const zakat = balGold >= 85 ? (balGold * 0.025).toFixed(2) : "0.00";
+            document.getElementById('zakatDisplay').innerHTML = `${zakat} <small>g</small>`;
+        }
+    </script>
+</body>
+</html>
