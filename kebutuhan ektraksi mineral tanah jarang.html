@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="su">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara OS - Manna Energy & Calculator</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --emerald: #16a085;
+            --dark-bg: #0f1419;
+            --panel-bg: #1a1a1a;
+            --text: #e0e0e0;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--dark-bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* SIDEBAR MENU */
+        .sidebar { width: 260px; background: #050505; border-right: 2px solid var(--gold); display: flex; flex-direction: column; padding: 20px 0; }
+        .sidebar-header { text-align: center; padding: 0 10px 20px; border-bottom: 1px solid #333; margin-bottom: 20px; }
+        .sidebar-header h2 { color: var(--gold); font-size: 1.1em; letter-spacing: 2px; text-transform: uppercase; }
+        
+        .menu-item { padding: 15px 25px; cursor: pointer; transition: 0.3s; border-left: 4px solid transparent; color: #bdc3c7; font-size: 0.9em; }
+        .menu-item:hover { background: rgba(22, 160, 133, 0.1); color: var(--emerald); }
+        .menu-item.active { background: rgba(22, 160, 133, 0.2); color: var(--emerald); border-left: 4px solid var(--emerald); font-weight: bold; }
+
+        /* MAIN CONTENT AREA */
+        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at center, #1a1a1a 0%, #0f1419 100%); }
+        .panel { display: none; animation: fadeIn 0.4s; }
+        .panel.active { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { color: var(--gold); border-bottom: 1px solid var(--emerald); padding-bottom: 10px; margin-top: 0; }
+        .panel-desc { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 3px solid var(--emerald); font-style: italic; font-size: 0.9em; }
+
+        /* CALCULATOR STYLE */
+        .calc-box { background: #222; padding: 20px; border-radius: 10px; border: 1px solid #444; max-width: 600px; margin: auto; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: var(--gold); font-weight: bold; }
+        select, input { width: 100%; padding: 10px; background: #333; border: 1px solid #555; color: white; border-radius: 5px; box-sizing: border-box; }
+        .result-box { margin-top: 25px; padding: 15px; background: #0d2e27; border: 1px solid var(--emerald); border-radius: 5px; text-align: center; }
+        .result-val { font-size: 2em; color: var(--emerald); font-weight: bold; margin: 10px 0; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9em; }
+        th { background: #111; color: var(--gold); padding: 10px; border: 1px solid #444; text-align: left; }
+        td { padding: 8px; border: 1px solid #444; background: #222; }
+        
+        .news-alert { background: #4a1c1c; padding: 10px; border-radius: 5px; border: 1px solid #e74c3c; margin-bottom: 20px; font-size: 0.85em; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header"><h2>NUSWANTARA OS</h2></div>
+        <div class="menu-item active" onclick="showPanel('katalog')">Katalog Urat Bumi</div>
+        <div class="menu-item" onclick="showPanel('kalkulator')">Kalkulator Manna</div>
+        <div class="menu-item" onclick="showPanel('pangaos')">Pratékna Pangaos</div>
+        <div class="menu-item" onclick="showPanel('ekstraksi')">SOP Ékstraksi</div>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="katalog" class="panel active">
+            <div class="news-alert">
+                ⚠️ <b>WARTA JAGAT:</b> Jépang parantos ngawitan nambang Logam Tanah Jarang (REE) di dasar laut (Minamitori). Urang Nuswantara ulah saré, harta karun di darat urang leuwih loba!
+            </div>
+            <h2>Daptar 17 Acining Bumi</h2>
+            <div class="panel-desc">"Sakur logam langka nu diperlukeun pikeun dunya anyar."</div>
+            <table>
+                <thead>
+                    <tr><th>Ngaran Unsur</th><th>Kagunaan Manna</th><th>Kelangkaan</th></tr>
+                </thead>
+                <tbody id="katalog-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="kalkulator" class="panel">
+            <h2>Kalkulator Keduk Taneuh</h2>
+            <div class="panel-desc">"Itung sabaraha méter kubik ($m^3$) taneuh nu kudu dikali sangkan dapet beurat logam nu dipiharep."</div>
+            
+            <div class="calc-box">
+                <div class="input-group">
+                    <label>Pilih Unsur Logam:</label>
+                    <select id="unsur-select" onchange="calculate()">
+                        </select>
+                </div>
+                <div class="input-group">
+                    <label>Target Hasil (Gram):</label>
+                    <input type="number" id="target-gram" value="1000" oninput="calculate()">
+                </div>
+                <div class="result-box">
+                    <div>Estimasi Taneuh nu Kudu "Dikali":</div>
+                    <div class="result-val" id="result-m3">0.00</div>
+                    <div style="font-size: 0.9em; color: #bdc3c7;">Méter Kubik ($m^3$)</div>
+                </div>
+                <p style="font-size: 0.8em; color: #888; margin-top: 15px;">
+                    *Asumsi: Kadar rata-rata dumasar deposit <i>Ion-Adsorption Clay</i> jeung Massa Jenis Taneuh 1.6 Ton/$m^3$.
+                </p>
+            </div>
+        </div>
+
+        <div id="pangaos" class="panel">
+            <h2>Pratékna Pangaos Emas/Perak</h2>
+            <div class="panel-desc">"Standar pangaos sangkan ajining logam urang tetep mulya."</div>
+            <table id="pangaos-table">
+                <thead>
+                    <tr><th>Unsur</th><th>1 Gram Sataher (Setara)</th></tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="ekstraksi" class="panel">
+            <h2>SOP Ékstraksi Mandiri</h2>
+            <div class="panel-desc">"Tahapan ngumbah taneuh sakti ku jalan Leaching (Pupuk ZA)."</div>
+            <div style="background: #111; padding: 20px; border-radius: 10px; border-left: 4px solid var(--emerald);">
+                <ol style="line-height: 1.8;">
+                    <li><b>Lebu Taneuh:</b> Taneuh didamel lemes (Mesh 200).</li>
+                    <li><b>Pangumbah:</b> Larutan ZA (1kg/20L cai) pikeun ngusir ion logam.</li>
+                    <li><b>Ngendap:</b> Tambah Asam Oksalat nepi ka janten endapan bodas.</li>
+                    <li><b>Murni:</b> Duruk endapan (800°C) nepi ka jadi bubuk Oksida.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 NUSWANTARA OS - Jagat Mandala Power
+        </div>
+    </div>
+
+    <script>
+        // DATA MASTER 17 UNSUR (Nama, Kagunaan, Kelangkaan, PPM, Nilai Tukeur)
+        const reeData = [
+            {id: 'La', name: 'Lanthanum', use: 'Batre/Kapasitor', rare: '40%', ppm: 350, val: '5 Gram Perak'},
+            {id: 'Ce', name: 'Cerium', use: 'Katalis Polusi', rare: '30%', ppm: 600, val: '2 Gram Perak'},
+            {id: 'Pr', name: 'Praseodymium', use: 'Magnet/Jet', rare: '60%', ppm: 100, val: '15 Gram Perak'},
+            {id: 'Nd', name: 'Neodymium', use: 'Magnet Super EV', rare: '85%', ppm: 250, val: '0.2 Gram Emas'},
+            {id: 'Sm', name: 'Samarium', use: 'Magnet Panas', rare: '70%', ppm: 45, val: '0.1 Gram Emas'},
+            {id: 'Eu', name: 'Europium', use: 'Layar HP/TV', rare: '92%', ppm: 2, val: '2.5 Gram Emas'},
+            {id: 'Gd', name: 'Gadolinium', use: 'MRI/Cooling', rare: '75%', ppm: 40, val: '0.15 Gram Emas'},
+            {id: 'Tb', name: 'Terbium', use: 'Cymatics Energy', rare: '90%', ppm: 8, val: '3.0 Gram Emas'},
+            {id: 'Dy', name: 'Dysprosium', use: 'Stabilisator Ether', rare: '95%', ppm: 35, val: '1.5 Gram Emas'},
+            {id: 'Ho', name: 'Holmium', use: 'Laser Quantum', rare: '94%', ppm: 8, val: '0.8 Gram Emas'},
+            {id: 'Er', name: 'Erbium', use: 'Fiber Optic', rare: '80%', ppm: 25, val: '0.7 Gram Emas'},
+            {id: 'Tm', name: 'Thulium', use: 'X-Ray Portabel', rare: '98%', ppm: 4, val: '4.0 Gram Emas'},
+            {id: 'Yb', name: 'Ytterbium', use: 'Jam Atom Presisi', rare: '75%', ppm: 20, val: '0.6 Gram Emas'},
+            {id: 'Lu', name: 'Lutetium', use: 'Filter Murni', rare: '99%', ppm: 4, val: '5.0 Gram Emas'},
+            {id: 'Y',  name: 'Yttrium', use: 'Superkonduktor', rare: '65%', ppm: 250, val: '8 Gram Perak'},
+            {id: 'Sc', name: 'Scandium', use: 'Fuel Cells', rare: '70%', ppm: 25, val: '0.5 Gram Emas'},
+            {id: 'Pm', name: 'Promethium', use: 'Batre Nuklir', rare: '100%', ppm: 0.1, val: 'Priceless'}
+        ];
+
+        // FILL DATA TO UI
+        function init() {
+            const body = document.getElementById('katalog-body');
+            const select = document.getElementById('unsur-select');
+            const pangaos = document.querySelector('#pangaos-table tbody');
+
+            reeData.forEach(item => {
+                // Katalog
+                body.innerHTML += `<tr><td><b>${item.name}</b></td><td>${item.use}</td><td>${item.rare}</td></tr>`;
+                // Select
+                select.innerHTML += `<option value="${item.ppm}">${item.name} (${item.id})</option>`;
+                // Pangaos
+                pangaos.innerHTML += `<tr><td><b>${item.name}</b></td><td>${item.val}</td></tr>`;
+            });
+            calculate();
+        }
+
+        // CALCULATION LOGIC
+        function calculate() {
+            const ppm = parseFloat(document.getElementById('unsur-select').value);
+            const target = parseFloat(document.getElementById('target-gram').value);
+            const density = 1.6; // Ton/m3
+
+            if(target > 0 && ppm > 0) {
+                // Rumus: m3 = Gram / (PPM * Density)
+                // Sabab 1 PPM = 1 Gram per Ton
+                const res = target / (ppm * density);
+                document.getElementById('result-m3').innerText = res.toFixed(3);
+            } else {
+                document.getElementById('result-m3').innerText = "0.00";
+            }
+        }
+
+        function showPanel(id) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

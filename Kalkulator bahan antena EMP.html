@@ -1,0 +1,60 @@
+<div style="font-family: 'Courier New', Courier, monospace; border: 3px solid #f1c40f; padding: 25px; background-color: #1a1a1a; color: #e0e0e0; border-radius: 15px;">
+  <h2 style="color: #f1c40f; text-align: center; border-bottom: 2px solid #f1c40f; padding-bottom: 10px;">
+    ⚡ KALKULATOR ANTÉNA DETÉKTOR EMP
+  </h2>
+
+  <div class="panel-desc" style="background: rgba(241, 196, 15, 0.1); padding: 15px; border-left: 4px solid #f1c40f; margin-bottom: 20px;">
+    <i>"Beuki loba lilitan dina diaméter nu pas, beuki gancang alat nangkep induksi sateuacan sirkuit peradaban tutung."</i>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div style="background: #252525; padding: 15px; border-radius: 8px; border: 1px solid #444;">
+      <h3 style="color: #16a085; margin-top: 0;">Itungan Lilitan</h3>
+      <div style="margin-bottom: 10px;">
+        <label style="font-size: 0.8em; color: var(--gold);">Diaméter Loop (cm):</label>
+        <input type="number" id="loop-dia" value="20" style="width: 80%; padding: 5px; background: #333; color: #fff; border: 1px solid #555;" oninput="calcLoop()">
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label style="font-size: 0.8em; color: var(--gold);">Jumlah Lilitan (N):</label>
+        <input type="number" id="loop-turns" value="50" style="width: 80%; padding: 5px; background: #333; color: #fff; border: 1px solid #555;" oninput="calcLoop()">
+      </div>
+      <div id="inductance-res" style="margin-top: 15px; padding: 10px; background: #0d2e27; border-radius: 5px; color: #2ecc71; font-weight: bold;">
+        Induktansi: 0.45 mH
+      </div>
+    </div>
+
+    <div style="background: #252525; padding: 15px; border-radius: 8px; border: 1px solid #444;">
+      <h3 style="color: #16a085; margin-top: 0;">Skema Komponén</h3>
+      <ul style="font-size: 0.85em; padding-left: 20px;">
+        <li><b>Kawat:</b> Email Tambaga (0.5mm - 1mm).</li>
+        <li><b>Dioda:</b> 1N4148 atawa 1N60 (Ge/Si gancang).</li>
+        <li><b>Kapasitor:</b> 100nF (Paké nu aya campuran <b>Lanthanum</b> meh stabil).</li>
+        <li><b>Indikator:</b> LED Beureum atawa Buzzer piezo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top: 25px; padding: 15px; background: #2c3e50; border-radius: 8px;">
+    <h4 style="margin-top: 0; color: #f1c40f;">Cara Rakit "Jangjawokan" Sinyal:</h4>
+    <p style="font-size: 0.9em; line-height: 1.6;">
+      1. Gulung kawat tambaga dumasar diaméter nu diinput (misal 20cm) saloba 50 kali.<br>
+      2. Sambungkeun tungtung kawat ka <b>Dioda</b> sangkan arus induksi jadi saarah (DC).<br>
+      3. Pasang <b>Kapasitor Lanthanum</b> sacara pararel pikeun nahan lonjakan leutik (noise).<br>
+      4. Pasang <b>LED</b>. Nalika pulsa EMP datang, anténa loop bakal narima induksi magnét badag sarta ngahurungkeun LED sacara instan!
+    </p>
+  </div>
+</div>
+
+<script>
+function calcLoop() {
+    const d = parseFloat(document.getElementById('loop-dia').value); // cm
+    const n = parseFloat(document.getElementById('loop-turns').value); // turns
+    if(d > 0 && n > 0) {
+        const r = (d / 2) / 100; // m
+        // Rumus basajan Induktansi Loop: L = (mu0 * n^2 * A) / l (pendekatan)
+        // Urang make pendekatan praktis keur detektor pulsa
+        const inductance = (0.00000125 * n * n * r).toFixed(2);
+        document.getElementById('inductance-res').innerText = "Induktansi: " + inductance + " mH";
+    }
+}
+</script>

@@ -1,0 +1,83 @@
+<div style="font-family: 'Segoe UI', sans-serif; border: 3px solid #d4af37; padding: 25px; background-color: #0d1117; color: #e0e0e0; border-radius: 20px; text-align: center; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);">
+    
+    <h2 style="color: #d4af37; letter-spacing: 3px;">🔊 RESONATOR MANNA 432Hz</h2>
+    <p style="font-style: italic; color: #8b949e; font-size: 0.9em;">"Ngatur resonansi molekul sangkan selaras jeung jagat semesta."</p>
+
+    <div style="margin: 20px auto; width: 200px; height: 200px; border: 2px solid #16a085; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000;">
+        <div id="visual-cymatic" style="width: 50px; height: 50px; border: 2px solid #16a085; border-radius: 50%; transition: all 0.1s ease-out; box-shadow: 0 0 20px #16a085;"></div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <button onclick="toggleResonator()" id="btn-play" style="padding: 15px 40px; font-size: 1.1em; background: #16a085; color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(22, 160, 133, 0.4);">
+            ▶ MULANGKEUN RESONANSI
+        </button>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <label style="font-size: 0.8em; color: #d4af37;">VOLUME:</label>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" style="width: 150px; accent-color: #16a085;">
+    </div>
+
+    <div style="margin-top: 25px; padding: 10px; border-top: 1px solid #333; font-size: 0.8em; color: #555;">
+        <p><i><b>Catetan:</b> Setél ieu sora nalika prosés pangwangunan Leuit Piramida atawa nalika manéh keur tapa/mikir strategi nandingan para Watcher.</i></p>
+    </div>
+</div>
+
+<script>
+    let audioCtx;
+    let oscillator;
+    let gainNode;
+    let isPlaying = false;
+
+    function toggleResonator() {
+        if (!isPlaying) {
+            // Inisialisasi Audio Context
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            oscillator = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+
+            // Setel ka 432Hz murni
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(432, audioCtx.currentTime);
+            
+            // Volume control
+            const vol = document.getElementById('volume').value;
+            gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            isPlaying = true;
+            document.getElementById('btn-play').innerText = "⏸ PAREUMKEUN";
+            document.getElementById('btn-play').style.background = "#e74c3c";
+            
+            animateVisual();
+        } else {
+            oscillator.stop();
+            audioCtx.close();
+            isPlaying = false;
+            document.getElementById('btn-play').innerText = "▶ MULANGKEUN RESONANSI";
+            document.getElementById('btn-play').style.background = "#16a085";
+            document.getElementById('visual-cymatic').style.transform = "scale(1)";
+        }
+    }
+
+    function animateVisual() {
+        if (!isPlaying) return;
+        const visual = document.getElementById('visual-cymatic');
+        // Simulasi geteran molekul
+        const scale = 1 + (Math.random() * 0.5);
+        const rotate = Math.random() * 360;
+        visual.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+        visual.style.borderColor = Math.random() > 0.5 ? "#16a085" : "#d4af37";
+        requestAnimationFrame(animateVisual);
+    }
+
+    // Update volume real-time
+    document.getElementById('volume').oninput = function() {
+        if (isPlaying && gainNode) {
+            gainNode.gain.setValueAtTime(this.value, audioCtx.currentTime);
+        }
+    }
+</script>
