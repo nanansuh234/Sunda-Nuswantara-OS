@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PANDUAN SEMESTA: SUNDA NUSWANTARA OS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --primary: #00f0ff; /* Cyan Energy */
+            --secondary: #0f0; /* Green Logic */
+            --alert: #ff2a2a; /* Red Warning */
+            --bg: #050a10; /* Deep Space */
+            --panel: rgba(10, 20, 30, 0.8);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.05) 0%, transparent 60%),
+                linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .header-container {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px var(--primary);
+            color: #fff;
+        }
+
+        .sub-title {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            letter-spacing: 3px;
+            margin-top: 10px;
+        }
+
+        .system-status {
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        /* GRID MENU */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* CARD STYLES */
+        .menu-card {
+            background: var(--panel);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .menu-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            color: #aaa;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .access-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .menu-card:hover .access-btn {
+            background: var(--primary);
+            color: #000;
+        }
+
+        /* COLOR VARIANTS FOR CARDS */
+        .card-red { border-color: rgba(255, 42, 42, 0.4); }
+        .card-red .card-title { color: #ffcccc; }
+        .card-red:hover { border-color: var(--alert); box-shadow: 0 0 20px rgba(255, 42, 42, 0.2); }
+        .card-red .access-btn { border-color: var(--alert); color: var(--alert); }
+        .card-red:hover .access-btn { background: var(--alert); color: #000; }
+
+        .card-green { border-color: rgba(0, 255, 0, 0.4); }
+        .card-green .card-title { color: #ccffcc; }
+        .card-green:hover { border-color: var(--secondary); box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); }
+        .card-green .access-btn { border-color: var(--secondary); color: var(--secondary); }
+        .card-green:hover .access-btn { background: var(--secondary); color: #000; }
+
+        /* FOOTER */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #555;
+            border-top: 1px solid #222;
+            padding-top: 20px;
+        }
+
+        /* GLITCH ANIMATION */
+        .glitch { position: relative; }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .glitch::before { left: 2px; text-shadow: -1px 0 red; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim 3s infinite linear alternate-reverse; }
+        .glitch::after { left: -2px; text-shadow: -1px 0 blue; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim 2s infinite linear alternate-reverse; }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(14px, 9999px, 122px, 0); }
+            5% { clip: rect(74px, 9999px, 55px, 0); }
+            10% { clip: rect(29px, 9999px, 96px, 0); }
+            100% { clip: rect(106px, 9999px, 4px, 0); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <h1 class="glitch" data-text="PANDUAN SEMESTA">PANDUAN SEMESTA</h1>
+    <div class="sub-title">SUNDA NUSWANTARA OS // MAIN DASHBOARD</div>
+    <div class="system-status">
+        SYSTEM: ONLINE | ACCESS LEVEL: IMAN=UKURAN | TIME COMPRESSION: 3X
+    </div>
+</div>
+
+<div class="dashboard-grid">
+
+    <div class="menu-card" onclick="alert('Membuka File: 50 Bongkaran Fitnah Dajjal...')">
+        <span class="card-icon" style="color: #00f0ff;">👁️</span>
+        <div class="card-title">GRAND NARRATIVE</div>
+        <div class="card-desc">
+            Bongkaran 50 Narasi Besar Dajjal vs Logika Nuswantara. Kosmologi, Sejarah, dan Mekanisme Wadah.
+        </div>
+        <a href="#" class="access-btn">BUKA DATA</a>
+    </div>
+
+    <div class="menu-card" onclick="alert('Membuka File: Geologi & Nafas Bumi...')">
+        <span class="card-icon" style="color: #ffaa00;">🌋</span>
+        <div class="card-title">EARTH BREATH</div>
+        <div class="card-desc">
+            Membongkar mitos Plate Tectonics & Megathrust. Memahami Bumi sebagai Pasak Diam yang Bernafas.
+        </div>
+        <a href="#" class="access-btn">BUKA DATA</a>
+    </div>
+
+    <div class="menu-card card-green" onclick="alert('Membuka File: Energi Bebas & Ether...')">
+        <span class="card-icon">⚡</span>
+        <div class="card-title">FORBIDDEN ENERGY</div>
+        <div class="card-desc">
+            Rahasia Ether, Minyak Abiotik (Darah Bumi), dan Teknologi Listrik Atmosfer Leluhur.
+        </div>
+        <a href="#" class="access-btn">BUKA DATA</a>
+    </div>
+
+    <div class="menu-card card-red" onclick="alert('Membuka File: Fear Matrix Declassified...')">
+        <span class="card-icon">🚫</span>
+        <div class="card-title">FEAR MATRIX</div>
+        <div class="card-desc">
+            Menghapus ketakutan kosmik (Asteroid, Black Hole, Alien) dengan pemahaman mekanisme langit.
+        </div>
+        <a href="#" class="access-btn">BUKA DATA</a>
+    </div>
+
+    <div class="menu-card" onclick="alert('Membuka File: Cosmic Overclocking...')">
+        <span class="card-icon" style="color: #d400ff;">⏳</span>
+        <div class="card-title">TIME OVERCLOCK</div>
+        <div class="card-desc">
+            Sistem 8 Jam Adaptif untuk menghadapi inflasi waktu & percepatan siklus matahari 3X lipat.
+        </div>
+        <a href="#" class="access-btn">BUKA DATA</a>
+    </div>
+
+    <div class="menu-card card-green" onclick="alert('Membuka File: Ice Age & Sync Protocol...')">
+        <span class="card-icon">🛡️</span>
+        <div class="card-title">SURVIVAL PROTOCOL</div>
+        <div class="card-desc">
+            Panduan Sinkronisasi (Eling) menghadapi Reset, Ice Age, dan Badai Frekuensi.
+        </div>
+        <a href="#" class="access-btn">BUKA DATA</a>
+    </div>
+
+</div>
+
+<div class="footer">
+    PROJECT QORIN DEVELOPER BUILD v.2026 <br>
+    JANGAN MELAWAN ARUS, JADILAH ARUS ITU SENDIRI.
+</div>
+
+</body>
+</html>
