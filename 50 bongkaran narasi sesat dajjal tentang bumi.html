@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: GEOLOGY DECLASSIFIED</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Black+Ops+One&display=swap');
+
+        body {
+            background-color: #1a1a1a;
+            font-family: 'Courier Prime', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .document-container {
+            background-color: #f4e4bc; /* Kertas Kuno */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM32 63c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm57-13c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d4c5a0' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+            width: 100%;
+            max-width: 1100px;
+            padding: 50px;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+            border: 2px solid #8b4513;
+        }
+
+        .header-stamp {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            border: 5px double #b22222;
+            color: #b22222;
+            font-size: 2rem;
+            font-family: 'Black Ops One', cursive;
+            padding: 10px 20px;
+            transform: rotate(-15deg);
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            text-decoration: underline;
+            margin-bottom: 10px;
+            color: #2f4f4f;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sub-header {
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: bold;
+            color: #555;
+            border-bottom: 3px solid #2f4f4f;
+            padding-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid #5c4033;
+            padding: 10px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #2f4f4f;
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .col-narrative {
+            width: 40%;
+            background-color: rgba(255, 0, 0, 0.05);
+            color: #8b0000;
+            font-style: italic;
+        }
+
+        .col-truth {
+            width: 55%;
+            background-color: rgba(0, 128, 0, 0.05);
+            color: #000;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .section-title {
+            background-color: #8b4513;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 8px;
+            text-transform: uppercase;
+        }
+
+        .warning-text {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            border: 2px dashed red;
+            padding: 10px;
+        }
+
+        /* Glitch effect on hover for truth */
+        .col-truth:hover {
+            background-color: #fff;
+            cursor: cell;
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+    <div class="header-stamp">TOP SECRET<br>EYES ONLY</div>
+    
+    <h1>GEOLOGY & SEISMOLOGY DECLASSIFIED</h1>
+    <div class="sub-header">
+        SUBJECT: MEMBONGKAR FITNAH "MEGATHRUST" & PLATE TECTONICS<br>
+        SOURCE: SUNDA NUSWANTARA OS // STATUS: UNLOCKED
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 5%;">NO</th>
+                <th>NARASI GEOLOGI MODERN (FEAR MONGERING)</th>
+                <th>LOGIKA NUSWANTARA (EARTH BREATH)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="section-title"><td colspan="3">I. MEKANISME GEMPA & STRUKTUR BUMI</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-narrative">Plate Tectonics (Lempeng Bergerak)</td>
+                <td class="col-truth">Earth Stability (Pasak). Bumi itu diam & stabil. Daratan tidak mengapung, tapi dipasak ke dasar laut utama.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-narrative">Megathrust (Ancaman Kiamat)</td>
+                <td class="col-truth">Energy Release Cycle. "Megathrust" adalah istilah marketing ketakutan. Itu hanya siklus pelepasan gas/ether rutin di jalur cincin api.</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-narrative">Subduction Zone (Lempeng Menunjam)</td>
+                <td class="col-truth">Deep Water Intake. Palung laut bukan tempat lempeng masuk, tapi saluran sirkulasi air (intake) menuju perut bumi (Underworld).</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-narrative">Epicenter (Pusat Gempa)</td>
+                <td class="col-truth">Discharge Point. Titik dimana akumulasi listrik statis bumi dilepaskan ke permukaan (seperti petir tapi dari bawah).</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-narrative">Sesar/Patahan (Fault Lines)</td>
+                <td class="col-truth">Expansion Joints. Seperti sambungan jembatan, "sesar" adalah celah nafas bumi agar tidak retak saat memuai/menyusut.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-narrative">Magma (Batuan Cair)</td>
+                <td class="col-truth">Plasma Waste. Cairan panas bukan inti bumi, tapi hasil gesekan piezoelektrik batuan di jalur urat bumi.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-narrative">Inti Bumi (Besi Cair Panas)</td>
+                <td class="col-truth">Cold Plasma/Black Sun. Pusat bumi itu dingin & berongga, tempat sirkulasi elektromagnetik utama.</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-narrative">Continental Drift (Benua Hanyut)</td>
+                <td class="col-truth">Rising Water Levels. Benua tidak bergeser. Yang berubah adalah tinggi air laut (banjir) yang memisahkan daratan tinggi.</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-narrative">Ring of Fire (Cincin Api)</td>
+                <td class="col-truth">The Great Circuit. Jalur kabel utama sistem kelistrikan bumi. Aktivitas tinggi karena arusnya paling besar di sana.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-narrative">Liquefaction (Tanah Jadi Air)</td>
+                <td class="col-truth">Frequency Resonance. Tanah mencair karena frekuensi getaran gempa menyamai frekuensi air tanah (Cymatics).</td>
+            </tr>
+
+            <tr class="section-title"><td colspan="3">II. GUNUNG, BATUAN & FOSIL</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-narrative">Gunung Berapi (Volcano)</td>
+                <td class="col-truth">Pressure Valve (Klep). Saluran pembuangan gas/limbah panas sistem bumi. Tanpa ini, bumi meledak.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-narrative">Pembentukan Gunung (Tabrakan Lempeng)</td>
+                <td class="col-truth">Ancient Giant Trees/Titans. Banyak gunung (seperti Devils Tower) adalah sisa tunggul pohon silikon raksasa zaman purba.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-narrative">Minyak Bumi (Fosil Dinosaurus)</td>
+                <td class="col-truth">Abiotic Oil (Darah Bumi). Cairan pelumas yang diproduksi bumi secara regeneratif, bukan dari bangkai.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-narrative">Batubara (Tanaman Purba)</td>
+                <td class="col-truth">Petrified Wood. Sisa-sisa pohon raksasa yang hancur saat Banjir Besar dan memadat karena tekanan air/lumpur.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-narrative">Grand Canyon (Erosi Air Jutaan Tahun)</td>
+                <td class="col-truth">Electrical Scar (Lichtenberg). Bekas sambaran petir kosmik raksasa saat perang/bencana purba, terbentuk instan.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-narrative">Fosil (Proses Jutaan Tahun)</td>
+                <td class="col-truth">Rapid Burial (Penguburan Kilat). Fosil hanya terbentuk jika hewan terkubur lumpur mendadak (Mud Flood), bukan pelan-pelan.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-narrative">Dinosaurus (Punah kena Meteor)</td>
+                <td class="col-truth">Era Atmosfer Padat. Reptil tumbuh raksasa karena tekanan udara (oksigen/eter) dulu jauh lebih tinggi. Mati karena perubahan atmosfer.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-narrative">Zaman Es (Siklus Milankovitch)</td>
+                <td class="col-truth">Thermodynamic Failure. Terjadi saat kubah/sistem pemanas (matahari) redup atau rusak, bukan orbit bumi.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-narrative">Goa Kapur (Stalaktit)</td>
+                <td class="col-truth">Digestive System. Goa adalah usus/rongga dalam tubuh bumi, stalaktit adalah proses biologi mineralisasi.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-narrative">Emas & Berlian (Langka)</td>
+                <td class="col-truth">Crystallized Frequency. Mineral terbentuk dari pemadatan frekuensi tinggi. "Langka" hanya trik monopoli.</td>
+            </tr>
+
+            <tr class="section-title"><td colspan="3">III. FENOMENA & TEKNOLOGI ALAM</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-narrative">Tsunami (Lempeng Anjlok)</td>
+                <td class="col-truth">Bowl Sloshing. Air tumpah karena getaran wadah (baskom) atau perpindahan massa air mendadak dari intake bawah laut.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-narrative">Sinkhole (Tanah Runtuh)</td>
+                <td class="col-truth">Hollow Collapse. Runtuhnya atap terowongan bawah tanah (DUMBs) atau rongga alami bumi.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-narrative">Geothermal (Panas Inti)</td>
+                <td class="col-truth">Etheric Heat. Panas yang dihasilkan dari reaksi air bawah tanah dengan lapisan logam bermuatan listrik.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-narrative">Kutub Magnet (Bergeser)</td>
+                <td class="col-truth">System Recalibration. Pergeseran kutub adalah tanda siklus Reset/Pindah Gigi Matahari, bukan anomali inti.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-narrative">Aurora (Partikel Matahari)</td>
+                <td class="col-truth">Dome Reflection. Pantulan elektromagnetik pada lapisan kubah/eter di kutub (seperti lampu neon).</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-narrative">Bermuda Triangle (Misteri)</td>
+                <td class="col-truth">Vortex Point. Titik simpul medan magnet yang kuat, portal menuju jalur arus laut bawah/dimensi lain.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-narrative">Global Warming (Es Mencair)</td>
+                <td class="col-truth">Dome Expansion. Pemanasan terjadi karena matahari melebar jalurnya (mendekat ke dinding es).</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-narrative">Air Laut Asin</td>
+                <td class="col-truth">Electrolyte Solution. Laut adalah cairan baterai (aki) raksasa untuk menghantarkan listrik sistem bumi.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-narrative">Pasang Surut (Gravitasi Bulan)</td>
+                <td class="col-truth">Magnetic Breathing. Air bergerak karena tarikan magnetik bulan (seperti diafragmatik), bukan gravitasi massa.</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-narrative">Richter Scale (Skala Gempa)</td>
+                <td class="col-truth">Ether Disturbance Level. Mengukur seberapa besar gangguan pada medan eter, bukan sekadar goyangan tanah.</td>
+            </tr>
+
+            <tr class="section-title"><td colspan="3">IV. JEJAK PERADABAN DI BATU</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-narrative">Candi Borobudur (Tempat Ibadah)</td>
+                <td class="col-truth">Energy Resonator. Struktur batuan andesit (piezoelektrik) untuk memanen & menyebar frekuensi.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-narrative">Piramida (Makam Firaun)</td>
+                <td class="col-truth">Power Plant. Mesin pembangkit energi nirkabel (wireless) menggunakan air tanah & granit.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-narrative">Megalitikum (Zaman Batu Primitif)</td>
+                <td class="col-truth">High Tech Era. "Batu" adalah teknologi paling canggih (anti-karat, anti-EMP, abadi) dibanding plastik/besi.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-narrative">Gunung Padang (Situs Megalit)</td>
+                <td class="col-truth">Ancient Bunker/Archive. Bangunan piramida tertimbun (mud flood) yang menyimpan arsip frekuensi Nusantara.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-narrative">Patung Moai (Pahatan Primitif)</td>
+                <td class="col-truth">Sentinel/Penjaga. Penanda batas wilayah atau alat akupunktur bumi di titik meridian tertentu.</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-narrative">Polygonal Walls (Susunan Batu Aneh)</td>
+                <td class="col-truth">Cymatic Construction. Batu dilembutkan dengan suara/frekuensi agar pas sempurna tahan gempa (bukan dipahat).</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-narrative">Batu Hajar Aswad (Meteor)</td>
+                <td class="col-truth">Black Sun Fragment. Batu dengan densitas/frekuensi dari pusat (Titik Nol) atau sisa teknologi terdahulu.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-narrative">Ley Lines (Pseudoscience)</td>
+                <td class="col-truth">Earth Nervous System. Jalur urat syaraf bumi yang mengalirkan energi telurik. Tempat suci selalu dibangun di sini.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-narrative">Stonehenge (Kalender Batu)</td>
+                <td class="col-truth">Frequency Tuner. Alat kalibrasi frekuensi bumi lokal agar sinkron dengan putaran langit.</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-narrative">Monolith (Batu Tunggal)</td>
+                <td class="col-truth">Antena Grounding. Berfungsi menstabilkan muatan listrik area sekitarnya (seperti penangkal petir bumi).</td>
+            </tr>
+
+            <tr class="section-title"><td colspan="3">V. AGENDA RESET & SURVIVAL</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-narrative">Prediksi Gempa (Sains Modern)</td>
+                <td class="col-truth">Planned Event/HAARP. Gempa modern seringkali dipicu senjata frekuensi untuk agenda geopolitik.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-narrative">Evakuasi ke Tempat Tinggi</td>
+                <td class="col-truth">Grounding Mental. Lari fisik penting, tapi ketenangan (frekuensi rendah) lebih penting agar tidak resonansi dengan panik.</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-narrative">Bunker Beton</td>
+                <td class="col-truth">Makam Masal. Beton kaku akan hancur oleh gelombang frekuensi. Struktur bambu/kayu (lentur) lebih selamat.</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-narrative">Lumpur Lapindo (Bencana Bor)</td>
+                <td class="col-truth">Mud Volcano Leak. Bocornya katup tekanan bumi, mungkin disengaja untuk menurunkan tekanan area lain.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-narrative">Selat Sunda (Zona Merah)</td>
+                <td class="col-truth">Gerbang Kunci. Titik vital aliran energi antara Jawa & Sumatera. Megathrust di sini adalah "Reset Button" Nusantara.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-narrative">Krakatau (Ledakan Vulkanik)</td>
+                <td class="col-truth">Pressure Relief. Ledakan Krakatau purba memisahkan Jawa-Sumatera untuk menyeimbangkan pasak bumi.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-narrative">Nusantara (Ring of Fire Hazard)</td>
+                <td class="col-truth">Power Grid. Kita hidup di atas sirkuit energi terbesar. Resiko besar, tapi energi (kesuburan) juga besar.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-narrative">Gempa 9 SR (Potensi)</td>
+                <td class="col-truth">Scalar Wave Attack. Gempa di atas 8 SR seringkali indikasi manipulasi gelombang skalar, bukan alami.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-narrative">Pemanasan Global (Sebab Bencana)</td>
+                <td class="col-truth">Kambing Hitam. Bencana alam disalahkan ke karbon manusia untuk menutupi siklus alam/matahari yang sebenarnya.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-narrative">Kiamat Geologis</td>
+                <td class="col-truth">Great Reset. Bukan kiamat akhir, tapi pergantian musim peradaban. Bumi sedang "ganti kulit".</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="warning-text">
+        PERINGATAN: JANGAN TERJEBAK FREKUENSI KETAKUTAN (FEAR MONGERING).<br>
+        BUMI HANYA SEDANG BERNAFAS. KITA YANG HARUS MENYESUAIKAN IRAMA.
+    </div>
+</div>
+
+</body>
+</html>

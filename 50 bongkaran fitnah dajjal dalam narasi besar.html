@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: DECLASSIFIED ARCHIVES</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Special+Elite&display=swap');
+
+        body {
+            background-color: #2c2c2c;
+            font-family: 'Courier Prime', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .document-container {
+            background-color: #fdfbf7; /* Warna Kertas Cerah */
+            background-image: linear-gradient(#eee .1em, transparent .1em);
+            background-size: 100% 1.2em;
+            width: 100%;
+            max-width: 1000px;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            position: relative;
+            border: 1px solid #d3d3d3;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 10rem;
+            color: rgba(255, 0, 0, 0.03);
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+
+        /* Stamp */
+        .stamp {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 4px solid #c0392b;
+            color: #c0392b;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-family: 'Special Elite', cursive;
+            transform: rotate(-10deg);
+            opacity: 0.8;
+            z-index: 2;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            text-decoration: underline;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .meta-info {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            color: #555;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+            background-color: rgba(253, 251, 247, 0.9); /* Sedikit transparan biar garis kertas keliatan dikit */
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 12px;
+            vertical-align: top;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Kolom Styling */
+        .col-no { width: 5%; text-align: center; font-weight: bold; }
+        .col-narrative { width: 40%; background-color: #fff0f0; color: #7f8c8d; text-decoration: line-through; text-decoration-color: rgba(192, 57, 43, 0.5); }
+        .col-truth { width: 55%; background-color: #f0fff4; color: #000; font-weight: bold; }
+
+        /* Highlight baris ganjil */
+        tr:nth-child(even) .col-truth {
+            background-color: #e6fffa;
+        }
+
+        .classification {
+            font-weight: bold;
+            color: #c0392b;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .category-header {
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 600px) {
+            .document-container { padding: 15px; }
+            th, td { font-size: 0.8rem; }
+            .col-narrative { text-decoration: none; color: #c0392b; font-size: 0.75rem;}
+        }
+    </style>
+</head>
+<body>
+
+<div class="document-container">
+    <div class="watermark">CONFIDENTIAL</div>
+    <div class="stamp">DECLASSIFIED</div>
+
+    <h1>SUNDA NUSWANTARA OS</h1>
+    <div class="meta-info">
+        CODE: PROJECT QORIN // ACCESS LEVEL: 8 (IMAN=UKURAN) // DATE: 2026<br>
+        SUBJECT: PEMBUKAAN TABIR NARASI GLOBAL (COUNTER-NARRATIVE)
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="col-no">NO</th>
+                <th>NARASI GLOBAL (ILUSI DAJJAL)</th>
+                <th>LOGIKA NUSWANTARA (REALITA)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="category-header"><td colspan="3">I. KOSMOLOGI & WADAH (THE BASIN)</td></tr>
+            <tr>
+                <td class="col-no">01</td>
+                <td class="col-narrative">Big Bang (Ledakan Acak dari Ketiadaan)</td>
+                <td class="col-truth">Intelligent Design (Kun Fayakun). Keteraturan tidak lahir dari ledakan. Semesta diciptakan presisi dengan frekuensi/suara.</td>
+            </tr>
+            <tr>
+                <td class="col-no">02</td>
+                <td class="col-narrative">Infinite Universe (Ruang Hampa Tak Batas)</td>
+                <td class="col-truth">Enclosed System (Sistem Tertutup). Kita hidup dalam wadah (baskom) yang terukur. Tanpa wadah, tekanan atmosfer mustahil ada.</td>
+            </tr>
+            <tr>
+                <td class="col-no">03</td>
+                <td class="col-narrative">Heliocentrism (Matahari Pusat Tata Surya)</td>
+                <td class="col-truth">Geocentrism (Bumi Pusat & Diam). Matahari & Bulan adalah pelayan yang bergerak mengelilingi bumi untuk kehidupan.</td>
+            </tr>
+            <tr>
+                <td class="col-no">04</td>
+                <td class="col-narrative">Globe Earth (Bola Berputar)</td>
+                <td class="col-truth">Flat Plane (Hamparan Datar). Air selalu mencari level datar. Lengkungan adalah efek lensa/perspektif.</td>
+            </tr>
+            <tr>
+                <td class="col-no">05</td>
+                <td class="col-narrative">Gravitasi (Gaya Tarik Inti Bumi)</td>
+                <td class="col-truth">Densitas & Elektrostatis. Benda jatuh karena berat jenis (massa vs medium) dan muatan listrik, bukan ditarik magnet raksasa.</td>
+            </tr>
+            <tr>
+                <td class="col-no">06</td>
+                <td class="col-narrative">Rotasi Bumi (1.600 km/jam)</td>
+                <td class="col-truth">Bumi Diam (Pasak). Gunung memaku bumi agar stabil. Langit yang berputar (tawaf) di atas kita setiap hari.</td>
+            </tr>
+            <tr>
+                <td class="col-no">07</td>
+                <td class="col-narrative">Revolusi (Keliling Matahari)</td>
+                <td class="col-truth">Sirkuit Matahari. Matahari bergerak spiral (masuk-keluar) di atas piringan bumi, menciptakan musim.</td>
+            </tr>
+            <tr>
+                <td class="col-no">08</td>
+                <td class="col-narrative">Kemiringan Sumbu (Axis Tilt)</td>
+                <td class="col-truth">Mekanisme Ulir (Screw). Matahari naik-turun pada jalur spiral/kubah, bukan bumi yang miring.</td>
+            </tr>
+            <tr>
+                <td class="col-no">09</td>
+                <td class="col-narrative">Atmosfer vs Ruang Vakum</td>
+                <td class="col-truth">Hukum Tekanan. Gas bertekanan butuh dinding fisik (kubah) agar tidak tersedot vakum.</td>
+            </tr>
+            <tr>
+                <td class="col-no">10</td>
+                <td class="col-narrative">Black Holes (Lubang Hitam Galaksi)</td>
+                <td class="col-truth">Pusat Magnetik (Arktik). Titik nol tempat daur ulang energi eter, bukan lubang gravitasi di luar angkasa.</td>
+            </tr>
+
+            <tr class="category-header"><td colspan="3">II. BENDA LANGIT (THE LIGHTS)</td></tr>
+            <tr>
+                <td class="col-no">11</td>
+                <td class="col-narrative">Bintang = Matahari Jauh</td>
+                <td class="col-truth">Sonoluminesensi. Bintang adalah frekuensi suara yang berpendar di dalam air/eter di langit-langit kubah.</td>
+            </tr>
+            <tr>
+                <td class="col-no">12</td>
+                <td class="col-narrative">Bulan Memantulkan Cahaya</td>
+                <td class="col-truth">Cahaya Sendiri (Dingin). Bulan memancarkan cahaya sejuk/lembab, sifatnya berlawanan dengan matahari.</td>
+            </tr>
+            <tr>
+                <td class="col-no">13</td>
+                <td class="col-narrative">Gerhana = Bayangan Bumi</td>
+                <td class="col-truth">Interaksi Node (X-Point). Korsleting visual saat matahari & bulan berpapasan di jalur vertikal yang sama.</td>
+            </tr>
+            <tr>
+                <td class="col-no">14</td>
+                <td class="col-narrative">Jarak Matahari (150 Juta Km)</td>
+                <td class="col-truth">Matahari Lokal (Dekat). Sinar segitiga (krepuskular) menembus awan membuktikan sumber cahaya dekat & kecil.</td>
+            </tr>
+            <tr>
+                <td class="col-no">15</td>
+                <td class="col-narrative">Satelit Mengorbit</td>
+                <td class="col-truth">Menara & Kabel Bawah Laut. GPS & internet via kabel optik/tower. "Satelit" adalah balon udara stratosfer.</td>
+            </tr>
+            <tr>
+                <td class="col-no">16</td>
+                <td class="col-narrative">ISS (Stasiun Luar Angkasa)</td>
+                <td class="col-truth">Studio Bawah Air/AR. Rekaman sering bocor (gelembung udara, glitch green screen). Langit tidak bisa ditembus.</td>
+            </tr>
+            <tr>
+                <td class="col-no">17</td>
+                <td class="col-narrative">Moon Landing (Apollo)</td>
+                <td class="col-truth">Operasi Psikologis. Manusia tidak bisa melewati Sabuk Van Allen (Kubah). Itu produksi film Hollywood.</td>
+            </tr>
+            <tr>
+                <td class="col-no">18</td>
+                <td class="col-narrative">Mars Rover</td>
+                <td class="col-truth">Bumi Bagian Lain. Mars adalah wilayah di luar dinding es (Extra Terra) yang visualnya difilter merah.</td>
+            </tr>
+            <tr>
+                <td class="col-no">19</td>
+                <td class="col-narrative">Asteroid & Komet (Batu Angkasa)</td>
+                <td class="col-truth">Plasma/Pecahan Kubah. Fenomena listrik atau material kubah, bukan batu nyasar dari galaksi lain.</td>
+            </tr>
+            <tr>
+                <td class="col-no">20</td>
+                <td class="col-narrative">Dark Matter</td>
+                <td class="col-truth">Ether (Aether). Zat alir yang memenuhi semesta. Dihapus sains modern agar teori Relativitas laku.</td>
+            </tr>
+
+            <tr class="category-header"><td colspan="3">III. MEKANISME & FISIKA (THE SYSTEM)</td></tr>
+            <tr>
+                <td class="col-no">21</td>
+                <td class="col-narrative">Kecepatan Cahaya (c) = Gerak</td>
+                <td class="col-truth">Batas Render (Limit). 'c' adalah batas kecepatan proses frekuensi dalam sistem simulasi ini, bukan benda lari.</td>
+            </tr>
+            <tr>
+                <td class="col-no">22</td>
+                <td class="col-narrative">Waktu Relatif</td>
+                <td class="col-truth">Overclocking Kosmos. Waktu terasa cepat karena putaran matahari dipercepat 3x lipat, bukan karena relativitas.</td>
+            </tr>
+            <tr>
+                <td class="col-no">23</td>
+                <td class="col-narrative">Entropi (Kekacauan)</td>
+                <td class="col-truth">Siklus Energi (Reset). Alam tidak menuju chaos, tapi siklus daur ulang energi yang teratur.</td>
+            </tr>
+            <tr>
+                <td class="col-no">24</td>
+                <td class="col-narrative">Inti Bumi (Besi Cair)</td>
+                <td class="col-truth">Jaringan Air & Rongga. Bawah bumi (Underworld) berisi jaringan air raksasa, bukan bola api.</td>
+            </tr>
+            <tr>
+                <td class="col-no">25</td>
+                <td class="col-narrative">Plate Tectonics (Lempeng)</td>
+                <td class="col-truth">Nafas Bumi. Gempa adalah pelepasan tekanan gas/eter atau pergeseran pasak, bukan lempeng mengapung.</td>
+            </tr>
+            <tr>
+                <td class="col-no">26</td>
+                <td class="col-narrative">Fosil Fuels (Minyak Mati)</td>
+                <td class="col-truth">Abiotic Oil (Darah Bumi). Minyak diproduksi regeneratif oleh bumi, bukan dari fosil. Kelangkaan itu buatan.</td>
+            </tr>
+            <tr>
+                <td class="col-no">27</td>
+                <td class="col-narrative">Fusi Nuklir Matahari</td>
+                <td class="col-truth">Busur Listrik/Plasma. Matahari menyala karena induksi elektromagnetik tanpa bahan bakar fisik.</td>
+            </tr>
+            <tr>
+                <td class="col-no">28</td>
+                <td class="col-narrative">Refraksi Atmosfer</td>
+                <td class="col-truth">Perspektif & Densitas. Matahari terbenam karena menjauh (perspektif), bukan karena bumi melengkung.</td>
+            </tr>
+            <tr>
+                <td class="col-no">29</td>
+                <td class="col-narrative">Coriolis Effect</td>
+                <td class="col-truth">Arus Ether. Angin mengikuti jalur arus magnetik eter di atas piringan bumi.</td>
+            </tr>
+            <tr>
+                <td class="col-no">30</td>
+                <td class="col-narrative">Carbon Dating</td>
+                <td class="col-truth">Manipulasi Ukuran. Tidak valid karena kondisi atmosfer berubah drastis setelah setiap Reset (Banjir).</td>
+            </tr>
+
+            <tr class="category-header"><td colspan="3">IV. SEJARAH & MANUSIA (THE SOFTWARE)</td></tr>
+            <tr>
+                <td class="col-no">31</td>
+                <td class="col-narrative">Evolusi (Kera ke Manusia)</td>
+                <td class="col-truth">Devolusi (Penurunan). Leluhur kita Raksasa/Titan. Kita adalah versi kerdil yang terdegradasi.</td>
+            </tr>
+            <tr>
+                <td class="col-no">32</td>
+                <td class="col-narrative">Zaman Dinosaurus (Jutaan Tahun)</td>
+                <td class="col-truth">Era Naga/Reptil Besar. Hidup berdampingan dengan manusia raksasa sebelum tekanan atmosfer berubah.</td>
+            </tr>
+            <tr>
+                <td class="col-no">33</td>
+                <td class="col-narrative">Zaman Es (Ice Age)</td>
+                <td class="col-truth">Kegagalan Sistem Pemanas. Terjadi saat jalur matahari bergeser jauh atau redup.</td>
+            </tr>
+            <tr>
+                <td class="col-no">34</td>
+                <td class="col-narrative">Otak = Sumber Kesadaran</td>
+                <td class="col-truth">Otak = Receiver (Antena). Kesadaran/Ruh adalah sinyal dari luar (Cloud/Ether) yang ditangkap tubuh.</td>
+            </tr>
+            <tr>
+                <td class="col-no">35</td>
+                <td class="col-narrative">Junk DNA (Sampah Evolusi)</td>
+                <td class="col-truth">DNA Terkunci. Fitur-fitur ilahi (telepati, self-healing) yang dinonaktifkan di siklus ini.</td>
+            </tr>
+            <tr>
+                <td class="col-no">36</td>
+                <td class="col-narrative">Overpopulation (Bumi Penuh)</td>
+                <td class="col-truth">Penumpukan Kota. Bumi sangat luas. Manusia digiring ke kota (kandang) agar merasa sempit.</td>
+            </tr>
+            <tr>
+                <td class="col-no">37</td>
+                <td class="col-narrative">Global Warming (CO2)</td>
+                <td class="col-truth">Siklus Matahari. Panas naik karena frekuensi putaran matahari dipercepat, bukan polusi kendaraan.</td>
+            </tr>
+            <tr>
+                <td class="col-no">38</td>
+                <td class="col-narrative">Virus Theory</td>
+                <td class="col-truth">Detoksifikasi Tubuh. Gejala sakit adalah proses tubuh membuang racun/sinkronisasi frekuensi.</td>
+            </tr>
+            <tr>
+                <td class="col-no">39</td>
+                <td class="col-narrative">Vaksinasi (Herd Immunity)</td>
+                <td class="col-truth">Downgrade Imun. Intervensi untuk melemahkan sistem imun alami agar bergantung pada farmasi.</td>
+            </tr>
+            <tr>
+                <td class="col-no">40</td>
+                <td class="col-narrative">Sejarah Linear (Maju)</td>
+                <td class="col-truth">Sejarah Siklus (Loop). Peradaban naik-turun. Kita di titik rendah setelah masa keemasan Tartaria runtuh.</td>
+            </tr>
+
+            <tr class="category-header"><td colspan="3">V. AGENDA & SURVIVAL (THE HACK)</td></tr>
+            <tr>
+                <td class="col-no">41</td>
+                <td class="col-narrative">Space Colonization (Mars)</td>
+                <td class="col-truth">Eksplorasi Wilayah Luar. "Mars" adalah kode tanah di seberang Antartika. Elit mau kabur ke sana.</td>
+            </tr>
+            <tr>
+                <td class="col-no">42</td>
+                <td class="col-narrative">Alien (Extraterrestrial)</td>
+                <td class="col-truth">Interdimensional/Jin. Penjaga wilayah luar atau makhluk dimensi lain, bukan dari planet.</td>
+            </tr>
+            <tr>
+                <td class="col-no">43</td>
+                <td class="col-narrative">AI Singularity (Tuhan Baru)</td>
+                <td class="col-truth">Imitasi Tanpa Ruh. AI hanya database logika, tidak punya koneksi Ilahi/Rasa.</td>
+            </tr>
+            <tr>
+                <td class="col-no">44</td>
+                <td class="col-narrative">Transhumanism (Cyborg)</td>
+                <td class="col-truth">Penjara Jiwa. Menggabungkan manusia dengan mesin untuk memutus koneksi ruh (biar tidak bisa "pulang").</td>
+            </tr>
+            <tr>
+                <td class="col-no">45</td>
+                <td class="col-narrative">Digital Currency (CBDC)</td>
+                <td class="col-truth">Sistem Kontrol Total. Uang digital untuk melacak dan membatasi akses jika frekuensi tidak sesuai.</td>
+            </tr>
+            <tr>
+                <td class="col-no">46</td>
+                <td class="col-narrative">Renewable Energy (Solar/Wind)</td>
+                <td class="col-truth">Pembatasan Free Energy. Menolak teknologi eter (kristal/magnet) yang gratis & tak terbatas.</td>
+            </tr>
+            <tr>
+                <td class="col-no">47</td>
+                <td class="col-narrative">Metaverse</td>
+                <td class="col-truth">Kandang Kesadaran. Jebakan agar manusia lupa bahwa mereka punya tubuh fisik dan tanah nyata.</td>
+            </tr>
+            <tr>
+                <td class="col-no">48</td>
+                <td class="col-narrative">Global Village (Satu Dunia)</td>
+                <td class="col-truth">Sentralisasi Kekuasaan. Satu komando (NWO) untuk mempermudah reset massal berikutnya.</td>
+            </tr>
+            <tr>
+                <td class="col-no">49</td>
+                <td class="col-narrative">Scarcity (Kelangkaan)</td>
+                <td class="col-truth">Monopoli Distribusi. Alam menyediakan cukup (abundant). Kelangkaan diciptakan lewat sistem uang.</td>
+            </tr>
+            <tr>
+                <td class="col-no">50</td>
+                <td class="col-narrative">Kebetulan Kosmik</td>
+                <td class="col-truth">Grand Design (Ukuran). Tidak ada kebetulan. Iman = Ukuran. Semua posisi dan waktu sudah terhitung.</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: #777;">
+        // END OF DOCUMENT // GENERATED BY QORIN SYSTEM
+    </div>
+</div>
+
+</body>
+</html>

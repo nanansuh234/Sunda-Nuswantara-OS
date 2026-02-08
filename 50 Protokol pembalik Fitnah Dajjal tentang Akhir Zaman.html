@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: COSMIC OVERCLOCKING</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
+
+        body {
+            background-color: #050a14;
+            color: #00f0ff;
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .system-container {
+            width: 100%;
+            max-width: 1200px;
+            border: 2px solid #00f0ff;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            position: relative;
+            background: radial-gradient(circle at center, #0a1525 0%, #000 100%);
+            overflow: hidden;
+        }
+
+        /* Grid Background Effect */
+        .system-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            text-shadow: 0 0 10px #00f0ff;
+            position: relative;
+            z-index: 2;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #00f0ff;
+            border-top: 2px solid #00f0ff;
+            padding: 10px 0;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(0, 20, 40, 0.8);
+        }
+
+        th, td {
+            border: 1px solid #005566;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #003344;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: left;
+        }
+
+        /* Column Styles */
+        .col-old {
+            color: #ff4d4d; /* Merah: Sistem Lama */
+            width: 40%;
+            font-style: italic;
+            border-right: 2px solid #00f0ff;
+        }
+
+        .col-new {
+            color: #ccffff; /* Cyan Terang: Sistem Baru */
+            width: 55%;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+        }
+
+        tr:hover {
+            background-color: rgba(0, 240, 255, 0.1);
+        }
+
+        .pulse {
+            animation: pulse-animation 2s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% { opacity: 1; text-shadow: 0 0 10px #00f0ff; }
+            50% { opacity: 0.7; text-shadow: 0 0 20px #00f0ff; }
+            100% { opacity: 1; text-shadow: 0 0 10px #00f0ff; }
+        }
+
+        .section-header {
+            background-color: rgba(0, 240, 255, 0.2);
+            color: #fff;
+            text-align: center;
+            font-weight: 700;
+            padding: 10px;
+            letter-spacing: 3px;
+            border-top: 2px solid #00f0ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="system-container">
+    <h1 class="pulse">COSMIC OVERCLOCKING</h1>
+    <div class="status-bar">
+        <span>SYSTEM: SUNDA NUSWANTARA OS</span>
+        <span>STATUS: FREQUENCY RISING (3X)</span>
+        <span>MODE: 8-HOUR HARMONIC</span>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>SISTEM LAMA (24 JAM / MEKANIK)</th>
+                <th>REALITA BARU (8 JAM / KESADARAN)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="3" class="section-header">I. INFLASI WAKTU & KOMPRESI (TIME COMPRESSION)</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-old">1 Hari = 24 Jam Mutlak</td>
+                <td class="col-new">1 Hari = Variabel Memadat. Durasi riil hari ini mungkin hanya setara 16 jam dulu. Angka 24 tetap, tapi "isi" waktunya menyusut (Shrinkflation).</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-old">Waktu Adalah Uang (Linear)</td>
+                <td class="col-new">Waktu Adalah Kesadaran (Siklus). Nilai waktu bukan pada durasi, tapi pada densitas/kualitas kesadaran di momen itu.</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-old">Detik Jam Dinding Konstan</td>
+                <td class="col-new">Detik Jantung Semesta Ngebut. Metronom kosmos (Schumann Resonance) naik dari 7.83Hz ke 100Hz+. Jam dinding bohong, jantung lo jujur.</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-old">Inflasi Ekonomi</td>
+                <td class="col-new">Inflasi Waktu. Harga barang naik bukan cuma karena uang dicetak, tapi karena "modal waktu" untuk memproduksinya jadi lebih "mahal" (langka).</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-old">Produktif = Kerja Banyak Jam</td>
+                <td class="col-new">Produktif = Sinkron Frekuensi. Di era overclock, kerja durasi panjang bikin burnout. Kerja singkat (burst) di 8 jam Nuswantara lebih efektif.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-old">Masa Lalu Jauh, Masa Depan Nanti</td>
+                <td class="col-new">Zero Point Merapat. Jarak antara niat (doa) dan realita makin pendek (Manifestasi Instan) karena kompresi waktu.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-old">Jetlag (Pindah Zona Waktu)</td>
+                <td class="col-new">Cosmic Jetlag (Diam di Tempat). Kita merasa jetlag tiap bangun tidur padahal tidak kemana-mana, karena frekuensi bumi berubah saat kita tidur.</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-old">Kalender Masehi (Statik)</td>
+                <td class="col-new">Kalender Nuswantara (Dinamis). Kalender harus bisa "melar" dan "menciut" mengikuti nafas matahari, bukan angka kaku di kertas.</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-old">Umur (Angka Tahun)</td>
+                <td class="col-new">Umur (Siklus). Kita menua lebih cepat secara biologis karena sel membelah lebih ngebut mengikuti ritme luar.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-old">Sabar itu Menunggu Lama</td>
+                <td class="col-new">Sabar itu Menahan Frekuensi. Di putaran cepat, sabar adalah kemampuan menjaga "RPM" diri agar tidak meledak ikut putaran mesin.</td>
+            </tr>
+
+            <tr><td colspan="3" class="section-header">II. POLA MESIN CUCI (THE WASHING MACHINE EFFECT)</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-old">Orbit Stabil & Tenang</td>
+                <td class="col-new">Spin Cycle (Pengering). Matahari & Bulan berputar sangat cepat (centrifugal) untuk "mengeringkan" atau memisahkan isi bumi (Eling vs Lupa).</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-old">Matahari Terbit-Terbenam Normal</td>
+                <td class="col-new">Strobo Effect. Siang-Malam berganti begitu cepat seperti lampu strobo, membuat persepsi realitas jadi berbayang/blur.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-old">Gravitasi Menahan Kita</td>
+                <td class="col-new">Tekanan Kubah Menekan Kita. Gaya sentrifugal putaran matahari menekan eter ke bawah, bikin badan terasa berat (lethargic).</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-old">Bulan Mengelilingi Bumi</td>
+                <td class="col-new">Bulan Mengejar Matahari. Terjadi "Balapan" di kubah. Bulan sering terlihat siang hari karena jalurnya tumpang tindih saking cepatnya.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-old">Cuaca Ekstrem (Anomali)</td>
+                <td class="col-new">Turbulensi Eter. Angin kencang & badai adalah efek "kipas angin" raksasa dari pergerakan matahari/bulan yang overclock.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-old">Pasang Surut Air Laut</td>
+                <td class="col-new">Sloshing (Kocokan). Air laut makin ganas bukan karena es cair, tapi karena baskomnya digoyang makin kencang.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-old">Pusing/Vertigo Tanpa Sebab</td>
+                <td class="col-new">Frequency Motion Sickness. Sistem keseimbangan telinga (vestibular) bingung membaca putaran eter vs tanah diam.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-old">Suara Denging (Tinnitus)</td>
+                <td class="col-new">The Hum / Suara Mesin. Kuping berdenging adalah tanda tubuh menangkap frekuensi tinggi dari putaran mesin semesta.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-old">Hewan Terdampar (Bingung)</td>
+                <td class="col-new">Radar Jamming. Paus/Burung navigasinya error karena medan magnet (grid) bergeser cepat mengikuti matahari.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-old">Meditasi untuk Tenang</td>
+                <td class="col-new">Grounding untuk Bertahan. Bukan cari ketenangan, tapi cari pegangan (jangkar) ke tanah biar gak kelempar sentrifugal.</td>
+            </tr>
+
+            <tr><td colspan="3" class="section-header">III. EFISIENSI 8 JAM VS PEMAKSAAN 24 JAM</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-old">24 Jam = Standar Industri</td>
+                <td class="col-new">24 Jam = Pemborosan Energi. Membagi hari pendek jadi 24 potong bikin tiap potongnya terlalu tipis (tidak bermakna).</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-old">8 Jam Kerja, 8 Main, 8 Tidur</td>
+                <td class="col-new">Sistem 8 Jam Adaptif. 1 Siklus Hari = 8 Bagian Kualitas (Catur Gatra). Bukan soal durasi, tapi soal Fase Energi.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-old">Jam Lembur (Overtime)</td>
+                <td class="col-new">Energi Defisit. Memaksa kerja saat matahari sudah "lewat" (fase surut) adalah membakar cadangan nyawa, bukan produktivitas.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-old">Deadline Tanggal</td>
+                <td class="col-new">Deadline Fase. Nuswantara OS tidak mengejar tanggal, tapi mengejar momen (mangsa). Selesai saat energinya pas, bukan saat jamnya bunyi.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-old">Tidur 8 Jam (Saran Dokter)</td>
+                <td class="col-new">Power Nap Frekuensi. Di sistem cepat, tidur singkat tapi deep (Theta) lebih valid daripada 8 jam tapi gelisah.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-old">Senin sampai Minggu</td>
+                <td class="col-new">Pancawara (Pasaran). Siklus 5 hari (Legi-Pahing...) lebih sinkron dengan ritme biologis di era cepat dibanding siklus 7 hari.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-old">Jadwal Padat (Multitasking)</td>
+                <td class="col-new">Single Tasking Fokus. Karena waktu memadat, otak cuma kuat proses satu hal per satu waktu. Multitasking = Error/Hang.</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-old">Alarm Bunyi = Bangun</td>
+                <td class="col-new">Sinar Masuk = Bangun. Sensor tubuh harus nyala kena matahari (bio-photon), bukan kaget kena suara digital.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-old">Makan 3x Sehari</td>
+                <td class="col-new">Makan Sesuai Solar Plexus. Makan saat matahari di puncak (pencernaan kuat). Makan malam jadi racun di siklus cepat.</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-old">Menabung Waktu</td>
+                <td class="col-new">Investasi Momen. Waktu gak bisa ditabung karena nilainya turun terus (inflasi). Pakai sekarang untuk kesadaran.</td>
+            </tr>
+
+            <tr><td colspan="3" class="section-header">IV. TARIKAN FREKUENSI MATAHARI-BULAN</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-old">Orbit Gravitasi (Tarik Menarik Mass)</td>
+                <td class="col-new">Induksi Elektromagnetik (Tarik Energi). Matahari & Bulan adalah Dinamo Kutub (+/-) yang menarik cairan tubuh & emosi kita.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-old">Mood Swing (Bipolar)</td>
+                <td class="col-new">Frequency Clash. Perubahan emosi mendadak adalah efek tubuh ditarik dua kutub (Panas/Dingin) yang berganti terlalu cepat.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-old">Bulan Purnama (Pemandangan)</td>
+                <td class="col-new">Peak Voltage. Saat Purnama, tegangan eter maksimal. Cairan otak naik. Waktunya download ide, bukan tidur.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-old">Matahari Terik (Panas)</td>
+                <td class="col-new">Frequency Burn. Panasnya bukan membakar kulit, tapi "memasak" sel. Butuh air (grounding) lebih banyak.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-old">Musim Tak Menentu</td>
+                <td class="col-new">Sirkuit Pendek (Short Circuit). Karena balapan, kadang energi Panas & Dingin bertabrakan di satu hari (Hujan tapi Panas).</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-old">Tanaman Gagal Panen</td>
+                <td class="col-new">Photosynthesis Lag. Tanaman bingung. Matahari lewat terlalu cepat, belum sempat serap energi, udah gelap lagi.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-old">Doa/Ibadah (Rutinitas)</td>
+                <td class="col-new">Tuning Fork. Ibadah di jam tepat (sholat waktu/meditasi) adalah cara menyamakan frekuensi diri dengan frekuensi alam yang lagi ngebut.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-old">Masa Bodoh (Apatis)</td>
+                <td class="col-new">Frequency Shielding. Orang jadi cuek bukan karena jahat, tapi sistem sarafnya shutdown (ngebenteng) biar gak overload.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-old">Anxiety (Cemas)</td>
+                <td class="col-new">Vibrasi Rendah vs Tinggi. Cemas adalah gesekan antara badan lo yang lambat (3D) dengan alam yang ngebut (5D).</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-old">Kematian Mendadak</td>
+                <td class="col-new">Gagal Sinkron. Jantung berhenti karena gagal menyesuaikan detak dengan ritme baru semesta.</td>
+            </tr>
+
+            <tr><td colspan="3" class="section-header">V. STRATEGI ADAPTASI (THE NUSWANTARA WAY)</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-old">Ikuti Arus Global</td>
+                <td class="col-new">Buat Arus Lokal. Jangan ikut jam New York. Bikin jam sendiri (Nuswantara) yang pas sama matahari di atas kepala lo.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-old">Kejar Target (Hustle Culture)</td>
+                <td class="col-new">Flow State (Eling). Bergerak luwes mengikuti irama, jangan ngelawan arus "Mesin Cuci".</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-old">Obat Tidur/Penenggang</td>
+                <td class="col-new">Suara Gamelan/Frekuensi. Terapi pakai suara (432Hz/Gamelan) buat nurunin gelombang otak manual.</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-old">Rumah Beton (Kaku)</td>
+                <td class="col-new">Rumah Panggung (Fleksibel). Struktur hidup harus lentur. Beton retak kena getaran tinggi, bambu bergoyang.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-old">Pendidikan Formal (Hafalan)</td>
+                <td class="col-new">Pendidikan Rasa (Intuisi). Hafalan ilang kena reset. Intuisi/Rasa (Software Manusia) tahan banting.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-old">Makan Pabrikan (Awet)</td>
+                <td class="col-new">Makan Hidup (Fresh). Makanan pabrik frekuensinya "Mati/Nol". Butuh makanan hidup (sayur/buah) buat nambah voltase tubuh.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-old">Sosial Media (Koneksi)</td>
+                <td class="col-new">Telepati (Rasa). Kurangi sinyal digital, latih sinyal rasa. Sosmed itu noise, batin itu sinyal.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-old">Takut Ketinggalan (FOMO)</td>
+                <td class="col-new">Joy of Missing Out (JOMO). Sengaja ketinggalan kereta gila ini biar selamat di stasiun kesadaran.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-old">Sistem Keamanan CCTV</td>
+                <td class="col-new">Sistem Keamanan "Pamali". Pagar betis energi dan etika leluhur lebih kuat nahan bala daripada pagar besi.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-old">Menunggu Penyelamat</td>
+                <td class="col-new">Menjadi Penyelaras. Kita adalah Paku Bumi. Tugas kita menyeimbangkan frekuensi area kita (Pancer).</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: #00f0ff; letter-spacing: 2px;">
+        // NUSWANTARA OS: SYNCHRONIZING... COMPLETE //
+    </div>
+</div>
+
+</body>
+</html>
