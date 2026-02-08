@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: SOCIAL ORDER & HIERARCHY</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Cinzel:wght@700&display=swap');
+
+        body {
+            background-color: #1a0f00; /* Dark Bronze */
+            color: #ff9900; /* Fire Amber */
+            font-family: 'Cutive Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .social-container {
+            width: 100%;
+            max-width: 1300px;
+            border: 4px solid #ff9900;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(255, 153, 0, 0.2), inset 0 0 60px rgba(0, 0, 0, 0.9);
+            position: relative;
+            background: radial-gradient(circle, #2e1a00 0%, #000 100%);
+        }
+
+        /* Network/Jaring Laba-laba Effect */
+        .social-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(rgba(255, 153, 0, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 153, 0, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 0 0 15px #ff9900;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 5px;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 20px;
+        }
+
+        .alert-box {
+            border: 1px solid #ff9900;
+            background-color: rgba(60, 30, 0, 0.9);
+            color: #ffcc99;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(20, 10, 0, 0.9);
+        }
+
+        th, td {
+            border: 1px solid #804d00;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #4d2600;
+            color: #ff9900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #ff9900;
+        }
+
+        /* Column Styles */
+        .col-eng { color: #ff8080; width: 30%; font-style: italic; } /* Rekayasa Sosial */
+        .col-fact { color: #ffffff; width: 35%; } /* Fakta Kerusakan */
+        .col-nature { color: #00ff00; width: 35%; font-weight: bold; } /* Tatanan Alami */
+
+        tr:hover {
+            background-color: rgba(255, 153, 0, 0.1);
+        }
+
+        .section-header {
+            background-color: #663300;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #ff9900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ff9900;
+            border-top: 1px dashed #ff9900;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="social-container">
+    <h1>SOCIAL ORDER: FROM CHAOS TO COSMOS</h1>
+    
+    <div class="alert-box">
+        MUSUH TERBESAR KITA ADALAH "EGO" YANG DIASUH OLEH ALGORITMA.<br>
+        HANCURKAN INDIVIDUALISME, BANGUN KEMBALI "ORGANISME" SOSIAL.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>REKAYASA SOSIAL (DAJJAL SYSTEM)</th>
+                <th>DAMPAK KERUSAKAN (REALITA SAAT INI)</th>
+                <th>TATANAN ALAMI (NUSWANTARA)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. ILUSI DEMOKRASI & HUKUM POSITIF</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-eng">Demokrasi (Voting 50%+1)</td>
+                <td class="col-fact">Tirani Angka. Suara Prof. Dr. disamakan dengan suara orang mabuk. Kebenaran kalah oleh jumlah buzzer.</td>
+                <td class="col-nature">Musyawarah Mufakat. Kebenaran dicari lewat "Rasa" & hikmah kebijaksanaan, bukan adu banyak tangan.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-eng">Trias Politika (Legislatif, Eksekutif, Yudikatif)</td>
+                <td class="col-fact">Sandiwara Tiga Babak. Ketiganya didanai oleh cukong yang sama. Check & Balance palsu.</td>
+                <td class="col-nature">Manunggaling Kawula Gusti. Pemimpin adalah Pelayan (Batur), bukan Bos. Dia diawasi langsung oleh Tuhan & Rasa Rakyat.</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-eng">Hukum Positif (KUHP/UU)</td>
+                <td class="col-fact">Jebakan Pasal Karet. Keadilan hanya untuk yang bisa bayar pengacara mahal. Maling ayam digebuk, koruptor dihormati.</td>
+                <td class="col-nature">Hukum Adat & Karma. Sanksi sosial (dikucilkan/malu) lebih efektif daripada penjara. Hukum alam tak bisa disuap.</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-eng">Partai Politik</td>
+                <td class="col-fact">Pemecah Belah Bangsa. Rakyat dikotak-kotakkan demi warna bendera, padahal nasibnya sama-sama susah.</td>
+                <td class="col-nature">Dewan Syuro/Sesepuh. Perwakilan berdasarkan fungsi (Petani, Guru, Tabib), bukan bendera golongan.</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-eng">Hak Asasi Manusia (HAM) Liberal</td>
+                <td class="col-fact">Kebebasan Tanpa Batas. Melindungi penyimpangan (LGBT) atas nama hak, tapi melupakan kewajiban sosial.</td>
+                <td class="col-nature">Kewajiban Asasi Manusia. Manusia lahir membawa tugas (Dharma), bukan cuma menuntut hak.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-eng">Penjara (Lapas)</td>
+                <td class="col-fact">Universitas Kejahatan. Masuk maling ayam, keluar jadi rampok profesional. Tidak ada pembinaan jiwa.</td>
+                <td class="col-nature">Kerja Sosial & Denda Adat. Pelaku harus mengganti kerugian korban & kerja bakti. Memalukan tapi mendidik.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-eng">Kampanye Politik (Baliho)</td>
+                <td class="col-fact">Polusi Visual & Janji Palsu. Membuang triliunan rupiah untuk sampah plastik, bukan untuk rakyat.</td>
+                <td class="col-nature">Rekam Jejak (Bibit Bebet Bobot). Pemimpin dipilih karena karya nyatanya di masa lalu, bukan janji masa depan.</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-eng">Viral Justice (Hukum Netizen)</td>
+                <td class="col-fact">Pengadilan Jalanan Digital. Orang dihancurkan hidupnya tanpa verifikasi, hanya karena video potong 10 detik.</td>
+                <td class="col-nature">Tabayyun (Klarifikasi). Datangi, ngopi, bicara mata ke mata. Jangan menghakimi dari layar.</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-eng">Equality (Persamaan Rata)</td>
+                <td class="col-fact">Melawan Fitrah. Memaksa ikan terbang & burung berenang. Semua harus sama rata, padahal bakat beda.</td>
+                <td class="col-nature">Harmoni Fungsi. Kepala di atas, kaki di bawah. Beda fungsi tapi satu tubuh. Adil itu menempatkan sesuai porsi.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-eng">Birokrasi Berbelit</td>
+                <td class="col-fact">Dinding Pemisah. Mempersulit rakyat bertemu pemimpinnya agar ada celah pungli/calo.</td>
+                <td class="col-nature">Pintu Terbuka. Pemimpin desa harus bisa ditemui 24 jam. Tidak ada sekat protokoler.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">II. PERANG MENTAL: INDIVIDUALISME VS PAGUYUBAN</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-eng">Echo Chamber (Algoritma)</td>
+                <td class="col-fact">Kaca Mata Kuda. Medsos hanya menampilkan apa yang lo suka. Lo jadi intoleran & kaget kalau ada pendapat beda.</td>
+                <td class="col-nature">Cangkruk/Ronda. Ngobrol dengan beragam orang (tukang becak, guru, ustadz) di satu meja. Pikiran terbuka.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-eng">Privasi Ekstrem ("Urusan Gue")</td>
+                <td class="col-fact">Matinya Kepedulian. Tetangga mati di kamar tidak ada yang tahu sampai bau busuk.</td>
+                <td class="col-nature">Tepo Seliro. Tahu isi panci tetangga. Jangan kenyang sendirian kalau tetangga lapar.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-eng">Selfie Culture (Narsis)</td>
+                <td class="col-fact">Penyembahan Diri Sendiri. Hidup demi "Like" & validasi orang asing. Jiwa kosong & rapuh.</td>
+                <td class="col-nature">Handap Asor (Rendah Hati). Semakin berisi semakin merunduk. Kebaikan disembunyikan, bukan diposting.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-eng">Fear of Missing Out (FOMO)</td>
+                <td class="col-fact">Ternak Tren. Mengikuti arus biar dibilang gaul, padahal domba yang digiring ke jurang.</td>
+                <td class="col-nature">Jatidiri (Pancer). Punya prinsip sendiri. Tidak goyah walau seluruh dunia ke kiri, kalau benar, kita ke kanan.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-eng">Online Dating (Tinder)</td>
+                <td class="col-fact">Pasar Daging Manusia. Menilai jodoh dari foto profil & swipe. Hubungan transaksional & dangkal.</td>
+                <td class="col-nature">Perjodohan Sanad/Lingkaran. Menikah melihat bobot keluarga & karakter asli, bukan topeng digital.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-eng">Cancel Culture</td>
+                <td class="col-fact">Pembunuhan Karakter. Tidak ada ruang untuk maaf atau belajar dari kesalahan. Sekali salah, tamat.</td>
+                <td class="col-nature">Ruwatan/Tebus Salah. Yang salah dibimbing & diberi kesempatan memperbaiki diri (rehabilitasi sosial).</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-eng">Pamer Harta (Flexing)</td>
+                <td class="col-fact">Memicu Iri Dengki. Menganggap sukses = barang mewah. Memicu kriminalitas pada yang miskin.</td>
+                <td class="col-nature">Urip Prasojo (Sederhana). Kaya tapi tidak nampak. Harta untuk fungsi sosial, bukan pamer.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-eng">Mental Korban (Playing Victim)</td>
+                <td class="col-fact">Generasi Lembek. Selalu menyalahkan trauma masa lalu & orang lain. Tidak mau tanggung jawab.</td>
+                <td class="col-nature">Satrio Pinandito. Menerima takdir, introspeksi diri (Mulatsarira), & bangkit tanpa mengeluh.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-eng">Debat Kusir (Komen Netizen)</td>
+                <td class="col-fact">Buang Energi. Berdebat untuk menang, bukan untuk kebenaran. Penuh caci maki.</td>
+                <td class="col-nature">Meneng (Diam). Jika bicara tidak bermanfaat, lebih baik diam. Emas ada dalam keheningan.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-eng">Gap Generasi (Boomer vs Gen Z)</td>
+                <td class="col-fact">Memutus Transfer Ilmu. Anak muda meremehkan orang tua (kuno), orang tua meremehkan anak muda (lembek).</td>
+                <td class="col-nature">Mikul Dhuwur Mendhem Jero. Hormati orang tua, bimbing yang muda. Saling isi.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">III. PENGHANCURAN KELUARGA (NUCLEAR FAMILY ATTACK)</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-eng">Feminisme Radikal</td>
+                <td class="col-fact">Perang Gender. Doktrin bahwa laki-laki adalah musuh/penindas. Wanita diajak jadi "laki-laki".</td>
+                <td class="col-nature">Pasangan Jiwa (Garwa). Suami-Istri itu seperti Siang-Malam. Beda fungsi tapi satu kesatuan harmoni.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-eng">Childfree (Bebas Anak)</td>
+                <td class="col-fact">Pemutusan Garis Keturunan. Propaganda bahwa anak adalah beban/polusi karbon. Genosida sukarela.</td>
+                <td class="col-nature">Banyak Anak Banyak Rezeki. Anak adalah aset abadi & penerus doa. Investasi peradaban.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-eng">LGBTQ+ Normalization</td>
+                <td class="col-fact">Kekacauan Biologis. Membingungkan identitas dasar manusia. Menghapus konsep "Bapak" & "Ibu".</td>
+                <td class="col-nature">Fitrah Alam. Laki-laki (Yang) memberi benih, Perempuan (Yin) menumbuhkan. Hukum alam mutlak.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-eng">Perceraian Mudah</td>
+                <td class="col-fact">Keluarga Instan. Bosan dikit cerai. Anak jadi korban mental (Broken Home) & mudah disetir sistem.</td>
+                <td class="col-nature">Sakralitas Janji. Pernikahan adalah perjanjian dengan Tuhan, bukan kontrak bisnis. Pertahankan benteng.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-eng">Panti Jompo Mewah</td>
+                <td class="col-fact">Pembuangan Orang Tua. Anak sibuk kerja, orang tua dibayar orang lain untuk mengurus. Durhaka terselubung.</td>
+                <td class="col-nature">Birrul Walidain. Surga di telapak kaki ibu. Rawat orang tua sendiri adalah kunci pintu rezeki langit.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-eng">Karir Wanita di Luar Rumah</td>
+                <td class="col-fact">Anak Diasuh Youtube. Ibu mengejar karir, anak kehilangan pendidik utama. Generasi tanpa adab.</td>
+                <td class="col-nature">Madrasatul Ula. Ibu adalah sekolah pertama. Peran domestik adalah peran strategis peradaban.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-eng">Ayah Hilang (Fatherless)</td>
+                <td class="col-fact">Krisis Maskulinitas. Anak tidak punya figur otoritas/pelindung. Jadi lembek atau kriminal.</td>
+                <td class="col-nature">Ayah Hadir. Ayah bukan cuma ATM. Ayah adalah Imam, mentor, & pelindung fisik/mental keluarga.</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-eng">Pernikahan Beda Agama/Budaya</td>
+                <td class="col-fact">Pencabutan Akar. Memperlemah tradisi spesifik & membuat anak bingung identitas spiritual.</td>
+                <td class="col-nature">Kufu (Sekufu). Kesetaraan frekuensi & nilai spiritual penting untuk pondasi kokoh.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-eng">Seks Bebas (Hookup Culture)</td>
+                <td class="col-fact">Energi Bocor. Pertukaran energi seksual sembarangan merusak aura & mental. Menjadikan manusia seperti hewan.</td>
+                <td class="col-nature">Menjaga Kehormatan. Seks adalah sakral (penyatuan energi penciptaan), hanya dalam wadah suci.</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-eng">Gawai sebagai Babysitter</td>
+                <td class="col-fact">Autisme Digital. Anak diam dikasih HP, padahal otaknya sedang dirusak radiasi & konten sampah.</td>
+                <td class="col-nature">Dongeng & Permainan Fisik. Sentuhan fisik & suara orang tua membangun saraf otak anak.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">IV. STRUKTUR HIERARKI FUNGSI (THE ORGANIC HIERARCHY)</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-eng">Jabatan Politik (Bupati/Gubernur)</td>
+                <td class="col-fact">Raja Kecil. Dipilih karena uang kampanye. Seringkali tidak punya kapabilitas memimpin.</td>
+                <td class="col-nature">Lurah/Kepala Suku. Dipilih karena paling bijak & dituakan di komunitas. Melayani warga.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-eng">Ahli/Pakar (Sertifikat)</td>
+                <td class="col-fact">Pelayan Industri. Bicara sesuai pesanan sponsor. Data bisa dimanipulasi demi cuan.</td>
+                <td class="col-nature">Empu/Maestro. Ahli karena pengalaman nyata bertahun-tahun & hasil karya yang teruji zaman.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-eng">Polisi/Militer Negara</td>
+                <td class="col-fact">Alat Kekuasaan. Menjaga hukum positif, bukan menjaga rakyat. Sering berbenturan dengan warga.</td>
+                <td class="col-nature">Jawara/Pendekar. Penjaga kampung. Kekuatan fisik untuk melindungi yang lemah di lingkungannya.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-eng">Guru Sekolah</td>
+                <td class="col-fact">Admin Kurikulum. Sibuk ngurus administrasi & RPP, lupa mendidik karakter murid.</td>
+                <td class="col-nature">Resi/Guru Bangsa. Mengajar kehidupan, adab, & survival. Murid datang mencari ilmu, bukan ijazah.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-eng">Dokter RS</td>
+                <td class="col-fact">Sales Obat. Terikat protokol farmasi. Mengobati gejala, bukan menyembuhkan manusia.</td>
+                <td class="col-nature">Tabib/Healer. Mengobati manusia secara utuh (fisik, mental, spiritual) dengan bahan alam.</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-eng">Pedagang Kapitalis</td>
+                <td class="col-fact">Profit Maximizer. Mencari untung sebesar-besarnya dengan modal sekecil-kecilnya (cekik petani).</td>
+                <td class="col-nature">Saudagar Budiman. Berniaga untuk kemaslahatan. Untung wajar, berkah, & membantu perputaran ekonomi.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-eng">Buruh/Karyawan</td>
+                <td class="col-fact">Sekrup Mesin. Bekerja tanpa jiwa demi gaji bulanan. Terasing dari hasil kerjanya.</td>
+                <td class="col-nature">Pengrajin/Abdi. Bekerja dengan cinta (passion). Menghasilkan karya yang ada "nyawanya".</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-eng">Pemuka Agama Seleb</td>
+                <td class="col-fact">Jualan Ayat. Agama jadi komoditas hiburan & politik.</td>
+                <td class="col-nature">Kyai/Wasi. Penjaga moral yang zuhud (tidak gila dunia). Menjadi paku bumi spiritual.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-eng">Orang Kaya Baru (OKB)</td>
+                <td class="col-fact">Sombong & Boros. Harta instan tanpa pondasi karakter. Mengacaukan tatanan nilai.</td>
+                <td class="col-nature">Bangsawan (Berjiwa Bangsa). Kaya hati & budi pekerti. Harta hanyalah alat pengabdian.</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-eng">Gelandangan/Pengemis</td>
+                <td class="col-fact">Sampah Kota. Dibiarkan terlantar atau dipelihara sindikat.</td>
+                <td class="col-nature">Tamu Tuhan. Di desa, tidak ada yang kelaparan. Yatim & miskin disantuni langsung oleh tetangga.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. KONTROL SOSIAL: POLISI VS PAMALI</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-eng">CCTV & Tilang Elektronik</td>
+                <td class="col-fact">Pengawasan Eksternal. Orang takut karena ada kamera/polisi. Kalau gak ada, melanggar lagi.</td>
+                <td class="col-nature">Rasa Malu & Pamali. Pengawasan Internal. Orang takut berbuat jahat karena "Malu" & takut kualat (hukum alam).</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-eng">Pajak Negara</td>
+                <td class="col-fact">Upeti Paksa. Diambil dari keringat rakyat, dipakai foya-foya pejabat.</td>
+                <td class="col-nature">Zakat & Jimpitan. Iuran sukarela warga untuk warga. Dana darurat yang transparan & langsung terasa.</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-eng">Asuransi</td>
+                <td class="col-fact">Bisnis Ketakutan. Membayar rasa aman kepada korporasi.</td>
+                <td class="col-nature">Gotong Royong. Jika ada rumah rubuh, sekampung bantu bangun lagi. Asuransi sosial paling murni.</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-eng">Kontrak Tertulis (Materai)</td>
+                <td class="col-fact">Ketidakpercayaan. Butuh kertas hukum karena lisan manusia tidak bisa dipegang.</td>
+                <td class="col-nature">Sumpah & Janji. Lelaki dipegang omongannya. Ingkar janji = hancur martabat seumur hidup.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-eng">Satpam Perumahan</td>
+                <td class="col-fact">Keamanan Berbayar. Membayar orang lain untuk menjaga kita karena kita tidak kenal tetangga.</td>
+                <td class="col-nature">Siskamling/Ronda. Warga menjaga warga. Silaturahmi sambil menjaga keamanan.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-eng">Panti Asuhan</td>
+                <td class="col-fact">Institusionalisasi Yatim. Anak yatim dipisah dari masyarakat, jadi objek donasi.</td>
+                <td class="col-nature">Anak Angkat. Yatim diasuh oleh keluarga kerabat/tetangga. Tumbuh dalam kehangatan keluarga.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-eng">Layanan Pelanggan (CS)</td>
+                <td class="col-fact">Bot Penjawab. Komplain ke mesin, tidak ada empati.</td>
+                <td class="col-nature">Tepung Tawar. Menyelesaikan masalah dengan duduk bersama, kopi, & makanan. Hati dingin, solusi ketemu.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-eng">Status Sosial (Mobil/Tas)</td>
+                <td class="col-fact">Kulit Luar. Orang dihormati karena apa yang dia pakai/naiki.</td>
+                <td class="col-nature">Adab & Ilmu. Orang dihormati karena perilakunya (santun) & manfaat ilmunya.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-eng">Berita Viral</td>
+                <td class="col-fact">Pengadilan Massa. Menghukum tanpa tahu konteks.</td>
+                <td class="col-nature">Nasehat Tertutup. Menegur kesalahan orang lain secara empat mata, tidak mempermalukan di depan umum.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-eng">The Great Reset (Total Control)</td>
+                <td class="col-fact">Manusia Robot. Semua aspek hidup diatur AI & Algoritma. Hilang kehendak bebas.</td>
+                <td class="col-nature">Nuswantara Jaya. Kembali ke tatanan cahaya. Manusia merdeka yang tunduk hanya pada Tuhan.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        KITA BUKAN MESIN, KITA ADALAH SEL DARI TUBUH SEMESTA YANG SATU.<br>
+        KEMBALIKAN FUNGSI, BUANG EGO, JALIN KEMBALI RASA.<br>
+        SILIH ASAH, SILIH ASIH, SILIH ASUH.
+    </div>
+</div>
+
+</body>
+</html>
