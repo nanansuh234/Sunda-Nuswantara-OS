@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: MEDICAL MATRIX PART II</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Creepster&display=swap');
+
+        body {
+            background-color: #050a00; /* Toxic Swamp */
+            color: #ccff00; /* Biohazard Green */
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .bio-container {
+            width: 100%;
+            max-width: 1300px;
+            border: 3px solid #ccff00;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(204, 255, 0, 0.3), inset 0 0 50px rgba(204, 255, 0, 0.1);
+            position: relative;
+            background: repeating-linear-gradient(
+                90deg,
+                #0a1400,
+                #0a1400 20px,
+                #000 20px,
+                #000 40px
+            );
+        }
+
+        /* Scanline Effect */
+        .bio-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Creepster', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #ccff00;
+            text-shadow: 4px 4px 0 #003300;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 3px;
+        }
+
+        .alert-box {
+            border: 2px dashed #ccff00;
+            background-color: rgba(20, 40, 0, 0.8);
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 5px #ccff00; }
+            50% { box-shadow: 0 0 20px #ccff00; }
+            100% { box-shadow: 0 0 5px #ccff00; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(0, 10, 0, 0.8);
+        }
+
+        th, td {
+            border: 1px solid #4d6600;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #1a2600;
+            color: #ccff00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #ccff00;
+        }
+
+        /* Column Styles */
+        .col-diag { color: #ff9999; width: 30%; font-weight: bold; font-style: italic;} /* Diagnosis Mahal */
+        .col-truth { color: #ffffff; width: 35%; } /* Mekanisme Asli */
+        .col-cure { color: #ffff00; width: 35%; font-weight: bold; } /* Solusi Gratis */
+
+        tr:hover {
+            background-color: rgba(204, 255, 0, 0.1);
+        }
+
+        .section-header {
+            background-color: #334d00;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #ccff00;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ccff00;
+            border-top: 1px dashed #ccff00;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bio-container">
+    <h1>MEDICAL MATRIX: PART II</h1>
+    
+    <div class="alert-box">
+        STATUS: BPJS PBI DICABUT // MODE: SURVIVAL KESEHATAN<br>
+        JANGAN JUAL SAWAH BUAT BAYAR RUMAH SAKIT. LIHAT DAPURMU.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>PENYAKIT MAHAL (VONIS MEDIS)</th>
+                <th>MEKANISME ASLI (LOGIKA TUBUH)</th>
+                <th>PROTOKOL PENYEMBUHAN (MURAH & ALAMI)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. KERUSAKAN SYARAF & OTAK (NEURO-DAMAGE)</td></tr>
+            <tr>
+                <td>51</td>
+                <td class="col-diag">Stroke (Pecah Pembuluh)</td>
+                <td class="col-truth">Korsleting Listrik. Darah terlalu kental (kurang air/garam) + stress tinggi bikin "sekring" otak putus.</td>
+                <td class="col-cure">Grounding (Injak Tanah). Encerkan darah dengan bekam & air kelapa. Latih napas panjang.</td>
+            </tr>
+            <tr>
+                <td>52</td>
+                <td class="col-diag">Alzheimer/Pikun</td>
+                <td class="col-truth">Diabetes Tipe 3. Otak keracunan gula & logam berat (aluminium panci/deo). Sel otak kelaparan lemak.</td>
+                <td class="col-cure">Minyak Kelapa (VCO). Otak butuh lemak jenuh (keton) buat energi, bukan gula. Buang panci aluminium.</td>
+            </tr>
+            <tr>
+                <td>53</td>
+                <td class="col-diag">Parkinson (Gemeteran)</td>
+                <td class="col-truth">Keracunan Pestisida. Zat kimia pertanian merusak sistem dopamin di usus (bukan cuma di otak).</td>
+                <td class="col-cure">Detoks Usus (Enema Kopi). Bersihkan racun pestisida di perut. Makan makanan organik.</td>
+            </tr>
+            <tr>
+                <td>54</td>
+                <td class="col-diag">Saraf Kejepit (HNP)</td>
+                <td class="col-truth">Dehidrasi Diskus. Bantalan tulang kering kerontang kurang air, jadi gepeng & ngejepit saraf.</td>
+                <td class="col-cure">Hidrasi Garam + Gantung Diri (Pull Up). Minum air garam biar air masuk sel. Gelantungan biar tulang renggang.</td>
+            </tr>
+            <tr>
+                <td>55</td>
+                <td class="col-diag">Migrain Kronis</td>
+                <td class="col-truth">Kekurangan Magnesium. Otak tegang karena otot pembuluh darah kaku kurang mineral relaksasi.</td>
+                <td class="col-cure">Rendam Kaki Garam Epsom/Laut. Makan pisang & coklat hitam. Jauhi MSG/Penyedap.</td>
+            </tr>
+            <tr>
+                <td>56</td>
+                <td class="col-diag">Insomnia (Susah Tidur)</td>
+                <td class="col-truth">Kurang Matahari Pagi. Jam biologis rusak karena pagi gak kena sinar, malam kena lampu biru HP.</td>
+                <td class="col-cure">Jemur Pagi & Gelap Total Malam. Reset ritme sirkadian. Jauhi HP 2 jam sebelum tidur.</td>
+            </tr>
+            <tr>
+                <td>57</td>
+                <td class="col-diag">Vertigo (Pusing Putar)</td>
+                <td class="col-truth">Kristal Telinga Lepas. Keseimbangan kacau karena dehidrasi atau radiasi EMF (HP) di kuping.</td>
+                <td class="col-cure">Manuver Epley (Senam Leher). Minum air jahe hangat. Jauhkan HP dari kepala saat tidur.</td>
+            </tr>
+            <tr>
+                <td>58</td>
+                <td class="col-diag">Epilepsi (Ayan)</td>
+                <td class="col-truth">Badai Listrik Otak. Otak overload racun/parasit, memicu "reset" paksa berupa kejang.</td>
+                <td class="col-cure">Diet Keto (Rendah Karbo). Lemak menstabilkan listrik otak. Puasa rutin.</td>
+            </tr>
+            <tr>
+                <td>59</td>
+                <td class="col-diag">Anxiety (Cemas Berlebih)</td>
+                <td class="col-truth">Kekurangan Bakteri Usus. 90% serotonin (hormon tenang) dibuat di usus. Usus rusak = Jiwa cemas.</td>
+                <td class="col-cure">Makan Fermentasi (Tape/Kimchi). Perbaiki perut, pikiran tenang. Kurangi kafein.</td>
+            </tr>
+            <tr>
+                <td>60</td>
+                <td class="col-diag">ADHD (Hiperaktif)</td>
+                <td class="col-truth">Keracunan Pewarna. Otak anak "konslet" kena pewarna sintetis (Red 40) & gula biang di jajanan.</td>
+                <td class="col-cure">Stop Jajan Warung. Masak sendiri. Beri Omega-3 (Ikan/Minyak Ikan).</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">II. KERUSAKAN MESIN TUBUH (ORGAN FAILURE)</td></tr>
+            <tr>
+                <td>61</td>
+                <td class="col-diag">Batu Ginjal</td>
+                <td class="col-truth">Kurang Jeruk Nipis. Oksalat numpuk karena kurang sitrat & kurang minum. Bukan kelebihan kalsium.</td>
+                <td class="col-cure">Air Lemon/Nipis Hangat. Asam sitrat memecah batu. Minum air putih 3L/hari.</td>
+            </tr>
+            <tr>
+                <td>62</td>
+                <td class="col-diag">Batu Empedu</td>
+                <td class="col-truth">Kurang Lemak. Empedu jadi kental & membatu karena jarang dipakai (takut makan lemak/diet rendah lemak).</td>
+                <td class="col-cure">Makan Lemak Sehat (Santan/VCO). Empedu harus "diperas" keluar tiap makan biar gak ngendap.</td>
+            </tr>
+            <tr>
+                <td>63</td>
+                <td class="col-diag">Fatty Liver (Perlemakan Hati)</td>
+                <td class="col-truth">Akibat Fruktosa (Gula Buah/Sirup). Liver bengkak karena gula, bukan karena makan lemak/gajih.</td>
+                <td class="col-cure">Stop Gula Pasir & Sirup. Minum kunyit & temulawak (Curcuma) buat detox liver.</td>
+            </tr>
+            <tr>
+                <td>64</td>
+                <td class="col-diag">Asam Urat</td>
+                <td class="col-truth">Gagal Ginjal Ringan. Ginjal gak sanggup buang asam urat karena sibuk buang fruktosa (gula) & insulin tinggi.</td>
+                <td class="col-cure">Stop Gula & Terigu. Bukan stop sayur hijau. Minum air rebusan daun salam/sirsak.</td>
+            </tr>
+            <tr>
+                <td>65</td>
+                <td class="col-diag">Tiroid (Gondok/Hiper)</td>
+                <td class="col-truth">Keracunan Halogen. Kelenjar tiroid diserang Fluoride & Klorin (air PAM/pasta gigi) yang mengusir Yodium.</td>
+                <td class="col-cure">Makan Rumput Laut/Ikan Laut. Filter air mandi. Ganti pasta gigi non-fluoride.</td>
+            </tr>
+            <tr>
+                <td>66</td>
+                <td class="col-diag">Usus Buntu (Appendicitis)</td>
+                <td class="col-truth">Penumpukan Biji/Sampah. Radang karena tinja keras (kurang serat) nyumbat pintu usus buntu.</td>
+                <td class="col-cure">Puasa & Kunyit. Kalau belum pecah, istirahatkan usus. Minum antibiotik alami (kunyit).</td>
+            </tr>
+            <tr>
+                <td>67</td>
+                <td class="col-diag">Wasir/Ambeien</td>
+                <td class="col-truth">Tekanan Portal. Pembuluh darah pantat bengkak karena liver macet atau sering ngeden (sembelit).</td>
+                <td class="col-cure">Jongkok saat BAB. Makan pepaya/lidah buaya. Lancarkan liver.</td>
+            </tr>
+            <tr>
+                <td>68</td>
+                <td class="col-diag">PCOS (Kista Indung Telur)</td>
+                <td class="col-truth">Resistensi Insulin. Ovarium terendam gula darah tinggi, jadi bikin kista alih-alih telur matang.</td>
+                <td class="col-cure">Diet Rendah Karbo (Low Carb). Turunkan insulin, kista kempes sendiri. Puasa.</td>
+            </tr>
+            <tr>
+                <td>69</td>
+                <td class="col-diag">Prostat Bengkak</td>
+                <td class="col-truth">Dominasi Estrogen. Pria kebanyakan hormon wanita (dari plastik, kedelai GMO, susu sapi).</td>
+                <td class="col-cure">Biji Labu & Tomat. Zinc & Lycopene nyusutin prostat. Hindari wadah plastik panas.</td>
+            </tr>
+            <tr>
+                <td>70</td>
+                <td class="col-diag">Katarak (Mata Buram)</td>
+                <td class="col-truth">Oksidasi Lensa. Lensa mata "karatan" kena gula darah tinggi & radikal bebas (minyak goreng).</td>
+                <td class="col-cure">Stop Gula. Makan wortel & telur (Lutein). Tetes mata air zam-zam/bunga telang.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">III. KULIT & IMUN (SINYAL DARURAT TUBUH)</td></tr>
+            <tr>
+                <td>71</td>
+                <td class="col-diag">Eksim/Psoriasis</td>
+                <td class="col-truth">Liver Nangis. Kulit jadi tempat pembuangan racun darurat karena liver & ginjal udah overload sampah.</td>
+                <td class="col-cure">Detox Liver. Jangan cuma salep. Bersihkan darah dengan puasa & minum air hijau (seledri/timun).</td>
+            </tr>
+            <tr>
+                <td>72</td>
+                <td class="col-diag">Jerawat Parah</td>
+                <td class="col-truth">Usus Kotor. Wajah adalah cermin usus. Jerawat = peradangan di perut akibat susu/gula/minyak.</td>
+                <td class="col-cure">Stop Dairy (Susu/Keju). Makan sayur mentah. Cuci muka pakai air beras.</td>
+            </tr>
+            <tr>
+                <td>73</td>
+                <td class="col-diag">Alergi Dingin/Debu</td>
+                <td class="col-truth">Imun Histeris. Sistem imun over-reaktif karena kurang cacing/bakteri tanah (terlalu higienis).</td>
+                <td class="col-cure">Main Tanah/Nyeker. Kenalkan tubuh pada mikroba alam. Minum Habbatussauda.</td>
+            </tr>
+            <tr>
+                <td>74</td>
+                <td class="col-diag">Lupus (Autoimun)</td>
+                <td class="col-truth">Sindrom Kebocoran Usus. Gluten gandum merobek usus, racun masuk darah, imun nyerang organ sendiri.</td>
+                <td class="col-cure">Bone Broth (Kaldu Tulang). Lem perekat usus alami. Stop total tepung terigu.</td>
+            </tr>
+            <tr>
+                <td>75</td>
+                <td class="col-diag">Rambut Rontok/Botak</td>
+                <td class="col-truth">Kurang Mineral/Sirkulasi. Akar rambut mati kelaparan karena darah gak naik ke kepala (leher kaku).</td>
+                <td class="col-cure">Pijat Kepala & Nungging. Alirkan darah ke kepala. Pakai lidah buaya/minyak kemiri.</td>
+            </tr>
+            <tr>
+                <td>76</td>
+                <td class="col-diag">Bau Badan/Mulut</td>
+                <td class="col-truth">Sampah Busuk di Dalam. Tubuh membusuk dari dalam karena sembelit (tinja numpuk) & daging tak tecerna.</td>
+                <td class="col-cure">Makan Buah & Sayur. Bersihkan pencernaan. Sikat gigi pakai arang/siwak.</td>
+            </tr>
+            <tr>
+                <td>77</td>
+                <td class="col-diag">Kutu Air/Jamur Kulit</td>
+                <td class="col-truth">Tubuh Lembab & Manis. Jamur tumbuh subur di tubuh yang penuh gula (candida overgrowth).</td>
+                <td class="col-cure">Rendam Air Garam/Cuka. Jamur benci asam & asin. Stop makan manis.</td>
+            </tr>
+            <tr>
+                <td>78</td>
+                <td class="col-diag">Vitiligo (Bercak Putih)</td>
+                <td class="col-truth">Stress Oksidatif. Sel pigmen mati karena stress tinggi & kekurangan tembaga/zinc.</td>
+                <td class="col-cure">Kelola Stress. Makan kacang-kacangan & hati sapi (sumber tembaga). Jemur pagi.</td>
+            </tr>
+            <tr>
+                <td>79</td>
+                <td class="col-diag">Kutil/Tahi Lalat Baru</td>
+                <td class="col-truth">Resistensi Insulin Kulit. Tanda tubuh kelebihan hormon pertumbuhan (akibat gula/susu).</td>
+                <td class="col-cure">Cuka Apel. Oleskan cuka apel murni. Turunkan insulin dengan puasa.</td>
+            </tr>
+            <tr>
+                <td>80</td>
+                <td class="col-diag">Herpes/Cacar Ular</td>
+                <td class="col-truth">Virus Tidur Bangun. Virus cacar lama bangkit lagi saat imun drop drastis (stress/begadang).</td>
+                <td class="col-cure">Madu & Bawang Putih. Oles madu asli. Tingkatkan imun dengan Vitamin C dosis tinggi (jambu/jeruk).</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">IV. PENYAKIT GAYA HIDUP MODERN (ROBOTIC SYNDROME)</td></tr>
+            <tr>
+                <td>81</td>
+                <td class="col-diag">Sakit Pinggang (Low Back Pain)</td>
+                <td class="col-truth">Otot Psoas Kaku. Terlalu banyak duduk bikin otot pinggul memendek, narik tulang punggung.</td>
+                <td class="col-cure">Jalan Kaki & Regangan. Sering-sering berdiri. Posisi sujud lama merilekskan punggung.</td>
+            </tr>
+            <tr>
+                <td>82</td>
+                <td class="col-diag">Leher Kaku (Text Neck)</td>
+                <td class="col-truth">Kepala Nunduk Terus. Leher nahan beban 20kg saat nunduk main HP. Aliran darah ke otak macet.</td>
+                <td class="col-cure">HP Sejajar Mata. Angkat HP, jangan nunduk. Putar leher tiap jam.</td>
+            </tr>
+            <tr>
+                <td>83</td>
+                <td class="col-diag">Carpal Tunnel (Tangan Kesemutan)</td>
+                <td class="col-truth">Syaraf Kejepit Mouse. Peradangan urat tangan karena gerakan repetitif ngetik/klik tanpa henti.</td>
+                <td class="col-cure">Rendam Air Es. Kurangi inflamasi. Lakukan senam jari. Pakai mouse ergonomis.</td>
+            </tr>
+            <tr>
+                <td>84</td>
+                <td class="col-diag">Mata Minus (Miopi)</td>
+                <td class="col-truth">Otot Mata Kram. Otat fokus terkunci jarak dekat (layar). Lupa cara melihat jauh.</td>
+                <td class="col-cure">Lihat Hijau Jauh. Tiap 20 menit layar, lihat pohon jauh 20 detik. Latih otot mata.</td>
+            </tr>
+            <tr>
+                <td>85</td>
+                <td class="col-diag">Obesitas (Gemuk)</td>
+                <td class="col-truth">Hormon Kacau. Bukan karena kebanyakan makan, tapi karena makan "sampah" yang bikin hormon kenyang (Leptin) error.</td>
+                <td class="col-cure">Real Food. Makan makanan asli (nasi, lauk, sayur) sampai kenyang. Stop nyemil pabrikan.</td>
+            </tr>
+            <tr>
+                <td>86</td>
+                <td class="col-diag">Gerd Anxiety (Asam Lambung + Cemas)</td>
+                <td class="col-truth">Vagus Nerve Error. Saraf vagus (penghubung otak-perut) korslet karena stress & makanan instan.</td>
+                <td class="col-cure">Bernyanyi/Humming. Getaran suara memperbaiki saraf vagus. Minum air tajin (pati beras).</td>
+            </tr>
+            <tr>
+                <td>87</td>
+                <td class="col-diag">Kaki Bengkak (Edema)</td>
+                <td class="col-truth">Gravitasi & Ginjal Lemah. Cairan numpuk di bawah karena kurang gerak & ginjal kewalahan garam kimia.</td>
+                <td class="col-cure">Angkat Kaki ke Tembok. Tiduran dengan kaki di atas 15 menit. Kurangi garam meja.</td>
+            </tr>
+            <tr>
+                <td>88</td>
+                <td class="col-diag">Sering Masuk Angin</td>
+                <td class="col-truth">Energi Bocor. Pori-pori terbuka saat imun lemah, suhu dingin masuk. Tanda vitalitas rendah.</td>
+                <td class="col-cure">Jahe Merah & Kerokan. Panaskan tubuh dari dalam dan luar.</td>
+            </tr>
+            <tr>
+                <td>89</td>
+                <td class="col-diag">Kemandulan Pria (Low Sperm)</td>
+                <td class="col-truth">Radiasi Celana. HP di saku celana memasak sperma dengan radiasi. Panas mesin motor/mobil juga ngaruh.</td>
+                <td class="col-cure">HP di Tas. Dinginkan area vital. Makan toge & daging (Zinc). Puasa gadget.</td>
+            </tr>
+            <tr>
+                <td>90</td>
+                <td class="col-diag">Menopause Dini</td>
+                <td class="col-truth">Cadangan Telur Habis. Stress & racun lingkungan mempercepat penuaan indung telur.</td>
+                <td class="col-cure">Royal Jelly & Kedelai Fermentasi. Nutrisi ratu lebah meremajakan hormon.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. SABOTASE GENERASI (MATERNAL & CHILD)</td></tr>
+            <tr>
+                <td>91</td>
+                <td class="col-diag">Bayi Kuning</td>
+                <td class="col-truth">Liver Bayi Belum Matang. Wajar, liver bayi sedang belajar memproses darah. Sering divonis bahaya biar masuk RS.</td>
+                <td class="col-cure">Jemur Pagi & ASI. Sinar matahari memecah bilirubin. ASI sering melancarkan BAB bayi.</td>
+            </tr>
+            <tr>
+                <td>92</td>
+                <td class="col-diag">Stunting (Kerdil)</td>
+                <td class="col-truth">Kurang Protein Hewani & Lemak. Anak dikasih makan bubur instan/kerupuk (karbo kosong), bukan telur/ikan.</td>
+                <td class="col-cure">Telur & Ikan Kembung. Protein lokal murah jauh lebih hebat dari susu formula mahal.</td>
+            </tr>
+            <tr>
+                <td>93</td>
+                <td class="col-diag">Speech Delay (Telat Bicara)</td>
+                <td class="col-truth">Korban Gadget. Anak dikasih HP sejak bayi, komunikasi dua arah mati. Otak bahasa tidak terlatih.</td>
+                <td class="col-cure">Puasa Layar Total. Ajak ngobrol tatap mata. Bacakan buku. Main fisik di luar.</td>
+            </tr>
+            <tr>
+                <td>94</td>
+                <td class="col-diag">Amandel Bengkak (Anak)</td>
+                <td class="col-truth">Kebanyakan Gula & Es. Amandel kerja keras nyaring bakteri dari makanan manis & dingin.</td>
+                <td class="col-cure">Stop Es Krim/Permen. Ganti buah potong. Kumur air garam hangat.</td>
+            </tr>
+            <tr>
+                <td>95</td>
+                <td class="col-diag">Cacingan</td>
+                <td class="col-truth">Pertahanan Usus Lemah. Asam lambung anak kurang kuat membunuh telur cacing dari tangan kotor.</td>
+                <td class="col-cure">Biji Pepaya/Wortel Mentah. Obat cacing alami. Jaga kebersihan kuku.</td>
+            </tr>
+            <tr>
+                <td>96</td>
+                <td class="col-diag">Batuk Pilek Berulang (Anak)</td>
+                <td class="col-truth">Alergi Susu Sapi. Lendir berlebih (mukus) seringkali reaksi tubuh menolak protein susu sapi.</td>
+                <td class="col-cure">Stop Susu UHT. Coba berhenti susu seminggu, lihat hasilnya. Ganti kuah kaldu hangat.</td>
+            </tr>
+            <tr>
+                <td>97</td>
+                <td class="col-diag">Sesar (C-Section) Wajib</td>
+                <td class="col-truth">Bisnis RS. Persalinan normal ditakut-takuti (pinggul sempit, lilitan tali pusat) demi jadwal dokter & biaya.</td>
+                <td class="col-cure">Yoga Hamil & Bidan. Siapkan fisik. Percaya tubuh wanita didesain untuk melahirkan.</td>
+            </tr>
+            <tr>
+                <td>98</td>
+                <td class="col-diag">Depresi Pasca Melahirkan (Baby Blues)</td>
+                <td class="col-truth">Nutrisi Terkuras. Tubuh ibu habis-habisan bikin bayi & ASI, otak kekurangan lemak & mineral.</td>
+                <td class="col-cure">Makan Ikan Gabus & Daun Katuk. Pulihkan nutrisi ibu dulu. Dukungan suami vital.</td>
+            </tr>
+            <tr>
+                <td>99</td>
+                <td class="col-diag">Anak Susah Makan (GTM)</td>
+                <td class="col-truth">Kecanduan Rasa Kuat. Lidah anak rusak kena micin/gula jajanan, jadi nolak rasa nasi/sayur tawar.</td>
+                <td class="col-cure">Detox Rasa. Stop jajan seminggu. Biarkan lapar. Anak lapar pasti makan apa saja.</td>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td class="col-diag">Generasi Lembek (Strawberry Gen)</td>
+                <td class="col-truth">Kurang Tantangan Fisik. Anak jarang manjat pohon, lari, atau jatuh. Mental & tulang jadi rapuh.</td>
+                <td class="col-cure">Main Alam Liar. Biarkan anak kotor, lecet, & capek. Itu membangun mental baja.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        JANGAN TUNGGU NEGARA NGASIH SEHAT.<br>
+        SEHAT ITU HAK, TAPI JUGA TANGGUNG JAWAB PRIBADI.<br>
+        KEMBALI KE FITRAH, KEMBALI KE ALAM.
+    </div>
+</div>
+
+</body>
+</html>

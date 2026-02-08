@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: MEDICAL MATRIX DECLASSIFIED</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Rubik+Glitch&display=swap');
+
+        body {
+            background-color: #1a0505; /* Darah Kering */
+            color: #ff4d4d; /* Emergency Red */
+            font-family: 'Courier Prime', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .med-container {
+            width: 100%;
+            max-width: 1300px;
+            border: 3px solid #ff4d4d;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255, 77, 77, 0.3), inset 0 0 50px rgba(255, 0, 0, 0.1);
+            position: relative;
+            background: linear-gradient(135deg, #2b0000 0%, #000 100%);
+        }
+
+        /* EKG Line Effect */
+        .med-container::before {
+            content: "";
+            position: absolute;
+            top: 50%; left: 0; right: 0; height: 2px;
+            background: rgba(255, 77, 77, 0.2);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Rubik Glitch', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #ff0000;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 2px;
+        }
+
+        .alert-box {
+            border: 2px solid #fff;
+            background-color: #800000;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 15px #ff0000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        th, td {
+            border: 1px solid #660000;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #330000;
+            color: #ff9999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #ff4d4d;
+        }
+
+        /* Column Styles */
+        .col-diag { color: #ffcccc; width: 30%; font-weight: bold; } /* Diagnosis Medis */
+        .col-truth { color: #ffff00; width: 35%; font-style: italic; } /* Realita Tubuh */
+        .col-cure { color: #00ff00; width: 35%; font-weight: bold; } /* Solusi Alami */
+
+        tr:hover {
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+
+        .section-header {
+            background-color: #990000;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #ff4d4d;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ff9999;
+            border-top: 1px dashed #ff4d4d;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="med-container">
+    <h1>MEDICAL MATRIX: THE HEALTH DECEPTION</h1>
+    
+    <div class="alert-box">
+        WARNING: MAKANAN OLAHAN = RACUN LAMBAT // OBAT KIMIA = PEMBUNGKAM SINYAL TUBUH<br>
+        AGENDA: MANUSIA LEMAH, SAKIT-SAKITAN, DAN BERGANTUNG PADA FARMASI SEUMUR HIDUP
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>VONIS MEDIS / LABEL MAKANAN (HOAX)</th>
+                <th>MEKANISME ASLI (REALITA BIOLOGIS)</th>
+                <th>PROTOKOL PENYEMBUHAN (ALAMI)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. DEFINISI PENYAKIT YANG DIBOLAK-BALIK</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-diag">Virus (Musuh Mikroskopis)</td>
+                <td class="col-truth">Exosome (Pelarut Racun). "Virus" adalah sabun seluler yang diproduksi sel sendiri untuk membersihkan racun/sampah. Bukan penularan.</td>
+                <td class="col-cure">Istirahat & Puasa. Biarkan tubuh bersih-bersih. Jangan distop pakai antibiotik/obat penekan gejala.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-diag">Kanker (Sel Jahat)</td>
+                <td class="col-truth">Survival Mechanism. Sel membungkus racun/asam tubuh agar tidak menyebar ke darah. Kanker adalah benteng pertahanan terakhir.</td>
+                <td class="col-cure">Detoks & Basa. Hentikan asupan gula/racun. Makan sayur mentah (Alkali). Kanker hilang saat tubuh bersih.</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-diag">Diabetes (Keturunan)</td>
+                <td class="col-truth">Keracunan Reseptor. Sel menolak gula karena pintu sel tertutup lemak jahat (minyak sawit/trans fat) & parasit. Bukan salah gula alami.</td>
+                <td class="col-cure">Stop Minyak Goreng & Tepung. Ganti lemak baik (VCO/Zaitun). Puasa Intermittent.</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-diag">Demam (Harus Diturunkan)</td>
+                <td class="col-truth">Oven Pembakar Sampah. Panas tubuh naik untuk membakar bakteri patogen & mempercepat detoks.</td>
+                <td class="col-cure">Kompres Hangat. Jangan minum paracetamol. Minum air kelapa. Biarkan demam bekerja (maks 39-40C pantau).</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-diag">Kolesterol (Jahat/Penyumbat)</td>
+                <td class="col-truth">Semen Penambal. Kolesterol diproduksi liver untuk menambal pembuluh darah yang "lecet" akibat gula & peradangan.</td>
+                <td class="col-cure">Kurangi Gula Pasir. Kolesterol akan turun sendiri jika tidak ada luka di pembuluh darah.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-diag">Darah Tinggi (Hipertensi)</td>
+                <td class="col-truth">Darah Kental. Jantung memompa keras karena darah isinya minyak jelantah & gula (sirup), susah ngalir.</td>
+                <td class="col-cure">Bekam & Pengencer Alami. Buang darah kotor. Minum jahe/bawang putih. Stop gorengan.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-diag">Autoimun (Tubuh Nyerang Diri)</td>
+                <td class="col-truth">Leaky Gut (Usus Bocor). Partikel makanan bocor ke darah, imun bingung nyerang sampah di darah.</td>
+                <td class="col-cure">Bone Broth & Puasa. Perbaiki dinding usus. Stop Gluten (Terigu) total.</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-diag">Maag/GERD (Kelebihan Asam)</td>
+                <td class="col-truth">Kekurangan Asam Lambung. Katup lambung tidak menutup karena asam kurang kuat, jadi naik ke atas.</td>
+                <td class="col-cure">Jeruk Nipis/Cuka Apel. Asamkan lambung sebelum makan biar katup menutup rapat.</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-diag">Osteoporosis (Kurang Kalsium)</td>
+                <td class="col-truth">Tubuh Terlalu Asam. Tubuh mencuri kalsium tulang untuk menetralkan asam darah akibat susu sapi & soda.</td>
+                <td class="col-cure">Stop Susu Sapi. Makan sayur hijau & ikan teri. Jemur pagi (Vitamin D).</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-diag">Autisme (Genetik/Takdir)</td>
+                <td class="col-truth">Keracunan Logam Berat. Otak anak terpapar merkuri/aluminium dari vaksin & glifosat makanan.</td>
+                <td class="col-cure">Detoks Logam Berat. Cilantro (Daun Ketumbar), Kelapa Muda, Zeolit. Makanan Organik.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">II. MAKANAN PALSU (SYNTHETIC FOOD)</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-diag">Minyak Goreng Sawit (Sehat)</td>
+                <td class="col-truth">Pelumas Industri. Minyak biji-bijian diproses panas tinggi & pemutih. Bikin sel radang & kanker.</td>
+                <td class="col-cure">Minyak Kelapa/Tajin. Masak pakai minyak kelapa asli (klentik) atau rebus/kukus.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-diag">Garam Dapur (Beryodium)</td>
+                <td class="col-truth">Natrium Klorida Murni + Kaca. Garam rafinasi adalah racun, mineralnya dibuang sisa asin kimia.</td>
+                <td class="col-cure">Garam Laut/Krosok/Himalaya. Cari garam yang bergumpal & lembab (Full Mineral).</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-diag">MSG/Penyedap (Aman)</td>
+                <td class="col-truth">Excitotoxin. Merangsang sel otak sampai mati (terbakar) demi rasa enak. Bikin bodoh & migrain.</td>
+                <td class="col-cure">Kaldu Jamur/Tulang. Bikin penyedap sendiri dari rebusan tulang atau jamur merang.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-diag">Susu Formula/UHT</td>
+                <td class="col-truth">Nanah Pasteurisasi. Susu sapi dipanaskan mati enzimnya, sisa gula & protein rusak pemicu alergi.</td>
+                <td class="col-cure">Susu Nabati. Susu almond, kedelai (non-GMO), atau santan encer.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-diag">Gula Pasir (Energi)</td>
+                <td class="col-truth">Kristal Adiktif. Gula rafinasi 8x lebih candu dari kokain. Makanan utama sel kanker.</td>
+                <td class="col-cure">Gula Aren/Madu/Tebu. Pakai pemanis yang masih punya mineral & serat.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-diag">Roti Putih/Gandum</td>
+                <td class="col-truth">Lem Usus. Gluten gandum modern nempel di usus, menghalangi penyerapan nutrisi (Malnutrisi).</td>
+                <td class="col-cure">Ubi/Singkong/Talas. Karbohidrat kompleks lokal yang ramah usus.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-diag">Daging Olahan (Sosis/Nugget)</td>
+                <td class="col-truth">Pink Slime. Sisa jeroan digiling campur tepung, pengawet nitrat (Karsinogenik), & perasa.</td>
+                <td class="col-cure">Daging Segar/Ikan. Beli di pasar, olah sendiri. Tahu apa yang dimakan.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-diag">Pewarna Makanan (Food Grade)</td>
+                <td class="col-truth">Turunan Minyak Bumi. Pewarna sintetis (Red 40, Yellow 5) pemicu ADHD & Tumor pada anak.</td>
+                <td class="col-cure">Warna Alami. Kunyit (kuning), Pandan (hijau), Buah Naga (merah).</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-diag">Makanan Kaleng/Instan</td>
+                <td class="col-truth">Mayat Makanan. Makanan tanpa enzim & "Qi" (energi kehidupan). Cuma ganjal perut, nol nutrisi.</td>
+                <td class="col-cure">Masak Dadakan. Sayur dipetik & dimasak hari itu juga. Makan yang 'hidup'.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-diag">Buah Impor (Apel Lilin)</td>
+                <td class="col-truth">Disuntik Pengawet. Buah impor dipanen belum matang, disemprot gas & dilapisi lilin biar awet berbulan-bulan.</td>
+                <td class="col-cure">Buah Lokal Musiman. Pisang, Pepaya, Manggis. Jelek dikit gak papa asal asli.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">III. CHEMICAL WARFARE (RACUN LINGKUNGAN)</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-diag">Fluoride (Pasta Gigi/Air)</td>
+                <td class="col-truth">Pengapur Otak. Fluoride menumpuk di Kelenjar Pineal (Mata Ketiga), mematikan intuisi & spiritualitas.</td>
+                <td class="col-cure">Pasta Gigi Non-Fluoride. Pakai Siwak atau bikin sendiri (Minyak Kelapa + Baking Soda).</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-diag">Residu Glifosat (Herbisida)</td>
+                <td class="col-truth">Perusak Usus & DNA. Racun rumput ini ada di tempe/tahu (kedelai impor). Pemicu Kanker & Autis.</td>
+                <td class="col-cure">Kedelai Lokal/Non-GMO. Cari tahu/tempe dari pengrajin yang pakai kedelai lokal.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-diag">Plastik BPA (Botol Minum)</td>
+                <td class="col-truth">Hormon Palsu (Xenoestrogen). Meniru estrogen, bikin pria mandul & wanita kanker payudara.</td>
+                <td class="col-cure">Kaca/Stainless Steel. Jangan minum dari plastik panas. Bawa tumbler sendiri.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-diag">Wajan Teflon (Anti Lengket)</td>
+                <td class="col-truth">Gas Beracun (PFOA). Saat panas, lapisan teflon menguap jadi gas karsinogenik yang meracuni makanan.</td>
+                <td class="col-cure">Wajan Besi (Cast Iron)/Tanah Liat. Kembali ke alat masak jadul yang nambah zat besi.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-diag">Sunscreen (Tabir Surya)</td>
+                <td class="col-truth">Pemicu Kanker Kulit. Menghalangi UV (penyembuh) & mengandung Benzene yang meresap ke darah.</td>
+                <td class="col-cure">Topi/Baju Panjang. Jemur matahari pagi (sebelum jam 10) tanpa krim apapun. Matahari itu obat.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-diag">Pembalut/Popok Putih</td>
+                <td class="col-truth">Dioxin (Pemutih). Zat sisa pemutih klorin masuk ke organ reproduksi. Pemicu Kista & Miom.</td>
+                <td class="col-cure">Kain Cuci Ulang. Balik ke pembalut kain/menstrual cup yang aman & hemat.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-diag">Parfum/Pewangi Laundry</td>
+                <td class="col-truth">Neurotoksin. Wangi sintetis (Phthalates) mengacaukan hormon & bikin pusing/mual (racun syaraf).</td>
+                <td class="col-cure">Minyak Atsiri (Essential Oil). Pakai wangi bunga asli atau akar wangi.</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-diag">Lampu LED Biru</td>
+                <td class="col-truth">Perusak Retina & Melatonin. Sinar biru menipu otak "masih siang", bikin insomnia & kerusakan mata.</td>
+                <td class="col-cure">Lampu Kuning/Lilin/Merah. Malam hari pakai cahaya hangat. Tidur gelap total.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-diag">Wifi/5G (Radiasi)</td>
+                <td class="col-truth">Microwave Cooker. Radiasi EMF memanaskan sel & memecah struktur DNA perlahan.</td>
+                <td class="col-cure">Matikan Wifi Malam Hari. Mode pesawat saat tidur. Grounding (injak tanah) tiap pagi.</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-diag">Vape (Rokok Elektrik)</td>
+                <td class="col-truth">Logam Berat Paru. Uap vape mengandung partikel logam dari pemanas, langsung masuk paru.</td>
+                <td class="col-cure">Tembakau Klembak (Linting). Kalau mau merokok, cari tembakau asli tanpa saus kimia.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">IV. JEBAKAN FARMASI (PHARMA TRAP)</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-diag">Kemoterapi (Obat Kanker)</td>
+                <td class="col-truth">Racun Mustard Gas. Membunuh sel kanker DAN sel sehat (imun). Pasien mati karena tubuh hancur, bukan kankernya.</td>
+                <td class="col-cure">Terapi Gerson/Keto/Puasa. Matikan suplai makanan kanker (gula), kuatkan imun.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-diag">Vaksin (Imunisasi)</td>
+                <td class="col-truth">Bypass Sistem. Memasukkan patogen langsung ke darah (tanpa filter mukosa/usus) + logam berat (merkuri/aluminium).</td>
+                <td class="col-cure">Imun Alami. ASI, Main tanah, Kena matahari. Biarkan anak sakit wajar untuk latihan imun.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-diag">Antibiotik (Obat Infeksi)</td>
+                <td class="col-truth">Nuklir Usus. Membunuh bakteri jahat DAN baik. Usus jadi gersang, imun turun drastis jangka panjang.</td>
+                <td class="col-cure">Probiotik & Bawang Putih. Antibiotik alami (bawang, madu, kunyit) tidak membunuh bakteri baik.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-diag">Obat Penurun Kolesterol (Statin)</td>
+                <td class="col-truth">Perusak Otak. Otak butuh kolesterol untuk berpikir. Statin bikin pikun & otot lemah.</td>
+                <td class="col-cure">Lemak Baik & Olahraga. Bakar lemak dengan gerak, bukan dimatikan produksinya.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-diag">Suplemen Sintetis</td>
+                <td class="col-truth">Batu Ginjal. Vitamin buatan pabrik (isolat) susah dikenali tubuh, numpuk jadi sampah ginjal.</td>
+                <td class="col-cure">Whole Food. Makan jeruk (bukan Vit C tablet). Makan wortel (bukan Vit A pil).</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-diag">Gagal Ginjal (Cuci Darah)</td>
+                <td class="col-truth">Akibat Minuman Kemasan. Ginjal jebol karena dipaksa saring pengawet, pewarna, & gula biang seumur hidup.</td>
+                <td class="col-cure">Air Akar Alang-alang. Herbal cuci ginjal alami. Stop total minuman berwarna.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-diag">KB Hormonal (Pil/Suntik)</td>
+                <td class="col-truth">Kastrasi Kimia. Mengacaukan siklus alami wanita, pemicu kanker payudara & emosi labil.</td>
+                <td class="col-cure">KB Kalender/Alami. Pahami siklus subur (Fase Bulan). Hormati ritme tubuh.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-diag">Operasi Amandel/Usus Buntu</td>
+                <td class="col-truth">Membuang Alarm. Organ itu adalah pos satpam imun. Dibuang = maling (penyakit) bebas masuk.</td>
+                <td class="col-cure">Radang = Detoks. Obati radangnya (kunyit/sambiloto), jangan buang organnya.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-diag">Depresi (Kurang Obat Kimia)</td>
+                <td class="col-truth">Kurang Koneksi & Matahari. Depresi adalah sinyal jiwa "kosong" atau radang otak akibat gula.</td>
+                <td class="col-cure">Ibadah & Grounding. Koneksi ke Tuhan & Bumi. Makan lemak baik buat otak.</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-diag">Rumah Sakit = Tempat Sembuh</td>
+                <td class="col-truth">Industri Penyakit. Sistem bisnis yang untung kalau orang sakit lama (langganan obat).</td>
+                <td class="col-cure">Rumah Sehat = Dapur Sendiri. Dokter terbaik adalah diri sendiri & koki di dapur.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. PROTOKOL HIDUP NUSWANTARA (BACK TO NATURE)</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-diag">Makan 3x Sehari + Snack</td>
+                <td class="col-truth">Overeating. Bikin mesin pencernaan cepat rusak. Manusia purba makan saat lapar saja.</td>
+                <td class="col-cure">Puasa (Fasting). Beri jeda usus istirahat 16 jam (Intermittent) atau puasa Senin-Kamis.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-diag">Sarapan Bubur/Nasi Uduk</td>
+                <td class="col-truth">Spike Gula Pagi. Bikin ngantuk jam 10 pagi. Pagi hari tubuh fase "Buang Sampah".</td>
+                <td class="col-cure">Sarapan Buah/Air. Makan berat geser ke jam 12 siang (Matahari Puncak).</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-diag">Masak Pakai Micin</td>
+                <td class="col-truth">Penipu Lidah. Lidah tak bisa deteksi makanan basi karena tertutup rasa gurih palsu.</td>
+                <td class="col-cure">Bumbu Rempah Lengkap. Bawang, Merica, Ketumbar, Pala. Rasa asli + Obat.</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-diag">Sayur Hidroponik (Sehat)</td>
+                <td class="col-truth">Sayur Air Kimia. Tumbuh tanpa tanah & mikroba. Kurang "Grounding" energinya.</td>
+                <td class="col-cure">Tanam di Tanah. Sayur butuh interaksi dengan cacing & bakteri tanah untuk 'bernyawa'.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-diag">Takut Matahari (Hitam)</td>
+                <td class="col-truth">Takut Sumber Hidup. Matahari adalah charger mitokondria (baterai sel). Kurang matahari = Lemah.</td>
+                <td class="col-cure">Mandi Cahaya. Jemur punggung 15 menit tiap pagi. Gratis & Powerfull.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-diag">Tidur AC Dingin</td>
+                <td class="col-truth">Udara Mati. AC sirkulasi tertutup, oksigen tipis, penuh jamur.</td>
+                <td class="col-cure">Ventilasi Silang. Buka jendela. Tidur dengan udara mengalir alami.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-diag">Alas Kaki Terus (Sandal)</td>
+                <td class="col-truth">Isolator Listrik. Tubuh penuh listrik statis (radang) karena tidak pernah dibuang ke bumi.</td>
+                <td class="col-cure">Nyeker (Earthing). Injak tanah/rumput tanpa alas kaki 15 menit. Buang muatan listrik negatif.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-diag">Makan Sambil Main HP</td>
+                <td class="col-truth">Stress Eating. Otak tidak fokus, enzim pencernaan tidak keluar maksimal. Makanan jadi sampah.</td>
+                <td class="col-cure">Mindful Eating. Fokus makan, kunyah 33x. Nikmati rasa. Syukuri rezeki.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-diag">Masak Pakai Aluminium</td>
+                <td class="col-truth">Logam Larut. Panci aluminium larut ke masakan (pemicu Alzheimer).</td>
+                <td class="col-cure">Panci Stainless/Tanah Liat. Investasi alat masak aman seumur hidup.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-diag">Pasrah pada Genetik</td>
+                <td class="col-truth">Epigenetik. Gen itu tombol. Gaya hidup yang menekan tombol on/off penyakit. Nasib di tanganmu.</td>
+                <td class="col-cure">Ubah Gaya Hidup. Putus rantai penyakit keluarga dengan mengubah isi piring & pikiran.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        DOKTER TERBAIK ADALAH TUBUHMU SENDIRI.<br>
+        DAPUR ADALAH APOTEK. MAKANAN ADALAH OBAT.<br>
+        JANGAN TUNGGU "MODAR" DI USIA MUDA, AMBIL ALIH KENDALI SEKARANG.
+    </div>
+</div>
+
+</body>
+</html>
