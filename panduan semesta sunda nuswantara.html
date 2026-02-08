@@ -80,6 +80,9 @@
             cursor: pointer;
             overflow: hidden;
             backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .menu-card:hover {
@@ -134,6 +137,7 @@
             font-size: 0.9rem;
             transition: 0.3s;
             text-transform: uppercase;
+            text-align: center;
         }
 
         .menu-card:hover .access-btn {
@@ -195,58 +199,70 @@
 
 <div class="dashboard-grid">
 
-    <div class="menu-card" onclick="alert('50 bongkaran fitnah dajjal dalam narasi besar.html')">
-        <span class="card-icon" style="color: #00f0ff;">👁️</span>
-        <div class="card-title">GRAND NARRATIVE</div>
-        <div class="card-desc">
-            Bongkaran 50 Narasi Besar Dajjal vs Logika Nuswantara. Kosmologi, Sejarah, dan Mekanisme Wadah.
+    <div class="menu-card" onclick="window.location.href='50 bongkaran fitnah dajjal dalam narasi besar.html'">
+        <div>
+            <span class="card-icon" style="color: #00f0ff;">👁️</span>
+            <div class="card-title">GRAND NARRATIVE</div>
+            <div class="card-desc">
+                Bongkaran 50 Narasi Besar Dajjal vs Logika Nuswantara. Kosmologi, Sejarah, dan Mekanisme Wadah.
+            </div>
         </div>
-        <a href="#" class="access-btn">BUKA DATA</a>
+        <a href="50 bongkaran fitnah dajjal dalam narasi besar.html" class="access-btn">BUKA DATA</a>
     </div>
 
-    <div class="menu-card" onclick="alert('50 bongkaran narasi sesat dajjal tentang bumi.html')">
-        <span class="card-icon" style="color: #ffaa00;">🌋</span>
-        <div class="card-title">EARTH BREATH</div>
-        <div class="card-desc">
-            Membongkar mitos Plate Tectonics & Megathrust. Memahami Bumi sebagai Pasak Diam yang Bernafas.
+    <div class="menu-card" onclick="window.location.href='50 bongkaran narasi sesat dajjal tentang bumi.html'">
+        <div>
+            <span class="card-icon" style="color: #ffaa00;">🌋</span>
+            <div class="card-title">EARTH BREATH</div>
+            <div class="card-desc">
+                Membongkar mitos Plate Tectonics & Megathrust. Memahami Bumi sebagai Pasak Diam yang Bernafas.
+            </div>
         </div>
-        <a href="#" class="access-btn">BUKA DATA</a>
+        <a href="50 bongkaran narasi sesat dajjal tentang bumi.html" class="access-btn">BUKA DATA</a>
     </div>
 
-    <div class="menu-card card-green" onclick="alert('50 Narasi Sesat untuk menghapus Free Energy.html')">
-        <span class="card-icon">⚡</span>
-        <div class="card-title">FORBIDDEN ENERGY</div>
-        <div class="card-desc">
-            Rahasia Ether, Minyak Abiotik (Darah Bumi), dan Teknologi Listrik Atmosfer Leluhur.
+    <div class="menu-card card-green" onclick="window.location.href='50 Narasi Sesat untuk menghapus Free Energy.html'">
+        <div>
+            <span class="card-icon">⚡</span>
+            <div class="card-title">FORBIDDEN ENERGY</div>
+            <div class="card-desc">
+                Rahasia Ether, Minyak Abiotik (Darah Bumi), dan Teknologi Listrik Atmosfer Leluhur.
+            </div>
         </div>
-        <a href="#" class="access-btn">BUKA DATA</a>
+        <a href="50 Narasi Sesat untuk menghapus Free Energy.html" class="access-btn">BUKA DATA</a>
     </div>
 
-    <div class="menu-card card-red" onclick="alert('50 fakta bagaimana alam dunia ini bekerja.html')">
-        <span class="card-icon">🚫</span>
-        <div class="card-title">FEAR MATRIX</div>
-        <div class="card-desc">
-            Menghapus ketakutan kosmik (Asteroid, Black Hole, Alien) dengan pemahaman mekanisme langit.
+    <div class="menu-card card-red" onclick="window.location.href='50 fakta bagaimana alam dunia ini bekerja.html'">
+        <div>
+            <span class="card-icon">🚫</span>
+            <div class="card-title">FEAR MATRIX</div>
+            <div class="card-desc">
+                Menghapus ketakutan kosmik (Asteroid, Black Hole, Alien) dengan pemahaman mekanisme langit.
+            </div>
         </div>
-        <a href="#" class="access-btn">BUKA DATA</a>
+        <a href="50 fakta bagaimana alam dunia ini bekerja.html" class="access-btn">BUKA DATA</a>
     </div>
 
-    <div class="menu-card" onclick="alert('50 Protokol pembalik Fitnah Dajjal tentang Akhir Zaman.html')">
-        <span class="card-icon" style="color: #d400ff;">⏳</span>
-        <div class="card-title">TIME OVERCLOCK</div>
-        <div class="card-desc">
-            Sistem 8 Jam Adaptif untuk menghadapi inflasi waktu & percepatan siklus matahari 3X lipat.
+    <div class="menu-card" onclick="window.location.href='50 Protokol pembalik Fitnah Dajjal tentang Akhir Zaman.html'">
+        <div>
+            <span class="card-icon" style="color: #d400ff;">⏳</span>
+            <div class="card-title">TIME OVERCLOCK</div>
+            <div class="card-desc">
+                Sistem 8 Jam Adaptif untuk menghadapi inflasi waktu & percepatan siklus matahari 3X lipat.
+            </div>
         </div>
-        <a href="#" class="access-btn">BUKA DATA</a>
+        <a href="50 Protokol pembalik Fitnah Dajjal tentang Akhir Zaman.html" class="access-btn">BUKA DATA</a>
     </div>
 
-    <div class="menu-card card-green" onclick="alert('50 protokol pelawan ketakutan dan kebisingan akhir jaman.html')">
-        <span class="card-icon">🛡️</span>
-        <div class="card-title">SURVIVAL PROTOCOL</div>
-        <div class="card-desc">
-            Panduan Sinkronisasi (Eling) menghadapi Reset, Ice Age, dan Badai Frekuensi.
+    <div class="menu-card card-green" onclick="window.location.href='50 protokol pelawan ketakutan dan kebisingan akhir jaman.html'">
+        <div>
+            <span class="card-icon">🛡️</span>
+            <div class="card-title">SURVIVAL PROTOCOL</div>
+            <div class="card-desc">
+                Panduan Sinkronisasi (Eling) menghadapi Reset, Ice Age, dan Badai Frekuensi.
+            </div>
         </div>
-        <a href="#" class="access-btn">BUKA DATA</a>
+        <a href="50 protokol pelawan ketakutan dan kebisingan akhir jaman.html" class="access-btn">BUKA DATA</a>
     </div>
 
 </div>
@@ -257,5 +273,4 @@
 </div>
 
 </body>
-
 </html>
