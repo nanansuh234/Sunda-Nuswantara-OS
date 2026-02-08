@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: WAR & CHAOS DECLASSIFIED</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Black+Ops+One&display=swap');
+
+        body {
+            background-color: #1a0000; /* Blood Dark */
+            color: #ff3333; /* Alert Red */
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .war-container {
+            width: 100%;
+            max-width: 1300px;
+            border: 4px solid #ff3333;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3), inset 0 0 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+            background: repeating-linear-gradient(
+                45deg,
+                #2b0000,
+                #2b0000 10px,
+                #000 10px,
+                #000 20px
+            );
+        }
+
+        /* Target Scope Effect */
+        .war-container::before {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 100%; height: 1px;
+            background: rgba(255, 0, 0, 0.2);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .war-container::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 1px; height: 100%;
+            background: rgba(255, 0, 0, 0.2);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 4px 4px 0 #ff0000;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .alert-box {
+            border: 2px dashed #ff3333;
+            background-color: rgba(50, 0, 0, 0.9);
+            color: #ffcccc;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+            animation: pulse-red 1s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 5px #ff0000; }
+            50% { box-shadow: 0 0 25px #ff0000; }
+            100% { box-shadow: 0 0 5px #ff0000; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(20, 0, 0, 0.9);
+        }
+
+        th, td {
+            border: 1px solid #800000;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #4d0000;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #ff3333;
+        }
+
+        /* Column Styles */
+        .col-tactic { color: #ff9999; width: 30%; font-weight: bold; font-style: italic; } /* Taktik Elit */
+        .col-truth { color: #ffff00; width: 35%; } /* Fakta Lapangan */
+        .col-shield { color: #00ff00; width: 35%; font-weight: bold; } /* Solusi Damai */
+
+        tr:hover {
+            background-color: rgba(255, 50, 50, 0.1);
+        }
+
+        .section-header {
+            background-color: #660000;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #ff3333;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ff6666;
+            border-top: 1px dashed #ff3333;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="war-container">
+    <h1>WAR AGENDA: THE CHAOS PROTOCOL</h1>
+    
+    <div class="alert-box">
+        STATUS: RED ALERT // JANGAN MAU DIADU DOMBA<br>
+        MUSUHMU BUKAN TETANGGA ATAU NEGARA LAIN, TAPI ELIT DI BALIK LAYAR.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>TAKTIK ADU DOMBA (ELITE TACTICS)</th>
+                <th>BONGKARAN ASLI (THE REALITY)</th>
+                <th>PERISAI NUSWANTARA (COUNTER-NARRATIVE)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. PEMICU: KELANGKAAN & PERUT LAPAR</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-tactic">Kelangkaan Pangan Buatan</td>
+                <td class="col-truth">Stok ditimbun/dimusnahkan elit agar rakyat panik & saling rampok. Lapar = Mudah Marah.</td>
+                <td class="col-shield">Lumbung Desa Mandiri. Stok pangan minimal 6 bulan per KK. Berbagi, jangan menimbun sendiri.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-tactic">Hyper-Inflasi (Uang Sampah)</td>
+                <td class="col-truth">Mencetak uang gila-gilaan untuk menghancurkan daya beli. Rakyat miskin mudah disuruh perang demi gaji.</td>
+                <td class="col-shield">Emas & Barter. Gunakan alat tukar yang tidak bisa dicetak (Logam Mulia/Beras).</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-tactic">Krisis Energi (BBM Langka)</td>
+                <td class="col-truth">Memutus rantai pasok agar mobilitas mati & harga barang naik. Chaos di SPBU adalah tontonan elit.</td>
+                <td class="col-shield">Sepeda & Jalan Kaki. Kurangi ketergantungan mesin. Lokalisasi hidup (kerja & makan di desa).</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-tactic">Pemutusan Listrik (Blackout)</td>
+                <td class="col-truth">Menciptakan kegelapan total untuk memicu penjarahan & ketakutan massal (Fear Frequency).</td>
+                <td class="col-shield">Lampu Minyak & Senter. Siapkan penerangan mandiri. Ronda malam bergilir.</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-tactic">Pengangguran Massal</td>
+                <td class="col-truth">Menciptakan pasukan pengangguran yang frustasi & siap dibayar murah untuk jadi perusuh/tentara.</td>
+                <td class="col-shield">Wirausaha Komunal. Buat lapangan kerja di desa. Bertani tidak butuh lamaran kerja.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-tactic">Blokade Distribusi</td>
+                <td class="col-truth">Menutup jalan tol/pelabuhan agar kota kelaparan dan rusuh (Civil War).</td>
+                <td class="col-shield">Pangan Lokal (Urban Farming). Tanam di halaman. Jangan andalkan truk dari luar kota.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-tactic">Penjarahan Terorganisir</td>
+                <td class="col-truth">Preman bayaran disusupkan untuk menjarah toko & memancing warga main hakim sendiri.</td>
+                <td class="col-shield">Siskamling Ketat. Kenali warga asli. Isolasi pendatang mencurigakan. Jangan main hakim.</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-tactic">Pajak Mencekik</td>
+                <td class="col-truth">Memeras rakyat sampai titik nadir agar memberontak (pemicu revolusi warna).</td>
+                <td class="col-shield">Ekonomi Bawah Tanah. Transaksi tanpa struk/catatan digital. Passive Resistance.</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-tactic">Bantuan Bersyarat</td>
+                <td class="col-truth">Bansos hanya untuk yang "nurut" (pro-perang/pro-sistem). Senjata biologis sosial.</td>
+                <td class="col-shield">Kemandirian. Tangan di atas (memberi) lebih mulia. Jangan gantungkan hidup pada Bansos.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-tactic">Runtuhnya Bank</td>
+                <td class="col-truth">Bail-in. Uang nasabah diambil untuk bayar hutang bank. Rakyat panik & rusuh di ATM.</td>
+                <td class="col-shield">Tarik Tunai Sekarang. Simpan aset di fisik (tanah/emas), bukan angka di layar bank.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">II. PSYOP: MENCUCI OTAK UNTUK MEMBENCI</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-tactic">Dehumanisasi Musuh</td>
+                <td class="col-truth">Menyebut kelompok lain sebagai "Kecoa/Tikus/Kafir" agar rakyat tidak merasa bersalah saat membunuh.</td>
+                <td class="col-shield">Semua Manusia Satu Asal. Lihat musuh sebagai korban propaganda juga. Jangan mau jadi pembunuh.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-tactic">Nasionalisme Palsu</td>
+                <td class="col-truth">"Bela Negara" padahal "Bela Aset Elit". Rakyat disuruh mati demi tambang minyak korporasi.</td>
+                <td class="col-shield">Bela Keluarga & Tanah. Patriotisme sejati adalah melindungi rumah sendiri, bukan menyerang negara orang.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-tactic">False Flag (Bendera Palsu)</td>
+                <td class="col-truth">Intelijen mengebom rakyat sendiri lalu menuduh musuh sebagai pelakunya untuk memicu amarah.</td>
+                <td class="col-shield">Pertanyakan Segalanya. Cui Bono? (Siapa yang untung?). Jangan langsung percaya berita TV.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-tactic">Politik Identitas (SARA)</td>
+                <td class="col-truth">Menggoreng isu agama/suku. Konflik horizontal paling murah & efektif untuk hancurkan bangsa.</td>
+                <td class="col-shield">Bhinneka Tunggal Ika. Fokus pada persamaan nasib (sama-sama korban elit), bukan beda baju.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-tactic">Berita Hoax Terkoordinir</td>
+                <td class="col-truth">BuzzerRp & Bot membanjiri medsos dengan kebencian agar rakyat merasa "perang sudah dimulai".</td>
+                <td class="col-shield">Puasa Medsos. Matikan HP. Lihat dunia nyata. Tetangga beda agama masih ngopi bareng kok.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-tactic">Kultus Tokoh/Pemimpin</td>
+                <td class="col-truth">Menciptakan "Juruselamat" palsu yang mengajak perang suci. Padahal agen ganda.</td>
+                <td class="col-shield">Tidak Ada Ratu Adil Instan. Keselamatan ada di tangan sendiri & komunitas, bukan tokoh politik.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-tactic">Normalisasi Kekerasan</td>
+                <td class="col-truth">Film/Game perang tiap hari agar otak bawah sadar terbiasa melihat darah & pembunuhan.</td>
+                <td class="col-shield">Tontonan Positif. Jaga mata anak-anak dari konten sadis. Ajarkan kasih sayang.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-tactic">Senjata Empathy (Air Mata)</td>
+                <td class="col-truth">Menggunakan foto anak kecil menangis (seringkali aktor) untuk membenarkan invasi militer.</td>
+                <td class="col-shield">Logika Dingin. Emosi adalah musuh akal sehat. Analisa fakta, jangan baper oleh foto.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-tactic">Ilusi Mayoritas</td>
+                <td class="col-truth">Seolah-olah "Semua orang dukung perang", padahal cuma bot. Membuat yang anti-perang takut bicara.</td>
+                <td class="col-shield">Speak Up. Suarakan damai. Kamu tidak sendiri. Silent majority sebenarnya cinta damai.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-tactic">Pengalihan Isu (Distraction)</td>
+                <td class="col-truth">Perang diciptakan untuk menutupi kejahatan keuangan global (Reseting Debt) atau skandal elit.</td>
+                <td class="col-shield">Fokus pada Uang. Follow the money. Perang adalah bisnis pencucian uang terbesar.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">III. WAYANG KULIT: SIAPA DALANGNYA?</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-tactic">Bandar Dua Kaki</td>
+                <td class="col-truth">Bankir mendanai KEDUA belah pihak yang berperang. Siapapun yang menang, bankir untung bunga.</td>
+                <td class="col-shield">Boikot Bank Perang. Tarik uang dari sistem riba yang membiayai peluru.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-tactic">Boneka Politik (Puppets)</td>
+                <td class="col-truth">Presiden/Raja hanyalah aktor yang membaca skrip. Mereka bersalaman di belakang panggung.</td>
+                <td class="col-shield">Jangan Dewakan Pejabat. Mereka cuma karyawan sistem. Kedaulatan ada di rakyat.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-tactic">Depopulasi Lewat Perang</td>
+                <td class="col-truth">Mengirim pemuda produktif ke medan jagal (meat grinder) untuk mengurangi populasi manusia.</td>
+                <td class="col-shield">Tolak Wajib Militer Paksa. Jika untuk agresi, tolak. Jika bertahan di rumah, lawan.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-tactic">Uji Coba Senjata</td>
+                <td class="col-truth">Perang adalah "Live Fire Exercise" untuk tes senjata baru & habisin stok peluru kadaluarsa.</td>
+                <td class="col-shield">Sadar Posisi. Kita cuma kelinci percobaan. Jangan mau jadi target. Menyingkir dari zona militer.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-tactic">Rebuilding Contract</td>
+                <td class="col-truth">Hancurkan negara A, lalu perusahaan negara B dapat kontrak bangun ulang. Cuan ganda.</td>
+                <td class="col-shield">Bangun Sendiri. Jangan tunggu kontraktor asing. Gotong royong bangun puing.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-tactic">Chaos sebagai Tangga</td>
+                <td class="col-truth">Orde Baru lahir dari Chaos. Elit butuh kerusuhan untuk membenarkan aturan darurat militer.</td>
+                <td class="col-shield">Tetap Tertib. Jangan kasih alasan aparat untuk bertindak represif. Jaga kampung tetap aman.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-tactic">Penyusupan Intelijen</td>
+                <td class="col-truth">Intel menyusup ke demo mahasiswa/buruh untuk memprovokasi pembakaran (Agent Provocateur).</td>
+                <td class="col-shield">Waspada Orang Asing. Tangkap provokator yang mulai lempar batu/bakar ban. Serahkan, jangan hajar.</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-tactic">Sabotase Infrastruktur</td>
+                <td class="col-truth">Meledakkan pipa gas/kabel internet sendiri untuk menyalahkan musuh (Nordstream taktik).</td>
+                <td class="col-shield">Siapkan Alternatif. Radio HT, Genset, Kompor Kayu. Jangan gantung ke infrastruktur pusat.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-tactic">Proxy War (Perang Boneka)</td>
+                <td class="col-truth">Negara besar perang di tanah negara kecil. Rakyat kecil yang hancur, negara besar nonton.</td>
+                <td class="col-shield">Non-Blok Aktif. Jangan mau jadi pion blok Barat atau Timur. Kita Nuswantara.</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-tactic">Ritual Panen Loosh</td>
+                <td class="col-truth">Kematian massal & penderitaan menghasilkan energi negatif yang "dimakan" entitas ghaib elit.</td>
+                <td class="col-shield">High Vibe. Lawan takut dengan tawa, cinta, & dzikir. Jangan kasih makan setan dengan takutmu.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">IV. BENTENG PERTAHANAN RAKYAT (CIVIL DEFENSE)</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-tactic">Pagar Betis (Human Shield)</td>
+                <td class="col-truth">Rakyat sipil dijadikan tameng hidup oleh militer di area konflik.</td>
+                <td class="col-shield">Evakuasi Dini. Jika ada tanda perang, segera minggir ke desa/gunung. Jangan di kota target.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-tactic">Jam Malam (Curfew)</td>
+                <td class="col-truth">Membatasi gerak & komunikasi warga. Kontrol total wilayah.</td>
+                <td class="col-shield">Jalur Tikus. Pelajari jalan-jalan kecil/hutan yang tidak dijaga pos. Peta manual penting.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-tactic">Penyitaan Aset Warga</td>
+                <td class="col-truth">"Demi negara", kendaraan & makanan warga diambil paksa militer.</td>
+                <td class="col-shield">Sembunyikan Aset. Kubur emas/logistik di tempat rahasia. Tampil miskin (Grey Man Concept).</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-tactic">Blokir Internet (Blackout)</td>
+                <td class="col-truth">Memutus koordinasi rakyat agar bingung & percaya rumor.</td>
+                <td class="col-shield">Radio Komunikasi (HT/RAPI). Bangun jaringan info lokal via gelombang radio analog.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-tactic">Senjata Biologis (Wabah)</td>
+                <td class="col-truth">Melepas penyakit di kamp pengungsian yang padat & kotor.</td>
+                <td class="col-shield">Sanitasi & Herbal. Sedia kunyit, madu, & antiseptik alami. Jaga kebersihan diri ketat.</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-tactic">Penculikan Aktivis</td>
+                <td class="col-truth">Menghilangkan pemimpin lokal yang vokal & berani melawan narasi.</td>
+                <td class="col-shield">Sistem Sel Terputus. Jangan ada satu pemimpin tunggal. Tiap orang adalah pemimpin. Desentralisasi.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-tactic">Kelaparan sebagai Senjata</td>
+                <td class="col-truth">Holodomor. Membiarkan rakyat mati lapar sampai menyerah.</td>
+                <td class="col-shield">Food Forest. Tanam singkong/ubi di hutan liar. Sumber pangan yang tidak terlihat seperti ladang.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-tactic">Narkoba Perang (Captagon)</td>
+                <td class="col-truth">Tentara/Perusuh dikasih obat biar berani mati & tidak punya rasa kasihan.</td>
+                <td class="col-shield">Hindari Konfrontasi. Jangan lawan orang mabuk/gila obat dengan logika. Lari atau lumpuhkan diam-diam.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-tactic">Trauma Healing Palsu</td>
+                <td class="col-truth">LSM asing masuk bawa agenda cuci otak anak-anak korban perang.</td>
+                <td class="col-shield">Pendidikan Keluarga. Orang tua pegang kendali mental anak. Ajarkan ketangguhan (Resiliensi).</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-tactic">Pengungsian Terpusat (Camp)</td>
+                <td class="col-truth">Kandang Konsentrasi. Mudah dikontrol, mudah kena wabah, mudah didata biometrik.</td>
+                <td class="col-shield">Mengungsi Mandiri. Ke rumah saudara di desa atau hutan. Hindari kamp resmi PBB/Pemerintah jika mungkin.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. JALAN KELUAR: KESADARAN & ELING</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-tactic">Ketakutan (Fear Mongering)</td>
+                <td class="col-truth">Frekuensi rendah. Membuat manusia beku akalnya & mudah disetir.</td>
+                <td class="col-shield">Eling & Waspada. Sadar nafas. Takut itu ilusi. Berani itu pilihan. Iman = Ukuran.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-tactic">Keputusasaan (Hopeless)</td>
+                <td class="col-truth">Membuat rakyat merasa "tak ada guna melawan". Mental budak.</td>
+                <td class="col-shield">Harapan Aktif. Bertindak sekecil apapun (nanam 1 pohon) adalah perlawanan. Gusti Mboten Sare.</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-tactic">Kebencian Rasial</td>
+                <td class="col-truth">Energi api. Membakar karma baik bangsa. Menjauhkan pertolongan langit.</td>
+                <td class="col-shield">Cinta Kasih (Welas Asih). Doakan yang baik buat semua mahluk. Api dilawan air.</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-tactic">Materialisme Ekstrem</td>
+                <td class="col-truth">Membuat orang saling bunuh demi sebutir nasi. Hilang kemanusiaan.</td>
+                <td class="col-shield">Puasa & Tirakat. Latih tubuh tahan lapar. Kuatkan ruh. Makan secukupnya.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-tactic">Ketergantungan Figur</td>
+                <td class="col-truth">Menunggu Ratu Adil / Imam Mahdi tapi diam saja (pasif).</td>
+                <td class="col-shield">Satrio Piningit ada di Diri. Bangkitkan potensi diri sendiri. Jadilah pemimpin bagi dirimu.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-tactic">Ritual Mistik Jahat</td>
+                <td class="col-truth">Elit pakai sihir/tumbal untuk kekebalan & kemenangan.</td>
+                <td class="col-shield">Pagar Gaib Alami. Doa ibu, sedekah, & tanah leluhur adalah benteng gaib terkuat.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-tactic">Memecah Belah Keluarga</td>
+                <td class="col-truth">Anak laporin bapak, istri laporin suami (seperti 1984). Hancurnya basis sosial terkecil.</td>
+                <td class="col-shield">Perkuat Meja Makan. Kumpul keluarga tanpa HP. Bangun ikatan batin yang tak bisa ditembus ideologi.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-tactic">Zombie Apocalypse (Kiasan)</td>
+                <td class="col-truth">Massa yang lapar, marah, & tidak berpikir (Mob Mentality). Sangat destruktif.</td>
+                <td class="col-shield">Menyingkir (Uzlah). Jangan hadapi gelombang gila. Biarkan lewat. Bertahan di tempat sunyi.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-tactic">Pemisahan Manusia & Alam</td>
+                <td class="col-truth">Membuat manusia merasa asing di hutan, jadi takut & lari ke kota (jebakan).</td>
+                <td class="col-shield">Rimba Raya Dulur Kita. Hutan adalah ibu. Belajar hidup dari hutan. Alam melindungi yang menjaganya.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-tactic">Akhir Zaman (Kiamat Sugra)</td>
+                <td class="col-truth">Reset Siklus. Pembersihan parasit bumi sebelum masuk era baru (Golden Age).</td>
+                <td class="col-shield">Nuswantara Mercusuar. Tetap tegak. Jaga kewarasan. Kita yang akan membangun ulang peradaban nanti.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        PERANG ADALAH BISNIS ORANG KAYA YANG DIBAYAR DENGAN DARAH ORANG MISKIN.<br>
+        JANGAN MAU JADI MATA UANG MEREKA. MERDEKA!
+    </div>
+</div>
+
+</body>
+</html>

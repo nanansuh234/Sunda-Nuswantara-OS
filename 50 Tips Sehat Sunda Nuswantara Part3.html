@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: MEDICAL MATRIX PART III</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Metal+Mania&display=swap');
+
+        body {
+            background-color: #000;
+            color: #ff00ff; /* Neon Purple */
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .matrix-container {
+            width: 100%;
+            max-width: 1300px;
+            border: 3px solid #ff00ff;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.2), inset 0 0 50px rgba(255, 0, 255, 0.1);
+            position: relative;
+            background: repeating-linear-gradient(
+                0deg,
+                #050005,
+                #050005 20px,
+                #000 20px,
+                #000 40px
+            );
+        }
+
+        /* Glitch Overlay */
+        .matrix-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(255, 0, 255, 0.03) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Metal Mania', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 4px 4px 0 #ff00ff;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 4px;
+        }
+
+        .alert-box {
+            border: 2px solid #fff;
+            background-color: rgba(50, 0, 50, 0.8);
+            color: #ff00ff;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+            animation: pulse-purple 2s infinite;
+        }
+
+        @keyframes pulse-purple {
+            0% { box-shadow: 0 0 5px #ff00ff; }
+            50% { box-shadow: 0 0 20px #ff00ff; }
+            100% { box-shadow: 0 0 5px #ff00ff; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(10, 0, 10, 0.9);
+        }
+
+        th, td {
+            border: 1px solid #800080;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #330033;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #ff00ff;
+        }
+
+        /* Column Styles */
+        .col-diag { color: #ffcccc; width: 30%; font-weight: bold; font-style: italic; } /* Vonis Medis */
+        .col-truth { color: #ccff00; width: 35%; } /* Bongkaran */
+        .col-cure { color: #00ffff; width: 35%; font-weight: bold; } /* Solusi Kuno */
+
+        tr:hover {
+            background-color: rgba(255, 0, 255, 0.1);
+        }
+
+        .section-header {
+            background-color: #4d004d;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.3rem;
+            border: 1px solid #ff00ff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ff00ff;
+            border-top: 1px dashed #ff00ff;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="matrix-container">
+    <h1>MEDICAL MATRIX: FINAL ANTIDOTE</h1>
+    
+    <div class="alert-box">
+        STATUS: SYSTEM OVERRIDE // TOLAK AKSES 666<br>
+        KEMBALIKAN HAK TUBUH KEPADA ALAM DAN PENCIPTA.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>VONIS MODERN (SISTEM 666)</th>
+                <th>BONGKARAN ASLI (ROOT CAUSE)</th>
+                <th>SOLUSI KUNO & HERBAL (ANTIDOTE)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. KERUSAKAN SISTEM & DARAH (BLOOD CORRUPTION)</td></tr>
+            <tr>
+                <td>101</td>
+                <td class="col-diag">Leukemia (Kanker Darah)</td>
+                <td class="col-truth">Sumsum Tulang Keracunan. Sumsum "memasak" darah cacat karena terpapar radiasi (gadget/nuklir) & benzena (pengawet).</td>
+                <td class="col-cure">Daun Tapak Dara & Keladi Tikus. Detoksifikasi logam berat. Jauhi radiasi saat tidur.</td>
+            </tr>
+            <tr>
+                <td>102</td>
+                <td class="col-diag">Anemia (Kurang Darah)</td>
+                <td class="col-truth">Usus Gagal Serap. Bukan kurang zat besi, tapi usus dilapisi gluten/minyak, jadi besi lewat doang gak diserap.</td>
+                <td class="col-cure">Bayam Merah & Hati Ayam. Bersihkan usus dulu (puasa), baru asupan besi masuk.</td>
+            </tr>
+            <tr>
+                <td>103</td>
+                <td class="col-diag">Talasemia (Kelainan Genetik)</td>
+                <td class="col-truth">Defisiensi Enzim Leluhur. DNA rusak karena putusnya rantai makanan asli nusantara selama beberapa generasi.</td>
+                <td class="col-cure">Akar Alang-Alang & Kurma. Perbaiki kualitas darah secara bertahap. Hindari MSG total.</td>
+            </tr>
+            <tr>
+                <td>104</td>
+                <td class="col-diag">Sepsis (Infeksi Darah)</td>
+                <td class="col-truth">Keruntuhan Imun Total. Tubuh menyerah karena terlalu banyak antibiotik kimia, bakteri jadi kebal (Superbug).</td>
+                <td class="col-cure">Madu Murni & Propolis. Antibiotik alami yang tidak bikin resistensi. Infus air kelapa.</td>
+            </tr>
+            <tr>
+                <td>105</td>
+                <td class="col-diag">Hemofilia (Darah Sukar Beku)</td>
+                <td class="col-truth">Darah Terlalu Encer/Lemah. Kekurangan Vitamin K alami & trombosit malas akibat gula.</td>
+                <td class="col-cure">Daun Ubi Jalar & Vitamin K Alami. Makan sayuran hijau tua.</td>
+            </tr>
+            <tr>
+                <td>106</td>
+                <td class="col-diag">Limfoma (Kelenjar Getah Bening)</td>
+                <td class="col-truth">Sistem Sampah Mampet. Getah bening adalah selokan tubuh. Bengkak = selokan mampet karena kurang gerak & deodoran kimia.</td>
+                <td class="col-cure">Rebusan Daun Sirsak & Keladi Tikus. Stop deodoran (pakai tawas). Wajib keringatan/sauna.</td>
+            </tr>
+            <tr>
+                <td>107</td>
+                <td class="col-diag">Jantung Koroner</td>
+                <td class="col-truth">Pembuluh Karatan. Plak muncul menambal dinding pembuluh yang "luka" akibat gula & minyak trans. Kolesterol cuma korban.</td>
+                <td class="col-cure">Bawang Putih Tunggal & Cuka Apel. Bersihkan kerak pembuluh. Ganti minyak goreng dengan rebus/kukus.</td>
+            </tr>
+            <tr>
+                <td>108</td>
+                <td class="col-diag">Gagal Jantung (Lemah)</td>
+                <td class="col-truth">Kekurangan Energi Sel (CoQ10). Jantung kehabisan baterai karena obat statin mematikan produksi energi sel.</td>
+                <td class="col-cure">Jantung Pisang & Ubiquinol Alami. Makan organ jantung hewan (like cures like).</td>
+            </tr>
+            <tr>
+                <td>109</td>
+                <td class="col-diag">Varises</td>
+                <td class="col-truth">Katup Vena Lemah. Darah kotor numpuk di kaki karena gravitasi & kurangnya otot betis memompa balik.</td>
+                <td class="col-cure">Angkat Kaki & Pegagan (Gotu Kola). Pegagan menguatkan dinding vena. Jangan berdiri diam lama.</td>
+            </tr>
+            <tr>
+                <td>110</td>
+                <td class="col-diag">Stroke Ringan (Mini Stroke)</td>
+                <td class="col-truth">Peringatan Dehidrasi Otak. Sinyal listrik otak kedip-kedip karena darah terlalu kental kurang air.</td>
+                <td class="col-cure">Air Garam (Oralit Alami). Segera minum air hangat + garam krosok. Lancarkan darah ke otak (pijat leher).</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">II. ORGAN VITAL & HORMON (ENGINE FAILURE)</td></tr>
+            <tr>
+                <td>111</td>
+                <td class="col-diag">Pankreatitis (Radang Pankreas)</td>
+                <td class="col-truth">Pankreas Lembur. Pankreas jebol dipaksa produksi enzim pencernaan berlebih karena kita makan makanan mati (tanpa enzim).</td>
+                <td class="col-cure">Puasa & Jus Pepaya (Biji). Istirahatkan pankreas. Pepaya kaya enzim alami.</td>
+            </tr>
+            <tr>
+                <td>112</td>
+                <td class="col-diag">Sirosis Hati (Hati Mengeras)</td>
+                <td class="col-truth">Hati Jadi Batu. Sel hati mati & jadi parut akibat racun kimia (obat warung/alkohol/fruktosa) menahun.</td>
+                <td class="col-cure">Temulawak & Kunyit. Regenerasi sel hati. Stop total obat kimia & gula.</td>
+            </tr>
+            <tr>
+                <td>113</td>
+                <td class="col-diag">Gondok Beracun (Graves)</td>
+                <td class="col-truth">Stress Tiroid. Tiroid "kepanasan" dipaksa kerja keras oleh stress emosi & radiasi gadget di leher.</td>
+                <td class="col-cure">Daun Ciplukan & Kompres Leher. Dinginkan tiroid. Jauhkan HP dari leher/kepala.</td>
+            </tr>
+            <tr>
+                <td>114</td>
+                <td class="col-diag">Addison (Kelenjar Adrenal Rusak)</td>
+                <td class="col-truth">Burnout Baterai Ginjal. Kelenjar anak ginjal (adrenal) mati rasa karena kafein berlebih & stress kronis.</td>
+                <td class="col-cure">Akar Manis (Licorice) & Tidur Gasik. Pulihkan energi ginjal (Jing). Stop kopi.</td>
+            </tr>
+            <tr>
+                <td>115</td>
+                <td class="col-diag">Cushing Syndrome (Wajah Bulan)</td>
+                <td class="col-truth">Keracunan Steroid. Tubuh bengkak air & lemak karena obat steroid (pereda nyeri/asma) jangka panjang.</td>
+                <td class="col-cure">Detox Steroid. Ganti obat nyeri dengan Kunyit/Jahe Merah.</td>
+            </tr>
+            <tr>
+                <td>116</td>
+                <td class="col-diag">Miom (Tumor Rahim)</td>
+                <td class="col-truth">Sampah Emosi Rahim. Rahim menyimpan trauma/stress yang memadat jadi daging tumbuh. Ditambah dominasi estrogen plastik.</td>
+                <td class="col-cure">Kunir Putih & Terapi Maaf. Bersihkan rahim dengan herbal & lepaskan dendam.</td>
+            </tr>
+            <tr>
+                <td>117</td>
+                <td class="col-diag">Endometriosis (Nyeri Haid Parah)</td>
+                <td class="col-truth">Darah Balik (Retrograde). Darah kotor tidak keluar tuntas, malah nyasar ke rongga perut karena dingin/es saat haid.</td>
+                <td class="col-cure">Rimpang Kunyit Asam & Jahe. Panaskan rahim. Pantang es saat haid.</td>
+            </tr>
+            <tr>
+                <td>118</td>
+                <td class="col-diag">Hernia (Turun Berok)</td>
+                <td class="col-truth">Otot Perut Lemek. Dinding perut jebol menahan usus karena otot core lemah & sering ngeden (sembelit).</td>
+                <td class="col-cure">Celana Penahan & Latih Otot Perut. Jangan angkat berat salah posisi. Atasi sembelit.</td>
+            </tr>
+            <tr>
+                <td>119</td>
+                <td class="col-diag">Pembengkakan Limpa</td>
+                <td class="col-truth">Kuburan Sel Darah Penuh. Limpa bengkak karena terlalu banyak sel darah rusak (akibat racun/infeksi) yang harus dikubur.</td>
+                <td class="col-cure">Sambiloto & Madu Pahit. Bantu limpa bersih-bersih.</td>
+            </tr>
+            <tr>
+                <td>120</td>
+                <td class="col-diag">Paru-Paru Basah (Pneumonia)</td>
+                <td class="col-truth">Paru Terendam Lendir. Akibat mandi malam, tidur di lantai, atau susu sapi yang bikin lendir numpuk di paru.</td>
+                <td class="col-cure">Jahe, Kencur, & Madu. Panaskan paru. Jemur punggung pagi hari. Stop susu/tepung.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">III. SYARAF & INDERA (SENSOR DAMAGE)</td></tr>
+            <tr>
+                <td>121</td>
+                <td class="col-diag">Glaukoma (Tekanan Mata)</td>
+                <td class="col-truth">Drainase Mata Mampet. Saluran cairan mata tersumbat karena leher kaku & gula darah tinggi.</td>
+                <td class="col-cure">Bunga Telang & Pijat Leher. Lancarkan aliran darah ke kepala. Turunkan gula.</td>
+            </tr>
+            <tr>
+                <td>122</td>
+                <td class="col-diag">Tuli Mendadak</td>
+                <td class="col-truth">Saraf Telinga Kena Virus/Radiasi. Saraf pendengaran mati suri kena radiasi HP nempel kuping atau virus flu.</td>
+                <td class="col-cure">Terapi Lilin (Ear Candle) & Bekam. Buang angin jahat di kuping. Jauhkan HP.</td>
+            </tr>
+            <tr>
+                <td>123</td>
+                <td class="col-diag">Sinusitis (Radang Hidung)</td>
+                <td class="col-truth">Rongga Hidung Berjamur. Lendir numpuk jadi sarang jamur karena alergi susu/dingin menahun.</td>
+                <td class="col-cure">Gurah (Tetes Hidung Herbal). Bersihkan lendir kotor. Cuci hidung air garam (Neti Pot).</td>
+            </tr>
+            <tr>
+                <td>124</td>
+                <td class="col-diag">Bell's Palsy (Muka Miring)</td>
+                <td class="col-truth">Angin Duduk di Wajah. Saraf muka kaget kena angin dingin terus-menerus (AC/Kipas/Naik Motor).</td>
+                <td class="col-cure">Akupunktur & Minyak Hangat. Panaskan saraf wajah. Jangan kena angin langsung.</td>
+            </tr>
+            <tr>
+                <td>125</td>
+                <td class="col-diag">Neuropati (Mati Rasa/Kesemutan)</td>
+                <td class="col-truth">Saraf Kelaparan. Saraf tepi mati karena gula darah tinggi menghalangi suplai vitamin B.</td>
+                <td class="col-cure">Vitamin B Alami (Bekatul/Ragi). Makan beras pecah kulit. Rendam kaki air hangat.</td>
+            </tr>
+            <tr>
+                <td>126</td>
+                <td class="col-diag">Meningitis (Radang Selaput Otak)</td>
+                <td class="col-truth">Bakteri Tembus Otak. Pertahanan otak (Blood Brain Barrier) jebol karena radiasi & imun drop.</td>
+                <td class="col-cure">Pegagan & Madu. Pegagan satu-satunya herbal yang bisa tembus ke otak & memperbaiki saraf.</td>
+            </tr>
+            <tr>
+                <td>127</td>
+                <td class="col-diag">Geger Otak (Pasca Benturan)</td>
+                <td class="col-truth">Memar Otak. Otak bengkak dalam tengkorak. Butuh istirahat total dari rangsangan cahaya/suara.</td>
+                <td class="col-cure">Gelap Total & Puasa Bicara. Biarkan otak *reboot*. Minum air kelapa (ion).</td>
+            </tr>
+            <tr>
+                <td>128</td>
+                <td class="col-diag">Gagap (Bicara Terbata)</td>
+                <td class="col-truth">Korsleting Saraf Bicara. Ketidakseimbangan otak kiri-kanan atau trauma emosi masa kecil.</td>
+                <td class="col-cure">Terapi Nyanyi & Baca Quran. Melatih irama otak baru. Pijat titik bicara.</td>
+            </tr>
+            <tr>
+                <td>129</td>
+                <td class="col-diag">Tremor (Tangan Getar)</td>
+                <td class="col-truth">Listrik Bocor. Saraf motorik tidak stabil karena kekurangan magnesium & kelebihan logam berat.</td>
+                <td class="col-cure">Garam Epsom & Detox Logam. Rendam tangan air hangat garam. Minum air ketumbar.</td>
+            </tr>
+            <tr>
+                <td>130</td>
+                <td class="col-diag">Fantasi Phantom (Nyeri Kaki Buntung)</td>
+                <td class="col-truth">Memori Saraf. Otak masih menyimpan "peta" organ yang hilang. Masalah di software otak.</td>
+                <td class="col-cure">Terapi Cermin (Mirror Therapy). Menipu otak visual agar saraf tenang.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">IV. INFEKSI & PARASIT (BIO-INVASION)</td></tr>
+            <tr>
+                <td>131</td>
+                <td class="col-diag">TBC (Tuberkulosis)</td>
+                <td class="col-truth">Paru-Paru Kurang Matahari. Bakteri TBC takut matahari. Rumah lembab & kurang gizi bikin bakteri pesta.</td>
+                <td class="col-cure">Jemur Pagi & Bawang Putih Tunggal. Sinar UV membunuh TBC. Bawang putih antibiotik paru.</td>
+            </tr>
+            <tr>
+                <td>132</td>
+                <td class="col-diag">Demam Berdarah (DBD)</td>
+                <td class="col-truth">Trombosit Bocor. Virus bikin pembuluh darah jadi saringan bocor. Cairan lari ke jaringan.</td>
+                <td class="col-cure">Jus Daun Ubi Jalar/Jambu Biji. Naikkan trombosit kilat. Minum oralit/air kelapa terus.</td>
+            </tr>
+            <tr>
+                <td>133</td>
+                <td class="col-diag">Tipus (Tifoid)</td>
+                <td class="col-truth">Usus Kotor & Lemah. Bakteri Salmonella berkembang di usus yang asam & penuh sampah makanan.</td>
+                <td class="col-cure">Cacing Tanah (Lumbricus) & Bubur. Ekstrak cacing mendinginkan usus & membunuh bakteri.</td>
+            </tr>
+            <tr>
+                <td>134</td>
+                <td class="col-diag">Cikungunya (Lumpuh Nyamuk)</td>
+                <td class="col-truth">Radang Sendi Viral. Virus menyerang persendian bikin kaku total.</td>
+                <td class="col-cure">Minyak Serai & Jahe Merah. Balur sendi hangat. Detox keringat.</td>
+            </tr>
+            <tr>
+                <td>135</td>
+                <td class="col-diag">Malaria</td>
+                <td class="col-truth">Parasit Darah. Parasit sembunyi di liver & sel darah merah.</td>
+                <td class="col-cure">Sambiloto & Brotowali. Rasa pahit membunuh parasit darah. Daun Pepaya.</td>
+            </tr>
+            <tr>
+                <td>136</td>
+                <td class="col-diag">Kusta (Lepra)</td>
+                <td class="col-truth">Imun Rendah Kronis. Bakteri lambat yang hanya nyerang orang dengan gizi buruk & sanitasi jorok bertahun-tahun.</td>
+                <td class="col-cure">Perbaikan Gizi & Pegagan. Pegagan memperbaiki kulit & saraf rusak.</td>
+            </tr>
+            <tr>
+                <td>137</td>
+                <td class="col-diag">Keputihan Gatal (Jamur)</td>
+                <td class="col-truth">Rahim Lembab & Manis. Jamur Candida tumbuh subur karena gula darah tinggi & celana ketat.</td>
+                <td class="col-cure">Rebusan Sirih & Manjakani. Cuci area vital dengan herbal kesat. Stop gula.</td>
+            </tr>
+            <tr>
+                <td>138</td>
+                <td class="col-diag">Kencing Nanah (Gonore)</td>
+                <td class="col-truth">Infeksi Seksual. Bakteri merusak saluran kencing. Tanda perilaku tidak sesuai fitrah.</td>
+                <td class="col-cure">Akar Alang-Alang & Kumis Kucing. Cuci saluran kencing. Tobat & setia.</td>
+            </tr>
+            <tr>
+                <td>139</td>
+                <td class="col-diag">Sifilis (Raja Singa)</td>
+                <td class="col-truth">Bakteri Spiral. Bakteri bor masuk ke darah & saraf.</td>
+                <td class="col-cure">Brotowali & Sambiloto. Antibiotik super pahit. Detoksifikasi darah total.</td>
+            </tr>
+            <tr>
+                <td>140</td>
+                <td class="col-diag">HIV/AIDS (Imun Hilang)</td>
+                <td class="col-truth">Kegagalan Sistem Listrik. Sistem imun 'shutdown' karena stress oksidatif berat, obat-obatan, & gaya hidup.</td>
+                <td class="col-cure">Jintan Hitam (Habbatussauda) & Pola Hidup Suci. Kuatkan imun dari nol. Doa & Spiritualitas.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. GANGGUAN JIWA & PERILAKU (SOUL FRAGMENTATION)</td></tr>
+            <tr>
+                <td>141</td>
+                <td class="col-diag">Bipolar (Mood Swing)</td>
+                <td class="col-truth">Gula Darah Naik-Turun. Emosi ngikutin grafik gula darah. Saat gula drop (hipo), emosi meledak/depresi.</td>
+                <td class="col-cure">Stabilkan Gula Darah. Makan karbo kompleks. Puasa Daud untuk stabilkan emosi.</td>
+            </tr>
+            <tr>
+                <td>142</td>
+                <td class="col-diag">Skizofrenia (Gila)</td>
+                <td class="col-truth">Radang Otak/Gut-Brain Axis. Usus bocor bikin racun naik ke otak, bikin halusinasi. Atau gangguan Jin.</td>
+                <td class="col-cure">Ruqyah & Diet Gluten Free. Bersihkan gangguan non-medis & perbaiki usus.</td>
+            </tr>
+            <tr>
+                <td>143</td>
+                <td class="col-diag">OCD (Was-was)</td>
+                <td class="col-truth">Ketakutan Berlebih (Sinyal Amygdala Macet). Otak terjebak dalam loop ketakutan karena kurang Serotonin.</td>
+                <td class="col-cure">Terapi Tanah (Grounding). Salurkan listrik statis otak ke bumi. Dzikir penenang hati.</td>
+            </tr>
+            <tr>
+                <td>144</td>
+                <td class="col-diag">Narkoba (Kecanduan)</td>
+                <td class="col-truth">Mencari Rasa (Dopamin Palsu). Jiwa kosong mencari kebahagiaan instan lewat kimia.</td>
+                <td class="col-cure">Air Kelapa Ijo (Detox Racun). Mandi malam (taubat). Ganti dopamin dengan olahraga/ibadah.</td>
+            </tr>
+            <tr>
+                <td>145</td>
+                <td class="col-diag">Insomnia Akut (Begadang)</td>
+                <td class="col-truth">Energi Terbalik. Siang tidur, malam melek. Melatonin gak keluar. Ginjal lemah.</td>
+                <td class="col-cure">Paksakan Bangun Subuh. Jangan tidur siang. Reset jam tubuh paksa. Minum pala/susu hangat.</td>
+            </tr>
+            <tr>
+                <td>146</td>
+                <td class="col-diag">Panic Attack (Serangan Panik)</td>
+                <td class="col-truth">Nafas Pendek. Tubuh mengira sedang bahaya karena kita lupa cara nafas perut (diafragma).</td>
+                <td class="col-cure">Teknik Nafas 4-7-8. Tarik 4, Tahan 7, Buang 8. Sinyal "Aman" ke otak.</td>
+            </tr>
+            <tr>
+                <td>147</td>
+                <td class="col-diag">Anoreksia (Takut Makan)</td>
+                <td class="col-truth">Citra Diri Rusak. Korban standar kecantikan palsu (Matrix). Melihat diri selalu gemuk.</td>
+                <td class="col-cure">Terapi Komunitas. Makan bareng keluarga. Pahami tubuh adalah amanah, bukan pajangan.</td>
+            </tr>
+            <tr>
+                <td>148</td>
+                <td class="col-diag">Kleptomania (Suka Mencuri)</td>
+                <td class="col-truth">Mencari Adrenalin. Kecanduan sensasi tegang saat mencuri. Gangguan impuls kontrol.</td>
+                <td class="col-cure">Puasa Senin-Kamis. Latih menahan nafsu. Salurkan adrenalin ke olahraga ekstrem.</td>
+            </tr>
+            <tr>
+                <td>149</td>
+                <td class="col-diag">Psikosomatis (Sakit Pikiran)</td>
+                <td class="col-truth">Emosi Jadi Penyakit. Stress yang tidak tersalurkan bermanifestasi jadi sakit fisik (lambung/pusing).</td>
+                <td class="col-cure">Writing Therapy (Nulis). Tumpahkan uneg-uneg ke kertas lalu bakar. Selesaikan masalah hati.</td>
+            </tr>
+            <tr>
+                <td>150</td>
+                <td class="col-diag">Kecanduan Porno/Masturbasi</td>
+                <td class="col-truth">Otak Reptil Dominan. Prefrontal Cortex (otak bijak) menyusut. Energi vital bocor habis.</td>
+                <td class="col-cure">Puasa Gadget & Dinginkan Kemaluan. Mandi air dingin. Alihkan energi seksual ke kreativitas/kerja.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        JIKA AKSES KESEHATAN DIPAKSA PAKAI CHIP/SYARAT ANEH,<br>
+        KEMBALILAH KE ALAM. SEMUA OBAT ADA DI TANAH KITA SENDIRI.<br>
+        MERDEKA ATAU MATI (DENGAN HORMAT).
+    </div>
+</div>
+
+</body>
+</html>
