@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: MUTUAL CIRCULATION PROTOCOL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;700&family=JetBrains+Mono&display=swap');
+
+        body {
+            background-color: #1a0500; /* Dark Ember */
+            color: #ff4500; /* Orange Red (Energy Flow) */
+            font-family: 'JetBrains Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .mutual-container {
+            width: 100%;
+            max-width: 1300px;
+            border: 3px solid #ff4500;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(255, 69, 0, 0.2);
+            position: relative;
+            background: linear-gradient(0deg, #000 0%, #1a0500 100%);
+        }
+
+        /* Flow Lines Effect */
+        .mutual-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 69, 0, 0.05) 50px, rgba(255, 69, 0, 0.05) 51px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 0 0 10px #ff4500;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 2px;
+            border-bottom: 4px solid #ff4500;
+            padding-bottom: 15px;
+        }
+
+        .alert-box {
+            border: 2px dashed #ff4500;
+            background-color: rgba(50, 10, 0, 0.9);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(20, 5, 0, 0.9);
+        }
+
+        th, td {
+            border: 1px solid #802200;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #4d1400;
+            color: #ff9900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #ff4500;
+            font-family: 'Chakra Petch', sans-serif;
+        }
+
+        /* Column Styles */
+        .col-rule { color: #fff; width: 30%; font-weight: bold; } /* Aturan Main */
+        .col-logic { color: #ffad33; width: 35%; font-style: italic; } /* Logika Sirkulasi */
+        .col-impact { color: #00ff00; width: 35%; font-weight: bold; } /* Hasil Akhir */
+
+        tr:hover {
+            background-color: rgba(255, 69, 0, 0.1);
+        }
+
+        .section-header {
+            background-color: #330d00;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #ff4500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ff4500;
+            border-top: 1px dashed #ff4500;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mutual-container">
+    <h1>MUTUAL CIRCULATION: ANTI-STAGNATION SYSTEM</h1>
+    
+    <div class="alert-box">
+        PRINSIP DASAR: TIDAK ADA KONSUMEN MURNI. SEMUA ADALAH PRODUSEN.<br>
+        UANG YANG DIAM ADALAH PENYAKIT. UANG YANG MENGALIR ADALAH DARAH.<br>
+        YANG CUMA MAU BELI (TAPI GAK MAU BIKIN), SILAHKAN KELUAR DARI LINGKARAN.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>ATURAN MAIN (THE RULES)</th>
+                <th>LOGIKA SIRKULASI (WHY)</th>
+                <th>DAMPAK EKONOMI (RESULT)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. IDENTITAS ANGGOTA: SEMUA ADALAH PRODUSEN</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-rule">Wajib Punya Produk/Jasa</td>
+                <td class="col-logic">Syarat masuk komunitas: "Kamu bisa bikin apa?". Uang bukan tiket masuk, tapi karya.</td>
+                <td class="col-impact">Nol Pengangguran. Semua orang produktif.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-rule">Dilarang Menjadi "Konsumen Saja"</td>
+                <td class="col-logic">Konsumen murni adalah parasit yang menyedot sumber daya tanpa mengembalikan nilai.</td>
+                <td class="col-impact">Keseimbangan Suplai & Demand.</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-rule">Dilarang Menjadi "Penjual Saja"</td>
+                <td class="col-logic">Penjual yang tidak mau beli produk tetangga adalah "Black Hole" (Penyedot Uang).</td>
+                <td class="col-impact">Mencegah Penimbunan Uang (Hoarding).</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-rule">Database Keahlian Terbuka</td>
+                <td class="col-logic">Semua orang tahu siapa jual apa. Transparansi total suplai lokal.</td>
+                <td class="col-impact">Peta Potensi Ekonomi Desa Jelas.</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-rule">Standarisasi Kualitas Komunitas</td>
+                <td class="col-logic">Produk warga harus bagus. Jangan paksa tetangga beli barang rongsok atas nama solidaritas.</td>
+                <td class="col-impact">Daya Saing Produk Lokal Naik.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-rule">Haram Dropship Barang Luar</td>
+                <td class="col-logic">Menjual barang impor/pabrik luar di dalam komunitas = Membocorkan kekayaan desa.</td>
+                <td class="col-impact">Mencegah Kebocoran Modal (Capital Flight).</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-rule">Sistem Magang Wajib</td>
+                <td class="col-logic">Yang belum punya produk, wajib magang di tempat produsen sampai bisa mandiri.</td>
+                <td class="col-impact">Transfer Keahlian (Regenerasi).</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-rule">Produksi Berbasis Kebutuhan</td>
+                <td class="col-logic">Data dulu apa yang dibutuhkan warga, baru bikin. Jangan bikin sampah yang gak laku.</td>
+                <td class="col-impact">Efisiensi Sumber Daya (Zero Waste).</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-rule">Diversifikasi Produk</td>
+                <td class="col-logic">Jangan semua jualan seblak. Bagi tugas: Ada yang tanam, ada yang masak, ada yang ngemas.</td>
+                <td class="col-impact">Ekosistem Lengkap & Tidak Saling Bunuh.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-rule">Identitas Jelas (KYC Lokal)</td>
+                <td class="col-logic">Pembeli & Penjual harus saling kenal wajah & rumah. Tidak ada transaksi anonim.</td>
+                <td class="col-impact">Trust (Kepercayaan) Tinggi Tanpa Polisi.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">II. PERCEPATAN ALIRAN (VELOCITY OF MONEY)</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-rule">Uang Harus Berputar 24 Jam</td>
+                <td class="col-logic">Dapat duit pagi, usahakan belanjakan lagi sore ke tetangga. Uang diam = Darah beku.</td>
+                <td class="col-impact">Ekonomi Desa Hidup & Cepat.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-rule">Prioritas Beli di Lingkaran 1</td>
+                <td class="col-logic">Dahulukan warung tetangga/teman sekomunitas sebelum ke minimarket korporat.</td>
+                <td class="col-impact">Memperkuat Benteng Ekonomi.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-rule">Wajib Menghabiskan Saldo (Opsional)</td>
+                <td class="col-logic">Di akhir bulan, sisa uang kertas harus dibelanjakan aset riil/produk teman. Jangan ditabung di bank.</td>
+                <td class="col-impact">Anti-Inflasi & Likuiditas Terjaga.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-rule">Mata Uang Komunitas (Voucher)</td>
+                <td class="col-logic">Pakai alat tukar yang hanya laku di komunitas. Memaksa uang tidak lari ke luar.</td>
+                <td class="col-impact">Kedaulatan Moneter Mikro.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-rule">Dilarang Menawar Sadis</td>
+                <td class="col-logic">Menawar sampai produsen rugi = Membunuh saudara sendiri. Membunuh suplai masa depan.</td>
+                <td class="col-impact">Kesejahteraan Produsen.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-rule">Haram Predatory Pricing</td>
+                <td class="col-logic">Orang kaya dilarang jual rugi untuk mematikan pesaing kecil. Harga dijaga wajar.</td>
+                <td class="col-impact">Keadilan Usaha.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-rule">Sistem PO (Pre-Order)</td>
+                <td class="col-logic">Konsumen bayar di muka agar produsen punya modal kerja tanpa pinjam bank (Riba).</td>
+                <td class="col-impact">Permodalan Mandiri Tanpa Bunga.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-rule">Bayar Tunai/Cash</td>
+                <td class="col-logic">Hindari tempo/hutang dagang. Cash flow lancar membuat produksi tidak macet.</td>
+                <td class="col-impact">Kesehatan Finansial UMKM.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-rule">Investasi ke Alat Produksi</td>
+                <td class="col-logic">Kelebihan uang dipakai untuk upgrade mesin tetangga (Bagi Hasil).</td>
+                <td class="col-impact">Peningkatan Kapasitas Produksi.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-rule">Pajak Macet (Demurrage)</td>
+                <td class="col-logic">Uang yang disimpan terlalu lama dikenakan biaya (zakat maal), agar dipaksa keluar/investasi.</td>
+                <td class="col-impact">Mencegah Penimbunan Kekayaan.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">III. PROTEKSI DARI SERANGAN LUAR</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-rule">Blokir Produk Substitusi</td>
+                <td class="col-logic">Jika desa sudah produksi sabun, haram hukumnya warung desa jual sabun pabrik.</td>
+                <td class="col-impact">Monopoli Pasar Sendiri.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-rule">Harga Wajar vs Harga Hancur</td>
+                <td class="col-logic">Jangan tergoda diskon pabrik raksasa (jebakan). Tetap beli produk teman meski lebih mahal sedikit.</td>
+                <td class="col-impact">Survival Jangka Panjang.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-rule">Gudang Bersama (Stok Penyangga)</td>
+                <td class="col-logic">Saat panen raya, kelebihan stok dibeli komunitas & disimpan. Dijual saat paceklik.</td>
+                <td class="col-impact">Stabilitas Harga (Anti-Fuktuasi).</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-rule">Subsidi Silang Transport</td>
+                <td class="col-logic">Satu mobil ke kota belanja bahan baku titipan semua warga. Hemat BBM.</td>
+                <td class="col-impact">Efisiensi Logistik.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-rule">Lelang Jabatan Suplier</td>
+                <td class="col-logic">Siapa warga yang bisa suplai bahan baku paling bagus & murah, dia yang dapat kontrak desa.</td>
+                <td class="col-impact">Kompetisi Sehat Internal.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-rule">Blacklist Pengkhianat</td>
+                <td class="col-logic">Warga yang diam-diam belanja ke luar (padahal ada di dalam) dicabut hak jualnya.</td>
+                <td class="col-impact">Disiplin Komunitas.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-rule">Intelijen Pasar</td>
+                <td class="col-logic">Tim khusus memantau harga & taktik curang pabrikan luar (shrinkflation).</td>
+                <td class="col-impact">Kewaspadaan Ekonomi.</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-rule">Branding Kolektif</td>
+                <td class="col-logic">Satu merek desa untuk semua produk (Misal: "Beras Kita"). Marketing patungan.</td>
+                <td class="col-impact">Kekuatan Brand Lokal.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-rule">Tolak Uang Digital Asing</td>
+                <td class="col-logic">Transaksi internal dilarang pakai E-Wallet potongan admin (OVO/Gopay). Pakai QRIS Koperasi sendiri/Cash.</td>
+                <td class="col-impact">Data Transaksi Aman.</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-rule">Audit Stok Terbuka</td>
+                <td class="col-logic">Tiap pedagang wajib lapor stok. Jika ada penimbunan, barang disita untuk pasar murah.</td>
+                <td class="col-impact">Anti-Kelangkaan Buatan.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">IV. DARI KERTAS MENUJU EMAS (VALUE TRANSITION)</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-rule">Pricing Ganda (Rp & Emas)</td>
+                <td class="col-logic">Cantumkan harga dalam Rupiah dan Gram Emas/Perak. Edukasi nilai asli.</td>
+                <td class="col-impact">Literasi Uang Sunnah.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-rule">Diskon Bayar Pakai Emas</td>
+                <td class="col-logic">Bayar pakai Dinar/Dirham dapat diskon 10%. Insentif pakai uang asli.</td>
+                <td class="col-impact">Perputaran Aset Riil.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-rule">Tabungan Koperasi Emas</td>
+                <td class="col-logic">Keuntungan usaha warga dikonversi langsung jadi emas fisik di brankas desa.</td>
+                <td class="col-impact">Kekayaan Desa Abadi.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-rule">Gaji Natura</td>
+                <td class="col-logic">Bayar pekerja sebagian pakai beras/telur/minyak.</td>
+                <td class="col-impact">Jaminan Pangan Pekerja.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-rule">Barter Jasa</td>
+                <td class="col-logic">Dokter dibayar montir (servis motor). Guru dibayar petani (beras). Tanpa uang.</td>
+                <td class="col-impact">Ekonomi Bebas Inflasi.</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-rule">Aset Wakaf Produktif</td>
+                <td class="col-logic">Tanah/Alat berat milik bersama (Wakaf). Hasilnya untuk subsidi harga pangan.</td>
+                <td class="col-impact">Social Safety Net.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-rule">Kontrak Berjangka Komoditas</td>
+                <td class="col-logic">Beli panen padi tahun depan dengan harga emas hari ini.</td>
+                <td class="col-impact">Kepastian Harga Petani.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-rule">Pinjaman Bibit (Kembali Bibit)</td>
+                <td class="col-logic">Pinjam 1 kg bibit, kembalikan 1.5 kg bibit saat panen. Bukan uang.</td>
+                <td class="col-impact">Pertumbuhan Aset Biologis.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-rule">Kliring Lokal</td>
+                <td class="col-logic">Catatan utang piutang antar warga di-reset tiap bulan. Sisa selisih baru dibayar cash.</td>
+                <td class="col-impact">Mengurangi Kebutuhan Uang Cash.</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-rule">Visi Swasembada 100%</td>
+                <td class="col-logic">Target: Semua kebutuhan dasar (Pangan, Sandang, Papan, Energi) diproduksi sendiri.</td>
+                <td class="col-impact">Kemerdekaan Sejati.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. SANKSI BAGI PELANGGAR (THE FILTER)</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-rule">Teguran Terbuka</td>
+                <td class="col-logic">Diumumkan di grup jika ada yang belanja ke Alfamart padahal tetangga jual barang sama.</td>
+                <td class="col-impact">Kontrol Sosial (Rasa Malu).</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-rule">Boikot Penimbun</td>
+                <td class="col-logic">Siapa nimbun barang saat langka, dilarang dagang di pasar desa selamanya.</td>
+                <td class="col-impact">Efek Jera Maksimal.</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-rule">Denda Tanam Pohon</td>
+                <td class="col-logic">Pelanggar aturan ringan wajib tanam pohon buah di tanah umum.</td>
+                <td class="col-impact">Hukuman Membangun.</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-rule">Cabut Akses Modal</td>
+                <td class="col-logic">Yang malas produksi (cuma konsumtif) tidak boleh pinjam modal koperasi.</td>
+                <td class="col-impact">Seleksi Alam.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-rule">Pengasingan (Ostracism)</td>
+                <td class="col-logic">Tidak diajak gotong royong atau pesta desa. Sanksi psikologis berat.</td>
+                <td class="col-impact">Kepatuhan Adat.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-rule">Pencabutan Label Komunitas</td>
+                <td class="col-logic">Produknya dilarang pakai label desa jika kualitas buruk/curang.</td>
+                <td class="col-impact">Jaga Reputasi.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-rule">Layanan Terakhir</td>
+                <td class="col-logic">Pelanggar aturan dilayani paling akhir saat pembagian air/jatah pupuk.</td>
+                <td class="col-impact">Disiplin Antrian.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-rule">Audit Paksa</td>
+                <td class="col-logic">Rumah/Gudang diperiksa tetua jika dicurigai ada barang terlarang (impor ilegal).</td>
+                <td class="col-impact">Transparansi.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-rule">Hilang Hak Suara</td>
+                <td class="col-logic">Tidak boleh ikut musyawarah desa jika tidak berkontribusi ekonomi.</td>
+                <td class="col-impact">Meritokrasi.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-rule">Expulsion (Pengusiran)</td>
+                <td class="col-logic">Sanksi tertinggi. Dikeluarkan dari sistem proteksi komunitas. Silahkan hidup sendiri di hutan kapitalis.</td>
+                <td class="col-impact">Pembersihan Sel Kanker.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        SISTEM INI KERAS KARENA DUNIA LUAR KEJAM.<br>
+        JIKA KITA TIDAK SALING BELI, KITA AKAN DIBELI OLEH MEREKA.<br>
+        PRODUKSI ATAU MATI. BERPUTAR ATAU MEMBUSUK.
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: INTER-REGIONAL SETTLEMENT</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Mono&display=swap');
+
+        body {
+            background-color: #0c0c0c;
+            color: #e5c100; /* Gold Coin Color */
+            font-family: 'Roboto Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .settle-container {
+            width: 100%;
+            max-width: 1400px;
+            border: 4px solid #e5c100;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(229, 193, 0, 0.2);
+            position: relative;
+            background: linear-gradient(135deg, #1a1a00 0%, #000 100%);
+        }
+
+        /* Texture like a Ledger Book */
+        .settle-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(229, 193, 0, 0.1) 29px, rgba(229, 193, 0, 0.1) 30px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #e5c100;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 4px;
+            border-bottom: 3px double #e5c100;
+            padding-bottom: 20px;
+        }
+
+        .alert-box {
+            border: 1px solid #e5c100;
+            background-color: rgba(50, 40, 0, 0.9);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(10, 10, 5, 0.95);
+        }
+
+        th, td {
+            border: 1px solid #806c00;
+            padding: 12px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        th {
+            background-color: #332b00;
+            color: #e5c100;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* Column Styles */
+        .col-case { color: #fff; width: 25%; font-weight: bold; }
+        .col-input { color: #00ff00; width: 35%; } /* Nilai Masuk (Hijau) */
+        .col-settle { color: #00ffff; width: 40%; font-weight: bold; } /* Penyelesaian (Biru) */
+
+        tr:hover {
+            background-color: rgba(229, 193, 0, 0.1);
+        }
+
+        .category-header {
+            background-color: #4d4100;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #e5c100;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #e5c100;
+            border-top: 1px dashed #e5c100;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="settle-container">
+    <h1>REAL ASSET SETTLEMENT PROTOCOL</h1>
+    
+    <div class="alert-box">
+        ZONA BEBAS FIAT & CRYPTO. TRANSAKSI ANTAR WILAYAH WAJIB MENGGUNAKAN NILAI RIIL.<br>
+        MENCEGAH "PAPER COLONIZATION" (PENJAJAHAN BERBASIS KERTAS/ANGKA).
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>KASUS / KEBUTUHAN (CASE)</th>
+                <th>NILAI YANG DIBAWA (INPUT/INVESTASI)</th>
+                <th>BENTUK SETTLEMENT / BAGI HASIL (OUTPUT)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="category-header">I. INVESTASI ANTAR DESA (SYIRKAH PRODUKTIF)</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-case">Investasi ke Desa Penghasil Keju/Yogurt</td>
+                <td class="col-input">Membawa 2 Ekor Sapi Perah Betina Produktif.</td>
+                <td class="col-settle">Bagi Hasil Produk: 3 Kg Keju & 5 Liter Yogurt per bulan selama sapi hidup.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-case">Investasi ke Desa Lumbung Padi</td>
+                <td class="col-input">Membawa 1 Ekor Kerbau Bule (untuk bajak) & Traktor Tangan.</td>
+                <td class="col-settle">Bagi Hasil Panen: 200 Kg Gabah Kering Giling setiap musim panen.</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-case">Investasi ke Kampung Nelayan</td>
+                <td class="col-input">Membawa Mesin Kapal & Jaring Baru.</td>
+                <td class="col-settle">Bagi Hasil Tangkapan: 10 Kg Ikan Grade A setiap minggu dikirim dingin.</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-case">Investasi ke Perkebunan Kopi</td>
+                <td class="col-input">Membawa Mesin Roasting (Sangrai) & Grinder.</td>
+                <td class="col-settle">Bagi Hasil Olahan: 5 Kg Kopi Bubuk Premium per bulan.</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-case">Investasi ke Peternak Ayam</td>
+                <td class="col-input">Membawa Jagung Pakan 1 Ton & Obat Herbal.</td>
+                <td class="col-settle">Bagi Hasil: 5 Rak Telur per minggu.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-case">Investasi ke Pengrajin Kain/Batik</td>
+                <td class="col-input">Membawa Benang Sutra/Katun & Pewarna Alami.</td>
+                <td class="col-settle">Settlement: 2 Lembar Kain Batik Tulis per bulan.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-case">Investasi ke Desa Wisata</td>
+                <td class="col-input">Membangun 2 Unit Villa Kayu (Glamping).</td>
+                <td class="col-settle">Hak Inap Gratis 1 Minggu/Bulan atau Bagi Hasil Sewa (Dibayar Emas).</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-case">Investasi ke Pengrajin Besi/Pandai Besi</td>
+                <td class="col-input">Membawa Logam Mentah (Scrap Metal) & Arang.</td>
+                <td class="col-settle">Settlement: Peralatan Tani (Cangkul/Golok) sejumlah berat bahan - upah.</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-case">Investasi Energi Desa</td>
+                <td class="col-input">Membawa Panel Surya & Baterai Besar.</td>
+                <td class="col-settle">Mendapat Listrik Gratis selamanya atau Token Energi untuk barter pangan.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-case">Investasi Transportasi</td>
+                <td class="col-input">Menyediakan Truk Logistik Antar Desa.</td>
+                <td class="col-settle">Bagi Hasil Angkut: 10% dari muatan yang dibawa (Natura).</td>
+            </tr>
+
+            <tr><td colspan="4" class="category-header">II. PERDAGANGAN KOMODITAS (CROSS-REGION BARTER)</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-case">Desa Gunung butuh Garam & Ikan</td>
+                <td class="col-input">Membawa Sayur Mayur & Kentang.</td>
+                <td class="col-settle">Tukar Guling: 1 Keranjang Sayur = 1 Keranjang Ikan Asin + Garam.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-case">Desa Pantai butuh Kayu Bangunan</td>
+                <td class="col-input">Membawa Terasi & Ikan Kering kualitas ekspor.</td>
+                <td class="col-settle">Tukar dengan Kayu Jati/Kelapa dari Desa Hutan.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-case">Kota butuh Beras Organik</td>
+                <td class="col-input">Membawa Emas Mini (0.1gr - 1gr).</td>
+                <td class="col-settle">Transaksi langsung menggunakan Dinar/Dirham/Emas butiran. NO PAPER MONEY.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-case">Tukar Menukar Bibit</td>
+                <td class="col-input">Desa A bawa Bibit Durian.</td>
+                <td class="col-settle">Desa B bayar dengan Bibit Alpukat. Nilai setara umur tanaman.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-case">Kebutuhan Pupuk</td>
+                <td class="col-input">Peternak bawa Kotoran Kandang (Kohe).</td>
+                <td class="col-settle">Petani bayar dengan Jerami/Rumput Gajah (Pakan). Siklus tertutup.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-case">Jasa Pendidikan Antar Wilayah</td>
+                <td class="col-input">Guru Kota datang mengajar Skill IT/Mekanik.</td>
+                <td class="col-settle">Dibayar "Living Cost" Full (Rumah, Makan, Laundry) + Oleh-oleh Hasil Bumi.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-case">Kebutuhan Material Bangunan</td>
+                <td class="col-input">Desa Kapur bawa Gamping/Semen.</td>
+                <td class="col-settle">Desa Bata bayar dengan Batu Bata Merah. Rasio 1 Truk : 1 Truk.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-case">Barter Tekstil vs Pangan</td>
+                <td class="col-input">Pengrajin bawa Baju/Celana Kerja.</td>
+                <td class="col-settle">Ditukar dengan Beras untuk kebutuhan makan pengrajin selama sebulan.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-case">Minyak Goreng vs Bahan Mentah</td>
+                <td class="col-input">Pabrik Desa bawa Minyak Kelapa.</td>
+                <td class="col-settle">Warga bayar dengan Kelapa Butiran. (Jasa maklon).</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-case">Obat-obatan</td>
+                <td class="col-input">Tabib Gunung bawa Jamu/Herbal.</td>
+                <td class="col-settle">Desa Kota bayar dengan Peralatan Medis/Botol Kaca.</td>
+            </tr>
+
+            <tr><td colspan="4" class="category-header">III. PEMBAYARAN JASA ANTAR WILAYAH</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-case">Dokter Spesialis Masuk Desa</td>
+                <td class="col-input">Jasa Operasi/Pengobatan.</td>
+                <td class="col-settle">Dibayar dengan Emas/Perak atau Hak Panen Tanah Bengkok Desa.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-case">Tukang Bangunan Borongan</td>
+                <td class="col-input">Tenaga membangun jembatan desa.</td>
+                <td class="col-settle">Dibayar Logistik Pangan Full + Sapi di akhir proyek.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-case">Ahli Geologi/Air</td>
+                <td class="col-input">Jasa deteksi mata air sumur bor.</td>
+                <td class="col-settle">Dibayar "Royalti Air" (Gratis air selamanya) atau Perak.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-case">Keamanan/Jawara Sewaan</td>
+                <td class="col-input">Menjaga panen raya dari perampok luar.</td>
+                <td class="col-settle">Dibayar 2.5% - 5% dari total hasil panen yang dijaga.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-case">Supir Truk Logistik</td>
+                <td class="col-input">Jasa antar barang lintas provinsi.</td>
+                <td class="col-settle">Dibayar BBM (Bio-solar) + Makan + Rokok + Sangu Emas Kecil.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-case">Seniman/Hiburan</td>
+                <td class="col-input">Wayang Kulit/Dangdut masuk desa.</td>
+                <td class="col-settle">Saweran Hasil Bumi (Pisang, Kelapa, Beras) + Makan Besar.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-case">Ahli IT/Jaringan</td>
+                <td class="col-input">Membangun jaringan intranet desa.</td>
+                <td class="col-settle">Dibayar Aset Tanah di desa tersebut (Menjadi warga kehormatan).</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-case">Konsultan Pertanian</td>
+                <td class="col-input">Mengajarkan cara bikin pupuk organik.</td>
+                <td class="col-settle">Dibayar sampel hasil panen terbaik (Quality Assurance).</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-case">Jasa Penggilingan Padi</td>
+                <td class="col-input">Mesin giling keliling.</td>
+                <td class="col-settle">Upah: Dedak/Sekam (untuk pakan ternak si tukang giling).</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-case">Bidan Desa</td>
+                <td class="col-input">Membantu lahiran.</td>
+                <td class="col-settle">Dibayar Aqiqah (Kambing sudah dimasak) + Emas Cincin Bayi.</td>
+            </tr>
+
+            <tr><td colspan="4" class="category-header">IV. PROTOKOL ANTI PENJAJAHAN EKONOMI</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-case">Orang Asing Mau Beli Tanah</td>
+                <td class="col-input">Mawa Dolar/Rupiah Digital.</td>
+                <td class="col-settle">DITOLAK. Tanah hanya boleh "Sewa Pakai" (Hak Guna) bayar pake Emas. Tanah tidak boleh dijual putus.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-case">Pabrik Masuk Desa</td>
+                <td class="col-input">Investasi Mesin.</td>
+                <td class="col-settle">Saham Pabrik 51% milik Desa (Tanah & Tenaga Kerja). Investor max 49%.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-case">Turis Masuk Wilayah</td>
+                <td class="col-input">Visa Kunjungan.</td>
+                <td class="col-settle">Wajib tukar uang asing ke Koin Lokal (Dirham Desa) di perbatasan. Uang asing dilarang beredar di dalam.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-case">Supermarket Waralaba Masuk</td>
+                <td class="col-input">Modal Besar & Barang Pabrik.</td>
+                <td class="col-settle">DILARANG. Hanya boleh Koperasi Desa yang menjual produk lokal. Mencegah uang lari ke pusat.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-case">Pinjaman Modal Luar</td>
+                <td class="col-input">Tawaran Hutang Bunga (Riba).</td>
+                <td class="col-settle">DITOLAK KERAS. Ganti dengan sistem Syirkah (Bagi Untung/Rugi).</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-case">Pajak/Upeti Keluar</td>
+                <td class="col-input">Setoran ke Pusat.</td>
+                <td class="col-settle">Hanya dalam bentuk kelebihan logistik (setelah kebutuhan desa terpenuhi). Bukan uang tunai.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-case">Holder/Penimbun Aset</td>
+                <td class="col-input">Beli tanah tapi ditelantarkan (Land Banking).</td>
+                <td class="col-settle">DENDA DEMURRAGE. Tanah nganggur didenda/disita desa untuk digarap warga. Aset wajib produktif.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-case">Inflasi Mata Uang Luar</td>
+                <td class="col-input">Harga barang naik karena Dolar naik.</td>
+                <td class="col-settle">ABAIKAN. Harga internal tetap dipatok Emas/Beras. 1 Ekor Ayam tetap 1 Dirham, mau dolar berapapun.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-case">Sanksi Pelanggaran Ekonomi</td>
+                <td class="col-input">Menipu timbangan/korupsi.</td>
+                <td class="col-settle">Ganti rugi 2x lipat + Kerja Sosial. Tidak ada penjara (buang nasi).</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-case">Dana Pensiun Warga</td>
+                <td class="col-input">Iuran masa muda.</td>
+                <td class="col-settle">Dikonversi jadi Pohon Jati/Kebun. Saat tua, hasil kebun yang menghidupi. Bukan uang kertas yang susut.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. TABEL KONVERSI NILAI (JIKA EMAS LANGKA)</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-case">Satuan Upah Dasar (1 Hari Kerja)</td>
+                <td class="col-input">Tenaga Buruh Kasar.</td>
+                <td class="col-settle">Setara 3-4 Kg Beras atau 1/2 Dirham Perak.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-case">Satuan Protein Kecil</td>
+                <td class="col-input">1 Ekor Ayam Kampung.</td>
+                <td class="col-settle">Setara 1 Dirham Perak atau 4 Liter Beras.</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-case">Satuan Protein Besar</td>
+                <td class="col-input">1 Ekor Kambing Dewasa.</td>
+                <td class="col-settle">Setara 1 Dinar Emas atau 10-12 Ekor Ayam.</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-case">Satuan Sapi</td>
+                <td class="col-input">1 Ekor Sapi Limosin.</td>
+                <td class="col-settle">Setara 7 Dinar Emas atau 7 Ekor Kambing.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-case">Satuan Tanah</td>
+                <td class="col-input">1 Hektar Sawah Produktif.</td>
+                <td class="col-settle">Dinilai berdasarkan hasil panen 5 tahun ke depan (Yield Valuation).</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-case">Satuan Sewa Rumah</td>
+                <td class="col-input">Kontrakan 1 Tahun.</td>
+                <td class="col-settle">Setara 5-10 Gram Emas (Tergantung fasilitas).</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-case">Biaya Nikah (Mahar Standar)</td>
+                <td class="col-input">Syarat Sah Nikah.</td>
+                <td class="col-settle">1 Dinar Emas atau Seperangkat Alat Sholat + Cincin Besi (Minimalis).</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-case">Denda Darah (Diyat)</td>
+                <td class="col-input">Ganti rugi nyawa/luka berat.</td>
+                <td class="col-settle">100 Ekor Unta (atau setara 1000 Dinar Emas).</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-case">Zakat Pertanian</td>
+                <td class="col-input">Pajak Panen (Air Hujan).</td>
+                <td class="col-settle">10% dari total panen (Langsung dibagi ke fakir miskin desa).</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-case">Zakat Pertanian (Irigasi Biaya)</td>
+                <td class="col-input">Pajak Panen (Air Pompa/Beli).</td>
+                <td class="col-settle">5% dari total panen.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        UANG KERTAS BISA DICETAK, TAPI SAPI TIDAK BISA DI-FOTOCOPY.<br>
+        KEKAYAAN SEJATI ADALAH ASET YANG BERNAFAS, TUMBUH, DAN MEMBERI MANFAAT.<br>
+        STOP MENABUNG ANGKA, MULAI MENABUNG NYAWA (ASET RIIL).
+    </div>
+</div>
+
+</body>
+</html>

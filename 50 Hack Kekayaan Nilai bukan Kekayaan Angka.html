@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: TRUE WEALTH VS ILLUSION</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Mono&display=swap');
+
+        body {
+            background-color: #12100b; /* Dark Bronze */
+            color: #d4af37; /* Metallic Gold */
+            font-family: 'Roboto Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wealth-container {
+            width: 100%;
+            max-width: 1300px;
+            border: 5px double #d4af37;
+            padding: 30px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2), inset 0 0 80px rgba(0, 0, 0, 0.9);
+            position: relative;
+            background: linear-gradient(135deg, #1f1a12 0%, #000 100%);
+        }
+
+        /* Coin Texture Effect */
+        .wealth-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: radial-gradient(circle, #d4af37 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #d4af37;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 20px;
+        }
+
+        .alert-box {
+            border: 1px solid #d4af37;
+            background-color: rgba(60, 50, 10, 0.8);
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(20, 15, 5, 0.9);
+        }
+
+        th, td {
+            border: 1px solid #8a702a;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #3b2f12;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #d4af37;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Column Styles */
+        .col-modern { color: #ff6b6b; width: 30%; font-weight: bold; } /* Miskin Modern */
+        .col-truth { color: #fff; width: 35%; } /* Realita */
+        .col-wealth { color: #50fa7b; width: 35%; font-weight: bold; } /* Kaya Hakiki */
+
+        tr:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .section-header {
+            background-color: #59461b;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #d4af37;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #d4af37;
+            border-top: 1px dashed #d4af37;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wealth-container">
+    <h1>TRUE WEALTH VS MODERN POVERTY</h1>
+    
+    <div class="alert-box">
+        JANGAN TUKAR SAWAH DENGAN MOBIL. JANGAN TUKAR EMAS DENGAN GAYA.<br>
+        KAYA ITU PUNYA PRODUKSI, BUKAN PUNYA HUTANG KONSUMSI.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>KEKAYAAN PALSU (MODERN)</th>
+                <th>REALITA (KENAPA MISKIN)</th>
+                <th>KEKAYAAN HAKIKI (LELUHUR)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. ASET VS SAMPAH (ASSET MISCONCEPTION)</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-modern">Mobil Mewah (Kredit)</td>
+                <td class="col-truth">Besi Rongsok. Nilai turun 20% saat keluar dealer. Biaya bensin, pajak, servis nyedot gaji.</td>
+                <td class="col-wealth">Sawah/Kebun Produktif. Tanah yang menghasilkan padi/buah. Nilai naik terus, perut kenyang.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-modern">Rumah Gedong (KPR 20th)</td>
+                <td class="col-truth">Penjara Beton. Bunga bank 2x lipat harga rumah. Hidup stress dikejar cicilan.</td>
+                <td class="col-wealth">Rumah Tumbuh (Tanpa Hutang). Dibangun bertahap sesuai rezeki. Sederhana tapi merdeka. Halaman luas buat ternak.</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-modern">iPhone Terbaru</td>
+                <td class="col-truth">Alat Pamer. Fitur canggih cuma dipake WA & Sosmed. 2 tahun jadi sampah.</td>
+                <td class="col-wealth">Emas Batangan (Dinar). Disimpan di lemari, nilainya menjaga daya beli. Anti-inflasi.</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-modern">Tabungan Uang Fiat</td>
+                <td class="col-truth">Es Balok. Disimpan lama mencair dimakan inflasi. Angka nambah, tapi barang makin mahal.</td>
+                <td class="col-wealth">Ternak (Sapi/Kambing). "Uang yang beranak pinak". Aset biologis yang berkembang biak sendiri.</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-modern">Branded Fashion (Tas/Sepatu)</td>
+                <td class="col-truth">Beli Logo. Kulit sintetik yang ngelupas. Cuma buat validasi orang lain.</td>
+                <td class="col-wealth">Alat Produksi (Mesin/Cangkul). Benda yang bisa dipakai buat nyari duit/makan. Aset kerja.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-modern">Apartemen Studio</td>
+                <td class="col-truth">Sangkar Burung. Gak dapet tanah, bayar IPL mahal, susah dijual lagi.</td>
+                <td class="col-wealth">Tanah Kavling Desa. Murah, luas, bisa ditanami singkong. Aset nyata.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-modern">Asuransi Unit Link</td>
+                <td class="col-truth">Judi Investasi. Nilai tunai sering hangus atau rugi. Biaya admin gede.</td>
+                <td class="col-wealth">Kesehatan Badan. Otot kuat, imun bagus, pikiran waras. Aset utama buat cari rezeki.</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-modern">Koleksi Mainan/Sneakers</td>
+                <td class="col-truth">Gelembung Hype. Harga mahal cuma karena tren sesaat. Susah dicairkan saat butuh makan.</td>
+                <td class="col-wealth">Stok Pangan (Lumbung). Beras, gabah, gula, garam. Aset paling berharga saat krisis.</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-modern">Gelar Akademik Berderet</td>
+                <td class="col-truth">Kertas Mahal. Keluar biaya ratusan juta, lulus nganggur atau gaji UMR.</td>
+                <td class="col-wealth">Skill Nyata (Tukang/Tani). Kemampuan benerin genteng, nanam cabe, ngelas. Selalu dicari orang.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-modern">Member Gym & Golf</td>
+                <td class="col-truth">Sewa Tempat. Bayar mahal buat keringetan di ruangan AC.</td>
+                <td class="col-wealth">Kebun Sayur Sendiri. Nyangkul dapet sehat, dapet vitamin D, dapet panen sayur.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">II. GAYA HIDUP VS DAYA HIDUP (LIFESTYLE TRAP)</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-modern">Hutang Produktif (Katanya)</td>
+                <td class="col-truth">Jebakan Tikus. Bisnis pake hutang = kerja buat bank. Salah dikit, aset disita.</td>
+                <td class="col-wealth">Bebas Hutang (Zero Debt). Tidur nyenyak. Rezeki sedikit tapi berkah karena utuh buat sendiri.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-modern">Kartu Kredit/Paylater</td>
+                <td class="col-truth">Makan Tabungan Masa Depan. Belanja barang yang belum mampu dibeli pake duit masa depan.</td>
+                <td class="col-wealth">Tunai Keras (Cash). Kalau gak ada duit di dompet, berarti gak mampu. Puasa.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-modern">Makan di Resto Viral</td>
+                <td class="col-truth">Beli Konten. Rasa biasa, harga gila, porsi dikit. Kenyang kagak, dompet jebol iya.</td>
+                <td class="col-wealth">Masak di Rumah. Bahan segar, porsi puas, higienis, hemat 70%. Kehangatan keluarga.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-modern">Healing ke Bali/LN</td>
+                <td class="col-truth">Pelarian Stress. Buang duit buat lari dari masalah hidup yang numpuk. Pulang tambah stress.</td>
+                <td class="col-wealth">Rumah Nyaman (Home). Bikin rumah jadi surga. Gak perlu healing keluar karena di rumah udah damai.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-modern">Ngopi di Cafe Tiap Hari</td>
+                <td class="col-truth">Bakar Duit. 50rb/hari x 30 = 1.5 Juta. Cuma buat air item gula.</td>
+                <td class="col-wealth">Nyeduh Sendiri. Beli biji kopi petani lokal. Support tetangga, rasa lebih enak, hemat gila.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-modern">Pesta Nikah Mewah (Hutang)</td>
+                <td class="col-truth">Raja Sehari, Budak Selamanya. Mulai rumah tangga dengan minus demi gengsi tamu.</td>
+                <td class="col-wealth">Akad & Syukuran. Sah agama & negara. Modal dipake buat beli rumah/tanah.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-modern">Sekolah Internasional</td>
+                <td class="col-truth">Gengsi Ortu. Mahal di kurikulum barat, anak jadi asing sama budaya sendiri.</td>
+                <td class="col-wealth">Home Schooling / Pesantren Alam. Anak diajar adab, survival, & agama. Mental baja.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-modern">Baju Sekali Pakai (OOTD)</td>
+                <td class="col-truth">Sampah Lemari. Beli baju cuma buat foto IG, abis itu numpuk. Pemborosan kain.</td>
+                <td class="col-wealth">Baju Berkualitas (Timeless). Sedikit tapi awet. Kain bagus, jahitan kuat. Dipake tahunan tetep gagah.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-modern">Nonton Konser VIP</td>
+                <td class="col-truth">Euforia Sesaat. Bayar jutaan buat teriak-teriak 2 jam. Besoknya lupa.</td>
+                <td class="col-wealth">Sedekah / Traktir Teman. Uang jadi doa & silaturahmi. Rasa bahagianya panjang.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-modern">Langganan Streaming (Netflix dll)</td>
+                <td class="col-truth">Pencuri Waktu. Bayar buat jadi males (Couch Potato). Otak dicuci propaganda film.</td>
+                <td class="col-wealth">Buku & Diskusi. Bayar ilmu. Otak diasah. Waktu jadi wawasan.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">III. MENTAL PENGEMIS VS MENTAL RAJA</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-modern">Mental Gaji Bulanan</td>
+                <td class="col-truth">Zona Nyaman. Takut resiko, nunggu disuruh, mental buruh seumur hidup.</td>
+                <td class="col-wealth">Mental Saudagar/Petani. Berani ambil resiko, mandiri, hasil tergantung usaha sendiri.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-modern">Berharap Warisan</td>
+                <td class="col-truth">Parasit. Nunggu orang tua mati biar dapet duit. Biasanya warisan habis sekejap.</td>
+                <td class="col-wealth">Membangun Dinasti. Menciptakan kekayaan baru buat anak cucu. Tangan di atas.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-modern">Takut Kelihatan Miskin</td>
+                <td class="col-truth">Topeng Emas. Aslinya kere tapi maksa gaya. Capek sandiwara.</td>
+                <td class="col-wealth">Low Profile (Zuhud). Kaya tapi sederhana. Gak ngundang rampok/pajak. Tenang.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-modern">Investasi Bodong (Crypto Micin/Slot)</td>
+                <td class="col-truth">Ingin Cepat Kaya. Serakah (Greed). Ujungnya miskin mendadak.</td>
+                <td class="col-wealth">Proses Tani. Paham hukum alam: Tanam -> Rawat -> Panen. Sabar & Bertahap.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-modern">Validasi Netizen</td>
+                <td class="col-truth">Budak Like. Harga diri ditentukan jumlah follower. Mental kerupuk.</td>
+                <td class="col-wealth">Validasi Tuhan & Keluarga. Cukup dikenal di langit & disayang anak istri.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-modern">Menunda Anak (Karir Dulu)</td>
+                <td class="col-truth">Takut Miskin. Menganggap anak beban ekonomi. Padahal rezeki anak itu beda paket.</td>
+                <td class="col-wealth">Banyak Anak. Membangun klan/suku. Anak adalah tenaga, doa, & penerus aset.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-modern">Pensiun Foya-Foya</td>
+                <td class="col-truth">Mimpi Kosong. Tua sakit-sakitan, duit abis buat berobat. Kesepian.</td>
+                <td class="col-wealth">Tua Beguna (Resi). Makin tua makin bijak, jadi tempat bertanya, dikelilingi cucu & kebun.</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-modern">Cinta Binatang (Cat/Dog Mom)</td>
+                <td class="col-truth">Pengganti Anak. Menganggap hewan setara manusia. Biaya pakan mahal, hewan mati stress.</td>
+                <td class="col-wealth">Ternak Produktif. Hewan dipelihara untuk manfaat (telur/daging/jaga rumah). Proporsional.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-modern">Sedekah Nunggu Kaya</td>
+                <td class="col-truth">Mental Kikir. Merasa selalu kurang. Rezeki seret karena pintu ditutup sendiri.</td>
+                <td class="col-wealth">Sedekah Saat Sempit. Pancingan rezeki. Memberi walau sedikit. Hati kaya.</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-modern">Menyalahkan Keadaan/Pemerintah</td>
+                <td class="col-truth">Mental Korban. Pasif. Nunggu bantuan bansos.</td>
+                <td class="col-wealth">Berdaulat. Gak peduli siapa presidennya, dapur tetep ngebul karena punya sawah & empang.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">IV. INDIKATOR SUKSES NUSWANTARA (GEMAH RIPAH)</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-modern">Saldo Rekening Gendut</td>
+                <td class="col-truth">Angka Digital. Bisa dibekukan/hilang kapan saja. Hampa.</td>
+                <td class="col-wealth">Stok Pangan Penuh. Gudang beras penuh, kolam ikan banyak, kebun subur. Tenang lahir batin.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-modern">Tidur di Hotel Bintang 5</td>
+                <td class="col-truth">Kasur Empuk, Tidur Gak Nyenyak. Stress mikirin tagihan.</td>
+                <td class="col-wealth">Tidur Pules (Tanpa Obat). Badan capek abis kerja fisik, hati tenang tanpa hutang. Nikmat tiada tara.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-modern">Makan Fine Dining</td>
+                <td class="col-truth">Porsi Kecil, Gengsi Gede. Lidah mati rasa kena micin.</td>
+                <td class="col-wealth">Makan Lalapan Sambal Dadak. Sayur petik sendiri, nasi anget. Sehat, seger, nikmat.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-modern">Punya Banyak Follower</td>
+                <td class="col-truth">Fans Palsu. Saat susah, mereka *unfollow* & menghujat.</td>
+                <td class="col-wealth">Punya Tetangga Baik. Saat rumah kebakaran, tetangga yang nyiram, bukan follower.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-modern">Kerja di Gedung Tinggi</td>
+                <td class="col-truth">Kandang Emas. Berangkat gelap pulang gelap, gak liat matahari. Stress, asam lambung.</td>
+                <td class="col-wealth">Kerja di Bawah Langit. Kena matahari, keringat keluar, bebas ngatur waktu.</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-modern">Jabatan CEO/Manajer</td>
+                <td class="col-truth">Tanggung Jawab Stress. Dimarahin owner, dimusuhin bawahan. Uang abis buat obat stress.</td>
+                <td class="col-wealth">Juragan Tanah. Punya lahan, disewakan/digarap. Dihormati karena memberi manfaat pangan.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-modern">Anak Les Sana-Sini</td>
+                <td class="col-truth">Anak Robot. Pintar teori, nol praktek. Mental rapuh.</td>
+                <td class="col-wealth">Anak Bisa Ngaji & Macul. Paham agama, paham survival. Siap hidup di jaman apapun.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-modern">Rumah Full AC/Tertutup</td>
+                <td class="col-truth">Isolasi Alam. Udara daur ulang. Sakit-sakitan.</td>
+                <td class="col-wealth">Rumah Asri Terbuka. Angin masuk, burung berkicau. Menyatu dengan ritme alam.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-modern">Mati Meninggalkan Asuransi</td>
+                <td class="col-truth">Uang Panas. Sering jadi rebutan ahli waris.</td>
+                <td class="col-wealth">Mati Meninggalkan Wakaf/Amal. Sumur umum, masjid, pohon buah. Pahala ngalir terus.</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-modern">Merdeka Finansial (FIRE)</td>
+                <td class="col-truth">Pensiun Dini buat Males-malesan. Hidup jadi gak punya tujuan.</td>
+                <td class="col-wealth">Merdeka Jiwa. Hidup bukan buat ngejar duit, tapi buat ibadah & manfaat. Kerja itu ibadah.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. JALAN PULANG (STRATEGI TRANSISI)</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-modern">Beli Barang Depresiasi</td>
+                <td class="col-truth">Barang yang nilainya turun (Elektronik, Mobil). Miskin perlahan.</td>
+                <td class="col-wealth">Beli Barang Apresiasi. Emas, Tanah, Kayu Keras, Barang Antik. Kaya perlahan.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-modern">Belanja Impulsif</td>
+                <td class="col-truth">Lapar Mata. Beli karena diskon, bukan butuh. Rumah jadi gudang sampah.</td>
+                <td class="col-wealth">Minimalis Fungsional. Beli yang butuh & kualitas terbaik (Buy it for life).</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-modern">Gaya Dulu, Makan Nanti</td>
+                <td class="col-truth">Prioritas Terbalik. HP iPhone, token listrik bunyi.</td>
+                <td class="col-wealth">Pondasi Dulu. Sandang, Pangan, Papan aman, baru mikir gaya (kalau sisa).</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-modern">Malu Bertani/Kotor</td>
+                <td class="col-truth">Gengsi Membunuhmu. Jijik sama tanah sumber kehidupan.</td>
+                <td class="col-wealth">Muliakan Tanah. Tanah adalah ibu. Siapa merawat tanah, tanah merawat dia.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-modern">Passive Income (Money Game)</td>
+                <td class="col-truth">Duduk Diem Dapet Duit. Biasanya penipuan (Ponzi).</td>
+                <td class="col-wealth">Active Income + Barokah. Rezeki yang didapat dari keringat & manfaat nyata jauh lebih berkah & awet.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-modern">Kredit Panci/Barang Remeh</td>
+                <td class="col-truth">Mental Cicilan. Barang murah pun dicicil. Gak punya kontrol diri.</td>
+                <td class="col-wealth">Nabun & Beli Tunai. Latih kesabaran. Kalau belum kumpul, berarti belum waktunya punya.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-modern">Fokus Harga Murah</td>
+                <td class="col-truth">Murahan = Cepat Rusak. Beli barang KW 5x setahun lebih boros dari ori 1x 5 tahun.</td>
+                <td class="col-wealth">Fokus Nilai (Value). Mahal dikit gak papa asal awet & fungsi maksimal.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-modern">Takut Inflasi</td>
+                <td class="col-truth">Panik nyimpen duit kertas.</td>
+                <td class="col-wealth">Heding Alam. Punya kebun singkong. Mau dolar naik 17rb, harga singkong ikut naik. Aman.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-modern">Kerja Keras Bagai Kuda</td>
+                <td class="col-truth">Hustle Culture. Kerja 18 jam sehari sampe tipes demi bos.</td>
+                <td class="col-wealth">Kerja Cerdas & Ikhlas. Kerja sesuai kapasitas, sisanya pasrah (Tawakal). Rezeki gak bakal ketuker.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-modern">Sukses = Materi</td>
+                <td class="col-truth">Pandangan Sempit. Kaya harta tapi miskin hati = Neraka dunia.</td>
+                <td class="col-wealth">Sukses = Cukup (Qanaah). Hati lapang, badan sehat, keluarga rukun, hutang lunas. ITULAH KAYA RAYA.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        KAYA ITU RASA CUKUP. MISKIN ITU RASA KURANG.<br>
+        JANGAN KEJAR BAYANGAN (UANG), KEJARLAH BENDA NYA (NILAI).<br>
+        HIDUP MERDEKA TANPA HUTANG ADALAH KEMEWAHAN TERTINGGI ABAD INI.
+    </div>
+</div>
+
+</body>
+</html>

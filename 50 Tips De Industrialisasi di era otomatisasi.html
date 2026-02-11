@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: PERSONAL AUTOMATION TOOLKIT</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap');
+
+        body {
+            background-color: #050505;
+            color: #00e5ff; /* Cyan Neon */
+            font-family: 'Roboto Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .auto-container {
+            width: 100%;
+            max-width: 1400px;
+            border: 2px solid #00e5ff;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.15);
+            position: relative;
+            background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+        }
+
+        /* Circuit Board Pattern */
+        .auto-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 0 10px #00e5ff;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .alert-box {
+            border-left: 5px solid #00e5ff;
+            background-color: rgba(0, 50, 60, 0.8);
+            color: #fff;
+            padding: 20px;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(10, 10, 10, 0.9);
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 15px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        th {
+            background-color: #002233;
+            color: #00e5ff;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #00e5ff;
+        }
+
+        /* Column Styles */
+        .col-tool { color: #fff; width: 25%; font-weight: bold; font-size: 1rem; }
+        .col-func { color: #cccccc; width: 35%; }
+        .col-ai { color: #ffeb3b; width: 40%; font-style: italic; } /* Kuning: Peran AI */
+
+        tr:hover {
+            background-color: rgba(0, 229, 255, 0.05);
+        }
+
+        .category-header {
+            background-color: #003300;
+            color: #00ff00;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #00ff00;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #00e5ff;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auto-container">
+    <h1>PERSONAL AUTOMATION: DE-INDUSTRIALIZATION KIT</h1>
+    
+    <div class="alert-box">
+        <strong>MISI:</strong> MENGUBAH KONSUMEN JADI PRODUSEN (PROSUMER).<br>
+        <strong>METODE:</strong> AI SEBAGAI OTAK, MESIN SEBAGAI OTOT, MANUSIA SEBAGAI JIWA.<br>
+        <strong>TARGET:</strong> KEMANDIRIAN TOTAL DARI PABRIK GLOBAL.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>ALAT PRODUKSI (HARDWARE)</th>
+                <th>FUNGSI KEMANDIRIAN (OUTPUT)</th>
+                <th>INTEGRASI AI (BANTUAN OTOMASI)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="category-header">I. PANGAN PRESISI (SMART FARMING)</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-tool">Modul Hidroponik IoT</td>
+                <td class="col-func">Menanam sayur di tembok rumah tanpa tanah. Panen tiap hari.</td>
+                <td class="col-ai">AI mengatur pH, nutrisi, & lampu grow-light otomatis. Kirim notif panen.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-tool">Inkubator Telur Otomatis</td>
+                <td class="col-func">Menetaskan ayam/bebek mandiri. Regenerasi ternak tanpa beli bibit (DOC).</td>
+                <td class="col-ai">Sensor suhu/kelembaban presisi dikendalikan AI agar daya tetas 95%+.</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-tool">Kolam Bioflok + Auto Feeder</td>
+                <td class="col-func">Ternak lele/nila padat tebar di lahan sempit (ember/terpal).</td>
+                <td class="col-ai">AI ngasih makan sesuai jadwal & nafsu makan ikan (deteksi gerakan air).</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-tool">Komposter Bioreaktor</td>
+                <td class="col-func">Mengubah sampah dapur jadi pupuk cair & gas masak dalam 24 jam.</td>
+                <td class="col-ai">Monitoring suhu fermentasi agar bakteri bekerja optimal.</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-tool">Drone Penyiram/Pemantau</td>
+                <td class="col-func">Menyiram kebun luas atau memantau hama tanpa keliling jalan kaki.</td>
+                <td class="col-ai">Computer Vision mendeteksi daun kuning/hama, lalu semprot otomatis di titik itu saja.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-tool">Alat Perangkap Hama UV</td>
+                <td class="col-func">Membasmi serangga tanpa pestisida kimia.</td>
+                <td class="col-ai">Menyala otomatis saat sensor mendeteksi pola terbang hama malam hari.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-tool">Rumah Jamur Otomatis (Kumbung)</td>
+                <td class="col-func">Produksi protein nabati di ruang gelap/lembab.</td>
+                <td class="col-ai">Mengatur kabut (misting) otomatis untuk menjaga kelembaban 90% stabil.</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-tool">Silo/Lumbung Vakum</td>
+                <td class="col-func">Menyimpan beras/jagung tahan 5 tahun tanpa kutu.</td>
+                <td class="col-ai">Sensor oksigen & kelembaban memberi peringatan jika ada kebocoran udara.</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-tool">Mesin Press Minyak (Oil Press)</td>
+                <td class="col-func">Bikin minyak goreng sendiri dari kelapa kering/bijian.</td>
+                <td class="col-ai">Mengatur suhu press agar minyak tidak rusak (Cold Press).</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-tool">Alat Pengering (Dehydrator) Solar</td>
+                <td class="col-func">Mengawetkan buah/daging jadi keripik/dendeng tanpa listrik (tenaga surya).</td>
+                <td class="col-ai">Kipas pintar nyala saat suhu terlalu panas agar gizi tidak rusak.</td>
+            </tr>
+
+            <tr><td colspan="4" class="category-header">II. PABRIK DI MEJA (PERSONAL FACTORY)</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-tool">3D Printer (FDM/Resin)</td>
+                <td class="col-func">Mencetak sparepart rusak, mainan, casing alat, engsel, dll.</td>
+                <td class="col-ai">AI memperbaiki file desain 3D yang rusak & optimasi penggunaan bahan (filament).</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-tool">CNC Router Mini</td>
+                <td class="col-func">Mengukir kayu/logam presisi. Bikin mebel, PCB, atau kerajinan.</td>
+                <td class="col-ai">Konversi gambar tangan jadi jalur potong mesin (G-Code) otomatis.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-tool">Laser Cutter/Engraver</td>
+                <td class="col-func">Potong akrilik, kulit, kain dengan presisi bedah. Bikin dompet/tas.</td>
+                <td class="col-ai">Optimasi tata letak (Nesting) agar bahan sisa sedikit mungkin.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-tool">Mesin Jahit Digital</td>
+                <td class="col-func">Bikin baju sendiri. Tidak beli baju *fast fashion* sampah.</td>
+                <td class="col-ai">Download pola baju dari internet, mesin menjahit motif bordir otomatis.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-tool">Las Listrik (Inverter Welding)</td>
+                <td class="col-func">Menyambung besi. Bikin rak, pagar, rangka atap sendiri.</td>
+                <td class="col-ai">Kacamata las AR (Augmented Reality) memandu jalur las yang lurus & kuat.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-tool">Mesin Daur Ulang Plastik</td>
+                <td class="col-func">Mengubah sampah botol jadi biji plastik atau filament 3D printer.</td>
+                <td class="col-ai">Memilah jenis plastik berdasarkan sensor optik warna/jenis.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-tool">Gerinda & Bor Cordless</td>
+                <td class="col-func">Alat dasar pertukangan yang wajib ada. Baterai bisa saling tukar.</td>
+                <td class="col-ai">Baterai pintar (BMS) memutus arus sebelum panas/rusak.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-tool">Sablon Digital (DTF)</td>
+                <td class="col-func">Cetak kaos/kain custom satuan. Kemandirian sandang.</td>
+                <td class="col-ai">Generative AI membuat desain gambar unik tanpa perlu skill gambar manual.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-tool">Vacuum Former</td>
+                <td class="col-func">Mencetak kemasan/cetakan kue dari lembaran plastik panas.</td>
+                <td class="col-ai">Mengatur suhu & hisapan vakum agar cetakan sempurna.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-tool">Kiln/Oven Keramik Mini</td>
+                <td class="col-func">Bikin piring/gelas dari tanah liat.</td>
+                <td class="col-ai">Profil pembakaran otomatis (suhu naik turun) agar keramik tidak retak.</td>
+            </tr>
+
+            <tr><td colspan="4" class="category-header">III. KEDAULATAN ENERGI (POWER PLANT)</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-tool">Panel Surya (Solar PV)</td>
+                <td class="col-func">Panen listrik dari langit.</td>
+                <td class="col-ai">Sun Tracker menggerakkan panel mengikuti arah matahari biar panen maksimal.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-tool">Baterai LiFePO4 (Powerwall)</td>
+                <td class="col-func">Menyimpan listrik untuk malam hari. Tahan 10 tahun.</td>
+                <td class="col-ai">BMS (Battery Management System) menyeimbangkan sel baterai biar awet.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-tool">Inverter Hybrid</td>
+                <td class="col-func">Otak listrik rumah. Mengatur sumber dari Surya/PLN/Baterai.</td>
+                <td class="col-ai">AI memprediksi cuaca: "Besok mendung, hemat baterai malam ini".</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-tool">Digester Biogas</td>
+                <td class="col-func">Mengubah kotoran (septictank) jadi gas masak.</td>
+                <td class="col-ai">Sensor tekanan gas & kebocoran untuk keamanan.</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-tool">Turbin Angin/Air Mini</td>
+                <td class="col-func">Tambahan listrik jika punya sungai atau di pantai.</td>
+                <td class="col-ai">Rem otomatis saat badai/banjir agar alat tidak rusak.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-tool">Pompa Air DC (Tenaga Surya)</td>
+                <td class="col-func">Naikkan air tanpa bayar listrik PLN.</td>
+                <td class="col-ai">Otomatis nyala saat tangki kosong & matahari bersinar.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-tool">Filter Air RO (Reverse Osmosis)</td>
+                <td class="col-func">Ubah air sumur/hujan jadi air minum murni.</td>
+                <td class="col-ai">Sensor TDS (Total Dissolved Solids) memberi tahu kapan filter harus ganti.</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-tool">Kompor Induksi/Listrik</td>
+                <td class="col-func">Masak pakai listrik surya (gratis) daripada beli gas LPG.</td>
+                <td class="col-ai">Mengatur suhu presisi & mati otomatis (timer).</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-tool">Sepeda Listrik Cargo</td>
+                <td class="col-func">Angkut barang/panen tanpa bensin.</td>
+                <td class="col-ai">Regenerative Braking (Ngerem ngisi baterai).</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-tool">Genset Baterai Portable</td>
+                <td class="col-func">Listrik darurat yang bisa ditenteng kemana-mana.</td>
+                <td class="col-ai">Fast charging management.</td>
+            </tr>
+
+            <tr><td colspan="4" class="category-header">IV. OTAK DIGITAL (LOCAL AI & COMMS)</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-tool">Home Server (Mini PC)</td>
+                <td class="col-func">Penyimpanan data pribadi (Cloud sendiri). Bebas intip Google/Big Tech.</td>
+                <td class="col-ai">Menjalankan "Local LLM" (AI Chatbot Pribadi) tanpa internet.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-tool">LoRa Mesh Node</td>
+                <td class="col-func">Alat chat teks jarak jauh (5-10km) tanpa pulsa & internet.</td>
+                <td class="col-ai">Enkripsi pesan otomatis & routing jalur terkuat.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-tool">Hardisk Eksternal (Offline Wiki)</td>
+                <td class="col-func">Menyimpan seluruh ilmu pengetahuan (Wikipedia Offline, Buku Medis, Peta).</td>
+                <td class="col-ai">AI Search Engine untuk mencari data di file lokal dengan cepat.</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-tool">Raspberry Pi / Arduino</td>
+                <td class="col-func">Otak kecil untuk bikin robot/otomasi apa saja.</td>
+                <td class="col-ai">AI Coding Assistant membantu nulis kode program untuk alat ini.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-tool">Kamera CCTV Pintar (Offline)</td>
+                <td class="col-func">Keamanan rumah tanpa setor data ke cloud China/US.</td>
+                <td class="col-ai">Face Recognition lokal: Bedakan keluarga vs maling.</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-tool">Radio HT (Walkie Talkie)</td>
+                <td class="col-func">Komunikasi suara real-time lokal.</td>
+                <td class="col-ai">Software Defined Radio (SDR) untuk scan frekuensi darurat.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-tool">Sensor Tanah & Cuaca</td>
+                <td class="col-func">Stasiun cuaca pribadi. Tahu kapan hujan/kering.</td>
+                <td class="col-ai">Prediksi cuaca lokal berbasis data historis kebun sendiri.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-tool">Tablet E-Ink</td>
+                <td class="col-func">Membaca ribuan buku manual tanpa sakit mata & hemat baterai.</td>
+                <td class="col-ai">AI merangkum isi buku tebal jadi poin-poin penting.</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-tool">Printer Ink Tank</td>
+                <td class="col-func">Cetak dokumen fisik/pamflet propaganda kebaikan.</td>
+                <td class="col-ai">Optimasi tinta & layout otomatis.</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-tool">Faraday Cage (Kotak Besi)</td>
+                <td class="col-func">Melindungi alat elektronik dari EMP (ledakan elektromagnetik) atau penyadapan.</td>
+                <td class="col-ai">- (Fisik Murni) -</td>
+            </tr>
+
+            <tr><td colspan="4" class="category-header">V. DOKTER MANDIRI (BIO-LAB)</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-tool">Mikroskop Digital</td>
+                <td class="col-func">Cek kualitas air, darah, atau hama tanaman.</td>
+                <td class="col-ai">AI Image Recognition mendiagnosa jenis bakteri/penyakit dari gambar.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-tool">Alat Destilasi Minyak Atsiri</td>
+                <td class="col-func">Bikin minyak kayu putih, sereh, cengkeh untuk obat.</td>
+                <td class="col-ai">Kontrol suhu penyulingan presisi.</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-tool">Mesin Pembuat Kapsul Herbal</td>
+                <td class="col-func">Mengemas bubuk jamu jadi obat modern (kapsul).</td>
+                <td class="col-ai">- (Mekanis) -</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-tool">Oximeter & Tensi Digital</td>
+                <td class="col-func">Monitor tanda vital tubuh harian.</td>
+                <td class="col-ai">AI menganalisa tren kesehatan: "Tensi anda naik 3 hari ini, kurangi garam".</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-tool">Blender/Grinder High Speed</td>
+                <td class="col-func">Bikin tepung beras, bubuk kopi, atau jus detoks.</td>
+                <td class="col-ai">-</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-tool">Alat Bekam & Akupunktur</td>
+                <td class="col-func">Terapi fisik mandiri.</td>
+                <td class="col-ai">Aplikasi panduan titik bekam/akupunktur berbasis AR di badan.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-tool">Timbangan Presisi (Emas/Obat)</td>
+                <td class="col-func">Menimbang racikan obat atau transaksi emas.</td>
+                <td class="col-ai">Koneksi ke HP untuk catat rekam medis/transaksi.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-tool">Fermentor (Kefir/Yoghurt)</td>
+                <td class="col-func">Bikin probiotik untuk imun tubuh.</td>
+                <td class="col-ai">Jaga suhu inkubasi bakteri baik.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-tool">Kotak P3K Lengkap + Buku Manual</td>
+                <td class="col-func">Penanganan luka darurat.</td>
+                <td class="col-ai">Chatbot Medis Offline memandu cara jahit luka/bidai tulang.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-tool">Smartwatch (Tanpa GPS Cloud)</td>
+                <td class="col-func">Monitor detak jantung & tidur.</td>
+                <td class="col-ai">Analisa stres & kebugaran lokal di HP sendiri.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        DENGAN ALAT INI, KITA BUKAN LAGI KONSUMEN. KITA ADALAH PENCIPTA.<br>
+        AI ADALAH 'JIN' YANG TUNDUK PADA MANUSIA UNTUK MEMBANGUN PERADABAN BARU.<br>
+        <strong>DE-INDUSTRIALISASI DIMULAI DARI GUDANG RUMAHMU SENDIRI.</strong>
+    </div>
+</div>
+
+</body>
+</html>

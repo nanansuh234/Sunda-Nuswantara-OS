@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: CRISIS EXCHANGE PROTOCOL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Wallpoet&display=swap');
+
+        body {
+            background-color: #0d1a0d; /* Dark Money Green */
+            color: #50c878; /* Emerald */
+            font-family: 'Fira Code', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .trade-container {
+            width: 100%;
+            max-width: 1300px;
+            border: 4px solid #50c878;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(80, 200, 120, 0.2), inset 0 0 60px rgba(0, 0, 0, 0.9);
+            position: relative;
+            background: #000;
+        }
+
+        /* Ledger Lines Effect */
+        .trade-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(rgba(80, 200, 120, 0.05) 1px, transparent 1px);
+            background-size: 100% 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Wallpoet', cursive;
+            font-size: 2.8rem;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #50c878;
+            z-index: 2;
+            position: relative;
+            letter-spacing: 3px;
+            border-bottom: 2px dashed #50c878;
+            padding-bottom: 20px;
+        }
+
+        .alert-box {
+            border: 1px solid #50c878;
+            background-color: rgba(0, 50, 20, 0.9);
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            background-color: rgba(10, 20, 10, 0.95);
+        }
+
+        th, td {
+            border: 1px solid #2d5a38;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #1a3320;
+            color: #50c878;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #50c878;
+        }
+
+        /* Column Styles */
+        .col-crisis { color: #ff6666; width: 25%; font-weight: bold; } /* Jenis Krisis */
+        .col-tool { color: #ffd700; width: 30%; font-weight: bold; } /* Alat Tukar */
+        .col-val { color: #ffffff; width: 45%; font-style: italic; } /* Ekuivalensi Nilai */
+
+        tr:hover {
+            background-color: rgba(80, 200, 120, 0.1);
+        }
+
+        .section-header {
+            background-color: #264d30;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 1px solid #50c878;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #50c878;
+            border-top: 1px dashed #50c878;
+            padding-top: 15px;
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="trade-container">
+    <h1>CRISIS EXCHANGE: PROTOKOL DAGANG DARURAT</h1>
+    
+    <div class="alert-box">
+        JIKA UANG KERTAS JADI SAMPAH, NILAI KEMBALI KE BENDA NYATA.<br>
+        RUMUS DASAR: 1 DIRHAM = 1 EKOR AYAM = 3-5 KG BERAS (STABIL 1400 TAHUN).
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>SITUASI KRISIS</th>
+                <th>ALAT TUKAR UTAMA (CURRENCY)</th>
+                <th>STANDAR NILAI / EKUIVALENSI (CONTOH)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. KRISIS MONETER (HYPERINFLASI / BANK RUN)</td></tr>
+            <tr>
+                <td>01</td>
+                <td class="col-crisis">Uang Kertas Tak Laku</td>
+                <td class="col-tool">Dirham Perak (Koin 3gr)</td>
+                <td class="col-val">Standar Upah Harian. 1 Dirham = Upah tukang 1 hari = 1 Ekor Ayam Kampung = 3-5 Kg Beras.</td>
+            </tr>
+            <tr>
+                <td>02</td>
+                <td class="col-crisis">Tabungan Bank Hangus</td>
+                <td class="col-tool">Dinar Emas (Koin 4.25gr)</td>
+                <td class="col-val">Standar Aset Tinggi. 1 Dinar = 1 Kambing Dewasa = Biaya hidup 1 keluarga sebulan (sederhana).</td>
+            </tr>
+            <tr>
+                <td>03</td>
+                <td class="col-crisis">Inflasi Barang Impor</td>
+                <td class="col-tool">Perhiasan Emas Muda</td>
+                <td class="col-val">Pecahan Kecil. Cincin/Anting gram-graman untuk belanja mingguan di pasar kaget.</td>
+            </tr>
+            <tr>
+                <td>04</td>
+                <td class="col-crisis">Digital Banking Down</td>
+                <td class="col-tool">Uang Kartal (Cash) Receh</td>
+                <td class="col-val">Raja Sesaat. Saat ATM mati, siapa pegang cash fisik (terutama pecahan kecil) dia raja.</td>
+            </tr>
+            <tr>
+                <td>05</td>
+                <td class="col-crisis">CBDC (Uang Program)</td>
+                <td class="col-tool">Barter Tertutup (P2P)</td>
+                <td class="col-val">Sistem Buku Warung. Catatan hutang-piutang antar tetangga (Kasbon) tanpa lewat bank. Kepercayaan adalah mata uang.</td>
+            </tr>
+            <tr>
+                <td>06</td>
+                <td class="col-crisis">Krisis Devisa Negara</td>
+                <td class="col-tool">Komoditas Ekspor Desa</td>
+                <td class="col-val">Kopi/Lada/Cengkeh. Disimpan kering. 1 Kg Lada Hitam = Mata uang keras yang laku di pasar gelap internasional.</td>
+            </tr>
+            <tr>
+                <td>07</td>
+                <td class="col-crisis">Pasar Modal Runtuh</td>
+                <td class="col-tool">Tanah Produktif</td>
+                <td class="col-val">Aset Abadi. Sertifikat tanah tidak bisa dimakan, tapi ubi di dalamnya bisa. Nilai tanah = hasil panennya.</td>
+            </tr>
+            <tr>
+                <td>08</td>
+                <td class="col-crisis">Kehilangan Pekerjaan</td>
+                <td class="col-tool">Jasa/Tenaga (Labor)</td>
+                <td class="col-val">Sistem Sambatan. Kerja di sawah tetangga dibayar makan siang + 2 liter beras (bawon).</td>
+            </tr>
+            <tr>
+                <td>09</td>
+                <td class="col-crisis">Pajak Tinggi</td>
+                <td class="col-tool">Transaksi Bawah Tanah</td>
+                <td class="col-val">Tanpa Struk. Jual beli langsung di kebun/rumah. Harga lebih murah karena tanpa PPN.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="col-crisis">Utang Menumpuk</td>
+                <td class="col-tool">Pemutihan Komunitas</td>
+                <td class="col-val">Reset Lokal. Warga sepakat saling mengikhlaskan hutang kecil demi kohesi sosial (Sistem Udunan).</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">II. KRISIS PANGAN (LOGISTIK PUTUS)</td></tr>
+            <tr>
+                <td>11</td>
+                <td class="col-crisis">Kelaparan Kota</td>
+                <td class="col-tool">Beras & Gabah Kering</td>
+                <td class="col-val">Mata Uang Putih. 1 Liter Beras = Tiket untuk jasa apapun (cukur, ojek, servis).</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td class="col-crisis">Gagal Panen</td>
+                <td class="col-tool">Bibit Tanaman (Heirloom)</td>
+                <td class="col-val">Investasi Masa Depan. 1 Sachet Benih Cabai/Tomat Asli = Senilai 10x lipat harga normal karena langka.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td class="col-crisis">Protein Langka</td>
+                <td class="col-tool">Telur Ayam/Bebek</td>
+                <td class="col-val">Koin Bernutrisi. 1 Butir Telur = Mata uang receh paling laku. Mudah dibawa & ditukar sayur.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td class="col-crisis">Rantai Pasok Putus</td>
+                <td class="col-tool">Garam Krosok/Ikan Asin</td>
+                <td class="col-val">Pengawet. Garam menjadi sangat mahal saat kulkas mati. 1 Kg Garam = 10 Kg Singkong.</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td class="col-crisis">Toko Tutup</td>
+                <td class="col-tool">Gula Merah/Aren</td>
+                <td class="col-val">Kalori Padat. Gula aren tahan lama & sumber energi instan. Alat tukar favorit di pasar desa.</td>
+            </tr>
+            <tr>
+                <td>16</td>
+                <td class="col-crisis">Krisis Air Bersih</td>
+                <td class="col-tool">Filter Air/Tawas</td>
+                <td class="col-val">Jasa Penjernihan. 1 Galon Air Bersih = Ditukar dengan jasa angkut atau keamanan.</td>
+            </tr>
+            <tr>
+                <td>17</td>
+                <td class="col-crisis">Malnutrisi Anak</td>
+                <td class="col-tool">Susu Kambing/Sapi Segar</td>
+                <td class="col-val">Emas Cair. Pemilik kambing perah jadi "Bankir" gizi desa. Susu ditukar tenaga kerja.</td>
+            </tr>
+            <tr>
+                <td>18</td>
+                <td class="col-crisis">Ketiadaan Minyak Goreng</td>
+                <td class="col-tool">Kelapa Tua/Kopra</td>
+                <td class="col-val">Sumber Lemak. 5 Butir Kelapa = 1 Botol Minyak Klentik (Home made). Nilai tukar tinggi.</td>
+            </tr>
+            <tr>
+                <td>19</td>
+                <td class="col-crisis">Rokok Langka (Cukai Naik)</td>
+                <td class="col-tool">Tembakau Iris (Tingwe)</td>
+                <td class="col-val">Mata Uang Sosial. Bagi perokok, tembakau > emas. Alat sogok/pelicin paling efektif di pos penjagaan.</td>
+            </tr>
+            <tr>
+                <td>20</td>
+                <td class="col-crisis">Obat Pabrik Hilang</td>
+                <td class="col-tool">Madu Murni & Kunyit</td>
+                <td class="col-val">Apotek Hidup. 1 Botol Madu Asli = Antibiotik premium. Nilainya setara kunjungan dokter.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">III. KRISIS ENERGI (LISTRIK & BBM MATI)</td></tr>
+            <tr>
+                <td>21</td>
+                <td class="col-crisis">SPBU Kosong</td>
+                <td class="col-tool">Bensin Eceran (Jerigen)</td>
+                <td class="col-val">Liquid Gold. 1 Liter Bensin = Bisa ditukar beras 10 Kg saat chaos. Nilainya naik 1000%.</td>
+            </tr>
+            <tr>
+                <td>22</td>
+                <td class="col-crisis">Listrik Padam Total</td>
+                <td class="col-tool">Baterai (AA/AAA/18650)</td>
+                <td class="col-val">Energi Portabel. Baterai isi ulang + Panel Surya kecil = Harta karun untuk nyalakan radio/senter.</td>
+            </tr>
+            <tr>
+                <td>23</td>
+                <td class="col-crisis">Gas LPG Hilang</td>
+                <td class="col-tool">Kayu Bakar/Arang</td>
+                <td class="col-val">Energi Masak. Seikat kayu bakar = Ditukar masakan matang. Tukang arang jadi profesi vital.</td>
+            </tr>
+            <tr>
+                <td>24</td>
+                <td class="col-crisis">Komunikasi Mati</td>
+                <td class="col-tool">Jasa Cas HP (Solar/Genset)</td>
+                <td class="col-val">Koneksi Informasi. 1x Cas Penuh = Bayaran tinggi (rokok/beras).</td>
+            </tr>
+            <tr>
+                <td>25</td>
+                <td class="col-crisis">Transportasi Mogok</td>
+                <td class="col-tool">Sepeda & Sparepart</td>
+                <td class="col-val">Mobilitas Tanpa BBM. Ban dalam & rantai sepeda jadi komoditas panas.</td>
+            </tr>
+            <tr>
+                <td>26</td>
+                <td class="col-crisis">Malam Gelap Gulita</td>
+                <td class="col-tool">Lilin & Minyak Tanah</td>
+                <td class="col-val">Cahaya. 1 Batang Lilin = Keamanan malam hari. Nilai psikologis tinggi.</td>
+            </tr>
+            <tr>
+                <td>27</td>
+                <td class="col-crisis">Mesin Pertanian Mati</td>
+                <td class="col-tool">Kerbau/Sapi Bajak</td>
+                <td class="col-val">Traktor Biologis. Sewa kerbau dibayar dengan bagi hasil panen (1/5 bagian).</td>
+            </tr>
+            <tr>
+                <td>28</td>
+                <td class="col-crisis">Korek Api Langka</td>
+                <td class="col-tool">Korek Gas/Batu Api</td>
+                <td class="col-val">Pemicu Api. Benda sepele tapi vital. 1 Korek = Bisa barter dengan makanan siap saji.</td>
+            </tr>
+            <tr>
+                <td>29</td>
+                <td class="col-crisis">Lampu Senter Mati</td>
+                <td class="col-tool">Minyak Jelantah (Lampu)</td>
+                <td class="col-val">Daur Ulang Energi. Minyak bekas pakai kapas = Lampu darurat.</td>
+            </tr>
+            <tr>
+                <td>30</td>
+                <td class="col-crisis">Internet Down</td>
+                <td class="col-tool">Informasi (Radio/Kurir)</td>
+                <td class="col-val">Berita Valid. Orang yang punya radio HT/SW jadi pusat informasi. Berita ditukar logistik.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">IV. MODAL MANUSIA (SKILL FOR FOOD)</td></tr>
+            <tr>
+                <td>31</td>
+                <td class="col-crisis">Sakit Tanpa Dokter</td>
+                <td class="col-tool">Jasa Bekam/Pijat/Herbal</td>
+                <td class="col-val">Penyembuhan. Tabib dibayar dengan ayam/beras. Jasa kesehatan langsung ke pasien.</td>
+            </tr>
+            <tr>
+                <td>32</td>
+                <td class="col-crisis">Barang Rusak</td>
+                <td class="col-tool">Skill Mekanik/Tukang</td>
+                <td class="col-val">Perbaikan. Memperbaiki pompa air/sepeda/atap. Dibayar dengan sparepart atau makanan.</td>
+            </tr>
+            <tr>
+                <td>33</td>
+                <td class="col-crisis">Penjarahan/Maling</td>
+                <td class="col-tool">Jasa Keamanan (Jawara)</td>
+                <td class="col-val">Proteksi. Kelompok pemuda menjaga kampung. Dibayar iuran warga (jimpitan beras).</td>
+            </tr>
+            <tr>
+                <td>34</td>
+                <td class="col-crisis">Baju Rusak</td>
+                <td class="col-tool">Menjahit Manual</td>
+                <td class="col-val">Sandang. Memperbaiki baju sobek saat toko baju tutup. Jarum & benang jadi aset.</td>
+            </tr>
+            <tr>
+                <td>35</td>
+                <td class="col-crisis">Stress/Depresi Massal</td>
+                <td class="col-tool">Guru Ngaji/Spiritual</td>
+                <td class="col-val">Ketenangan Jiwa. Nasehat & doa. Dibayar dengan rasa hormat & sedekah bumi.</td>
+            </tr>
+            <tr>
+                <td>36</td>
+                <td class="col-crisis">Buta Arah</td>
+                <td class="col-tool">Pemandu Jalan/Scout</td>
+                <td class="col-val">Navigasi. Menunjukkan jalur aman/sumber air di hutan.</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td class="col-crisis">Rumah Bocor/Roboh</td>
+                <td class="col-tool">Gotong Royong (Sambatan)</td>
+                <td class="col-val">Bank Tenaga. "Hari ini saya bantu kamu, besok kamu bantu saya". Tanpa uang, cuma makan bareng.</td>
+            </tr>
+            <tr>
+                <td>38</td>
+                <td class="col-crisis">Anak Tidak Sekolah</td>
+                <td class="col-tool">Guru Privat Komunitas</td>
+                <td class="col-val">Pendidikan. Mengajar calistung/agama ke anak-anak tetangga. Dibayar natura (hasil bumi).</td>
+            </tr>
+            <tr>
+                <td>39</td>
+                <td class="col-crisis">Hiburan Mati</td>
+                <td class="col-tool">Seniman/Dalang/Musisi</td>
+                <td class="col-val">Hiburan Rakyat. Pertunjukan keliling dibayar saweran seikhlasnya (ubi/jagung).</td>
+            </tr>
+            <tr>
+                <td>40</td>
+                <td class="col-crisis">Sengketa Warga</td>
+                <td class="col-tool">Jasa Penengah (Lurah)</td>
+                <td class="col-val">Hakim Adat. Memutuskan perkara tanpa pengadilan negara. Upahnya adalah wibawa.</td>
+            </tr>
+
+            <tr><td colspan="4" class="section-header">V. HARD ASSETS (SAAT HUKUM HILANG)</td></tr>
+            <tr>
+                <td>41</td>
+                <td class="col-crisis">Hukum Rimba</td>
+                <td class="col-tool">Amunisi/Senjata Tajam</td>
+                <td class="col-val">Alat Bertahan. 1 Kotak Peluru/Golok Tajam = Aset paling mahal saat kerusuhan total.</td>
+            </tr>
+            <tr>
+                <td>42</td>
+                <td class="col-crisis">Wabah Penyakit</td>
+                <td class="col-tool">Alkohol/Disinfektan</td>
+                <td class="col-val">Sterilisasi. Alkohol 70% atau arak murni untuk luka & operasi darurat.</td>
+            </tr>
+            <tr>
+                <td>43</td>
+                <td class="col-crisis">Tidak Ada Sabun</td>
+                <td class="col-tool">Lerak/Abu Gosok</td>
+                <td class="col-val">Kebersihan Dasar. Sabun alami untuk cuci baju & badan. Mencegah penyakit kulit.</td>
+            </tr>
+            <tr>
+                <td>44</td>
+                <td class="col-crisis">Alas Kaki Hancur</td>
+                <td class="col-tool">Sandal Ban Bekas</td>
+                <td class="col-val">Alas Kaki Abadi. Kuat puluhan tahun. Melindungi kaki dari infeksi/paku.</td>
+            </tr>
+            <tr>
+                <td>45</td>
+                <td class="col-crisis">Perkakas Hilang</td>
+                <td class="col-tool">Paku & Kawat</td>
+                <td class="col-val">Konstruksi Darurat. Benda kecil yang vital untuk memperbaiki benteng/rumah.</td>
+            </tr>
+            <tr>
+                <td>46</td>
+                <td class="col-crisis">Wadah Air Pecah</td>
+                <td class="col-tool">Ember/Jerigen Plastik</td>
+                <td class="col-val">Penyimpan Aset. Wadah air yang kuat & tertutup sangat bernilai untuk survival.</td>
+            </tr>
+            <tr>
+                <td>47</td>
+                <td class="col-crisis">Hujan Asam/Debu</td>
+                <td class="col-tool">Terpal Plastik</td>
+                <td class="col-val">Atap Darurat. Melindungi stok pangan & manusia dari cuaca ekstrem.</td>
+            </tr>
+            <tr>
+                <td>48</td>
+                <td class="col-crisis">Butuh Tali</td>
+                <td class="col-tool">Tali Tambang/Ijuk</td>
+                <td class="col-val">Pengikat. Mengikat hewan, bangunan, atau tawanan.</td>
+            </tr>
+            <tr>
+                <td>49</td>
+                <td class="col-crisis">Peralatan Masak</td>
+                <td class="col-tool">Panci Besi (Cast Iron)</td>
+                <td class="col-val">Dapur Umum. Panci besar untuk masak sekampung. Aset komunal.</td>
+            </tr>
+            <tr>
+                <td>50</td>
+                <td class="col-crisis">Sistem Runtuh Total</td>
+                <td class="col-tool">KEPERCAYAAN (TRUST)</td>
+                <td class="col-val">Mata Uang Tertinggi. Orang jujur & bisa dipegang omongannya adalah aset terbesar. Pengkhianat dibuang.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        PRINSIP EKONOMI SWADAYA: JANGAN BOCOR KELUAR.<br>
+        PRODUKSI SENDIRI, KONSUMSI SENDIRI, TUKAR DENGAN TETANGGA.<br>
+        UANG HANYALAH ALAT, BARANG ADALAH RAJA.
+    </div>
+</div>
+
+</body>
+</html>
