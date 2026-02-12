@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALARM IMSAK: MANUAL MODE</title>
+    <style>
+        :root { 
+            --neon: #d4af37; --bg: #050505; --card: #111; --alert: #ff0000;
+            --color-8-2: rgba(255, 215, 0, 0.25); --color-2-4: rgba(255, 69, 0, 0.25);  
+            --color-4-6: rgba(0, 255, 127, 0.25); --color-6-8: rgba(30, 144, 255, 0.25); 
+        }
+        * { box-sizing: border-box; }
+        body { 
+            background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 10px; overflow-x: hidden;
+            transition: background-color 0.2s;
+        }
+        
+        /* EFEK SIRENE VISUAL */
+        body.alarm-active { animation: redAlert 0.5s infinite; }
+        @keyframes redAlert { 
+            0% { background: #050505; box-shadow: inset 0 0 50px var(--alert); } 
+            50% { background: #550000; box-shadow: inset 0 0 200px var(--alert); } 
+            100% { background: #050505; } 
+        }
+        
+        .header { text-align: center; margin-bottom: 20px; }
+        h1 { margin: 0; font-size: 1.5rem; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon); }
+        .sub-header { font-size: 0.8rem; color: #666; }
+
+        .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; width: 100%; max-width: 1200px; }
+        @media(min-width: 768px) { .main-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .card { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; text-align: center; position: relative; display: flex; flex-direction: column; align-items: center; }
+
+        /* JAM CAKRA */
+        .clock-frame { position: relative; width: 260px; height: 260px; border: 4px solid var(--neon); border-radius: 50%; background: #000; margin: 20px 0; }
+        .zones-bg { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(var(--color-8-2) 0deg 90deg, var(--color-2-4) 90deg 180deg, var(--color-4-6) 180deg 270deg, var(--color-6-8) 270deg 360deg); }
+        .tick { position: absolute; width: 100%; height: 100%; } 
+        .tick::after { content: ''; position: absolute; top: 0; left: 50%; width: 2px; height: 10px; background: #fff; transform: translateX(-50%); opacity: 0.4; }
+        .tick-main::after { height: 15px; width: 3px; opacity: 1; }
+        .number { position: absolute; width: 100%; height: 100%; padding-top: 20px; color: #fff; font-weight: bold; }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; border-radius: 10px; background: var(--neon); z-index: 10; }
+        .hour-hand { width: 8px; height: 70px; } .min-hand { width: 4px; height: 100px; background: #fff; opacity: 0.7; }
+        .center-dot { position: absolute; top: 50%; left: 50%; width: 16px; height: 16px; background: var(--neon); border-radius: 50%; transform: translate(-50%, -50%); z-index: 11; border: 2px solid #000; }
+        
+        .fase-name { font-size: 2rem; font-weight: bold; color: #fff; margin: 5px 0; }
+        .engine-status { color: var(--neon); font-weight: bold; border-left: 3px solid var(--neon); padding-left: 10px; font-size: 0.9rem; margin-bottom: 5px; text-align: left; width: 100%; }
+        .desc-text { color: #aaa; font-size: 0.8rem; line-height: 1.4; text-align: left; width: 100%; }
+        .digital-nus { font-family: monospace; font-size: 1.1rem; margin-top: 10px; color: #666; }
+
+        /* KALENDER */
+        .calendar-title { font-size: 1.2rem; font-weight: bold; letter-spacing: 3px; margin-bottom: 15px; color: #fff; text-transform: uppercase; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; width: 100%; }
+        .cal-day { font-size: 0.7rem; color: #888; font-weight: bold; padding-bottom: 5px; border-bottom: 1px solid #333; text-transform: uppercase; }
+        .day-RAD { color: #ff4444; } .day-SUK { color: #00ff00; }
+        .cal-cell { aspect-ratio: 1/1; border: 1px solid #222; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .cal-num { font-size: 1rem; font-weight: bold; color: #eee; }
+        .cal-pasaran { font-size: 0.6rem; color: var(--neon); }
+        .today { border: 2px solid var(--neon); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); background: #1a1a00; }
+
+        /* JADWAL */
+        .schedule-list { width: 100%; text-align: left; margin-top: 10px; }
+        .schedule-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #333; }
+        .schedule-row.highlight { color: #fff; background: rgba(255,255,255,0.1); font-weight: bold; padding: 5px; }
+        .status-text { margin-top: 10px; color: #00ff00; font-size: 0.8rem; font-weight: bold; }
+        
+        .alarm-controls { margin-top: 20px; display: flex; gap: 10px; width: 100%; justify-content: center; flex-wrap: wrap; }
+        button { background: var(--neon); border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; color: #000; border-radius: 5px; margin: 5px; font-size: 1rem; }
+        button:hover { background: #fff; }
+        button.stop { background: var(--alert); color: #fff; display: none; width: 100%; }
+        button.stop.show { display: block; animation: pulse 0.2s infinite; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>NUSWANTARA OS</h1>
+        <div class="sub-header">MANUAL MODE (ANTI ERROR)</div>
+    </div>
+
+    <div class="main-grid">
+        <div class="card">
+            <div class="clock-frame" id="clock">
+                <div class="zones-bg"></div><div class="center-dot"></div>
+                <div class="hand hour-hand" id="hrHand"></div><div class="hand min-hand" id="minHand"></div>
+            </div>
+            <div id="fase-name" class="fase-name">...</div>
+            <div id="engine-status" class="engine-status">...</div>
+            <div id="fase-desc" class="desc-text">...</div>
+            <div id="digital-clock" class="digital-nus">...</div>
+        </div>
+
+        <div class="card">
+            <div id="calMonth" class="calendar-title">...</div>
+            <div class="cal-grid" id="calGrid"></div>
+            
+            <div style="margin-top: 20px; width: 100%; border-top: 1px solid #333; padding-top: 10px;">
+                <div style="text-align: left; color: #888; font-size: 0.8rem; margin-bottom: 5px;">JADWAL HARI INI (DATABASE MANUAL):</div>
+                <div id="scheduleContainer" class="schedule-list">
+                    <div>Memuat Database...</div>
+                </div>
+            </div>
+
+            <div class="status-text" id="statusText">SYSTEM STANDBY</div>
+            
+            <div class="alarm-controls">
+                <button id="btnStart" onclick="startSystem()">🔊 AKTIFKAN ALARM</button>
+                <button id="btnStop" class="stop" onclick="stopAlarm()">🔕 MATIKAN SIRENE</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // === 1. DATABASE LOKAL (EDIT DIDIEU MUN PERLU) ===
+    // Format: Tanggal(Masehi), Imsyak, Subuh, ... , Maghrib
+    const rawData = `
+12,4:24,4:34,5:50,6:14,12:05,15:19,18:15,19:27
+13,4:24,4:34,5:50,6:14,12:05,15:19,18:15,19:27
+14,4:24,4:34,5:50,6:14,12:05,15:18,18:15,19:27
+15,4:24,4:34,5:50,6:14,12:05,15:18,18:15,19:26
+16,4:25,4:35,5:51,6:15,12:05,15:17,18:15,19:26
+17,4:25,4:35,5:51,6:15,12:05,15:16,18:14,19:26
+18,4:25,4:35,5:51,6:15,12:04,15:16,18:14,19:25
+19,4:25,4:35,5:51,6:15,12:04,15:15,18:14,19:25
+20,4:26,4:36,5:51,6:15,12:04,15:14,18:13,19:24
+21,4:26,4:36,5:51,6:15,12:04,15:13,18:13,19:24
+22,4:26,4:36,5:51,6:15,12:04,15:12,18:13,19:24
+23,4:26,4:36,5:51,6:15,12:04,15:12,18:13,19:23
+24,4:26,4:36,5:51,6:15,12:04,15:11,18:12,19:23
+25,4:27,4:37,5:51,6:15,12:04,15:10,18:12,19:22
+26,4:27,4:37,5:51,6:15,12:04,15:09,18:11,19:22
+27,4:27,4:37,5:52,6:16,12:03,15:08,18:11,19:21
+28,4:27,4:37,5:52,6:16,12:03,15:07,18:11,19:21
+1,4:27,4:37,5:52,6:16,12:03,15:06,18:10,19:21
+2,4:27,4:37,5:52,6:16,12:03,15:05,18:10,19:20
+3,4:27,4:37,5:52,6:16,12:03,15:04,18:10,19:20
+4,4:27,4:37,5:52,6:16,12:02,15:05,18:09,19:19
+5,4:28,4:38,5:52,6:16,12:02,15:05,18:09,19:19
+6,4:28,4:38,5:52,6:16,12:02,15:06,18:08,19:18
+7,4:28,4:38,5:52,6:16,12:02,15:06,18:08,19:18
+8,4:28,4:38,5:52,6:16,12:02,15:06,18:07,19:17
+9,4:28,4:38,5:51,6:15,12:01,15:07,18:07,19:17
+10,4:28,4:38,5:51,6:15,12:01,15:07,18:07,19:16
+11,4:28,4:38,5:51,6:15,12:01,15:07,18:06,19:16
+12,4:28,4:38,5:51,6:15,12:01,15:08,18:06,19:15
+13,4:28,4:38,5:51,6:15,12:00,15:08,18:05,19:15
+14,4:28,4:38,5:51,6:15,12:00,15:08,18:05,19:14
+15,4:28,4:38,5:51,6:15,12:00,15:09,18:04,19:14
+16,4:28,4:38,5:51,6:15,11:59,15:09,18:04,19:13
+17,4:28,4:38,5:51,6:15,11:59,15:09,18:03,19:13
+18,4:27,4:37,5:51,6:15,11:59,15:09,18:03,19:12
+19,4:27,4:37,5:51,6:15,11:59,15:09,18:02,19:12
+20,4:27,4:37,5:51,6:15,11:58,15:10,18:02,19:11
+21,4:27,4:37,5:51,6:15,11:58,15:10,18:01,19:11
+22,4:27,4:37,5:51,6:15,11:58,15:10,18:01,19:10
+23,4:27,4:37,5:50,6:14,11:57,15:10,18:00,19:10
+24,4:27,4:37,5:50,6:14,11:57,15:10,18:00,19:09
+25,4:27,4:37,5:50,6:14,11:57,15:10,17:59,19:09
+26,4:27,4:37,5:50,6:14,11:57,15:10,17:59,19:08
+27,4:27,4:37,5:50,6:14,11:56,15:10,17:58,19:08
+28,4:27,4:37,5:50,6:14,11:56,15:11,17:58,19:07
+29,4:26,4:36,5:50,6:14,11:56,15:11,17:57,19:07
+30,4:26,4:36,5:50,6:14,11:55,15:11,17:57,19:06
+31,4:26,4:36,5:50,6:14,11:55,15:11,17:56,19:06`;
+
+    let todaySchedule = null;
+
+    function parseLocalData() {
+        const container = document.getElementById('scheduleContainer');
+        const rows = rawData.trim().split('\n');
+        const todayDate = new Date().getDate(); 
+        let found = false;
+
+        for (let row of rows) {
+            const cols = row.split(',');
+            // Kolom 0 = Tanggal
+            if (parseInt(cols[0]) === todayDate) {
+                todaySchedule = {
+                    imsyak: cols[1],
+                    subuh: cols[2],
+                    maghrib: cols[7]
+                };
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            container.innerHTML = `
+                <div class="schedule-row highlight"><span>IMSYAK</span><span>${todaySchedule.imsyak}</span></div>
+                <div class="schedule-row"><span>SUBUH</span><span>${todaySchedule.subuh}</span></div>
+                <div class="schedule-row"><span>MAGHRIB</span><span>${todaySchedule.maghrib}</span></div>
+            `;
+            document.getElementById('statusText').style.color = "#00ff00";
+        } else {
+            container.innerHTML = "<div>Tanggal Masehi ini tidak ada di Database.</div>";
+        }
+    }
+
+    // === 2. KALENDER (RADITE START + LEGI FIX) ===
+    const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const dayNames = ["RAD", "SOM", "ANG", "BUD", "RES", "SUK", "TUM"];
+
+    function renderCalendar() {
+        let now = new Date();
+        let currentYearMasehi = now.getFullYear();
+        let startOfNewYear = new Date(currentYearMasehi, 2, 21); // 21 Maret
+        let anchorDate, nuswantaraYear;
+
+        if (now < startOfNewYear) {
+            anchorDate = new Date(currentYearMasehi - 1, 2, 21);
+            nuswantaraYear = (currentYearMasehi - 1) - 2024; 
+        } else {
+            anchorDate = new Date(currentYearMasehi, 2, 21);
+            nuswantaraYear = currentYearMasehi - 2024; 
+        }
+
+        let diffTime = now.getTime() - anchorDate.getTime();
+        let diffDays = Math.floor(diffTime / 86400000); 
+        let mIdx = Math.floor(diffDays / 28);
+        if(mIdx > 12) mIdx = 12; 
+        let dDate = (diffDays % 28) + 1;
+
+        // OFFSET PASARAN: Supaya Tgl 21 Purnaka = LEGI
+        const PASARAN_OFFSET = 1; 
+
+        document.getElementById('calMonth').innerText = `${months[mIdx].toUpperCase()} - TAHUN ${String(nuswantaraYear).padStart(3,'0')}`;
+        const grid = document.getElementById('calGrid');
+        grid.innerHTML = "";
+        
+        dayNames.forEach(d => {
+            let cls = "cal-day";
+            if(d==="RAD") cls += " day-RAD"; if(d==="SUK") cls += " day-SUK";
+            grid.innerHTML += `<div class="${cls}">${d}</div>`
+        });
+
+        // Posisi Tanggal 1
+        let yearShift = (nuswantaraYear - 1); 
+        let startDayIndex = (5 + yearShift) % 7; 
+
+        for(let i=0; i<startDayIndex; i++) {
+            grid.innerHTML += `<div class="cal-cell" style="border:none"></div>`;
+        }
+
+        for(let d=1; d<=28; d++) {
+            let cell = document.createElement('div');
+            cell.className = 'cal-cell';
+            if(d === dDate) cell.classList.add('today');
+            
+            let daysInYearSoFar = (mIdx * 28) + d; 
+            let pIdx = (daysInYearSoFar + PASARAN_OFFSET) % 5;
+            
+            cell.innerHTML = `<div class="cal-num">${d}</div><div class="cal-pasaran">${pasarans[pIdx]}</div>`;
+            grid.appendChild(cell);
+        }
+    }
+
+    // === 3. JAM CAKRA & ALARM BUZZER ===
+    const phaseDB = [
+        { id: 7, name: "ISTIWA", engine: "Pause & Reset", desc: "Matahari puncak. Wajib Power Nap.", range: "8-2 Siang" },
+        { id: 8, name: "ASAR", engine: "Wrapping Up", desc: "Evaluasi kerjaan. Santai.", range: "2-4 Siang" },
+        { id: 1, name: "SANDIKALA", engine: "Transisi", desc: "Kumpul keluarga. Mendarat.", range: "4-6 Malam" },
+        { id: 2, name: "SIREPAN", engine: "Istirahat Fisik", desc: "Deep Sleep. Detoks.", range: "6-8 Malam" },
+        { id: 3, name: "HENING", engine: "Istirahat Mental", desc: "Lucid Dream. Download data.", range: "8-2 Malam" },
+        { id: 4, name: "FAJAR", engine: "Golden Hour", desc: "Bangun. Tahajjud/Meditasi.", range: "2-4 Malam" },
+        { id: 5, name: "DUHA", engine: "Start Engine", desc: "Olahraga, Planning.", range: "4-6 Siang" },
+        { id: 6, name: "KARYA", engine: "High Performance", desc: "Kerja keras, eksekusi.", range: "6-8 Siang" }
+    ];
+
+    const clock = document.getElementById('clock');
+    for(let i=0; i<48; i++) {
+        let t = document.createElement('div'); t.className = (i % 6 === 0) ? 'tick tick-main' : 'tick';
+        t.style.transform = `rotate(${i * 7.5}deg)`; clock.appendChild(t);
+    }
+    [8, 1, 2, 3, 4, 5, 6, 7].forEach((num, i) => {
+        let n = document.createElement('div'); n.className = 'number';
+        n.style.transform = `rotate(${i * 45}deg)`; n.innerHTML = `<div style="transform: rotate(-${i * 45}deg)">${num}</div>`;
+        clock.appendChild(n);
+    });
+
+    let alarmTriggered = false;
+    let audioCtx, oscillator, gainNode, sirenInterval;
+
+    function mainLoop() {
+        const now = new Date();
+        const h = now.getHours(); const m = now.getMinutes(); const s = now.getSeconds();
+
+        let mTotalMin = ((h % 12) * 60) + m + (s/60);
+        let nTotalHours = mTotalMin / 90; 
+        document.getElementById('hrHand').style.transform = `translateX(-50%) rotate(${nTotalHours * 45}deg)`;
+        document.getElementById('minHand').style.transform = `translateX(-50%) rotate(${(nTotalHours % 1) * 360}deg)`;
+
+        const phaseSequence = [3, 4, 5, 6, 7, 8, 1, 2];
+        let seqIdx = Math.floor(h / 3);
+        let p = phaseDB.find(item => item.id === phaseSequence[seqIdx]);
+        
+        document.getElementById('fase-name').innerText = p.name;
+        document.getElementById('engine-status').innerText = `Fase: ${p.engine}`;
+        document.getElementById('fase-desc').innerText = p.desc;
+        document.getElementById('digital-clock').innerText = `WAKTU ${p.id}.${Math.floor((m/60)*100)}`;
+
+        if (todaySchedule && !alarmTriggered) {
+            let target = todaySchedule.imsyak;
+            if(target) {
+                target = target.trim();
+                if(target.length === 4) target = "0" + target; 
+                let curTime = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+                if (curTime === target && s === 0) triggerAlarm();
+            }
+        }
+    }
+
+    function initAudio() { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    
+    // SORA SIRENE NGIING-NGUUUNG
+    function playSiren() {
+        if (!audioCtx) initAudio();
+        oscillator = audioCtx.createOscillator();
+        gainNode = audioCtx.createGain();
+        oscillator.type = 'sawtooth'; // Gergaji = Sora Kasar/Buzzer
+        oscillator.frequency.value = 600;
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.start();
+        
+        // EFEK PUTER (SWEEP)
+        let f = 600, d = 1;
+        sirenInterval = setInterval(() => {
+            if(f>=1000) d=-1; if(f<=400) d=1; 
+            f+=20*d; oscillator.frequency.value = f;
+        }, 50);
+    }
+
+    function triggerAlarm() {
+        alarmTriggered = true; document.body.classList.add('alarm-active');
+        document.getElementById('btnStop').classList.add('show');
+        document.getElementById('statusText').innerText = "⚠️ IMSYAK! STOP DAHAR! ⚠️";
+        playSiren();
+    }
+
+    function stopAlarm() {
+        if(oscillator) { oscillator.stop(); clearInterval(sirenInterval); }
+        document.body.classList.remove('alarm-active');
+        document.getElementById('btnStop').classList.remove('show');
+        document.getElementById('statusText').innerText = "ALARM DIMATIKAN";
+        setTimeout(() => { alarmTriggered = false; }, 60000);
+    }
+
+    function startSystem() {
+        initAudio(); document.getElementById('btnStart').style.display = 'none';
+        parseLocalData();
+        document.getElementById('statusText').innerText = "MONITORING AKTIF";
+    }
+
+    renderCalendar();
+    setInterval(mainLoop, 1000);
+    mainLoop();
+</script>
+</body>
+</html>

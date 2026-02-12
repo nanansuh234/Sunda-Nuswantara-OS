@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PARADOX LAUNCHER: TIKTOK & YOUTUBE</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #000;
+            color: #ff0055; /* Cyber Pink (TikTok Style) */
+            font-family: 'Share Tech Mono', monospace;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; margin: 0; padding: 20px;
+            overflow: hidden;
+            background-image: radial-gradient(circle at center, #110000 0%, #000 70%);
+        }
+
+        h1 {
+            font-size: 3rem; text-shadow: 0 0 20px #ff0055;
+            margin-bottom: 10px; letter-spacing: 5px; text-align: center;
+        }
+
+        .subtitle {
+            color: #00ffea; /* Cyan (TikTok Accent) */
+            margin-bottom: 40px; font-size: 1rem; letter-spacing: 2px;
+        }
+
+        .control-panel {
+            background: #111; border: 2px solid #333; padding: 40px;
+            border-radius: 15px; width: 100%; max-width: 600px;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.1);
+            position: relative;
+        }
+
+        /* PLATFORM SELECTOR */
+        .platform-switch {
+            display: flex; gap: 10px; margin-bottom: 20px;
+        }
+
+        .p-btn {
+            flex: 1; padding: 15px; border: 1px solid #333; background: #000;
+            color: #555; cursor: pointer; font-weight: bold; font-family: inherit;
+            transition: 0.3s;
+        }
+
+        /* Active States */
+        .p-btn.active-tt { background: #ff0055; color: #fff; border-color: #ff0055; box-shadow: 0 0 15px #ff0055; }
+        .p-btn.active-yt { background: #ff0000; color: #fff; border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        .p-btn.active-x { background: #fff; color: #000; border-color: #fff; box-shadow: 0 0 15px #fff; }
+
+        input {
+            width: 100%; padding: 20px; background: #000; border: 2px solid #333;
+            color: #fff; font-size: 1.5rem; font-family: 'Share Tech Mono', monospace;
+            outline: none; text-align: center; margin-bottom: 20px;
+        }
+        input:focus { border-color: #00ffea; }
+
+        .launch-btn {
+            width: 100%; padding: 20px; background: #00ffea; color: #000;
+            border: none; font-size: 1.5rem; font-weight: bold; cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            transition: 0.2s;
+        }
+        .launch-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px #00ffea; }
+
+        .info {
+            margin-top: 20px; color: #666; font-size: 0.8rem; text-align: center;
+        }
+
+        #realQueryDisplay {
+            color: #00ffea; font-weight: bold; display: none; margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>MIND HACKER</h1>
+    <div class="subtitle">TIKTOK & YOUTUBE REALITY INJECTOR</div>
+
+    <div class="control-panel">
+        
+        <div class="platform-switch">
+            <button class="p-btn active-tt" onclick="setPlatform('tiktok')" id="btnTT">TIKTOK</button>
+            <button class="p-btn" onclick="setPlatform('youtube')" id="btnYT">YOUTUBE</button>
+            <button class="p-btn" onclick="setPlatform('twitter')" id="btnX">TWITTER (X)</button>
+        </div>
+
+        <input type="text" id="userInput" placeholder="Ketik Topik (Misal: Kanker)..." onkeypress="if(event.keyCode==13) launchTruth()">
+
+        <button class="launch-btn" onclick="launchTruth()">BONGKAR FAKTA 🚀</button>
+
+        <div class="info">
+            Sistem akan membalikkan kata kunci anda dan membuka hasilnya di Tab Baru.<br>
+            <span id="realQueryDisplay"></span>
+        </div>
+    </div>
+
+    <script>
+        let currentPlatform = 'tiktok';
+
+        function setPlatform(p) {
+            currentPlatform = p;
+            // Reset Button Styles
+            document.querySelectorAll('.p-btn').forEach(b => {
+                b.className = 'p-btn';
+            });
+
+            // Set Active
+            if(p === 'tiktok') document.getElementById('btnTT').classList.add('active-tt');
+            if(p === 'youtube') document.getElementById('btnYT').classList.add('active-yt');
+            if(p === 'twitter') document.getElementById('btnX').classList.add('active-x');
+        }
+
+        // === KAMUS "RED PILL" (DATABASE LENGKAP) ===
+        const paradoxDictionary = {
+            // EKONOMI
+            "uang": "sejarah uang fiat dan inflasi sistematis",
+            "kaya": "bahaya judi online dan skema ponzi",
+            "investasi": "kenapa emas dan perak adalah uang asli",
+            "pinjol": "jebakan riba dan perbudakan modern",
+            "bank": "fractional reserve banking scam",
+            "saham": "market manipulation blackrock vanguard",
+            "hutang": "economic hitman confenssions",
+            "pajak": "taxation is theft history",
+            "crypto": "cbdc danger control system",
+
+            // MEDIS (PENYAKIT)
+            "kanker": "cancer metabolic disease sugar otto warburg",
+            "kemoterapi": "gerson therapy vs chemotherapy statistics",
+            "tumor": "parasitic infection cancer connection",
+            "kanker payudara": "aluminum deodorant breast cancer",
+            "leukemia": "sugar white blood cell suppression",
+            "prostat": "seed oils prostate inflammation",
+            "serviks": "hpv vaccine side effects injuries",
+            "kista": "estrogen dominance detox",
+            "biopsi": "biopsies spread cancer cells risk",
+            
+            // MEDIS (UMUM)
+            "jantung": "cholesterol myth inflammation heart disease",
+            "kolesterol": "benefits of high cholesterol brain",
+            "darah tinggi": "magnesium deficiency blood pressure",
+            "strok": "blood clot mrna vaccine side effect",
+            "diabetes": "intermittent fasting reverse diabetes type 2",
+            "gula": "sugar is poison brain damage",
+            "nasi": "glycemic index rice vs fasting",
+            "autis": "heavy metal detox autism recovery",
+            "adhd": "sugar diet adhd behavior connection",
+            "depresi": "gut brain connection probiotics",
+            "vaksin": "vaccine injuries hidden data",
+            "imunisasi": "natural immunity vs artificial",
+            "dokter": "rockefeller medicine history flexner",
+            "rumah sakit": "iatrogenic death statistics",
+
+            // SEJARAH & KONSPIRASI
+            "sejarah": "hidden history tartaria mudflood",
+            "borobudur": "ancient power plant technology",
+            "piramida": "tesla tower pyramid connection",
+            "manusia purba": "darwin evolution theory debunked",
+            "majapahit": "nusantara empire world history",
+            "atlantis": "sundaland atlantis evidence",
+            "bumi bulat": "flat earth scientific experiments",
+            "bumi datar": "fisika realitas cakrawala",
+            "nasa": "nasa cgi moon landing fake",
+            "bulan": "plasma moon theory",
+            "matahari": "local sun simulator patents",
+            "gravitasi": "density and buoyancy physics",
+            "satelit": "undersea cables internet map",
+            "5g": "emf radiation health effects",
+            "ai": "transhumanism agenda 2030",
+            "global warming": "climate change hoax solar cycles",
+            "nuklir": "galen winsor eating uranium",
+
+            // POLITIK & SOSIAL
+            "pemilu": "illusion of choice democracy",
+            "pbb": "new world order agenda",
+            "who": "who pandemic treaty danger",
+            "ham": "human rights weaponization",
+            "teroris": "false flag operations cia",
+            "perang": "military industrial complex profits",
+            "media": "operation mockingbird media control",
+            "sekolah": "prussian education system indoctrination",
+            "kuliah": "student loan debt trap scam",
+            "hukum": "admiralty maritime law vs common law",
+            "polisi": "police serve and protect whom",
+
+            // SPIRITUAL
+            "agama": "spirituality vs religion dogma",
+            "tuhan": "god within manunggaling kawula gusti",
+            "setan": "ego and lower self mastery",
+            "dajjal": "one eye symbolism meaning",
+            "kiamat": "kali yuga cycle end times",
+            "mati": "near death experience consciousness",
+            "hantu": "interdimensional beings frequencies",
+            "meditasi": "pineal gland activation dmt",
+            "doa": "quantum entanglement prayer science",
+            "takdir": "law of attraction vibration frequency"
+        };
+
+        const criticalSuffix = " fakta tersembunyi konspirasi realita";
+
+        function launchTruth() {
+            let input = document.getElementById('userInput').value.toLowerCase().trim();
+            if(!input) return;
+
+            // 1. CARI LAWAN KATA
+            let query = "";
+            let isParadox = false;
+
+            // Cek kamus (parsial match)
+            // Misal user ngetik "obat kanker", di kamus aya "kanker", eta nu dipake.
+            let foundKey = Object.keys(paradoxDictionary).find(key => input.includes(key));
+
+            if (foundKey) {
+                query = paradoxDictionary[foundKey];
+                isParadox = true;
+            } else {
+                query = input + criticalSuffix;
+            }
+
+            // 2. TAMPILKAN INFO
+            let display = document.getElementById('realQueryDisplay');
+            display.style.display = 'block';
+            display.innerText = `MENGALIHKAN KE: "${query.toUpperCase()}"`;
+
+            // 3. BUKA TAB SESUAI PLATFORM
+            let finalUrl = "";
+            if(currentPlatform === 'tiktok') {
+                finalUrl = `https://www.tiktok.com/search?q=${encodeURIComponent(query)}`;
+            } else if(currentPlatform === 'youtube') {
+                finalUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+            } else if(currentPlatform === 'twitter') {
+                finalUrl = `https://twitter.com/search?q=${encodeURIComponent(query)}&src=typed_query`;
+            }
+
+            // Jeda saeutik keur efek dramatis
+            setTimeout(() => {
+                window.open(finalUrl, '_blank');
+            }, 800);
+        }
+    </script>
+
+</body>
+</html>

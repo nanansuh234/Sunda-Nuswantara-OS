@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CERMIN NUSWANTARA: PARADOX SEARCH</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #000;
+            color: #00ff41; /* Matrix Green */
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: #050505;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #00ff41;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .search-container {
+            display: flex;
+            width: 100%;
+            max-width: 700px;
+            position: relative;
+        }
+
+        input {
+            flex: 1;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-family: 'Share Tech Mono', monospace;
+            outline: none;
+        }
+
+        input:focus { border-color: #00ff41; box-shadow: 0 0 10px rgba(0,255,65,0.3); }
+
+        button {
+            background: #003300;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 0 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            font-family: 'Share Tech Mono', monospace;
+            transition: 0.2s;
+        }
+
+        button:hover { background: #00ff41; color: #000; }
+
+        /* GRID VIDEO */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* CARD */
+        .video-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            cursor: pointer;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+            border-color: #00ff41;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+        }
+
+        .thumbnail-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            position: relative;
+        }
+
+        .thumb { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
+        .video-card:hover .thumb { opacity: 1; }
+
+        .meta { padding: 15px; }
+        
+        .vid-title {
+            font-size: 1rem;
+            color: #ddd;
+            margin-bottom: 5px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .vid-channel { font-size: 0.8rem; color: #00ff41; }
+
+        /* SECRET TOAST MESSAGE */
+        #secretMsg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #003300;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 15px;
+            display: none;
+            z-index: 999;
+            font-size: 0.9rem;
+            box-shadow: 0 0 20px #00ff41;
+        }
+
+        .load-more-btn {
+            display: block; margin: 20px auto; padding: 15px 40px;
+            background: transparent; border: 1px dashed #00ff41; color: #00ff41;
+            cursor: pointer; font-family: 'Share Tech Mono', monospace;
+            display: none;
+        }
+        .load-more-btn:hover { background: #00ff41; color: #000; }
+
+        /* GLITCH EFFECT (Hiasan) */
+        .glitch-text { animation: glitch 1s infinite alternate; }
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 #ff0000, -2px 0 #0000ff; }
+            100% { text-shadow: -2px 0 #ff0000, 2px 0 #0000ff; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">CERMIN <span class="glitch-text">NUSWANTARA</span></div>
+        <div class="search-box" style="text-align:center; margin-bottom:10px; font-size:0.8rem; color:#555;">
+            FILTER BUBBLE BREAKER // MIND HACKING TOOL
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Ketik topik (Misal: Bumi Datar)..." onkeypress="if(event.keyCode==13) cariParadox(true)">
+            <button onclick="cariParadox(true)">GO</button>
+        </div>
+    </div>
+
+    <div class="video-grid" id="resultsArea">
+        <div style="text-align: center; width: 100%; grid-column: 1 / -1; color: #333; margin-top: 50px;">
+            <h2>SISTEM SIAP.</h2>
+            <p>Ketikan sesuatu. Kami akan menampilkan "Sisi Lain"-nya.</p>
+        </div>
+    </div>
+
+    <button class="load-more-btn" id="loadMoreBtn" onclick="cariParadox(false)">GALI LEBIH DALAM</button>
+
+    <div id="secretMsg">⚠️ MODE PARADOX AKTIF: NARASI DIBALIKKAN</div>
+
+    <script>
+        // API KEY (HARDCODED)
+        const FIXED_API_KEY = "AIzaSyA7qvW9P-wffxhMKyhN6ytPEitqcLzo2IQ"; // Pake nu maneh
+        
+        let nextPageToken = "";
+        let currentQuery = "";
+
+        // === KAMUS PARADOX (EDIT DIDIEU, NAN!) ===
+        // Format: "kata kunci user": "kata kunci rahasia mesin"
+        // Ieu otakna. Mun user ngetik Kiri (Key), mesin neangan Kanan (Value).
+        const paradoxDictionary = {
+           // --- BAGIAN 1: EKONOMI & UANG (THE FIAT TRAP) ---
+            "uang": "sejarah uang fiat dan inflasi sistematis",
+            "kaya cepat": "bahaya judi online dan skema ponzi",
+            "investasi": "kenapa emas dan perak adalah uang asli",
+            "pinjol": "jebakan riba dan perbudakan modern",
+            "bank": "bagaimana bank menciptakan uang dari angin",
+            "saham": "manipulasi pasar modal oleh global elite",
+            "krisis ekonomi": "siklus pencurian kekayaan 10 tahunan",
+            "hutang negara": "sistem penjajahan ekonomi imf world bank",
+            "pajak": "sejarah upeti dan pemerasan legal",
+            "sedekah": "konsep ekonomi tuhan yang melipatgandakan aset",
+            "kemiskinan": "desain sistemik pemiskinan struktural",
+            "lowongan kerja": "mentalitas pengusaha vs mentalitas buruh",
+            "pensiun": "ilusi jaminan hari tua sistem ponzi",
+            "asuransi": "ketakutan yang dijual sebagai produk",
+            "crypto": "cbdc alat kontrol total keuangan masa depan",
+
+            // --- BAGIAN 2: KESEHATAN & MAKANAN (POISONING) ---
+            "dokter": "sejarah rockefeller dan monopoli obat kimia",
+            "obat": "cara kerja tubuh menyembuhkan diri sendiri autophagy",
+            "vaksin": "data efek samping dan imunitas alami",
+            "susu": "bahaya laktosa dan propaganda industri susu",
+            "gula": "racun manis perusak otak dan penyebab kanker",
+            "msg": "eksitotoksin perusak saraf otak",
+            "nasi putih": "bahaya lonjakan insulin dan diabetes",
+            "diet": "puasa sunnah sebagai detoksifikasi sel",
+            "kanker": "gula sebagai makanan sel kanker",
+            "fluoride": "pengapuran kelenjar pineal dan pasta gigi",
+            "matahari": "manfaat vitamin d gratis yang ditakuti farmasi",
+            "garam": "pentingnya garam laut bagi listrik tubuh",
+            "air putih": "bahaya air kemasan dan mikroplastik",
+            "herbal": "kekuatan obat alam nusantara yang disembunyikan",
+            "rumah sakit": "bisnis orang sakit bukan bisnis orang sehat",
+
+            // --- BAGIAN 3: SEJARAH & PERADABAN (THE LOST HISTORY) ---
+            "sejarah indonesia": "manipulasi sejarah belanda dan de graaf",
+            "borobudur": "teknologi kuno power plant energi gratis",
+            "piramida": "bukan kuburan tapi mesin pembangkit energi",
+            "manusia purba": "kebohongan teori evolusi darwin",
+            "majapahit": "jejak imperium nusantara penakluk dunia",
+            "sriwijaya": "pusat maritim dunia yang hilang",
+            "atlantis": "bukti sunda land adalah atlantis yang tenggelam",
+            "lemuria": "peradaban leluhur nusantara sebelum banjir besar",
+            "tartaria": "sejarah peradaban raksasa yang dihapus (mudflood)",
+            "buku sejarah": "pemenang perang yang menulis sejarah palsu",
+            "penjajahan": "mental inlander yang masih dipelihara",
+            "kemerdekaan": "transisi kekuasaan dari kolonial ke oligarki",
+            "wali songo": "strategi dakwah budaya tanpa pedang",
+            "nyi roro kidul": "teknologi penjaga gerbang selatan nusantara",
+            "keris": "teknologi metalurgi canggih warisan leluhur",
+
+            // --- BAGIAN 4: SAINS & TEKNOLOGI (THE MATRIX) ---
+            "bumi bulat": "anomali penerbangan dan teori bumi datar", // Pancingan
+            "bumi datar": "fisika realitas dan ilusi cakrawala",
+            "nasa": "studio film antariksa dan cgi",
+            "bulan": "anomali cahaya bulan dan plasma dingin",
+            "matahari": "simulator matahari buatan china",
+            "gravitasi": "hukum densitas dan bouyancy archimedes",
+            "satelit": "kabel bawah laut tulang punggung internet",
+            "5g": "dampak radiasi gelombang milimeter pada tubuh",
+            "ai": "bahaya transhumanisme dan penggabungan manusia mesin",
+            "robot": "penggantian tenaga kerja manusia masal",
+            "metaverse": "penjara digital bagi kesadaran manusia",
+            "chip": "mark of the beast dan kontrol populasi",
+            "listrik": "teknologi free energy nikola tesla yang dibredel",
+            "mobil listrik": "sisi gelap tambang nikel dan limbah baterai",
+            "nuklir": "sumber energi bersih yang ditakuti elit minyak",
+
+            // --- BAGIAN 5: POLITIK & KONTROL (THE PUPPET SHOW) ---
+            "pemilu": "ilusi pilihan dalam sistem demokrasi oligarki",
+            "presiden": "siapa pengendali boneka politik sebenarnya",
+            "pbb": "alat kontrol global satu komando (nwo)",
+            "who": "diktator kesehatan dunia yang tidak dipilih rakyat",
+            "ham": "standar ganda barat untuk intervensi negara lain",
+            "teroris": "operasi intelijen false flag dan cia",
+            "perang": "bisnis industri senjata dan bankir internasional",
+            "media": "alat propaganda pencuci otak massa (mockingbird)",
+            "pendidikan": "sistem prussia pencetak buruh patuh",
+            "sekolah": "penjara kreativitas dan indoktrinasi",
+            "kuliah": "jebakan hutang dan pengangguran terdidik",
+            "hukum": "tajam ke bawah tumpul ke atas",
+            "polisi": "alat pelindung kekuasaan bukan rakyat",
+            "uud 45": "naskah asli vs amandemen pesanan asing",
+            "pancasila": "filosofi luhur yang hanya jadi slogan",
+
+            // --- BAGIAN 6: SPIRITUAL & KESADARAN (THE AWAKENING) ---
+            "agama": "spiritualitas vs dogma buatan manusia",
+            "tuhan": "mencari tuhan dalam diri (manunggaling kawula gusti)",
+            "setan": "hawa nafsu dan ego dalam diri sendiri",
+            "dajjal": "sistem materialisme bermata satu (one eye)",
+            "kiamat": "pergantian siklus zaman (yuga) bukan kehancuran",
+            "mati": "perjalanan kesadaran ke dimensi lain",
+            "hantu": "fenomena interdimensional dan frekuensi",
+            "meditasi": "cara akses database semesta (akashic record)",
+            "doa": "teknik resonansi gelombang otak dan kuantum",
+            "ikhlas": "ilmu letting go level tertinggi",
+            "sabar": "teknik manajemen energi emosi",
+            "syukur": "frekuensi penarik keberlimpahan (law of attraction)",
+            "sedih": "cara melepaskan trauma masa lalu",
+            "takdir": "program jiwa yang bisa diubah dengan ikhtiar",
+            "jodoh": "cerminan getaran frekuensi diri sendiri",
+
+            // --- BAGIAN 7: GAYA HIDUP & HIBURAN (DISTRACTION) ---
+            "healing": "melatih mental baja tanpa lari dari masalah",
+            "traveling": "pencarian jati diri atau sekedar pamer sosmed",
+            "game": "dopamin detox dan bahaya kecanduan instan",
+            "tiktok": "senjata perusak atensi (attention span) generasi muda",
+            "viral": "rekayasa algoritma untuk bodohisasi massal",
+            "artis": "boneka industri hiburan dan simbolisme",
+            "k-pop": "dampak psikologis pemujaan berhala modern",
+            "sepak bola": "pengalihan isu politik (panem et circenses)",
+            "fashion": "konsumerisme dan sampah tekstil",
+            "mobil mewah": "liabilitas yang menyedot kekayaan",
+            "rumah kpr": "kontrak seumur hidup dengan bank",
+            "nikah": "sakralitas janji vs industri pesta pamer",
+            "selingkuh": "kerusakan moral akibat pornografi internet",
+            "lgbt": "agenda depopulasi dan perusakan fitrah",
+            "feminis": "penghancuran struktur keluarga tradisional",
+            
+            // --- BAGIAN 1: KANKER & TUMOR (THE BIG C) ---
+            "kanker": "cancer is a metabolic disease otto warburg sugar",
+            "obat kanker": "gerson therapy cancer healing",
+            "kemoterapi": "chemo fail rate and natural alternatives",
+            "tumor": "parasitic cause of cancer dr hulda clark",
+            "kanker payudara": "aluminum deodorant breast cancer link",
+            "kanker usus": "leaky gut cancer connection processed food",
+            "kanker paru": "emotional trauma lung cancer new german medicine",
+            "leukemia": "sugar consumption and white blood cell suppression",
+            "prostat": "zinc deficiency prostate health seed oils",
+            "serviks": "hpv vaccine side effects truth",
+            "kista": "estrogen dominance detox liver",
+            "miom": "emotional root cause of uterine fibroids",
+            "biopsi": "danger of biopsy spreading cancer cells",
+            "mammogram": "radiation caused cancer from mammography",
+            "radiasi": "emf radiation cancer cell phone danger",
+
+            // --- BAGIAN 2: JANTUNG & DARAH (THE CHOLESTEROL LIE) ---
+            "jantung": "cholesterol myth heart disease inflammation",
+            "kolesterol": "benefits of high cholesterol for brain health",
+            "darah tinggi": "magnesium deficiency blood pressure salt myth",
+            "hipertensi": "emotional stress root cause hypertension",
+            "strok": "blood clot mrna vaccine side effect",
+            "serangan jantung": "seed oils inflammation heart attack",
+            "obat statin": "statin drugs side effects brain fog muscle pain",
+            "pengentalan darah": "nattokinase blood thinner natural",
+            "anemia": "copper deficiency iron overload truth",
+            "varises": "liver congestion and varicose veins",
+            "jantung bengkak": "coq10 deficiency heart failure",
+            "pasang ring": "artery plaque reversal vitamin k2",
+
+            // --- BAGIAN 3: DIABETES & GULA (THE SWEET POISON) ---
+            "diabetes": "reversing type 2 diabetes intermittent fasting",
+            "gula darah": "insulin resistance dr jason fung",
+            "insulin": "dangers of high insulin toxicity",
+            "nasi putih": "glycemic index rice vs fasting",
+            "pemanis buatan": "aspartame neurotoxin brain damage",
+            "fruktosa": "fatty liver fructose corn syrup",
+            "kaki diabetes": "neuropathy reversal alpha lipoic acid",
+            "cuci darah": "kidney regeneration herbs astragalus",
+            "gagal ginjal": "nsaids painkillers kidney damage",
+
+            // --- BAGIAN 4: OTAK & MENTAL (THE PSYCH TRAP) ---
+            "depresi": "gut brain connection serotonin probiotics",
+            "cemas": "anxiety magnesium deficiency caffeine",
+            "insomnia": "blue light sleep destruction circadian rhythm",
+            "skizofrenia": "gluten connection schizophrenia brain inflammation",
+            "autis": "heavy metal detox autism gut health",
+            "adhd": "sugar diet adhd behavior school system",
+            "pikun": "alzheimers type 3 diabetes sugar brain",
+            "sakit kepala": "dehydration headache electrolyte imbalance",
+            "migrain": "parasite cleanse headache relief",
+            "bipolar": "nutritional psychiatry bipolar disorder",
+            "obat penenang": "benzodiazepine addiction withdrawal horror",
+            "stress": "cortisol belly fat adrenal fatigue",
+
+            // --- BAGIAN 5: GIGI & MULUT (THE ROOT CAUSE) ---
+            "sakit gigi": "clove oil tooth pain relief",
+            "gigi berlubang": "remineralizing teeth cod liver oil weston price",
+            "root canal": "root canal toxic teeth chronic disease link",
+            "cabut gigi": "meridian tooth chart organ connection",
+            "fluoride": "fluoride calcifies pineal gland iq lower",
+            "pasta gigi": "homemade toothpaste coconut oil baking soda",
+            "bau mulut": "stomach acid reflux bad breath",
+            "amandel": "lymphatic drainage tonsil health dairy",
+
+            // --- BAGIAN 6: PENCERNAAN (THE SECOND BRAIN) ---
+            "maag": "low stomach acid gerd myth apple cider vinegar",
+            "gerd": "betaine hcl for acid reflux",
+            "asam lambung": "baking soda stomach acid test",
+            "usus buntu": "appendix function beneficial bacteria",
+            "sembelit": "magnesium citrate constipation relief",
+            "diare": "charcoal bind toxins diarrhea",
+            "wasir": "squatty potty hemorrhoids posture",
+            "batu empedu": "liver flush hulda clark olive oil",
+            "usus bocor": "leaky gut glyphosate round up",
+            "gluten": "gluten zonulin gut lining damage",
+
+            // --- BAGIAN 7: MATA & THT (SENSORY) ---
+            "mata minus": "bates method eyesight improvement exercises",
+            "katarak": "carnivore diet cataracts reversal",
+            "kacamata": "glasses worsen eyesight pinhole glasses",
+            "telinga berdenging": "tinnitus heavy metals detox",
+            "sinusitis": "neti pot colloidal silver sinus infection",
+            "flu": "vitamin d3 immune system virus myth",
+            "batuk": "honey onion syrup cough remedy",
+            "pilek": "mucusless diet healing system",
+
+            // --- BAGIAN 8: KULIT & KECANTIKAN (DETOX) ---
+            "jerawat": "dairy acne connection liver detox",
+            "eksim": "eczema gut health probiotics",
+            "psoriasis": "vitamin d deficiency psoriasis sun",
+            "uban": "copper deficiency gray hair hydrogen peroxide",
+            "botak": "rosemary oil hair growth scalp massage",
+            "sunscreen": "sunscreen cancer causing chemicals",
+            "kanker kulit": "seed oils sunburn connection",
+            "awet muda": "autophagy fasting anti aging",
+            "skincare": "toxic chemicals in cosmetics endocrine disruptors",
+
+            // --- BAGIAN 9: VAKSIN & FARMASI (THE INDUSTRY) ---
+            "vaksin": "vaccine ingredients aluminium mercury",
+            "imunisasi": "natural immunity vs artificial immunity",
+            "antibiotik": "antibiotics destroy microbiome colloidial silver",
+            "demam": "fever is healing mechanism do not suppress",
+            "obat batuk": "dextromethorphan side effects brain",
+            "paracetamol": "glutathione depletion acetaminophen liver",
+            "vitamin c": "liposomal vitamin c megadose healing",
+            "rumah sakit": "iatrogenic death medical errors statistics",
+            "dokter": "rockefeller medicine history flexner report",
+
+            // --- BAGIAN 10: WANITA & HORMON ---
+            "haid sakit": "magnesium cramps period pain",
+            "pms": "hormone imbalance liver detox",
+            "kb": "birth control pill side effects depression",
+            "mandul": "infertility gmo food glyphosate",
+            "hamil": "home birth vs hospital birth trauma",
+            "melahirkan": "water birth benefits natural",
+            "menopause": "bioidentical hormones vs synthetic",
+            "keputihan": "candida overgrowth sugar addiction",
+
+            // --- BAGIAN 11: UMUM & LAINNYA ---
+            "nyeri sendi": "oxalates joint pain spinach danger",
+            "asam urat": "fructose uric acid gout connection",
+            "rematik": "boron arthritis cure",
+            "tulang keropos": "calcium myth vitamin k2 d3 bone",
+            "otot kaku": "magnesium oil transdermal",
+            "lelah": "adrenal fatigue caffeine crash",
+            "masuk angin": "kerokan healing technique science",
+            "bekam": "cupping therapy blood detox",
+            "akupuntur": "meridian energy flow healing",
+            "herbal": "big pharma suppressing natural cures",
+            
+            // --- BAGIAN 8: TERLARANG ---
+            "lelah": "melatih mental baja tanpa lari dari masalah",
+            "traveling": "pencarian jati diri atau sekedar pamer sosmed",
+            "game": "dopamin detox dan bahaya kecanduan instan",
+            "tiktok": "senjata perusak atensi (attention span) generasi muda",
+            "viral": "rekayasa algoritma untuk bodohisasi massal",
+            "artis": "boneka industri hiburan dan simbolisme",
+            "k-pop": "dampak psikologis pemujaan berhala modern",
+            "sepak bola": "pengalihan isu politik (panem et circenses)",
+            "fashion": "konsumerisme dan sampah tekstil",
+            "mobil mewah": "liabilitas yang menyedot kekayaan",
+            "rumah kpr": "kontrak seumur hidup dengan bank",
+            "nikah": "sakralitas janji vs industri pesta pamer",
+            "selingkuh": "kerusakan moral akibat pornografi internet",
+            "lgbt": "agenda depopulasi dan perusakan fitrah",
+            "feminis": "penghancuran struktur keluarga tradisional"
+        };
+
+        // KATA KUNCI UMUM (Jaga-jaga mun teu aya di kamus)
+        // Mun user ngetik hal nu teu aya di kamus, urang tambahkan "suffix" supaya hasilna leuwih kritis.
+        const criticalSuffix = " fakta dan data analisis kritis";
+
+        async function cariParadox(isNewSearch) {
+            let userInput = document.getElementById('searchInput').value.toLowerCase().trim();
+            let container = document.getElementById('resultsArea');
+            let btnMore = document.getElementById('loadMoreBtn');
+            let toast = document.getElementById('secretMsg');
+
+            if (isNewSearch) {
+                if (!userInput) return;
+                
+                // === LOGIKA PARADOX ===
+                // 1. Cek naha aya di kamus?
+                if (paradoxDictionary[userInput]) {
+                    currentQuery = paradoxDictionary[userInput];
+                    toast.innerText = `⚠️ SISTEM MENDETEKSI BIAS. MENCARI: "${currentQuery.toUpperCase()}"`;
+                    toast.style.display = 'block';
+                } 
+                // 2. Mun teu aya, tambahkeun suffix "Analisis Kritis"
+                else {
+                    currentQuery = userInput + criticalSuffix;
+                    toast.innerText = "⚠️ MENAMPILKAN SUDUT PANDANG KRITIS...";
+                    toast.style.display = 'block';
+                }
+
+                // Sumputkeun Toast sanggeus 3 detik
+                setTimeout(() => { toast.style.display = 'none'; }, 4000);
+
+                nextPageToken = ""; 
+                container.innerHTML = "<div style='color:#00ff41; text-align:center; grid-column:1/-1;'>MEMBALIKKAN NARASI...</div>";
+                btnMore.style.display = "none";
+            }
+
+            try {
+                // Request ka YouTube API
+                let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=24&q=${encodeURIComponent(currentQuery)}&type=video&key=${FIXED_API_KEY}&pageToken=${nextPageToken}`;
+                
+                let response = await fetch(url);
+                let data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+
+                if (isNewSearch) container.innerHTML = ""; // Bersihkeun mun anyar
+
+                if (data.items.length === 0) {
+                    container.innerHTML = "<div style='text-align:center; color:#555;'>Tidak ada data yang bisa dibalikkan.</div>";
+                    return;
+                }
+
+                data.items.forEach(item => {
+                    let vid = item.snippet;
+                    let videoId = item.id.videoId;
+                    let imgUrl = vid.thumbnails.high ? vid.thumbnails.high.url : vid.thumbnails.medium.url;
+
+                    let card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="thumbnail-container">
+                            <img src="${imgUrl}" class="thumb" loading="lazy">
+                        </div>
+                        <div class="meta">
+                            <div class="vid-title">${vid.title}</div>
+                            <div class="vid-channel">${vid.channelTitle}</div>
+                        </div>
+                    `;
+                    
+                    // Klik -> Tab Baru
+                    card.onclick = () => {
+                        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+                    };
+
+                    container.appendChild(card);
+                });
+
+                if (data.nextPageToken) {
+                    nextPageToken = data.nextPageToken;
+                    btnMore.style.display = "block";
+                } else {
+                    btnMore.style.display = "none";
+                }
+
+            } catch (error) {
+                container.innerHTML = `
+                    <div style='text-align:center; color:red; grid-column:1/-1;'>
+                        ERROR SYSTEM: ${error.message}<br>
+                        API Key Limit or Network Error.
+                    </div>`;
+            }
+        }
+    </script>
+
+</body>
+</html>
