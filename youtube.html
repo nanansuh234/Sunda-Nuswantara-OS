@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDEO YOUTUBE ANTI ALGORITMA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            background-color: #0f0f0f;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: #0f0f0f;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #ff0000;
+            margin-right: 20px;
+            letter-spacing: 1px;
+            display: none; /* Disumputkeun di HP biar lega */
+        }
+        @media(min-width: 600px) { .logo { display: block; } }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        input {
+            flex: 1;
+            background: #121212;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+        }
+
+        input:focus { border-color: #1c62b9; }
+
+        button {
+            background: #222;
+            border: 1px solid #333;
+            border-left: none;
+            color: #fff;
+            padding: 0 20px;
+            cursor: pointer;
+            border-radius: 0 20px 20px 0;
+        }
+
+        button:hover { background: #333; }
+
+        /* GRID VIDEO */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* VIDEO CARD */
+        .video-card {
+            background: transparent;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover { transform: scale(1.02); }
+
+        .thumbnail-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #222;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .thumb { width: 100%; height: 100%; object-fit: cover; }
+
+        .meta { padding-top: 10px; display: flex; gap: 10px; }
+        .details { flex: 1; }
+
+        .vid-title {
+            font-size: 1rem;
+            font-weight: bold;
+            line-height: 1.4;
+            margin-bottom: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .vid-channel { font-size: 0.85rem; color: #aaa; }
+        .vid-channel:hover { color: #fff; }
+
+        /* LOAD MORE BUTTON */
+        .load-more-container {
+            text-align: center;
+            padding: 40px;
+            display: none; /* Defaultna leungit */
+        }
+
+        .load-more-btn {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .load-more-btn:hover { background: #cc0000; }
+
+        .msg { text-align: center; margin-top: 50px; color: #777; font-size: 1.2rem; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">VIDEO YOUTUBE ANTI ALGORITMA</div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cari Video..." onkeypress="if(event.keyCode==13) cariVideo(true)">
+            <button onclick="cariVideo(true)">🔍</button>
+        </div>
+    </div>
+
+    <div class="video-grid" id="resultsArea">
+        <div class="msg">
+            Ketik kata kunci pencarian.<br>
+            Hasil alami tanpa algoritma akan muncul di sini.
+        </div>
+    </div>
+
+    <div class="load-more-container" id="loadMoreArea">
+        <button class="load-more-btn" onclick="cariVideo(false)">TAMPILKAN LAGI</button>
+    </div>
+
+    <script>
+        // API KEY (HARDCODED)
+        const FIXED_API_KEY = "AIzaSyA7qvW9P-wffxhMKyhN6ytPEitqcLzo2IQ";
+        
+        // VARIABEL TOKEN HALAMAN (Penting keur "Load More")
+        let nextPageToken = "";
+        let currentQuery = "";
+
+        async function cariVideo(isNewSearch) {
+            let container = document.getElementById('resultsArea');
+            let loadMoreArea = document.getElementById('loadMoreArea');
+            
+            // Lamun Pencarian Baru
+            if (isNewSearch) {
+                currentQuery = document.getElementById('searchInput').value;
+                nextPageToken = ""; // Reset token
+                if (!currentQuery) return;
+                container.innerHTML = "<div class='msg'>Sedang mencari...</div>";
+                loadMoreArea.style.display = "none";
+            }
+
+            try {
+                // URL API + maxResults=50 (Maksimal Google) + pageToken
+                let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=${encodeURIComponent(currentQuery)}&type=video&key=${FIXED_API_KEY}&pageToken=${nextPageToken}`;
+                
+                let response = await fetch(url);
+                let data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+
+                // Lamun Pencarian Baru, Bersihkeun Layar
+                if (isNewSearch) {
+                    container.innerHTML = "";
+                    if(data.items.length === 0) {
+                        container.innerHTML = "<div class='msg'>Tidak ada hasil ditemukan.</div>";
+                        return;
+                    }
+                }
+
+                // Render Video
+                data.items.forEach(item => {
+                    let vid = item.snippet;
+                    let videoId = item.id.videoId;
+                    let imgUrl = vid.thumbnails.high ? vid.thumbnails.high.url : vid.thumbnails.medium.url;
+
+                    let card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="thumbnail-container">
+                            <img src="${imgUrl}" class="thumb" loading="lazy">
+                        </div>
+                        <div class="meta">
+                            <div class="details">
+                                <div class="vid-title">${vid.title}</div>
+                                <div class="vid-channel">${vid.channelTitle}</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Klik -> Tab Baru
+                    card.onclick = () => {
+                        window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+                    };
+
+                    container.appendChild(card);
+                });
+
+                // Cek naha masih aya halaman saterusna?
+                if (data.nextPageToken) {
+                    nextPageToken = data.nextPageToken; // Simpen token anyar
+                    loadMoreArea.style.display = "block"; // Munculkeun tombol
+                } else {
+                    nextPageToken = "";
+                    loadMoreArea.style.display = "none"; // Sumputkeun mun geus beak
+                }
+
+            } catch (error) {
+                container.innerHTML = `
+                    <div class='msg' style='color:red'>
+                        ERROR: ${error.message}<br>
+                        <small>Cek API Key / Kuota Habis.</small>
+                    </div>`;
+            }
+        }
+    </script>
+
+</body>
+</html>
