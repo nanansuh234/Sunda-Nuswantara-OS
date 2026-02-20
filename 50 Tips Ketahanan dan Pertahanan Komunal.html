@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: PROTOKOL MUDIK TERAKHIR</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0d110a; /* Dark Forest Green */
+            color: #d4af37; /* Nuswantara Gold */
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1400px;
+            border: 3px solid #228b22; /* Forest Green */
+            padding: 30px;
+            background: #050a05;
+            position: relative;
+            box-shadow: 0 0 40px rgba(34, 139, 34, 0.2);
+        }
+
+        /* Camo/Radar Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: radial-gradient(circle, transparent 20%, #050a05 120%), 
+                        linear-gradient(rgba(34, 139, 34, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(34, 139, 34, 0.05) 1px, transparent 1px);
+            background-size: 100%, 30px 30px, 30px 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #d4af37;
+            text-shadow: 0 0 15px #d4af37;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #00ff41;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #ffaa00;
+            background-color: rgba(50, 30, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #ffaa00; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #1a331a;
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #0a1a0a;
+            color: #00ff41;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #00ff41;
+        }
+
+        /* Kolom Styling */
+        .col-kota { color: #ff5555; width: 30%; background: rgba(255,0,0,0.03); font-style: italic; }
+        .col-desa { color: #d4af37; width: 35%; background: rgba(212, 175, 55, 0.02); }
+        .col-aksi { color: #00ff41; width: 30%; font-weight: bold; }
+
+        tr:hover td { background-color: #0a1a0a; }
+
+        .section-header {
+            background-color: #050a05;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #228b22;
+            border-bottom: 2px solid #228b22;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #d4af37;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #d4af37; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>THE GREAT EXODUS</h1>
+    <div class="subtitle">PROTOKOL MUDIK TERAKHIR: DESENTRALISASI & BERTAHAN HIDUP</div>
+    
+    <div class="alert-box">
+        KOTA BESAR ADALAH PERANGKAP. JIKA RANTAI SUPLAI LOGISTIK GLOBAL TERPUTUS KARENA PERANG ATAU KRISIS, KOTA AKAN MENJADI NERAKA KELAPARAN DALAM 3 HARI.<br>
+        <span>Lebaran tahun ini bukan untuk pamer kesuksesan palsu. Ini adalah MUDIK TERAKHIR.</span><br>
+        Bawa pulang keluargamu, hartamu, dan skill-mu. Menetaplah di desa. Bangun kembali kedaulatan lokal. Desa mengepung kota. 
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>ILUSI KOTA BESAR (MATRIX)</th>
+                <th>REALITA KAMPUNG (BUNKER ALAMI)</th>
+                <th>TINDAKAN PERSIAPAN MUDIK</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. DEKONSTRUKSI MENTAL & GENGSI</td></tr>
+            <tr><td>01</td><td class="col-kota">Kesuksesan diukur dari mobil cicilan & apartemen sempit.</td><td class="col-desa">Kesuksesan nyata adalah punya kebun sendiri, air bersih gratis, dan tidur nyenyak tanpa hutang.</td><td class="col-aksi">Jual/Kembalikan aset kredit (mobil/rumah KPR). Mudiklah walau hanya naik bus, bawa sisa uang tunai (cash).</td></tr>
+            <tr><td>02</td><td class="col-kota">Mudik untuk pamer (Flexing) ke tetangga kampung.</td><td class="col-desa">Mudik untuk menyatukan diri kembali dengan tanah kelahiran dan meminta maaf pada leluhur.</td><td class="col-aksi">Buang gengsi. Datang ke desa dengan kerendahan hati, bukan kesombongan orang kota.</td></tr>
+            <tr><td>03</td><td class="col-kota">Takut menganggur jika kembali ke desa.</td><td class="col-desa">Di desa tidak ada pengangguran jika anda mau memegang cangkul dan mengolah tanah.</td><td class="col-aksi">Ubah mindset: "Kerja" bukan berarti harus di kantor ber-AC. Bertani adalah profesi tertinggi.</td></tr>
+            <tr><td>04</td><td class="col-kota">Anak harus sekolah di kota agar pintar.</td><td class="col-desa">Sekolah kota mencetak buruh. Alam desa mencetak manusia merdeka yang paham ilmu kehidupan sejati.</td><td class="col-aksi">Cabut anak dari sistem sekolah matrix. Mulai homeschooling atau sekolahkan di alam desa.</td></tr>
+            <tr><td>05</td><td class="col-kota">Malu jika dianggap "gagal di rantau".</td><td class="col-desa">Lebih baik dianggap gagal oleh tetangga kota, daripada mati kelaparan saat kota di-lockdown/krisis.</td><td class="col-aksi">Siapkan mental baja. Hiraukan omongan orang. Tujuan anda adalah survival keluarga.</td></tr>
+            <tr><td>06</td><td class="col-kota">Menunggu pensiun baru pulang kampung.</td><td class="col-desa">Krisis geopolitik tidak akan menunggu anda pensiun. Jika SHTF (Shit Hits The Fan) terjadi besok, anda terjebak.</td><td class="col-aksi">Percepat timeline anda. Resign sekarang. Pulang selagi jalan tol dan transportasi masih beroperasi normal.</td></tr>
+            <tr><td>07</td><td class="col-kota">Gaya hidup konsumtif & healing ke mall.</td><td class="col-desa">Gaya hidup produktif. Hiburan didapat dari melihat benih tumbuh dan memanen hasil karya sendiri.</td><td class="col-aksi">Berhenti belanja barang tersier. Konversi uang pesangon/THR ke modal alat pertanian.</td></tr>
+            <tr><td>08</td><td class="col-kota">Kota adalah pusat peradaban modern.</td><td class="col-desa">Kota adalah pusat kerapuhan (fragility). Target utama rudal, sabotase cyber, dan penjarahan massal.</td><td class="col-aksi">Sadarilah bahwa desa adalah "Safe Haven" (Zona Aman) yang diabaikan elit global.</td></tr>
+            <tr><td>09</td><td class="col-kota">Mengandalkan profesi jasa (Konsultan/Admin/Digital).</td><td class="col-desa">Di masa krisis, orang tidak bisa memakan presentasi PowerPoint. Mereka butuh karbohidrat dan protein.</td><td class="col-aksi">Pelajari skill fisik primer sebelum mudik: Bertukang, menjahit, P3K, dan agrikultur dasar.</td></tr>
+            <tr><td>10</td><td class="col-kota">Identitas terikat pada jabatan di ID Card kantor.</td><td class="col-desa">Identitas asli adalah 'Anak dari Bapak X', 'Cucu dari Kakek Y', bagian dari klan/suku lokal.</td><td class="col-aksi">Tanggalkan seragam kerjamu. Pakai pakaian yang menyatu dengan lingkungan kampung.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. EKONOMI & LIKUIDASI ASET KOTA</td></tr>
+            <tr><td>11</td><td class="col-kota">Menyimpan kekayaan di rekening bank pusat.</td><td class="col-desa">Uang di bank bisa dibekukan saat darurat militer (Bail-in). Uang fisik dan emas di tangan adalah raja.</td><td class="col-aksi">Tarik uang tunai dari bank sebelum sistem perbankan global crash. Beli koin Dinar/Dirham/Emas.</td></tr>
+            <tr><td>12</td><td class="col-kota">Membayar sewa apartemen / kos bertahun-tahun.</td><td class="col-desa">Memiliki sepetak tanah di desa, membangun rumah kayu sederhana tanpa hutang.</td><td class="col-aksi">Putus kontrak sewa di kota. Gunakan sisa uang untuk beli tanah (walau kecil) di kampung halaman.</td></tr>
+            <tr><td>13</td><td class="col-kota">Bergantung pada gaji bulanan yang terkena pajak tinggi.</td><td class="col-desa">Membangun ekonomi mikro berputar cepat. Hasil panen dijual langsung ke tetangga tanpa pajak negara.</td><td class="col-aksi">Rencanakan bisnis desa: Toko kelontong, ternak ayam petelur, atau bengkel alat tani.</td></tr>
+            <tr><td>14</td><td class="col-kota">Berinvestasi di Saham/Crypto.</td><td class="col-desa">Investasi pada sapi, kambing, dan empang ikan. Aset yang beranak-pinak secara organik.</td><td class="col-aksi">Likuidasi (jual) aset digital. Konversi jadi aset biologis setibanya di desa.</td></tr>
+            <tr><td>15</td><td class="col-kota">Asuransi kesehatan swasta mahal.</td><td class="col-desa">Menyisihkan uang untuk dana darurat fisik (Emas Antam kecil) dan lumbung sehat.</td><td class="col-aksi">Tutup polis asuransi yang tidak perlu. Bawa pulang uang tunainya.</td></tr>
+            <tr><td>16</td><td class="col-kota">Konsumsi listrik berlebihan untuk AC & Hiburan.</td><td class="col-desa">Energi digunakan seperlunya untuk hal vital. Mengandalkan ventilasi alami dan cahaya matahari.</td><td class="col-aksi">Beli dan bawa pulang Solar Panel (Panel Surya) portabel kecil untuk lampu dan komunikasi darurat.</td></tr>
+            <tr><td>17</td><td class="col-kota">Membeli franchise/bisnis modern (Kopi Kekinian).</td><td class="col-desa">Mengolah hasil bumi lokal menjadi produk tahan lama (Gula aren, Kopi bubuk kampung, Ikan asin).</td><td class="col-aksi">Siapkan mesin press/pengemas manual untuk membuat produk olahan di kampung.</td></tr>
+            <tr><td>18</td><td class="col-kota">Bergantung pada sistem supply chain (minimarket).</td><td class="col-desa">Membangun gudang penyimpanan bahan pokok di rumah sendiri.</td><td class="col-aksi">Beli drum plastik tebal. Mulai menimbun beras, garam, gula, dan minyak goreng utuh setiba di desa.</td></tr>
+            <tr><td>19</td><td class="col-kota">Uang kertas adalah ukuran kekayaan satu-satunya.</td><td class="col-desa">Barang modal (Tools) adalah harta sejati. Mesin jahit, gergaji, cangkul baja tidak akan kena inflasi.</td><td class="col-aksi">Beli perkakas tangan (Hand tools) berkualitas tinggi di kota sebelum mudik.</td></tr>
+            <tr><td>20</td><td class="col-kota">Mencari investor luar untuk membangun desa.</td><td class="col-desa">Membangun desa dengan gotong royong dan "Syirkah" (Patungan) sesama warga kampung.</td><td class="col-action col-aksi">Kumpulkan keluarga besar, bentuk konsorsium dana keluarga untuk membeli tanah leluhur kembali.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. KETAHANAN PANGAN & AIR (FOOD ESTATE MANDIRI)</td></tr>
+            <tr><td>21</td><td class="col-kota">Air didapat dengan memutar keran PAM berbayar.</td><td class="col-desa">Air didapat dari sumur bor, mata air, dan menampung air hujan (Rainwater Harvesting).</td><td class="col-aksi">Setiba di kampung, prioritas pertama: Gali sumur atau bersihkan mata air terdekat. Beli pompa manual (engkol).</td></tr>
+            <tr><td>22</td><td class="col-kota">Sayuran dibeli di supermarket berselimut plastik.</td><td class="col-desa">Sayuran dipetik di halaman dapur 10 menit sebelum dimasak. Enzim dan gizi masih hidup.</td><td class="col-aksi">Bawa bibit pusaka (Heirloom Seeds) dari kota. Bibit organik yang bisa ditanam ulang selamanya (bukan bibit GMO pabrik).</td></tr>
+            <tr><td>23</td><td class="col-kota">Ketergantungan pada obat kimia apotek.</td><td class="col-desa">Apotek hidup. Jahe, kunyit, sereh, sambiloto ditanam bebas di pekarangan.</td><td class="col-aksi">Pelajari jurnal/buku pengobatan herbal. Tanam rimpang-rimpangan di minggu pertama menetap.</td></tr>
+            <tr><td>24</td><td class="col-kota">Protein didapat dari ayam suntik hormon pabrik.</td><td class="col-desa">Protein didapat dari telur ayam kampung liar dan ikan di empang mandiri.</td><td class="col-aksi">Beli sepasang indukan ayam kampung dan bibit ikan lele/nila yang tahan banting.</td></tr>
+            <tr><td>25</td><td class="col-kota">Membuang sisa makanan ke tempat sampah.</td><td class="col-desa">Siklus Zero Waste. Sisa makanan jadi kompos atau pakan ternak.</td><td class="col-aksi">Siapkan area komposter di pekarangan. Pelajari ilmu membuat pupuk kompos alami (Bokashi).</td></tr>
+            <tr><td>26</td><td class="col-kota">Beras bergantung pada impor pemerintah.</td><td class="col-desa">Gabah disimpan di Leuit (Lumbung). Gabah tahan bertahun-tahun jika disimpan dengan benar.</td><td class="col-aksi">Beli gabah kering langsung dari petani, bukan beras putih (beras putih cepat rusak/berkutu).</td></tr>
+            <tr><td>27</td><td class="col-kota">Pupuk kimia mahal buatan pabrik besar.</td><td class="col-desa">Pupuk kandang dan kotoran hewan gratis melimpah di desa.</td><td class="col-aksi">Pelajari cara membuat pupuk organik cair (POC) dan pestisida nabati (Pesnab) dari daun-daunan.</td></tr>
+            <tr><td>28</td><td class="col-kota">Gas LPG untuk memasak bergantung pada kuota negara.</td><td class="col-desa">Kayu bakar, arang, atau reaktor Biogas dari kotoran sapi.</td><td class="col-aksi">Bawa/beli Tungku Roket (Rocket Stove) yang hemat kayu bakar dan menghasilkan panas tinggi.</td></tr>
+            <tr><td>29</td><td class="col-kota">Makan tiga kali sehari karena lapar mata.</td><td class="col-desa">Makan untuk energi bekerja. Terbiasa puasa (intermittent) saat bahan makanan harus dihemat.</td><td class="col-aksi">Latih tubuh berpuasa. Adaptasi dengan porsi makan orang desa yang padat karbohidrat alami (singkong/ubi).</td></tr>
+            <tr><td>30</td><td class="col-kota">Daging selalu segar di kulkas menyala 24 jam.</td><td class="col-desa">Teknik pengawetan tradisional: Pengasapan, penggaraman, atau fermentasi tanpa listrik.</td><td class="col-aksi">Bawa garam krosok (garam laut kasar) dalam jumlah banyak. Ini adalah alat pengawet dan obat paling vital.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. PERTAHANAN, KOMUNITAS & TRIBALISME BARU</td></tr>
+            <tr><td>31</td><td class="col-kota">Apatis terhadap tetangga sebelah.</td><td class="col-desa">High-Trust Society. Keselamatan anda bergantung pada seberapa baik hubungan anda dengan warga lokal.</td><td class="col-aksi">Bawa oleh-oleh saat mudik. Segera sowan (silaturahmi) ke RT, RW, dan Sesepuh kampung. Minta izin menetap menetap.</td></tr>
+            <tr><td>32</td><td class="col-kota">Keamanan diserahkan pada Satpam/Polisi.</td><td class="col-desa">Keamanan komunal. Tiap pemuda desa adalah penjaga batas teritorial kampung.</td><td class="col-aksi">Ikut aktif ronda malam. Jika ada krisis, tutup akses masuk desa (Lockdown lokal) dari pendatang asing/penjarah kota.</td></tr>
+            <tr><td>33</td><td class="col-kota">Komunikasi via WhatsApp & Internet yang bisa dimatikan (Blackout).</td><td class="col-desa">Komunikasi via HT (Handy Talkie), Radio Amatir, atau Kentongan/Bedug.</td><td class="col-aksi">Bawa perangkat Radio HT (VHF/UHF). Sepakati sandi kentongan darurat dengan warga kampung.</td></tr>
+            <tr><td>34</td><td class="col-kota">Berdebat politik nasional (Pemilu/Presiden) di warkop.</td><td class="col-desa">Fokus pada politik lokal: Siapa yang ngurus irigasi? Siapa yang jaga ronda?</td><td class="col-aksi">Berhenti bahas elit ibukota. Curahkan energi untuk berembuk soal kemajuan desa bersama warga.</td></tr>
+            <tr><td>35</td><td class="col-kota">Pakaian mencolok dan perhiasan berlebihan.</td><td class="col-desa">Kesederhanaan yang merakyat. Tidak memancing kecemburuan sosial.</td><td class="col-aksi">Terapkan "Grey Man Theory" (Orang Abu-abu). Berbaurlah, jangan terlihat paling kaya atau paling menonjol.</td></tr>
+            <tr><td>36</td><td class="col-kota">Hukum diproses lewat polisi dan pengacara.</td><td class="col-desa">Hukum adat dan musyawarah mufakat di balai desa. Cepat, tuntas, tanpa biaya.</td><td class="col-aksi">Tunduk pada kearifan lokal. Jika ada masalah, minta mediasi Kokolot kampung, jangan langsung lapor aparat.</td></tr>
+            <tr><td>37</td><td class="col-kota">Individualis saat tertimpa musibah (sakit/rumah rusak).</td><td class="col-desa">Sistem Sambatan/Gotong Royong. Membangun rumah bersama dalam 1 minggu tanpa bayar kuli.</td><td class="col-aksi">Hadir dan sumbang tenaga di setiap kerja bakti kampung. Keringat anda adalah tabungan sosial anda.</td></tr>
+            <tr><td>38</td><td class="col-kota">Bersembunyi saat ada preman/ancaman luar.</td><td class="col-desa">Solidaritas Suku (Tribalisme). Jika satu warga diganggu pihak luar, satu kampung maju mengangkat golok.</td><td class="col-aksi">Bela tetanggamu walau ia salah, lalu hukum dia di dalam. Jangan biarkan orang luar menginjak orang kampungmu.</td></tr>
+            <tr><td>39</td><td class="col-kota">Lupa silsilah keluarga.</td><td class="col-desa">Nasab adalah paspor masuk. "Oh, ieu mah incuna Bah Soma".</td><td class="col-aksi">Hafalkan silsilah keluargamu. Jalin kembali rantai persaudaraan yang terputus selama kamu di kota.</td></tr>
+            <tr><td>40</td><td class="col-kota">Mental pendatang yang merasa lebih pintar.</td><td class="col-desa">Orang desa adalah ahli bertahan hidup (Survivalist) sejati. Mereka profesor alam.</td><td class="col-aksi">Kosongkan gelas. Datang sebagai murid alam, bukan sebagai bos dari kota. Dengarkan ilmu titenan mereka.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. PROTOKOL KIAMAT KECIL (PREPPING WW3)</td></tr>
+            <tr><td>41</td><td class="col-kota">Percaya perang hanya di TV.</td><td class="col-desa">Sadar bahwa efek riak (Ripple Effect) perang akan memutus bensin, listrik, dan sembako secara global.</td><td class="col-aksi">Siapkan skenario terburuk (SHTF). Miliki stok logistik minimum untuk bertahan hidup 6 bulan tertutup.</td></tr>
+            <tr><td>42</td><td class="col-kota">Lampu mati = kepanikan massal.</td><td class="col-desa">Lampu mati = kembali ke ritme alam (tidur lebih awal, bangun sebelum subuh).</td><td class="col-aksi">Bawa senter minyak (cempor), lilin cadangan banyak, dan senter tenaga surya.</td></tr>
+            <tr><td>43</td><td class="col-kota">Membeli senjata api mahal (sulit/ilegal).</td><td class="col-desa">Memiliki senjata tradisional tajam (Golok, Parang, Celurit, Panah) untuk bertani sekaligus pertahanan jarak dekat.</td><td class="col-aksi">Beli perkakas tajam dari panday besi lokal. Latih fisik (bela diri pencak silat) untuk pertahanan diri mutlak.</td></tr>
+            <tr><td>44</td><td class="col-kota">Buku-buku PDF di laptop/HP.</td><td class="col-desa">Saat listrik padam total (EMP Attack), semua data digital musnah tak bisa diakses.</td><td class="col-aksi">Cetak (Print) buku survival, panduan herbal, kalender alam, dan buku agama dalam bentuk fisik kertas.</td></tr>
+            <tr><td>45</td><td class="col-kota">Kebutuhan medis bergantung pada ambulans.</td><td class="col-desa">Setiap rumah memiliki anggota keluarga yang paham pertolongan pertama (First Aid) dan bedah minor.</td><td class="col-aksi">Bawa Tas P3K skala tempur (Perban, alkohol, Betadine, obat anti infeksi, antibiotik spektrum luas).</td></tr>
+            <tr><td>46</td><td class="col-kota">Meninggalkan dokumen penting di brankas bank.</td><td class="col-desa">Semua dokumen fisik berada di bawah penguasaan pribadi dalam tas anti air darurat (Bug Out Bag).</td><td class="col-aksi">Bawa semua ijazah, surat tanah, dan identitas fisik di tas ransel pelarian yang selalu siap dibawa.</td></tr>
+            <tr><td>47</td><td class="col-kota">Tergantung pada alat transportasi mesin (Mobil/Motor).</td><td class="col-desa">Saat BBM langka dan mahal, mobilitas dilakukan dengan tenaga otot atau hewan.</td><td class="col-aksi">Bawa/beli Sepeda kayuh mekanik standar (non-listrik) atau pelihara kuda/sapi untuk angkutan angkutan berat.</td></tr>
+            <tr><td>48</td><td class="col-kota">Informasi tersentralisasi (Internet mati = buta informasi).</td><td class="col-desa">Informasi didapat dari frekuensi radio gelombang pendek.</td><td class="col-aksi">Bawa Radio FM/AM/SW Baterai (atau engkol manual) untuk mendengarkan siaran darurat lokal/internasional.</td></tr>
+            <tr><td>49</td><td class="col-kota">Menunggu negara memberikan bantuan.</td><td class="col-desa">Kedaulatan mutlak: "Saya dan kampung saya akan menolong diri kami sendiri."</td><td class="col-aksi">Bangun pagar mental dan fisik di sekeliling desa anda. Jika negara runtuh, desa anda jadi negara baru yang berdaulat.</td></tr>
+            <tr><td>50</td><td class="col-kota">Takut mati.</td><td class="col-desa">Sadar bahwa kematian adalah hal pasti. Yang terpenting adalah MATI MERDEKA, bukan mati sebagai budak sistem.</td><td class="col-aksi">Luruskan Niat. Perkuat Iman Internal (OS Spiritual). Pasrah pada Tuhan, tapi gigih berikhtiar mempertahankan keluarga.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🔥 KEMBALI KE AKAR, ATAU HANCUR BERSAMA MATRIX 🔥</h2>
+        <p>Edukasi warga desamu. Jangan biarkan mereka menjual tanahnya kepada "Orang Kota" atau "Investor Asing" yang sedang menyiapkan tempat sembunyi. <br><br>
+        <strong>Desa adalah Pangkalan Terakhir Kedaulatan Nuswantara.</strong> <br><br>
+        Jadikan Mudik Lebaran ini sebagai MUDIK PERMANEN. Bawa pulang ilmu, bawa pulang emas, bawa pulang keberanian. Tinggalkan kota-kota beton yang akan runtuh oleh perang ekonomi dan senjata globalis. Mari kita padatkan kembali kampung halaman, hidupkan kembali sistem gotong royong, dan bersiaplah menyambut era Tatanan Dunia Baru dengan cara kita sendiri: <strong>Tatanan Sosial Alami Nuswantara!</strong> 👁️⚡🛡️</p>
+    </div>
+</div>
+
+</body>
+</html>

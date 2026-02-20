@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: BIO-TEKNOLOGI NUSWANTARA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0a0f0a; /* Dark Earth */
+            color: #d4af37; /* Soil Gold */
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1400px;
+            border: 3px solid #00ff41; /* Bio Green */
+            padding: 30px;
+            background: #020502;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.15);
+        }
+
+        /* Hexagon / Organic Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #00ff41;
+            text-shadow: 0 0 15px #00ff41;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #d4af37;
+            background-color: rgba(20, 15, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #00ff41; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #1a331a;
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #051a05;
+            color: #d4af37;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #d4af37;
+        }
+
+        /* Kolom Styling */
+        .col-palsu { color: #ff5555; width: 30%; background: rgba(255,0,0,0.02); font-style: italic; }
+        .col-alami { color: #00ff41; width: 35%; background: rgba(0,255,65,0.02); }
+        .col-aksi { color: #d4af37; width: 30%; font-weight: bold; }
+
+        tr:hover td { background-color: #0a150a; }
+
+        .section-header {
+            background-color: #0a110a;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #00ff41;
+            border-bottom: 2px solid #00ff41;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #00ff41;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #00ff41; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>AGRARIA ALKEMIA</h1>
+    <div class="subtitle">PROTOKOL KEMANDIRIAN PANGAN & ADAPTASI DESA</div>
+    
+    <div class="alert-box">
+        PUPUK KIMIA (UREA/NPK) ADALAH NARKOBA BAGI TANAH. MEMBUAT TANAH KECANDUAN DAN MEMBUNUH MIKROBA ALAMI.<br>
+        <span>Orang kota yang mudik harus me-reset otaknya. Tanah adalah entitas hidup berfrekuensi!</span><br>
+        Gunakan bakteri lokal, rotasi tanaman pelindung, netralisir racun atmosfer, dan manfaatkan teknologi resonansi semesta.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>SISTEM KIMIA/KOTA (MERUSAK)</th>
+                <th>BIO-SISTEM NUSWANTARA (MEMULIHKAN)</th>
+                <th>TINDAKAN / SKILL EKSEKUSI</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. DETOKSIFIKASI & PENYEMBUHAN TANAH</td></tr>
+            <tr><td>01</td><td class="col-palsu">Membiarkan Hujan Asam merusak tanah (pH turun, tanaman kerdil).</td><td class="col-alami"><strong>Kapur Dolomit:</strong> Menetralkan tingkat keasaman (pH) tanah dan mensuplai Kalsium-Magnesium.</td><td class="col-aksi">Taburkan Dolomit di awal musim hujan/tanam agar tanah kembali basa (pH 6.5 - 7).</td></tr>
+            <tr><td>02</td><td class="col-palsu">Membakar sisa panen hingga jadi abu mati.</td><td class="col-alami"><strong>Biochar (Arang Aktif):</strong> Pembakaran tanpa oksigen. Menjadi rumah bagi jutaan bakteri baik dan penyimpan air.</td><td class="col-aksi">Buat tong pembakaran sekam padi/kayu tertutup. Campur arangnya dengan tanah bedengan.</td></tr>
+            <tr><td>03</td><td class="col-palsu">Mencangkul tanah terlalu dalam (Tillage) membalik ekosistem cacing.</td><td class="col-alami"><strong>No-Till Farming (Tanpa Olah Tanah):</strong> Membiarkan struktur tanah alami, hanya melubangi titik tanam.</td><td class="col-aksi">Berhenti menyiksa tanah. Cukup lapisi dengan kompos dan tutupi dengan mulsa organik.</td></tr>
+            <tr><td>04</td><td class="col-palsu">Membiarkan tanah telanjang tersengat matahari (mati kekeringan).</td><td class="col-alami"><strong>Mulsa Organik:</strong> Menutupi tanah dengan jerami, daun kering, atau cacahan rumput menjaga suhu & kelembaban.</td><td class="col-aksi">Jangan biarkan ada tanah yang terlihat. Alam benci ruang kosong, tutupi tanahmu!</td></tr>
+            <tr><td>05</td><td class="col-palsu">Menganggap rumput liar (Gulma) sebagai musuh yang harus di-RoundUp.</td><td class="col-alami"><strong>Gulma sebagai Indikator:</strong> Daun lebar (kurang kalsium), ilalang (tanah padat). Mereka adalah dokter tanah.</td><td class="col-aksi">Cabut manual, cacah, dan kembalikan ke tanah sebagai kompos. Jangan pakai herbisida kimia!</td></tr>
+            <tr><td>06</td><td class="col-palsu">Mengusir cacing tanah karena dianggap hama kotor.</td><td class="col-alami"><strong>Vermikompos:</strong> Kotoran cacing (Kascing) adalah pupuk paling sempurna dengan enzim pelindung akar.</td><td class="col-aksi">Buat kotak ternak cacing merah (Lumbricus rubellus) di bawah wastafel cucian piring.</td></tr>
+            <tr><td>07</td><td class="col-palsu">Tanah pecah-pecah dan banjir saat hujan.</td><td class="col-alami"><strong>Biopori & Swales:</strong> Parit resapan dan lubang organik untuk menjebak air hujan ke dalam tanah (Bank Air).</td><td class="col-aksi">Gali lubang silinder 1 meter, isi sampah organik. Bikin parit buntu di kemiringan lahan.</td></tr>
+            <tr><td>08</td><td class="col-palsu">Kekurangan Fosfor & Kalium beli pupuk NPK pabrik.</td><td class="col-alami"><strong>Abu Bakar & Tulang:</strong> Abu kayu murni dan tumbukan tulang hewan adalah sumber Fosfor & Kalium gratis.</td><td class="col-aksi">Kumpulkan abu dari tungku dapur. Taburkan di sekitar tanaman berbuah (jangan berlebihan).</td></tr>
+            <tr><td>09</td><td class="col-palsu">Penyemprotan fungisida kimia untuk membunuh jamur.</td><td class="col-alami"><strong>Jamur Mikoriza:</strong> Jamur baik yang bersimbiosis dengan akar tanaman, memperluas jangkauan akar mencari air.</td><td class="col-aksi">Ambil tanah dari bawah pohon bambu yang rindang, campurkan ke media tanammu.</td></tr>
+            <tr><td>10</td><td class="col-palsu">Menganggap tanah hanya sebagai benda mati penahan akar.</td><td class="col-alami"><strong>Soil Food Web:</strong> Tanah adalah perut bumi. Miliaran mikroba mencerna mineral untuk dimakan tumbuhan.</td><td class="col-aksi">Beri makan mikrobanya (dengan bahan organik/karbon), maka mikroba akan memberi makan tanamanmu.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. PUPUK HAYATI & PROBIOTIK LOKAL (BIO-ION)</td></tr>
+            <tr><td>11</td><td class="col-palsu">Urea (Nitrogen Sintetis) hasil tambang gas alam.</td><td class="col-alami"><strong>Daun Lamtoro/Kelor:</strong> Kaya akan nitrogen murni. Difermentasi menjadi POC (Pupuk Organik Cair).</td><td class="col-aksi">Rendam daun Kelor/Lamtoro dalam air + Gula Aren selama 14 hari. Siramkan ke tanah.</td></tr>
+            <tr><td>12</td><td class="col-palsu">Beli EM4 pabrikan seharga Rp 30.000/botol.</td><td class="col-alami"><strong>MOL Nasi Basi (Mikroorganisme Lokal):</strong> Bakteri dekomposer asli yang sudah adaptasi dengan iklim setempat.</td><td class="col-aksi">Kepal nasi basi (berjamur oren/putih), rendam air gula 1 minggu. Jadi biang bakteri gratis!</td></tr>
+            <tr><td>13</td><td class="col-palsu">Pupuk pemacu pertumbuhan akar kimia.</td><td class="col-alami"><strong>PGPR (Plant Growth Promoting Rhizobacteria):</strong> Bakteri luar biasa pelindung dan pemacu akar dari alam.</td><td class="col-aksi">Rendam akar bambu + terasi + air cucian beras selama 15 hari. Pemacu tumbuh gratis.</td></tr>
+            <tr><td>14</td><td class="col-palsu">Pestisida (Racun serangga) yang membunuh lebah dan meracuni manusia.</td><td class="col-alami"><strong>Pestisida Nabati (Pesnab):</strong> Aroma menyengat yang mengusir hama (repellent) tanpa residu racun jangka panjang.</td><td class="col-aksi">Blender bawang putih, daun mindi/nimba, dan brotowali. Semprotkan sore hari.</td></tr>
+            <tr><td>15</td><td class="col-palsu">Membuang kotoran ternak ke sungai.</td><td class="col-alami"><strong>Kompos Dingin & Biogas:</strong> Kotoran sapi/kambing yang difremsentasi hingga tidak berbau, tinggi hara.</td><td class="col-aksi">Jangan pakai kohe segar (panas)! Fermentasi dulu dengan MOL minimal 1 bulan sebelum ke kebun.</td></tr>
+            <tr><td>16</td><td class="col-palsu">Urin hewan dibuang sia-sia.</td><td class="col-alami"><strong>POC Urin Kelinci / Sapi (Biourine):</strong> Cairan ajaib penyubur daun. Nitrogen alami yang siap diserap daun.</td><td class="col-aksi">Tampung urin kelinci, fermentasi 2 minggu dengan tetes tebu. Semprot ke daun pagi hari.</td></tr>
+            <tr><td>17</td><td class="col-palsu">Membuang cangkang telur.</td><td class="col-alami"><strong>Kalsium Organik:</strong> Cangkang telur mencegah rontok bunga dan buah pecah.</td><td class="col-aksi">Sangrai cangkang telur, tumbuk halus, rendam dengan cuka apel. Ambil airnya untuk kalsium cair.</td></tr>
+            <tr><td>18</td><td class="col-palsu">Membeli vitamin B1 tanaman di toko pertanian.</td><td class="col-alami"><strong>Air Cucian Beras (Leri):</strong> Penuh dengan Vitamin B1 untuk anti-stres tanaman saat baru pindah tanam.</td><td class="col-aksi">Jangan buang air cucian beras pertama. Tampung dan langsung siramkan ke pot tanaman.</td></tr>
+            <tr><td>19</td><td class="col-palsu">Pupuk pabrik buatan asing yang mahal.</td><td class="col-alami"><strong>Jamur JAKABA (Jamur Keberuntungan Abadi):</strong> Penemuan petani nusantara. Berbentuk seperti karang, penyubur total.</td><td class="col-aksi">Biarkan air leri + air kolam terpapar udara lembab tertutup di tempat gelap berbulan-bulan.</td></tr>
+            <tr><td>20</td><td class="col-palsu">Asam Amino impor cair.</td><td class="col-alami"><strong>Bangkai Keong Emas / Kepala Ikan:</strong> Dilarutkan jadi Asam Amino murni untuk membesarkan buah.</td><td class="col-aksi">Fermentasi cincangan bekicot/keong mas + Gula Aren + Nanas. Hasilnya pupuk buah level dewa.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. EKOLOGI TANAM & ROTASI (PERMACULTURE)</td></tr>
+            <tr><td>21</td><td class="col-palsu">Monokultur (Tanam 1 jenis sejauh mata memandang). Menarik wabah hama.</td><td class="col-alami"><strong>Tumpang Sari (Polyculture):</strong> Menanam berbagai jenis sayur di satu bedeng. Hama bingung mencari makan.</td><td class="col-aksi">Tanam Jagung, Kacang Panjang, dan Labu berdampingan (Sistem 3 Saudari / Three Sisters).</td></tr>
+            <tr><td>22</td><td class="col-palsu">Memaksa tanah menanam padi berturut-turut hingga hara habis.</td><td class="col-alami"><strong>Rotasi Legum (Kacang-Kacangan):</strong> Tanaman kacang memiliki bintil akar penyimpan Nitrogen dari udara.</td><td class="col-aksi">Wajib: Setelah panen padi/jagung, tanam Kedelai atau Kacang Tanah untuk me-reset unsur N di tanah.</td></tr>
+            <tr><td>23</td><td class="col-palsu">Membeli jaring serangga plastik mahal.</td><td class="col-alami"><strong>Tanaman Refugia:</strong> Bunga berwarna kuning/mencolok yang menarik predator alami hama (Kepik penumpas kutu).</td><td class="col-aksi">Tanam Bunga Kenikir, Marigold, atau Bunga Matahari di pinggir petak sawah/kebun.</td></tr>
+            <tr><td>24</td><td class="col-palsu">Tanam sesuka hati setiap hari berbeda.</td><td class="col-alami"><strong>Tanam Serempak 1 Desa:</strong> Memutus siklus hidup hama seperti tikus atau wereng secara masal.</td><td class="col-aksi">Rembuk desa. Tentukan tanggal tanam bareng. Setelah panen, biarkan lahan kosong bersamaan.</td></tr>
+            <tr><td>25</td><td class="col-palsu">Beli benih Hibrida/F1 pabrik yang tidak bisa ditanam ulang (Mandul).</td><td class="col-alami"><strong>Heirloom Seed Saving:</strong> Benih pusaka warisan yang jika ditanam akan menghasilkan bibit subur selamanya.</td><td class="col-aksi">Simpan biji tomat/cabai dari buah terbaikmu. Jemur, simpan di botol kaca. Bebas dari monopoli bibit!</td></tr>
+            <tr><td>26</td><td class="col-palsu">Tanam lurus mendatar boros tempat.</td><td class="col-alami"><strong>Stratifikasi Tajuk (Agroforestri):</strong> Ada pohon tinggi (buah), pohon sedang (kopi), perdu (cabai), rambat (vanili).</td><td class="col-aksi">Susun kebunmu seperti hutan hujan tropis mini. Sinar matahari dibagi rata berlapis.</td></tr>
+            <tr><td>27</td><td class="col-palsu">Pagar tembok/besi anti karat.</td><td class="col-alami"><strong>Pagar Hidup (Living Fence):</strong> Pohon penahan angin yang daunnya bisa dipangkas untuk pakan ternak / kompos.</td><td class="col-aksi">Tanam pohon Kelor, Gamal, atau Sengon mengelilingi rumah. Pagar yang menghasilkan pupuk!</td></tr>
+            <tr><td>28</td><td class="col-palsu">Mengalirkan air langsung ke sungai.</td><td class="col-alami"><strong>Kolam Retensi Biotik:</strong> Kolam penampung air hujan yang diisi Azolla dan Ikan Nila (Penyubur air).</td><td class="col-aksi">Buat balong leutik. Siram kebun pakai air balong yang sudah kaya nutrisi kotoran ikan.</td></tr>
+            <tr><td>29</td><td class="col-palsu">Mencangkul bukit hingga longsor.</td><td class="col-alami"><strong>Terasering Contour (Nyabuk Gunung):</strong> Menahan laju air mengikuti garis kemiringan alam.</td><td class="col-aksi">Jangan menanam memotong bukit. Ikuti garis sabuk bukit untuk mencegah erosi dan hilangnya humus.</td></tr>
+            <tr><td>30</td><td class="col-palsu">Tanah dipaksa bekerja 365 hari setahun.</td><td class="col-alami"><strong>Lahan Bera (Istirahat):</strong> Memberi waktu tanah menyembuhkan diri (mengembalikan bakteri dan mikoriza).</td><td class="col-aksi">Puasakan sepetak lahanmu selama 1 musim (biarkan ditumbuhi rumput/kacangan liar), lalu gilir petak lain.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. TEKNOLOGI RESONANSI & KEARIFAN KUNO</td></tr>
+            <tr><td>31</td><td class="col-palsu">Membeli perangkat elektronik penyubur tanah buatan pabrik.</td><td class="col-alami"><strong>Electro-Culture (Antena Tembaga):</strong> Menarik ion/listrik statis dari atmosfer bumi ke akar tanaman. Tumbuh raksasa!</td><td class="col-aksi">Lilit kawat tembaga murni ke tongkat bambu membentuk spiral ke atas, tancapkan ke tanah kebun.</td></tr>
+            <tr><td>32</td><td class="col-palsu">Menyiram dengan air keran (PAM) bercampur Kaporit/Klorin.</td><td class="col-alami"><strong>Air Bermagnet (Magnetized Water) & Air Petir:</strong> Air hujan yang turun bersama kilat mengandung Nitrogen super.</td><td class="col-aksi">Tampung air hujan deras pertama. Atau pasang magnet Neodymium di selang siram untuk merubah struktur air.</td></tr>
+            <tr><td>33</td><td class="col-palsu">Kebun sepi seperti pabrik industri mati.</td><td class="col-alami"><strong>Bio-Acoustic (Resonansi Suara):</strong> Frekuensi alam (kicau burung, gamelan 432Hz) membuka lebar Stomata (mulut daun).</td><td class="col-aksi">Nyalakan suara serangga/gamelan pelan di kebun pada jam 7-9 pagi saat menyemprot pupuk daun.</td></tr>
+            <tr><td>34</td><td class="col-palsu">Menabur pupuk secara acak tak beraturan.</td><td class="col-alami"><strong>Geometri Sakral (Fibonacci):</strong> Menanam dengan pola melingkar/spiral alami meniru energi pertumbuhan alam semesta.</td><td class="col-aksi">Terapkan bedengan melingkar (Mandala Garden). Pusatnya diisi batu kuarsa atau sumber air.</td></tr>
+            <tr><td>35</td><td class="col-palsu">Kalender masehi 24 jam untuk bertani.</td><td class="col-alami"><strong>Pranata Mangsa & Fase Bulan:</strong> Gravitasi bulan menarik air tanah. Bulan purnama = tarik akar, bulan baru = tarik daun.</td><td class="col-aksi">Tanam umbi-umbian saat fase bulan gelap. Tanam sayur daun saat bulan menuju purnama penuh.</td></tr>
+            <tr><td>36</td><td class="col-palsu">Memakai Sepatu boot karet tebal setiap saat.</td><td class="col-alami"><strong>Earthing / Grounding:</strong> Bertelanjang kaki menyatukan elektron negatif bumi dengan tubuh pekebun dan tanaman.</td><td class="col-aksi">Cabut sepatumu sesekali. Sentuh tanah basah dengan kaki telanjangmu. Transfer energi doa secara langsung.</td></tr>
+            <tr><td>37</td><td class="col-palsu">Pestisida untuk mengendalikan tikus.</td><td class="col-alami"><strong>Predator Apex Alami (Burung Hantu & Ular Katam):</strong> Menjaga keseimbangan ekosistem tanpa racun.</td><td class="col-aksi">Buat pagupon (rumah burung hantu) tinggi di tengah sawah. 1 Burung hantu memangsa 5 tikus semalam.</td></tr>
+            <tr><td>38</td><td class="col-palsu">Tanah dipadatkan oleh traktor baja berat.</td><td class="col-alami"><strong>Radionik Bumi:</strong> Menjaga struktur rongga tanah agar energi magnetik bumi bisa bersirkulasi.</td><td class="col-aksi">Buat jalur jalan kaki khusus di kebun. Jangan pernah menginjak area bedengan tanam!</td></tr>
+            <tr><td>39</td><td class="col-palsu">Petani menanam sambil mengeluh harga pupuk mahal.</td><td class="col-alami"><strong>Kristalisasi Memori Air (Niat):</strong> Tumbuhan 80% air. Mengeluh merusak molekul air di dalam daun.</td><td class="col-aksi">Bicara yang baik pada tanamanmu. Berdoa (Iqra) sebelum menanam benih pertama. Frekuensimu meresonansi daun.</td></tr>
+            <tr><td>40</td><td class="col-palsu">Mengusir hama dengan lampu UV listrik mati.</td><td class="col-alami"><strong>Cahaya Api Alami:</strong> Asap dan cahaya dari obor organik mengusir serangga malam pengganggu pucuk buah.</td><td class="col-aksi">Nyalakan perapian kecil/obor getah di beberapa titik kebun saat musim serangga kawin.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. SKILL SURVIVAL DESA UNTUK ORANG KOTA</td></tr>
+            <tr><td>41</td><td class="col-palsu">Skill Presentasi & Microsoft Excel.</td><td class="col-alami"><strong>Metalurgi Dasar (Mengasah Tajam):</strong> Golok/Arit tumpul membuang 50% energimu percuma.</td><td class="col-aksi">BELAJAR MENGASAH! Pahami beda asahan kasar (batu gunung) dan asahan halus (batu minyak) pada sudut 20 derajat.</td></tr>
+            <tr><td>42</td><td class="col-palsu">Memesan makanan via GoFood / Kompor Gas.</td><td class="col-alami"><strong>Api Purba (Rocket Stove):</strong> Membuat api stabil 24 jam dengan ranting kecil tanpa banyak asap.</td><td class="col-aksi">Susun batu bata membentuk huruf 'L' tertutup (Tungku Roket). Api menyedot oksigen kuat dari bawah.</td></tr>
+            <tr><td>43</td><td class="col-palsu">Telepon teknisi PAM / Tukang Sanyo.</td><td class="col-alami"><strong>Plumbing Dasar & Hidrolika:</strong> Air adalah nyawa. Tahu cara menyambung pipa paralon dan benerin klep pompa manual.</td><td class="col-aksi">Sediakan lem PVC, selotip ledeng, dan pelajari cara mengganti seal karet pompa naga (pompa tangan).</td></tr>
+            <tr><td>44</td><td class="col-palsu">Membaca aplikasi cuaca BMKG.</td><td class="col-alami"><strong>Navigasi Alam & Meteorologi Lokal:</strong> Membaca arah semut pindah rumah, bentuk awan kumulonimbus, dan arah angin sore.</td><td class="col-aksi">Titenan (perhatikan). Jika semut hitam menaikkan telurnya ke atas pohon, hujan besar akan datang.</td></tr>
+            <tr><td>45</td><td class="col-palsu">Takut melihat kecoa atau cacing.</td><td class="col-alami"><strong>Identifikasi Predator Lahan:</strong> Mengenali ular berbisa (kepala segitiga) vs ular sawah biasa (pembasmi tikus).</td><td class="col-aksi">Jangan bunuh ular sawah biasa. Sediakan tongkat kayu panjang saat ke kebun rimbun.</td></tr>
+            <tr><td>46</td><td class="col-palsu">Bergantung pada perban dan Betadine pabrik.</td><td class="col-alami"><strong>P3K Herbal Hutan:</strong> Daun Yodium/Binahong untuk luka terbuka. Babadotan untuk pendarahan. Air kelapa untuk racun.</td><td class="col-aksi">Kunyah daun Babadotan/Bandotan, tempelkan pada luka potong sabit. Darah akan berhenti seketika.</td></tr>
+            <tr><td>47</td><td class="col-palsu">Memakai paku dan baut besi.</td><td class="col-alami"><strong>Simpul Tali & Konstruksi Bambu:</strong> Mengikat struktur kuat tanpa paku (Lashing) menggunakan ijuk rotan/bambu.</td><td class="col-aksi">Pelajari ikatan palang (Square lashing) dan ikatan silang untuk membangun saung/bunker bambu darurat.</td></tr>
+            <tr><td>48</td><td class="col-palsu">Berteriak jika ada hewan yang akan disembelih.</td><td class="col-alami"><strong>Eksekusi Hewan Sesuai Adab:</strong> Mematikan saraf nyeri ayam/hewan dalam 1 detik tanpa menyiksa.</td><td class="col-aksi">Beli pisau super tajam. Pelajari titik potong urat nadi & tenggorokan hewan. Orang desa harus berani menyembelih.</td></tr>
+            <tr><td>49</td><td class="col-palsu">Tertutup, kaku, dan perhitungan soal uang.</td><td class="col-alami"><strong>Sosiologi Warung Kopi:</strong> Negosiasi tidak dilakukan dengan proposal, tapi dengan membagikan rokok dan senyuman tulus.</td><td class="col-aksi">Orang desa tidak melihat uangmu, mereka melihat kesopananmu. Ucapkan "Punten" sambil menunduk saat lewat.</td></tr>
+            <tr><td>50</td><td class="col-palsu">Rasa Superior (Merasa pintar karena lulusan S1 Kota).</td><td class="col-alami"><strong>Kerendahan Hati Kosmis (Merunduk Padi):</strong> Sadar bahwa petani buta huruf itu adalah Profesor Bertahan Hidup yang akan menyelamatkan nyawamu saat WW3.</td><td class="col-aksi">Buang egomu. Jadilah murid dari tanah, alam, dan kearifan para sesepuh lokal Nuswantara. </td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🌱 KEMBALIKAN KEDAULATAN KE TANGAN PETANI 🌱</h2>
+        <p>Negara yang mengontrol pangannya sendiri tidak akan bisa dijajah oleh lembaga global (WHO/PBB).<br><br>
+        <strong>Jika sistem finansial dan suplai makanan global hancur, Emas tidak bisa dimakan. Kripto tidak bisa digoreng.</strong><br><br>
+        Harta paling berharga di era mendatang adalah <em>Benih Pusaka, Tanah Subur, Air Bersih, dan Komunitas yang Guyub</em>. Gunakan teknologi Resonansi Alam dan Bio-ion Alami untuk mengembalikan kesuburan tanah Nuswantara. Ajarkan ilmu ini ke orang kota yang baru turun gunung, agar mereka tidak menjadi beban di kampung, melainkan menjadi pasukan perintis kemandirian total! 👁️⚡🌾</p>
+    </div>
+</div>
+
+</body>
+</html>

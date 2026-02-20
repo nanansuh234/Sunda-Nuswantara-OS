@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: EKONOMI ALAM DESA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0d0d0d;
+            color: #ccc;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1500px;
+            border: 3px solid #00ff41;
+            padding: 30px;
+            background: #111;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+        }
+
+        /* Scanline Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #d4af37;
+            text-shadow: 0 0 15px #d4af37;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #00ff41;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #ffaa00;
+            background-color: rgba(30, 20, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .alert-box span { color: #ffaa00; font-weight: bold; font-size: 1.2rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid #334433;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #002200;
+            color: #d4af37;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #00ff41;
+            position: sticky;
+            top: 0;
+        }
+
+        /* Kolom Styling */
+        .col-nama { color: #00ff41; width: 20%; font-weight: bold; font-size: 1.05rem; }
+        .col-modal { color: #aaa; width: 25%; }
+        .col-rutin { color: #ccc; width: 25%; font-style: italic; }
+        .col-hasil { color: #ffaa00; width: 30%; font-weight: bold; background: rgba(255, 170, 0, 0.05); }
+
+        tr:hover td { background-color: #1a221a; }
+
+        .section-header {
+            background-color: #051105;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #00ff41;
+            border-bottom: 2px solid #00ff41;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #d4af37;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #d4af37; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>THE VILLAGE ECONOMY</h1>
+    <div class="subtitle">50 PACABAKAN (PROFESI) PEMUTUS RANTAI PERBUDAKAN GAJI</div>
+    
+    <div class="alert-box">
+        Orang modern diukur dari slip gaji bulanan. Di desa, kekayaan diukur dari seberapa banyak aset biologis yang bekerja untukmu saat kamu tidur.<br>
+        <span>BERHENTI MENJUAL WAKTU HIDUPMU UNTUK MEMPERKAYA BOS.</span><br>
+        Berikut adalah hitung-hitungan rasional agar mantan buruh pabrik tahu bahwa alam jauh lebih dermawan daripada UMR kota!
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>JENIS USAHA (PACABAKAN)</th>
+                <th>MODAL & PERSIAPAN (ASET FISIK)</th>
+                <th>RUTINITAS HARIAN (GAWEAN)</th>
+                <th>NILAI PANEN (TERJEMAHAN UANG)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="5" class="section-header">I. PETERNAKAN (BANK PROTEIN & ASET BERJALAN)</td></tr>
+            <tr><td>01</td><td class="col-nama">Ayam Kampung Liar (Telur)</td><td class="col-modal">Lahan 3x3m dipagar. 10 Indukan Betina, 1 Jago. Pakan: Sisa dapur + dedak/maggot buatan sendiri.</td><td class="col-rutin">06:00 Buka kandang, kasih makan. Sore 17:00 tutup kandang. Sisanya ngopi.</td><td class="col-hasil">10 betina = min. 6 telur/hari. Sebulan 180 telur. @Rp 3.000 = Rp 540.000/bulan pasif. Tanpa kerja 8 jam.</td></tr>
+            <tr><td>02</td><td class="col-nama">Entok (Bebek Manila)</td><td class="col-modal">Kandang bambu, bak air kecil. 5 Betina, 1 Jantan. Sangat kebal penyakit. Pakan: Cacahan batang pisang + dedak.</td><td class="col-rutin">Beri makan pagi & sore. Sangat santai, entok mencari makan sendiri di kebun.</td><td class="col-hasil">1 betina bertelur & mengerami 10-15 anak. Umur 3 bulan dijual Rp 40-50rb/ekor. Skala kecil bisa panen Rp 1-2 Juta/musim.</td></tr>
+            <tr><td>03</td><td class="col-nama">Lele Kolam Terpal</td><td class="col-modal">Terpal 2x3 meter. Air sumur. Bibit 1000 ekor. Pakan: Pelet + sisa usus/jeroan dari pasar/ayam mati.</td><td class="col-rutin">Cek air, tebar pakan pagi-sore (10 menit). Kuras air 2 minggu sekali untuk siram kebun (pupuk super).</td><td class="col-hasil">Panen 2.5 bulan = 100kg. Jual ke tetangga/pengepul @Rp 20.000 = Rp 2.000.000 tiap panen.</td></tr>
+            <tr><td>04</td><td class="col-nama">Domba / Kambing (Tabungan)</td><td class="col-modal">Kandang panggung kayu. Beli 2 betina bunting. Aset tidak tergerus inflasi uang kertas.</td><td class="col-rutin">Ngarit (cari rumput/daun lamtoro) 1 jam sehari. Taruh pakan, beri air garam. Sisanya nganggur.</td><td class="col-hasil">Beranak 1-2 ekor per tahun. Nilai 1 anak domba umur 6 bulan = Rp 1,5 Juta. Ini adalah "Deposito Bank" versi alam.</td></tr>
+            <tr><td>05</td><td class="col-nama">Lebah Klanceng (Teuweul)</td><td class="col-modal">Beli 5 stup (kotak bambu/kayu) lebah tanpa sengat. Simpan di dinding luar rumah dekat bunga.</td><td class="col-rutin">TIDAK ADA RUTINITAS! Lebah cari nektar sendiri. Anda hanya melihat mereka bekerja.</td><td class="col-hasil">Panen 3-4 bulan sekali. 1 liter madu klanceng asli dihargai Rp 300.000 - Rp 500.000. Uang turun dari langit!</td></tr>
+            <tr><td>06</td><td class="col-nama">Ternak Maggot (BSF)</td><td class="col-modal">Tong/bak kayu. Kumpulkan sampah organik dapur/pasar (gratis). Jaring lalat BSF.</td><td class="col-rutin">Buang sampah dapur ke tong. Biarkan belatung maggot memakannya. Nol biaya pakan.</td><td class="col-hasil">Maggot adalah pakan protein tinggi gratis untuk ayam/lele. Menghemat biaya pakan ternak hingga 80%. Uang terselamatkan = Uang dihasilkan.</td></tr>
+            <tr><td>07</td><td class="col-nama">Cacing Tanah (Lumbricus)</td><td class="col-modal">Kotak kayu di bawah tempat teduh. Isi dengan tanah dan kotoran sapi busuk.</td><td class="col-rutin">Jaga kelembapan (siram sedikit). Masukkan sisa sayuran.</td><td class="col-hasil">Kotorannya (Kascing) = Pupuk termahal di dunia (Rp 5.000/kg). Cacingnya = Pakan belut/ayam super.</td></tr>
+            <tr><td>08</td><td class="col-nama">Burung Puyuh (Mesin Telur)</td><td class="col-modal">Kandang baterai kawat 1x1 meter. 100 ekor betina. Butuh tempat hangat terhindar dari angin.</td><td class="col-rutin">Beri pakan pur + jagung pagi & sore. Bersihkan kotorannya tiap hari.</td><td class="col-hasil">100 ekor bertelur 80 butir/hari. Sebulan 2.400 butir (24 kg). @Rp 35.000/kg = Rp 840.000/bulan dari lahan 1 meter persegi!</td></tr>
+            <tr><td>09</td><td class="col-nama">Kelinci Pedaging / Hias</td><td class="col-modal">Kandang bambu bersekat. 2 Betina, 1 Jantan. Pakan rumput layu & pelet.</td><td class="col-rutin">Ngarit rumput (dilayukan semalam agar tidak kembung). Tampung kotoran dan urinnya di bawah kandang.</td><td class="col-hasil">Kelinci cepat beranak (6-8 ekor). Dagingnya mahal. URIN KELINCI dijual Rp 10.000/liter untuk pupuk sultan.</td></tr>
+            <tr><td>10</td><td class="col-nama">Ikan Nila (Kolam Tanah/Tanaman)</td><td class="col-modal">Empang kecil atau bak terpal. Nila bisa berkembang biak sendiri (berbeda dengan lele).</td><td class="col-rutin">Tebar daun talas, kangkung, atau azolla. Lebih hemat pelet dibanding lele.</td><td class="col-hasil">Bisa dipancing kapan saja saat butuh protein keluarga. Surplusnya dijual ke tetangga tanpa lewat tengkulak.</td></tr>
+
+            <tr><td colspan="5" class="section-header">II. PERTANIAN & KEBUN (MESIN PENCETAK UANG HIJAU)</td></tr>
+            <tr><td>11</td><td class="col-nama">Jahe Merah (Polybag/Karung)</td><td class="col-modal">100 karung beras bekas. Campuran tanah, sekam, pupuk kandang. Bibit jahe merah.</td><td class="col-rutin">Siram jika musim kemarau. Cabut rumput liar. Sangat minim perawatan.</td><td class="col-hasil">Panen 8-10 bulan. 1 karung hasilkan 1-2 kg. 100 karung x Rp 30.000/kg = Rp 3.000.000. Lahan sempit hasil selangit.</td></tr>
+            <tr><td>12</td><td class="col-nama">Cabai Rawit Setan</td><td class="col-modal">Bedengan pekarangan rumah / 50 polybag. Pupuk kandang + Semprotan bawang putih (Pesnab).</td><td class="col-rutin">Cek hama keriting daun tiap sore. Semprot pesnab. Siram pagi.</td><td class="col-hasil">Cabai selalu jadi "Emas Merah" saat krisis. Panen berkali-kali. Sekali panen 2-3 kg. Hemat uang dapur ratusan ribu sebulan.</td></tr>
+            <tr><td>13</td><td class="col-nama">Sayur Kangkung / Bayam Cabut</td><td class="col-modal">Lahan 2x5 meter. Biji kangkung darat. Cangkul gembur + pupuk kompos.</td><td class="col-rutin">Siram pagi dan sore hari. Sangat butuh air konstan.</td><td class="col-hasil">Panen ultra cepat (21 hari). Jual langsung ke tetangga Rp 2000/ikat. Uang harian cepat cair untuk beli lauk/garam.</td></tr>
+            <tr><td>14</td><td class="col-nama">Jamur Tiram</td><td class="col-modal">Bangun Kumbung (gubuk bambu tertutup rumbia) lembab. Beli 500 baglog (media jamur).</td><td class="col-rutin">Semprot baglog dengan air (kabut) pagi & sore agar lembab. Panen jamur tiap subuh.</td><td class="col-hasil">Dari 500 baglog, panen harian 1-2 kg. @Rp 20.000/kg. Penghasilan pasif harian Rp 40.000. Setara UMR harian dengan kerja 10 menit.</td></tr>
+            <tr><td>15</td><td class="col-nama">Pembibitan (Nursery) Polybag</td><td class="col-modal">Toples biji buah (Alpukat/Durian/Kopi). Polybag kecil, tanah subur. Paranet peneduh.</td><td class="col-rutin">Tanam biji, siram rutin, biarkan tumbuh setinggi 40cm. Belajar teknik Stek/Cangkok.</td><td class="col-hasil">Satu bibit alpukat hasil okulasi harganya Rp 35.000 - Rp 50.000. Modal biji gratis dari sampah buah.</td></tr>
+            <tr><td>16</td><td class="col-nama">Pepaya California</td><td class="col-modal">Lahan kosong. Biji pepaya unggul. Butuh sinar matahari penuh sepanjang hari.</td><td class="col-rutin">Bersihkan gulma sekitar batang, pupuk kalium/abu saat mulai berbuah.</td><td class="col-hasil">Umur 7 bulan mulai panen, dan terus berbuah tiap minggu bertahun-tahun. Dijual ke tukang rujak/pasar stabil laku.</td></tr>
+            <tr><td>17</td><td class="col-nama">Tembakau Lokal (Bako Mole)</td><td class="col-modal">Biji tembakau lokal. Tanam di akhir musim hujan menyongsong kemarau (Tanah kering).</td><td class="col-rutin">Pangkas bunga agar daun melebar. Panen, iris tipis manual, jemur di terik matahari.</td><td class="col-hasil">Tembakau murni (tanpa cukai) adalah mata uang barter di desa. 1 Kg bako kering bernilai ratusan ribu saat rokok pabrik mahal.</td></tr>
+            <tr><td>18</td><td class="col-nama">Kacang Tanah & Kedelai</td><td class="col-modal">Lahan sehabis panen jagung/padi. Tidak butuh pupuk kimia (bisa menyerap nitrogen dari udara).</td><td class="col-rutin">Bersihkan rumput awal tanam. Setelah daun rimbun, tinggalkan.</td><td class="col-hasil">Menyuburkan kembali tanah untuk tanaman berikutnya + Panen kacang bernilai ekonomis tinggi untuk cemilan.</td></tr>
+            <tr><td>19</td><td class="col-nama">Budidaya Bawang Merah</td><td class="col-modal">Tanah sangat gembur, bedengan agak tinggi. Bibit umbi/bawang dari dapur.</td><td class="col-rutin">Wajib rajin siang malam cek hama ulat bawang. Semprot air biasa pagi hari jika malamnya turun embun es.</td><td class="col-hasil">Panen umur 60 hari. Harga jual selalu tinggi dan stabil. Bumbu wajib setiap dapur Nusantara.</td></tr>
+            <tr><td>20</td><td class="col-nama">Kopi Lokal (Robusta/Arabika)</td><td class="col-modal">Pohon kopi butuh peneduh (naungan pohon pisang/sengon). Cocok di tanah pegunungan.</td><td class="col-rutin">Pangkas dahan (pruning) setahun sekali. Panen biji merah.</td><td class="col-hasil">Panen raya setahun sekali. Aset jangka panjang yang diwariskan ke anak cucu. Harga kopi petik merah (Cherry) selalu premium.</td></tr>
+
+            <tr><td colspan="5" class="section-header">III. OLAHAN PANGAN & NILAI TAMBAH (VALUE ADDED)</td></tr>
+            <tr><td>21</td><td class="col-nama">Gula Aren / Gula Kelapa</td><td class="col-modal">Pohon Aren/Kelapa milik sendiri/sewa. Golok sadap khusus, bumbung bambu, kuali raksasa (Cétok).</td><td class="col-rutin">Pagi jam 05:00 naek pohon ambil nira. Sore naek lagi. Langsung rebus nira 4-5 jam sambil ngopi.</td><td class="col-hasil">Gula aren asli organik dicetak batok harganya bisa Rp 25.000/kg. Permintaan selalu kurang. Pembuat gula (Penyadap) sangat dihormati.</td></tr>
+            <tr><td>22</td><td class="col-nama">Pembuat Tempe & Tahu Daun</td><td class="col-modal">Kacang kedelai, Ragi tempe. Daun pisang/tepus untuk bungkus (Bebas plastik). Panci rebus.</td><td class="col-rutin">Rendam, rebus, kupas kulit, campur ragi, bungkus sore hari. Esoknya dijual.</td><td class="col-hasil">Duit kontan muter tiap poé (Cashflow). Tempe daun dihargai lebih mahal karena aroma lebih sedap dan sehat.</td></tr>
+            <tr><td>23</td><td class="col-nama">Minyak Kelapa (VCO / Klentik)</td><td class="col-modal">Kelapa tua, alat parut manual, alat peras (saringan kain). Tungku kayu bakar.</td><td class="col-rutin">Parut kelapa, peras santan, diamkan (untuk VCO) atau rebus berjam-jam hingga jadi blondo dan minyak bening (Klentik).</td><td class="col-hasil">Minyak kelapa murni sangat mahal. Blondo (ampasnya) enak dimakan. Memutus ketergantungan minyak sawit korporat.</td></tr>
+            <tr><td>24</td><td class="col-nama">Tepung Singkong (Mocaf)</td><td class="col-modal">Singkong segar, alat pasrah/iris, ember perendam, ragi mocaf (bisa dari bakteri lokal).</td><td class="col-rutin">Iris singkong tipis, rendam fermentasi 2-3 hari, bilas, jemur hingga keriuk, tumbuk jadi tepung.</td><td class="col-hasil">Pengganti Terigu (Gandum Impor). Bisa dibikin bolu/roti. Memutus rantai impor pangan. Jual tepung Rp 15.000/kg.</td></tr>
+            <tr><td>25</td><td class="col-nama">Ikan Asin / Pindang</td><td class="col-modal">Ikan segar lokal, garam krosok karungan, nampan jemur bambu, panci presto manual.</td><td class="col-rutin">Belah ikan, cuci, rendam garam tebal (fermentasi pengawetan), jemur di atap rumah.</td><td class="col-hasil">Makanan logistik perang/krisis. Bisa disimpan 1 tahun tanpa kulkas. Nilai jual naik 2x lipat dari ikan basah.</td></tr>
+            <tr><td>26</td><td class="col-nama">Kopi Bubuk Roasting Kayu Tulis</td><td class="col-modal">Biji kopi hijau (Greenbean) lokal. Kuali tanah liat, kayu bakar kopi, lumpang tumbuk baja.</td><td class="col-rutin">Sangrai kopi pelan-pelan di atas tungku kayu (aroma smokey alami). Tumbuk manual. Saring.</td><td class="col-hasil">Kopi Kampung "Artisan" kemasan kertas harganya bisa tembus Rp 150.000/kg bagi penikmat kopi organik kota.</td></tr>
+            <tr><td>27</td><td class="col-nama">Telur Asin / Asap</td><td class="col-modal">Telur bebek (ternak sendiri), abu gosok/bubuk bata merah, garam, ember.</td><td class="col-rutin">Balur telur dengan adonan abu garam. Diamkan 14-20 hari. Cuci, rebus.</td><td class="col-hasil">Meningkatkan masa simpan telur dari 1 minggu menjadi 1 bulan. Tambah nilai jual +30%.</td></tr>
+            <tr><td>28</td><td class="col-nama">Jamu & Herbal Kering (Simplisia)</td><td class="col-modal">Jahe, Kunyit, Temulawak (dari kebun). Alat parut, nampan jemur, botol kaca.</td><td class="col-rutin">Cuci bersih rimpang, iris tipis 2mm, jemur terik matahari hingga patah (kering mati).</td><td class="col-hasil">Dijual sebagai teh herbal/seduh. Tahan 2 tahun. Modal tanam sendiri = Untung 100%.</td></tr>
+            <tr><td>29</td><td class="col-nama">Bawang Goreng Homemade</td><td class="col-modal">Bawang merah panen sendiri, alat pasrah/iris, wajan cast iron, minyak kelapa.</td><td class="col-rutin">Kupas malam hari, iris, goreng pagi hari, tiriskan minyak pakai Spinner (putar manual).</td><td class="col-hasil">Bisnis ibu rumah tangga yang tak pernah mati. Bawang merah Rp 30rb/kg jadi Rp 100rb/kg setelah digoreng renyah.</td></tr>
+            <tr><td>30</td><td class="col-nama">Keripik Pisang / Singkong</td><td class="col-modal">Pisang nangka/kepok tua mentah, tungku besar, bumbu garam/gula.</td><td class="col-rutin">Iris langsung di atas wajan panas besar. Angkat, kemas.</td><td class="col-hasil">Pisang yang tadinya setandan cuma Rp 20.000, setelah jadi keripik nilainya jadi Rp 100.000.</td></tr>
+
+            <tr><td colspan="5" class="section-header">IV. JASA & SKILL DESA (UANG JASA ANTI RESESI)</td></tr>
+            <tr><td>31</td><td class="col-nama">Pandai Besi (Blacksmith)</td><td class="col-modal">Paron besi (Anvil), palu godam, tungku arang dengan blower engkol manual, per baja bekas.</td><td class="col-rutin">Bakar baja hingga merah, tempa puluhan kali, sepuh dengan air/oli.</td><td class="col-hasil">Orang paling dicari saat krisis! 1 Golok baja kualitas dewa bisa dihargai Rp 500.000. Skill pamungkas.</td></tr>
+            <tr><td>32</td><td class="col-nama">Tukang Kayu (Carpenter)</td><td class="col-modal">Gergaji, pasrah, pahat, meteran siku, palu (Semua manual/Hand tools).</td><td class="col-rutin">Mengukur, memotong, dan merakit kayu sisa menjadi meja, kursi, kusen pintu.</td><td class="col-hasil">Modal kayu limbah, diubah jadi meja estetis Rp 500.000. Tanpa bayar token listrik.</td></tr>
+            <tr><td>33</td><td class="col-nama">Bengkel Reparasi / Las Setelin</td><td class="col-modal">Kunci pas/ring lengkap, tang, obeng, mesin las (jika ada listrik), alat tambal ban.</td><td class="col-rutin">Nongkrong di garasi nunggu tetangga motornya rusak atau cangkulnya patah minta dilas.</td><td class="col-hasil">Uang jasa 100% masuk kantong. Skill mekanik tak akan pernah mati diganti AI.</td></tr>
+            <tr><td>34</td><td class="col-nama">Tukang Bangun Bambu (Saung)</td><td class="col-modal">Golok raut tajam, gergaji potong, ilmu ikatan lashing (tali ijuk).</td><td class="col-rutin">Tebang bambu tua, rendam di lumpur (awet), potong, rakit jadi saung/kandang di rumah pemesan.</td><td class="col-hasil">Jasa bikin 1 saung bisa diupah Rp 2-3 Juta. Bambu ngambil dari kebun sendiri.</td></tr>
+            <tr><td>35</td><td class="col-nama">Ahli Sumur & Reparasi Pompa</td><td class="col-modal">Cangkul, katrol, kunci pipa (Pipe wrench), seal karet sanyo/pompa manual.</td><td class="col-rutin">Menyelamatkan rumah yang airnya mati. Membuka pipa, ganti karet hisap, pancing air.</td><td class="col-hasil">Pahlawan desa. Bayaran jasa reparasi sanyo Rp 150.000 per panggilan. Modalnya cuma obeng & kunci pipa.</td></tr>
+            <tr><td>36</td><td class="col-nama">Pembuat Pupuk Kompos (Bisnis kotoran)</td><td class="col-modal">Cangkul, terpal, kotoran sapi/kambing tetangga (gratis), cairan MOL (biang bakteri).</td><td class="col-rutin">Aduk kotoran dengan jerami/daun kering, siram MOL, tutup terpal. Balik tiap 3 hari.</td><td class="col-hasil">Setelah 3 minggu, kotoran busuk jadi pupuk wangi tanah. Dijual per karung Rp 20.000. Modal dengkul.</td></tr>
+            <tr><td>37</td><td class="col-nama">Tukang Pangkas Pohon (Chainsaw/Kampak)</td><td class="col-modal">Mesin gergaji potong (Bensin) atau Kampak besar, tambang pengaman, mental berani tinggi.</td><td class="col-rutin">Dipanggil tetangga untuk menebang pohon bahaya yang mau menimpa atap rumah.</td><td class="col-hasil">Upah nebang 1 pohon besar Rp 200.000 - Rp 500.000. Plus kayunya boleh dibawa pulang buat masak.</td></tr>
+            <tr><td>38</td><td class="col-nama">Pembuat Anyaman Bambu</td><td class="col-modal">Pisau raut halus, bambu tali (tipis liyat). Kesabaran tinggi.</td><td class="col-rutin">Duduk di teras rumah. Membelah bambu setipis kertas, menganyam bilik, tampah, atau bubu ikan.</td><td class="col-hasil">Kerajinan tangan yang perlahan hilang. Dijual mahal ke kolektor atau pasar desa. Anti stres, sangat meditatif.</td></tr>
+            <tr><td>39</td><td class="col-nama">Penjahit Pakaian (Tailor)</td><td class="col-modal">Mesin jahit genjot kaki. Benang, jarum, gunting potong.</td><td class="col-rutin">Memotong kain, menambal celana bolong orang kebun, mengecilkan baju longgar.</td><td class="col-hasil">Saat krisis, orang berhenti beli baju baru. Tukang jahit dan tambal akan dicari tiap hari. Uang jajan lancar.</td></tr>
+            <tr><td>40</td><td class="col-nama">Tukang Pijat / Bekam / Urut</td><td class="col-modal">Tenaga jari/tangan, alat bekam (Kop), jarum steril, minyak urut murni.</td><td class="col-rutin">Datang ke rumah pasien. Mengobati keseleo, masuk angin parah, darah kotor punggung.</td><td class="col-hasil">Biaya seikhlasnya, tapi orang desa sangat menghargai skill ini. Sering dibayar pakai telur, beras, plus uang rokok.</td></tr>
+
+            <tr><td colspan="5" class="section-header">V. SURVIVAL HUSTLE & PEMULUNG MULIA</td></tr>
+            <tr><td>41</td><td class="col-nama">Pengepul Barang Bekas (Rongsok)</td><td class="col-modal">Timbangan gantung manual, gerobak/motor, lahan kosong.</td><td class="col-rutin">Memisahkan besi, aluminium, plastik PE putih, kardus. Bongkar alat elektronik rusak (Ambil tembaganya).</td><td class="col-hasil">Sampah adalah uang. Rongsokan didaur ulang, dijual ton-an ke pabrik peleburan. Bisnis tanpa gengsi.</td></tr>
+            <tr><td>42</td><td class="col-nama">Pembuat Arang Batok & Biochar</td><td class="col-modal">Tong drum besi tertutup. Limbah batok kelapa atau kayu sisa tebangan.</td><td class="col-rutin">Bakar batok dengan oksigen minim (Pirolisis). Tumbuk sisa debunya jadi penyubur tanah.</td><td class="col-hasil">Arang batok premium dijual untuk sate/barbeque mahal di kota. Arang debunya buat nyuburin sawah.</td></tr>
+            <tr><td>43</td><td class="col-nama">Pencari Burung / Jangkrik Liar</td><td class="col-modal">Jaring burung, lem pulut (getah teureup), senter malam.</td><td class="col-rutin">Keliling kebun malam hari nyari jangkrik alam atau mancing burung kicau dengan pulut.</td><td class="col-hasil">Burung kicau bagus harganya ratusan ribu. Jangkrik alam buat pakan mahal. (Tangkap secukupnya, jangan serakah).</td></tr>
+            <tr><td>44</td><td class="col-nama">Pembuat Sabun Natural (Cold Process)</td><td class="col-modal">Minyak kelapa, Soda Api (NaOH), air suling, cetakan silikon, timbangan digital.</td><td class="col-rutin">Aduk bahan sampai mengental (Trace), diamkan 4 minggu sampai reaksi kimia hilang (Curing).</td><td class="col-hasil">Sabun organik murni tanpa SLS pabrik. Sangat sehat buat kulit sensitif. Bisa dijual mahal/dibarter beras.</td></tr>
+            <tr><td>45</td><td class="col-nama">Budidaya Pakan Alternatif (Azolla & Lemna)</td><td class="col-modal">Kolam terpal dangkal 10cm. Sinar matahari. Pupuk kandang sapi/lumpur selokan.</td><td class="col-rutin">Tebar bibit azolla. Serok pakai saringan setiap 3 hari karena tumbuhnya sangat gila menutupi kolam.</td><td class="col-hasil">Pakan gratis pengganti Pelet Pabrik untuk Lele & Entok (Hemat biaya pakan 50%). Sisa azolla busuk jadi pupuk nitrogen kebun.</td></tr>
+            <tr><td>46</td><td class="col-nama">Penetasan Telur (Inkubator Kayu)</td><td class="col-modal">Kotak kayu, lampu bohlam kuning, termostat manual. Telur fertil tetangga.</td><td class="col-rutin">Putar telur 3 kali sehari secara manual agar embrio tidak lengket di cangkang. Atur suhu 38C.</td><td class="col-hasil">Jasa menetaskan telur orang. Jika menetas, bagi hasil (misal dari 10 netas, kita ambil 3 ekor anakan sebagai ongkos).</td></tr>
+            <tr><td>47</td><td class="col-nama">Tukang Asah Pisau / Gunting Keliling</td><td class="col-modal">Gerinda genjot (menggunakan pedal kaki, alat jadul) atau 3 jenis batu asah air.</td><td class="col-rutin">Keliling kampung atau buka lapak di pasar. Menerima pisau dapur/gunting kain tumpul.</td><td class="col-hasil">Ongkos asah Rp 5.000/pisau. Sehari dapat 20 pisau = Rp 100.000. Modalnya cuma air dan tenaga gesek.</td></tr>
+            <tr><td>48</td><td class="col-nama">Jasa Pengolahan Tanah (Buruh Tani)</td><td class="col-modal">Cangkul tajam, tenaga otot, sarapan nasi singkong kuat.</td><td class="col-rutin">Disewa tetangga untuk mencangkul/membalik tanah sawah sebelum masa tanam.</td><td class="col-hasil">Upah harian Rp 70.000 - Rp 100.000 + Makan gratis 2 kali sehari + Rokok/Kopi. Duit utuh dibawa pulang.</td></tr>
+            <tr><td>49</td><td class="col-nama">Pembuat Tepung / Tumbuk Lumpang</td><td class="col-modal">Lumpang batu/kayu besar, alu tebal. Tenaga lengan.</td><td class="col-rutin">Menumbuk gabah padi secara tradisional, atau menumbuk singkong kering jadi tepung mocaf.</td><td class="col-hasil">Beras tumbuk manual (Beras Pecah Kulit) nutrisinya 10x lipat lebih sehat dari beras giling mesin pabrik. Konsumsi pribadi/dijual ke sadar sehat.</td></tr>
+            <tr><td>50</td><td class="col-nama">Guru Silat / Guru Ngaji Lokal</td><td class="col-modal">Langgar / Mushola / Saung. Ilmu agama murni, kesabaran, integritas diri (Al-Amin).</td><td class="col-rutin">Sore-Malam mengajarkan anak-anak desa baca kitab, budi pekerti, dan pertahanan fisik.</td><td class="col-hasil">Bayaran BUKAN UANG. Orang tua murid akan menaruh beras, pisang, lauk, dan kayu bakar di depan pintu rumahmu. Ini level "High-Trust" tertinggi!</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🔥 PEMUTUS RANTAI GAJI 🔥</h2>
+        <p>Banyak orang tidak berani pindah ke desa karena mengira uang sulit dicari. Kenyataannya, <strong>di desa anda tidak butuh banyak uang untuk hidup mewah (Banyak waktu, udara segar, makanan organik)!</strong><br><br>
+        Ubah ukuran kesuksesanmu. Coba hitung: Jika anda punya 20 ekor ayam petelur (Rp 1jt/bln), 1 kolam lele (Rp 1jt/bln), dan jamur tiram (Rp 1.5jt/bln) yang dikerjakan santai dari teras rumah sambil sarapan, <strong>kenapa anda harus membungkuk dan dimarahi bos di pabrik selama 8 jam sehari untuk gaji yang sama?</strong><br><br>
+        Mulailah satu per satu. Beli alatnya, tanam benihnya, nikmati otonomi penuh atas waktu dan hidup anda. Bral ah, gagaro gado bari panen duit! 👁️⚡🌿</p>
+    </div>
+</div>
+
+</body>
+</html>

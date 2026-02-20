@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: LOGISTIK EXODUS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0b0b0b; /* Tactical Black */
+            color: #b0c4b1; /* Muted Camo Green */
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1400px;
+            border: 3px solid #ffaa00; /* Survival Orange */
+            padding: 30px;
+            background: #111;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 170, 0, 0.1);
+        }
+
+        /* Tactical Grid Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(255, 170, 0, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 170, 0, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #ffaa00;
+            text-shadow: 0 0 15px #ffaa00;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #ff0055;
+            background-color: rgba(30, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #00ff41; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #ffaa00;
+            color: #000;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #ffaa00;
+        }
+
+        /* Kolom Styling */
+        .col-item { color: #ffaa00; width: 25%; font-weight: bold; font-size: 1.05rem; }
+        .col-alasan { color: #b0c4b1; width: 45%; }
+        .col-aksi { color: #fff; width: 30%; font-style: italic; }
+
+        tr:hover td { background-color: #1a1a1a; }
+
+        .section-header {
+            background-color: #222;
+            color: #ffaa00;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.2rem;
+            border-top: 2px solid #ffaa00;
+            border-bottom: 2px solid #ffaa00;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #ffaa00;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #ffaa00; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>PROTOKOL EXODUS</h1>
+    <div class="subtitle">50 LOGISTIK & MINDSET SEBELUM PINDAH KE DESA</div>
+    
+    <div class="alert-box">
+        JANGAN BAWA GAYA HIDUP KOTA KE DESA! KEMEWAHAN ADALAH MAGNET PENJARAHAN SAAT KRISIS.<br>
+        <span>"Minimalis adalah Taktis. Manual adalah Keabadian."</span><br>
+        Beli alat-alat produksi fisik yang tidak butuh listrik, bangun rumah yang menyatu dengan alam, dan jadilah <strong>Manusia Abu-Abu (Grey Man)</strong> yang tak terlihat menonjol.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>BARANG / KONSEP</th>
+                <th>FUNGSI SURVIVAL (ANTI-MATRIX)</th>
+                <th>PROTOKOL EKSEKUSI</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. MINDSET & PAPAN (SHELTER OFF-GRID)</td></tr>
+            <tr><td>01</td><td class="col-item">Konsep "Grey Man" (Manusia Abu-abu)</td><td class="col-alasan">Orang kaya yang mencolok adalah target pertama perampokan saat aparat tidak ada. Berbaurlah dengan warga lokal.</td><td class="col-aksi">Jangan pakai baju/jam mahal. Pakai kaos lusuh saat berkebun. Sembunyikan kekayaanmu.</td></tr>
+            <tr><td>02</td><td class="col-item">Rumah Panggung Kayu/Bambu</td><td class="col-alasan">Anti gempa, sirkulasi udara bawah mencegah lembab/rayap, dan tidak mencolok seperti gedong beton bertingkat.</td><td class="col-aksi">Jual aset KPR kota. Bangun rumah panggung sederhana di desa. Nyaman dan murah.</td></tr>
+            <tr><td>03</td><td class="col-item">Pagar Hidup Berduri</td><td class="col-alasan">Tembok tinggi memancing rasa penasaran pencuri. Pagar tanaman berduri (Salak/Jeruk/Bambu) lebih kuat dan natural.</td><td class="col-aksi">Tanam Salak atau Bambu Berduri rapat mengelilingi rumah/kebun sebagai benteng alam.</td></tr>
+            <tr><td>04</td><td class="col-item">Tungku Roket (Rocket Stove)</td><td class="col-alasan">Memasak tanpa gas LPG. Desain tungku ini membakar kayu/ranting kecil dengan panas maksimal dan tanpa asap (siluman).</td><td class="col-aksi">Beli/buat dari batu bata merah tebal. Letakkan di dapur luar (pawon).</td></tr>
+            <tr><td>05</td><td class="col-item">Senter Engkol (Dynamo Flashlight)</td><td class="col-alasan">Senter baterai akan mati, baterai akan langka. Senter engkol menyala hanya dengan putaran tangan/kinetik.</td><td class="col-aksi">Beli senter engkol kualitas bagus (jangan mainan plastik). Bawa selalu di tas.</td></tr>
+            <tr><td>06</td><td class="col-item">Pompa Air Manual (Dragon/Engkol)</td><td class="col-alasan">Sanyo/Jetpump mati total saat listrik putus. Air adalah nyawa. Pompa mekanik menjamin suplai air 24 jam.</td><td class="col-aksi">Pasang pompa tangan di sumur utama atau buat sistem katrol timba ember baja.</td></tr>
+            <tr><td>07</td><td class="col-item">Filter Air Gravitasi (Keramik)</td><td class="col-alasan">Menyaring air sungai/hujan menjadi air minum murni tanpa listrik atau merebus (menghemat kayu bakar).</td><td class="col-aksi">Beli filter air tetes (contoh: Nazava/Berkey) yang bisa dicuci ulang pori-porinya.</td></tr>
+            <tr><td>08</td><td class="col-item">Lampu Minyak / Cempor / Lilin Badag</td><td class="col-alasan">Cahaya di malam hari tanpa generator. Minyak goreng bekas (jelantah) bisa jadi bahan bakar lampu ini.</td><td class="col-aksi">Stok sumbu katun tebal, lilin pilar besar, dan wadah kaca tahan panas.</td></tr>
+            <tr><td>09</td><td class="col-item">Panel Surya Portabel Kecil</td><td class="col-alasan">Bukan untuk 1 rumah (terlalu mahal/mencolok), tapi cukup 50-100 WP untuk mencharge HT, senter, dan radio darurat.</td><td class="col-aksi">Siapkan 1 panel surya lipat + powerbank/aki kecil. Sembunyikan saat dijemur.</td></tr>
+            <tr><td>10</td><td class="col-item">WC Kompos (Composting Toilet)</td><td class="col-alasan">Sistem septictank butuh sedot tinja. WC Kompos mendaur ulang kotoran manusia (dicampur serbuk gergaji) jadi pupuk tanaman keras.</td><td class="col-aksi">Siapkan ember tertutup khusus, stok serbuk gergaji/sekam untuk menutup bau seketika.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. PERALATAN PRODUKSI MANUAL (MEMUTUS KETERGANTUNGAN PABRIK)</td></tr>
+            <tr><td>11</td><td class="col-item">Penggiling Biji Manual (Hand Crank Mill)</td><td class="col-alasan">Blender listrik mati. Alat putar baja ini menumbuk kopi, jagung, beras, atau gandum menjadi tepung karbohidrat.</td><td class="col-aksi">Beli penggiling berbahan Cast Iron (Besi Cor), jangan plastik. Baut ke meja kayu tebal.</td></tr>
+            <tr><td>12</td><td class="col-item">Alat Pres Minyak Manual (Hand Oil Press)</td><td class="col-alasan">Minyak goreng akan langka. Alat ini memeras biji bunga matahari, kacang tanah, atau kemiri menjadi minyak nabati segar.</td><td class="col-aksi">Beli mesin pres mekanik engkol tangan berbahan stainless steel 304.</td></tr>
+            <tr><td>13</td><td class="col-item">Mesin Jahit Manual (Kaki/Genjot)</td><td class="col-alasan">Pakaian akan robek. Mesin jahit nenek moyang tipe genjot (Butterfly/Singer klasik) abadi tanpa listrik.</td><td class="col-aksi">Cari di toko barang bekas/loak. Servis, beri pelumas, stok jarum jahit dan benang nilon super kuat.</td></tr>
+            <tr><td>14</td><td class="col-item">Batu Asah (Whetstone) Grid Kasar & Halus</td><td class="col-alasan">Pisau/golok tumpul adalah sampah. Grinda listrik mati. Mengasah adalah skill survival level 1.</td><td class="col-aksi">Beli batu asah alam (batu gunung) dan asahan intan. Latih sudut kemiringan 20 derajat.</td></tr>
+            <tr><td>15</td><td class="col-item">Golok Tarisi / Baja Per (Spring Steel)</td><td class="col-alasan">Pisau stainless dapur akan patah dipakai menebang kayu. Golok baja per truk di-tempa pandai besi tak bisa hancur.</td><td class="col-aksi">Beli langsung dari pandai besi lokal (Banten/Madura). Jangan beli pisau rambo gaya-gayaan di mall.</td></tr>
+            <tr><td>16</td><td class="col-item">Gergaji Tarik (Crosscut Saw) & Kampak</td><td class="col-alasan">Chainsaw butuh bensin. Gergaji manual 2 orang dan kampak baja menebang pohon untuk kayu bakar musim dingin/hujan.</td><td class="col-aksi">Stok kampak berat untuk membelah, gergaji potong panjang, dan kikir untuk menajamkannya.</td></tr>
+            <tr><td>17</td><td class="col-item">Peralatan Tani Baja Karbon (Carbon Steel)</td><td class="col-alasan">Cangkul, garpu tanah, linggis, bajak manual. Senjata utama menghasilkan karbohidrat dari bumi.</td><td class="col-aksi">Beli alat berbahan tebal. Buat gagang dari kayu kuat (Kihiang/Gagil).</td></tr>
+            <tr><td>18</td><td class="col-item">Pengawet Makanan Tradisional</td><td class="col-alasan">Kulkas mati. Daging dan ikan diawetkan dengan Pengasapan (Smoker) atau Penggaraman (Curing).</td><td class="col-aksi">Stok berkarung-karung GARAM KROSOK. Garam adalah alat pengawet dan disinfektan purba.</td></tr>
+            <tr><td>19</td><td class="col-item">Wajan Besi Cor (Cast Iron Skillet)</td><td class="col-alasan">Panci teflon tipis akan meleleh di atas api kayu bakar. Wajan besi cor tahan dibakar langsung di atas arang merembet.</td><td class="col-aksi">Beli alat masak Cast Iron. Lakukan "Seasoning" (bakar dengan minyak) agar anti-lengket alami.</td></tr>
+            <tr><td>20</td><td class="col-item">Bor Tangan Manual (Hand Auger/Brace)</td><td class="col-alasan">Bor listrik mati. Untuk membuat lubang pada struktur kayu/bambu untuk pasang pasak (menggantikan paku besi).</td><td class="col-aksi">Beli "Scotch Eyed Auger" untuk survival bushcraft menyambung kayu tanpa paku.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. SANDANG & PERTAHANAN DIRI (TACTICAL GEAR)</td></tr>
+            <tr><td>21</td><td class="col-item">Pakaian Ripstop & Earth Tone</td><td class="col-alasan">Bahan Ripstop (anti-robek jala). Warna coklat tanah, hijau zaitun, abu-abu (menyatu dengan alam, tidak menarik perhatian penembak jitu).</td><td class="col-aksi">Tinggalkan baju neon cerah. Beli celana cargo banyak kantong dan kemeja lapangan lengan panjang.</td></tr>
+            <tr><td>22</td><td class="col-item">Sepatu Boot Karet (AP Boots)</td><td class="col-alasan">Sepatu kets mahal hancur di lumpur. Boot karet anti air, anti gigitan ular, anti duri saat bertani/evakuasi hujan.</td><td class="col-aksi">Beli 2 pasang per anggota keluarga. Murah, jelek, tapi menyelamatkan nyawa dari infeksi tanah.</td></tr>
+            <tr><td>23</td><td class="col-item">Jas Hujan Ponco (Bahan Biway/Karet)</td><td class="col-alasan">Melindungi tubuh dari hujan ekstrem, bisa dibentangkan jadi atap tenda (bivak) darurat di hutan.</td><td class="col-aksi">Jangan pakai jas hujan plastik kresek transparan. Beli ponco militer yang tebal dengan mata ayam (ring) di sudutnya.</td></tr>
+            <tr><td>24</td><td class="col-item">Sarung Tangan Pekerja (Leather Work Gloves)</td><td class="col-alasan">Tangan adalah aset utama. Lecet = infeksi tetanus = mati. Sarung tangan kulit melindungi dari kawat, beling, dan duri.</td><td class="col-aksi">Beli sarung tangan las/kulit sapi tebal, bukan sarung tangan motor tipis.</td></tr>
+            <tr><td>25</td><td class="col-item">Tali Paracord 550 & Tambang Tambat</td><td class="col-alasan">Bisa digunakan mengikat tenda, memancing, membuat jebakan hewan, hingga menjahit luka darurat (serat dalamnya).</td><td class="col-aksi">Beli minimal 2 rol paracord (100 meter) warna gelap (hitam/hijau olive).</td></tr>
+            <tr><td>26</td><td class="col-item">Lakban Kain (Duct Tape) & Kabel Ties</td><td class="col-alasan">Bisa menambal atap bocor, sepatu robek, selang pecah, hingga membungkus luka patah tulang sementara.</td><td class="col-aksi">Beli selusin Duct Tape Heavy Duty (warna silver/hitam) dan ribuan kabel ties tebal.</td></tr>
+            <tr><td>27</td><td class="col-item">Pisau Lipat Multi-Tools (Leatherman/Victorinox)</td><td class="col-alasan">Satu alat berisi tang, obeng, gunting, pembuka kaleng, pisau. Sangat vital untuk reparasi darurat di jalan.</td><td class="col-aksi">Bawa setiap saat di sabuk pinggang. Ini adalah bengkel mini portable.</td></tr>
+            <tr><td>28</td><td class="col-item">Tas Ransel Darurat (Bug Out Bag - BOB)</td><td class="col-alasan">Tas yang SELALU SIAP di dekat pintu. Jika ada milisi/bencana datang, langsung ambil dan lari ke hutan tanpa mikir packing.</td><td class="col-aksi">Isi dengan: Pakaian ganti 1 set, alat buat api, pisau, jas hujan, logistik kering 3 hari, P3K.</td></tr>
+            <tr><td>29</td><td class="col-item">Radio HT (VHF/UHF Dual Band)</td><td class="col-alasan">Jaringan seluler mati total (Blackout). Komunikasi antar tetangga pos ronda dan informasi darurat luar desa hanya via radio frekuensi.</td><td class="col-aksi">Beli HT Baofeng/semacamnya. Seting frekuensi darurat bersama tetangga/komunitas.</td></tr>
+            <tr><td>30</td><td class="col-item">Bela Diri Tradisional (Pencak Silat)</td><td class="col-alasan">Senjata api bisa kehabisan peluru. Pertarungan jarak dekat bersenjata tajam di area sempit (kampung) butuh reflek tubuh.</td><td class="col-aksi">Latih fisik. Pelajari teknik dasar melumpuhkan serangan pisau dan pertahanan jarak dekat.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. LOGISTIK ALAM & BENIH PUSAKA (FOOD SECURITY)</td></tr>
+            <tr><td>31</td><td class="col-item">Benih Pusaka (Heirloom Seeds)</td><td class="col-alasan">Benih pabrik hibrida (F1) mandul jika ditanam kembali. Benih pusaka bisa ditanam berulang-ulang seumur hidup.</td><td class="col-aksi">Simpan benih tomat, cabe, jagung kuno lokal di toples kaca gelap campur abu dapur (anti kutu).</td></tr>
+            <tr><td>32</td><td class="col-item">Karbohidrat Bawah Tanah (Singkong/Ubi)</td><td class="col-alasan">Sawah padi mudah dilihat dan dirampas tentara/perampok. Singkong tersembunyi di bawah tanah, aman dari kebakaran/panen paksa.</td><td class="col-aksi">Segera tancapkan batang singkong di seluruh pagar dan sela kebun setibanya di desa.</td></tr>
+            <tr><td>33</td><td class="col-item">Ayam Kampung Liar & Entok</td><td class="col-alasan">Mencari makan sendiri (cacing/serangga), tangguh cuaca, dan merupakan mesin pencetak telur protein darurat setiap hari.</td><td class="col-aksi">Beli 5 ekor babon (betina) dan 1 jago. Biarkan berkeliaran di pekarangan belakang.</td></tr>
+            <tr><td>34</td><td class="col-item">Sabun Cuci Batang Murni (B29 / Sabun Colek)</td><td class="col-alasan">Sabun mandi cair wangi cepat habis dan mahal. Sabun batang murni bisa untuk mandi, cuci baju, cuci piring, sangat awet.</td><td class="col-aksi">Stok berdus-dus sabun colek keras/sabun batang kuning.</td></tr>
+            <tr><td>35</td><td class="col-item">Alat Penjebak Ikan (Bubu / Jala)</td><td class="col-alasan">Memancing pakai kail membuang waktu. Bubu ikan dipasang sore hari di sungai kecil, pagi hari sudah dapat protein gratis.</td><td class="col-aksi">Beli/rajut bubu dari anyaman bambu atau kawat strimin tebal.</td></tr>
+            <tr><td>36</td><td class="col-item">Drum Plastik Tebal Berlapis (Food Grade)</td><td class="col-alasan">Karung beras mudah dimakan tikus/kutu. Drum biru/putih kedap udara bisa menyimpan gabah hingga 5 tahun tanpa rusak.</td><td class="col-aksi">Masukkan gabah/kacang hijau, taruh lilin menyala di atas piring kecil di dalamnya, tutup rapat (Vakum Oksigen).</td></tr>
+            <tr><td>37</td><td class="col-item">Minyak Goreng Utuh & Madu Mentah</td><td class="col-alasan">Madu murni tidak pernah basi (ditemukan di piramida Mesir masih bisa dimakan). Minyak goreng penyedia lemak/kalori instan.</td><td class="col-aksi">Stok jerigen minyak goreng. Dan berternak lebah tanpa sengat (Teuweul/Klanceng) di dinding kayu rumah.</td></tr>
+            <tr><td>38</td><td class="col-item">Buku Cetak Fisik (Hardcopy)</td><td class="col-alasan">Internet mati, Google hilang. Ilmu kedokteran, arsitektur, pertanian yang ada di PDF HP tidak bisa dibaca tanpa listrik.</td><td class="col-aksi">Print/beli buku: Pengobatan Herbal, Pertukangan Kayu, Navigasi Alam, dan Buku Agama.</td></tr>
+            <tr><td>39</td><td class="col-item">Batu Api Magnesium (Ferrocerium Rod)</td><td class="col-alasan">Korek gas basah akan rusak, gasnya habis. Batu magnesium digesek baja menghasilkan percikan api 3000°C walau basah kuyup.</td><td class="col-aksi">Sediakan 3 batang Ferro-Rod besar. Api adalah teknologi purba terpenting manusia.</td></tr>
+            <tr><td>40</td><td class="col-item">Alat Panah Dasar / Ketapel (Slingshot)</td><td class="col-alasan">Senjata senyap (silent weapon) tanpa suara ledakan yang mengundang bahaya. Peluru ketapel bisa diambil dari batu sungai.</td><td class="col-aksi">Beli ketapel karet tebal baja untuk berburu hewan kecil (burung/tikus kebun) pemakan panen.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. KESEHATAN, BARTER & SOSIALISASI (UANG BARU)</td></tr>
+            <tr><td>41</td><td class="col-item">Koin Emas Dinar & Perak Dirham</td><td class="col-alasan">Uang kertas jadi sampah saat negara inflasi ratusan persen. 1 koin perak (Dirham) selamanya cukup untuk beli 1 ekor ayam.</td><td class="col-aksi">Jual aset angka di Bank, tukar dengan pecahan Emas/Perak kecil (1 gram, 2 gram) agar mudah untuk uang kembalian.</td></tr>
+            <tr><td>42</td><td class="col-item">Rokok Kretek, Kopi & Gula (Barter Darurat)</td><td class="col-alasan">Di masa krisis, perokok akan rela menukar seekor ayam demi 1 bungkus rokok/kopi. Barang ini lebih berharga dari uang.</td><td class="col-aksi">Stok tembakau linting murni (bako mole), kopi bubuk mentah, dan gula sebagai "Mata Uang Alternatif".</td></tr>
+            <tr><td>43</td><td class="col-item">Alkohol Medis 70% & Vodka/Arak Murni</td><td class="col-alasan">Bukan untuk mabuk! Untuk mensterilkan luka tembak/sayat (mencegah amputasi), alat cukur, dan bahan bakar darurat kompor spirtus.</td><td class="col-aksi">Beli jerigen alkohol medis murni. Ini alat bedah darurat paling vital.</td></tr>
+            <tr><td>44</td><td class="col-item">Kotak Bedah Darurat & Pembalut Wanita</td><td class="col-alasan">Rumah sakit penuh korban perang. Pembalut wanita sangat bersih, tebal, dan menyerap darah (sering dipakai militer menambal luka tembak).</td><td class="col-aksi">Stok perban tekan (Israeli Bandage), Tourniquet (penghenti darah memancar), jarum bedah, dan betadine.</td></tr>
+            <tr><td>45</td><td class="col-item">Antibiotik Spektrum Luas (Amoxicillin dll)</td><td class="col-alasan">Goresan kecil yang terinfeksi bakteri di desa tanpa dokter bisa membunuh dalam 3 hari (Sepsis).</td><td class="col-aksi">Beli stok antibiotik darurat, obat diare akut parah (Loperamide), dan penurun demam.</td></tr>
+            <tr><td>46</td><td class="col-item">Minyak Angin, Balsem & Kayu Putih</td><td class="col-alasan">Orang kota yang turun ke desa akan kaget dengan suhu dingin dan angin gunung malam hari.</td><td class="col-aksi">Stok botolan besar. Meredakan pusing, kram otot habis bertani, dan masuk angin mematikan.</td></tr>
+            <tr><td>47</td><td class="col-item">Kaca Mata Safety & Masker N95</td><td class="col-alasan">Debu kemarau, membelah kayu, debu vulkanik, atau asap pembakaran sampah bisa merusak mata/paru satu-satunya.</td><td class="col-aksi">Beli kacamata tukang (safety goggle) berbahan polikarbonat tebal.</td></tr>
+            <tr><td>48</td><td class="col-item">Membawa Ilmu/Akal Akal Sehat</td><td class="col-alasan">Kekayaan intelektual (ilmu merakit radio, menanam, mengobati) tidak bisa dicuri perampok. Ia terpatri di kepala.</td><td class="col-aksi">Banyak baca dan praktikkan HARI INI selagi ada YouTube. Saat listrik mati, anda sudah mahir (Muscle Memory).</td></tr>
+            <tr><td>49</td><td class="col-item">Pengetahuan Obat Tanaman Liar</td><td class="col-alasan">Apotek abadi. Tahu bahwa Daun Yodium/Babadotan menghentikan darah, Meniran meningkatkan imun, Antanan untuk otak.</td><td class="col-aksi">Keliling pekarangan desa, identifikasi 10 gulma penyembuh utama bersama kuncen (orang tua) setempat.</td></tr>
+            <tr><td>50</td><td class="col-item">Sikap Merunduk & Empati Tinggi</td><td class="col-alasan">Senjata terkuat! Jika anda disukai warga asli karena tidak sombong dan rajin membantu, satu desa akan melindungi nyawa anda.</td><td class="col-aksi">Tinggalkan arogansi sarjana perkotaan. Senyum, sapa, bagikan panen, dan jadilah aset berharga bagi kampung tersebut.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🎒 EXODUS BUKAN KEPANIKAN, TAPI KEMERDEKAAN 🎒</h2>
+        <p>Tujuan dari persiapan ini BUKAN hidup dalam ketakutan di gua bawah tanah.<br><br>
+        Tujuannya adalah <strong>MEMUTUS RANTAI KETERGANTUNGAN PADA SISTEM DAJJAL</strong>. Saat Anda bisa menghasilkan makanan sendiri, memompa air sendiri, menyembuhkan diri sendiri, dan tidak berhutang pada bank, Anda menjadi manusia yang <em>Un-Cancelable</em> dan <em>Un-Controllable</em>.<br><br>
+        Bergegaslah sebelum pintu-pintu gerbang kota ditutup. Mulailah mengumpulkan alat produksi fisik, belilah tanah di kampung leluhur, dan bersiaplah menyambut era Tatanan Dunia Baru dengan senyum kemandirian! 👁️⚡🌾</p>
+    </div>
+</div>
+
+</body>
+</html>

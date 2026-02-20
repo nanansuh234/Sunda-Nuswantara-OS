@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: APOTEK ALAM NUSWANTARA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #030f05; /* Deep Jungle Dark */
+            color: #d4af37; /* Herbal Gold */
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1500px;
+            border: 3px solid #00ff41; /* Bio Green */
+            padding: 30px;
+            background: #051105;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.15);
+        }
+
+        /* Leaf/Hexagon Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #00ff41;
+            text-shadow: 0 0 15px #00ff41;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #00ff41;
+            background-color: rgba(0, 30, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #ffaa00; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #1a3a1a;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #052205;
+            color: #00ff41;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #00ff41;
+        }
+
+        /* Kolom Styling */
+        .col-nama { color: #00ff41; width: 15%; font-weight: bold; font-size: 1.1rem; }
+        .col-fungsi { color: #ffaa00; width: 30%; }
+        .col-olah { color: #d4af37; width: 30%; }
+        .col-tanam { color: #aaa; width: 25%; font-style: italic; }
+
+        tr:hover td { background-color: #0a1f0a; }
+
+        .section-header {
+            background-color: #0a1a0a;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #00ff41;
+            border-bottom: 2px solid #00ff41;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #d4af37;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #d4af37; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>APOTEK ALAM NUSWANTARA</h1>
+    <div class="subtitle">50 PROTOKOL KEDAULATAN MEDIS & BIO-FARMASI MANDIRI</div>
+    
+    <div class="alert-box">
+        INDUSTRI FARMASI GLOBAL MEMBUTUHKAN ANDA TETAP SAKIT AGAR MEREKA TETAP KAYA.<br>
+        <span>Tanah Nuswantara telah menyediakan penawar untuk setiap racun dan penyakit!</span><br>
+        Cabut ketergantunganmu pada obat kimia sintetis. Tanam apotek hidup di pekaranganmu. Kuasai kembali kesehatan keluargamu.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>NAMA TANAMAN</th>
+                <th>FUNGSI (PENYAKIT/TARGET)</th>
+                <th>CARA PENGOLAHAN (ALKEMIA)</th>
+                <th>CARA BUDIDAYA (PELAKNA)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="5" class="section-header">I. RIMPANG SAKTI (THE UNDERGROUND HEALERS)</td></tr>
+            <tr><td>01</td><td class="col-nama">Jahe Biasa/Emprit</td><td class="col-fungsi">Masuk angin, mual, pencernaan kembung, melancarkan aliran darah.</td><td class="col-olah">Geprek/iris tipis, seduh air panas + Gula aren. Minum hangat.</td><td class="col-tanam">Tancap rimpang bertunas ke tanah gembur (teduh parsial).</td></tr>
+            <tr><td>02</td><td class="col-nama">Jahe Merah</td><td class="col-fungsi">Anti-inflamasi kuat, pereda nyeri sendi, pernapasan, penambah stamina pria.</td><td class="col-olah">Rebus rimpang yang sudah dicuci bersih, campur madu murni.</td><td class="col-tanam">Sama dengan jahe biasa, lebih suka tanah kaya kompos (karung/polybag).</td></tr>
+            <tr><td>03</td><td class="col-nama">Kunyit (Koneng)</td><td class="col-fungsi">Obat maag alami (GERD), anti-radang, pembunuh bakteri lambung, penurun demam.</td><td class="col-olah">Parut, peras airnya. Rebus dengan air asam jawa & gula merah (Jamu Kunir Asam).</td><td class="col-tanam">Potong rimpang yang ada "mata" nya, tanam sedalam 5cm. Sangat mudah hidup.</td></tr>
+            <tr><td>04</td><td class="col-nama">Temulawak</td><td class="col-fungsi">Detoksifikasi Liver (Hati), menyembuhkan penyakit kuning, penambah nafsu makan anak.</td><td class="col-olah">Iris tipis, jemur kering (Simplisia). Rebus 3 lembar irisan dengan 2 gelas air jadi 1 gelas.</td><td class="col-tanam">Stek rimpang di lahan terbuka. Daun lebar, butuh ruang tumbuh luas.</td></tr>
+            <tr><td>05</td><td class="col-nama">Kencur (Cikur)</td><td class="col-fungsi">Batuk berdahak, radang tenggorokan, suara serak, pelega pernapasan.</td><td class="col-olah">Kunyah mentah sejumput (telan airnya), atau parut direbus bersama beras tumbuk (Beras Kencur).</td><td class="col-tanam">Rimpang butuh tanah yang sangat gembur dan air cukup, tidak suka tergenang.</td></tr>
+            <tr><td>06</td><td class="col-nama">Lengkuas (Laja)</td><td class="col-fungsi">Panu, kadas, kurap (Obat luar). Anti-jamur dan membersihkan darah.</td><td class="col-olah">Tumbuk kasar lengkuas segar + sedikit garam, gosokkan pada kulit yang kena jamur.</td><td class="col-tanam">Sangat tangguh. Tanam rimpang di lahan mana saja, tahan cuaca ekstrem.</td></tr>
+            <tr><td>07</td><td class="col-nama">Temu Ireng</td><td class="col-fungsi">Pembersih darah kotor, obat cacingan, penyakit kulit parah.</td><td class="col-olah">Parut, peras airnya. Rasanya sangat pahit, bisa dicampur madu mentah.</td><td class="col-tanam">Tanam rimpang di tempat teduh. Panen setelah daun menguning (gugur).</td></tr>
+            <tr><td>08</td><td class="col-nama">Bangle</td><td class="col-fungsi">Sakit kepala, demam tinggi, rematik, melangsingkan perut pasca melahirkan.</td><td class="col-olah">Tumbuk halus jadi tapal (Boreh), tempelkan di dahi atau perut.</td><td class="col-tanam">Rimpang ditanam di media tanam campuran tanah dan sekam.</td></tr>
+            <tr><td>09</td><td class="col-nama">Kunci (Temu Kunci)</td><td class="col-fungsi">Sariawan, keputihan, bau badan, penyubur kandungan.</td><td class="col-olah">Rimpang direbus bersama daun sirih, diminum rutin sehari sekali.</td><td class="col-tanam">Cocok di pot atau pekarangan lembab. Rimpangnya tumbuh ke bawah (vertikal).</td></tr>
+            <tr><td>10</td><td class="col-nama">Kunyit Putih</td><td class="col-fungsi">Penghancur sel kanker/tumor, kista, miom, dan antioksidan super.</td><td class="col-olah">Iris tipis, keringkan, seduh seperti teh. Rutinkan pagi dan sore.</td><td class="col-tanam">Tanam rimpang. Pastikan drainase bagus agar tidak busuk di dalam tanah.</td></tr>
+
+            <tr><td colspan="5" class="section-header">II. DAUN DEWA & DEDAUNAN PENYEMBUH (LEAF MEDICINE)</td></tr>
+            <tr><td>11</td><td class="col-nama">Kelor (Moringa)</td><td class="col-fungsi">Superfood! Gizi buruk, diabetes, hipertensi, peningkat ASI. Multi-vitamin alam.</td><td class="col-olah">Sayur bening (jangan direbus lama), atau daun dikeringkan di tempat teduh, jadikan bubuk teh.</td><td class="col-tanam">Potong batang pohon setinggi 1 meter, tancap langsung ke tanah. Langsung hidup!</td></tr>
+            <tr><td>12</td><td class="col-nama">Sambiloto</td><td class="col-fungsi">Penurun gula darah (Diabetes), hipertensi, tifus, malaria (Raja Pahit).</td><td class="col-olah">Rebus 7-10 lembar daun segar dengan 3 gelas air jadi 1 gelas. Minum hangat.</td><td class="col-tanam">Tebar bijinya. Tumbuh liar di tempat lembab. Sangat mudah berkembang biak.</td></tr>
+            <tr><td>13</td><td class="col-nama">Daun Sirsak</td><td class="col-fungsi">Membunuh sel kanker 10.000x lebih kuat dari kemoterapi (tanpa merusak sel baik), asam urat.</td><td class="col-olah">Rebus 7 lembar daun sirsak (yang tidak terlalu muda/tua) dengan 3 gelas air sisa 1.</td><td class="col-tanam">Tanam dari biji buah sirsak. Berbentuk pohon keras, butuh pekarangan.</td></tr>
+            <tr><td>14</td><td class="col-nama">Kumis Kucing</td><td class="col-fungsi">Infeksi saluran kemih, batu ginjal, peluruh kencing (diuretik kuat).</td><td class="col-olah">Rebus segenggam daun segar/kering dengan 2 gelas air. Minum rutin.</td><td class="col-tanam">Stek batang. Berbunga putih mirip kumis kucing. Rajin pangkas agar rimbun.</td></tr>
+            <tr><td>15</td><td class="col-nama">Binahong</td><td class="col-fungsi">Penyembuh luka pasca operasi, ambeien, vitalitas, regenerasi sel cepat.</td><td class="col-olah">Rebus 5 lembar daunnya atau tumbuk halus untuk ditempel di luka terbuka.</td><td class="col-tanam">Tanaman rambat. Tanam biji/stek batang, beri rambatan pagar/bambu.</td></tr>
+            <tr><td>16</td><td class="col-nama">Sirih (Hijau)</td><td class="col-fungsi">Antiseptik alami, mimisan, keputihan, pembersih mata, obat kumur.</td><td class="col-olah">Rebus 5 lembar daun, gunakan airnya untuk cebok/kumur. Digulung sumbat hidung mimisan.</td><td class="col-tanam">Rambat. Stek batang bergeragih, tanam di bawah pohon pelindung.</td></tr>
+            <tr><td>17</td><td class="col-nama">Sirih Merah</td><td class="col-fungsi">Diabetes, kanker payudara, penurun kolesterol jahat.</td><td class="col-olah">Rebus 3 lembar daun, minum airnya. Perhatian: dosis jangan terlalu pekat.</td><td class="col-tanam">Rambat, tapi lebih sensitif sinar matahari dibanding sirih hijau. Tempatkan di tempat teduh.</td></tr>
+            <tr><td>18</td><td class="col-nama">Pegagan (Antanan)</td><td class="col-fungsi">Nutrisi otak, alzheimer, perbaikan memori, kelancaran darah ke otak.</td><td class="col-olah">Dimakan mentah sebagai lalapan, atau dijus bersama madu.</td><td class="col-tanam">Tumbuh merambat di tanah lembab pinggir sawah/parit. Cabut dengan akarnya, pindah ke pot.</td></tr>
+            <tr><td>19</td><td class="col-nama">Daun Salam</td><td class="col-fungsi">Penurun Asam Urat, penurun kolesterol, gula darah.</td><td class="col-olah">Rebus 10 lembar daun salam segar dengan 3 gelas air hingga sisa 1 gelas.</td><td class="col-tanam">Pohon kayu keras. Tanam dari biji atau cangkok. Berguna juga sebagai bumbu dapur.</td></tr>
+            <tr><td>20</td><td class="col-nama">Daun Pepaya</td><td class="col-fungsi">Malaria, demam berdarah (DBD), cacingan, penambah trombosit.</td><td class="col-olah">Tumbuk/peras mentah ambil airnya (sangat pahit, bisa campur madu), atau rebus jadi sayur.</td><td class="col-tanam">Tebar biji pepaya matang. Tumbuh sangat cepat di mana saja.</td></tr>
+            <tr><td>21</td><td class="col-nama">Daun Jambu Biji</td><td class="col-fungsi">Diare kronis, mencret, maag.</td><td class="col-olah">Kunyah langsung daun pucuk muda dengan sedikit garam, telan perlahan.</td><td class="col-tanam">Cangkok atau biji. Pohon keras peneduh halaman.</td></tr>
+            <tr><td>22</td><td class="col-nama">Keji Beling</td><td class="col-fungsi">Menghancurkan batu ginjal, batu empedu, peluruh kencing.</td><td class="col-olah">Rebus 7 lembar daun keji beling, minum airnya.</td><td class="col-tanam">Stek batang. Sering dijadikan tanaman pagar pekarangan.</td></tr>
+            <tr><td>23</td><td class="col-nama">Babadotan (Ageratum)</td><td class="col-fungsi">P3K Luka berdarah/terbuka (menghentikan darah dalam detik), infeksi luka.</td><td class="col-olah">Ambil daun segar, remas-remas di telapak tangan hingga berair, tempel di luka potong.</td><td class="col-tanam">Gulma/liar. Biarkan tumbuh di sudut kebun, jangan dicabut habis.</td></tr>
+            <tr><td>24</td><td class="col-nama">Sungkai</td><td class="col-fungsi">Peningkat imun super (imunomodulator), anti-virus, flu berat.</td><td class="col-olah">Seduh daun mudanya sebagai teh, atau rebus segenggam daun tua.</td><td class="col-tanam">Stek batang. Pohonnya cepat tinggi, kayunya juga bagus untuk perabotan.</td></tr>
+            <tr><td>25</td><td class="col-nama">Daun Ungu (Handeuleum)</td><td class="col-fungsi">Obat wasir/ambeien (menyusutkan benjolan tanpa operasi), sembelit.</td><td class="col-olah">Rebus 7 lembar daun ungu segar, minum setiap pagi dan sore rutin.</td><td class="col-tanam">Stek batang. Tanaman hias yang daunnya merah/ungu pekat.</td></tr>
+
+            <tr><td colspan="5" class="section-header">III. BUNGA, BUAH & BATANG SAKTI (NATURE'S ALCHEMY)</td></tr>
+            <tr><td>26</td><td class="col-nama">Bunga Telang</td><td class="col-fungsi">Anti-depresan, pembersih mata, kesehatan jantung, kaya antioksidan.</td><td class="col-olah">Seduh 5 bunga dengan air panas jadi teh biru. Tambah jeruk nipis jadi ungu.</td><td class="col-tanam">Tanaman rambat. Tanam biji, buatkan pagar/tali untuk merambat. Berbunga setiap hari.</td></tr>
+            <tr><td>27</td><td class="col-nama">Rosella</td><td class="col-fungsi">Menurunkan tensi darah tinggi, kaya vitamin C, peremajaan kulit.</td><td class="col-olah">Keringkan kelopak bunga, seduh jadi teh merah asam segar.</td><td class="col-tanam">Tebar biji. Tanaman perdu musiman, butuh sinar matahari penuh.</td></tr>
+            <tr><td>28</td><td class="col-nama">Mengkudu (Pace)</td><td class="col-fungsi">Hipertensi ekstrim, asam urat, alergi, imunitas (meski baunya menyengat).</td><td class="col-olah">Jus buah mengkudu matang (bisa dicampur nanas untuk menutupi bau), peras, minum.</td><td class="col-tanam">Pohon. Tanam bijinya. Tumbuh liar dan berbuah sepanjang tahun tanpa dirawat.</td></tr>
+            <tr><td>29</td><td class="col-nama">Mahkota Dewa</td><td class="col-fungsi">Detoks racun tubuh, penurun gula darah, penyakit kulit kronis.</td><td class="col-olah">JANGAN dimakan mentah (beracun). Iris tipis daging buah, jemur kering, seduh.</td><td class="col-tanam">Cangkok / biji. Tanaman peneduh, buah merah menyala saat matang.</td></tr>
+            <tr><td>30</td><td class="col-nama">Belimbing Wuluh</td><td class="col-fungsi">Darah tinggi, sariawan, gusi berdarah, obat batuk anak.</td><td class="col-olah">Kukus buahnya dengan gula batu (untuk batuk), atau dimakan mentah untuk tensi.</td><td class="col-tanam">Pohon buah. Tumbuh dari biji/cangkok. Sangat subur di tanah tropis.</td></tr>
+            <tr><td>31</td><td class="col-nama">Ciplukan (Cecendet)</td><td class="col-fungsi">Epilepsi, bronkitis, bisul, diabetes. Buahnya kaya vitamin.</td><td class="col-olah">Rebus seluruh bagian tanaman (akar sampai daun), atau makan buahnya langsung.</td><td class="col-tanam">Tanaman liar (gulma) di sawah kering. Pindahkan ke pot, siram rutin.</td></tr>
+            <tr><td>32</td><td class="col-nama">Jeruk Nipis</td><td class="col-fungsi">Detoks liver, melunturkan lemak darah, batuk, amandel.</td><td class="col-olah">Peras 1 jeruk, campur air hangat + kecap (untuk batuk) atau madu/garam.</td><td class="col-tanam">Cangkok. Pohon perdu berduri, wajib ada di setiap halaman rumah.</td></tr>
+            <tr><td>33</td><td class="col-nama">Pinang</td><td class="col-fungsi">Cacingan (Pita/Kremi), gigi goyah, penambah tenaga.</td><td class="col-olah">Rebus biji pinang muda, minum airnya. Atau dikunyah dengan sirih (nyirih).</td><td class="col-tanam">Pohon palm tinggi. Tanam dari buah pinang tua yang sudah bertunas.</td></tr>
+            <tr><td>34</td><td class="col-nama">Brotowali</td><td class="col-fungsi">Diabetes, rematik, gatal-gatal, malaria (Sangat pahit).</td><td class="col-olah">Potong batangnya, rebus dengan air. Minum untuk obat dalam, mandikan untuk gatal luar.</td><td class="col-tanam">Rambat. Stek batang, lilitkan pada pagar/pohon lain.</td></tr>
+            <tr><td>35</td><td class="col-nama">Secang (Kayu)</td><td class="col-fungsi">Sifilis, diare, radang, minuman penghangat tubuh (Wedang Uwuh).</td><td class="col-olah">Serut kayunya, rebus hingga air berwarna merah darah. Sedap dicampur jahe.</td><td class="col-tanam">Pohon kayu besar berduri. Tanam dari biji (polong).</td></tr>
+
+            <tr><td colspan="5" class="section-header">IV. REMPAH & BUMBU DAPUR PENYEMBUH (KITCHEN PHARMACY)</td></tr>
+            <tr><td>36</td><td class="col-nama">Sereh (Serai)</td><td class="col-fungsi">Relaksasi otot, obat insomnia, kolesterol, mengusir nyamuk.</td><td class="col-olah">Geprek 2 batang sereh, rebus, minum airnya malam hari sebelum tidur.</td><td class="col-tanam">Pisahkan bonggol berakar dari dapur, tancap di tanah. Tumbuh merumpun.</td></tr>
+            <tr><td>37</td><td class="col-nama">Bawang Putih</td><td class="col-fungsi">Antibiotik alami terkuat di bumi! Hipertensi, kolesterol, infeksi bakteri.</td><td class="col-olah">Kunyah 1-2 siung mentah sebelum tidur, atau cincang halus campur madu mentah (fermentasi).</td><td class="col-tanam">Tanam siung bawang di tanah gembur bercampur pasir.</td></tr>
+            <tr><td>38</td><td class="col-nama">Bawang Merah</td><td class="col-fungsi">Penurun demam balita, masuk angin, melonggarkan hidung mampet.</td><td class="col-olah">Iris kasar, campur minyak telon/minyak kelapa, balurkan ke dada/punggung/ubun-ubun anak.</td><td class="col-tanam">Tanam siung utuh yang ujungnya dipotong sedikit di bedengan dangkal.</td></tr>
+            <tr><td>39</td><td class="col-nama">Cengkeh</td><td class="col-fungsi">Obat sakit gigi (mati rasa alami), anti-bakteri paru-paru.</td><td class="col-olah">Kunyah/selipkan cengkeh utuh di gigi yang berlubang, atau rebus untuk wedang.</td><td class="col-tanam">Pohon kayu. Tanam dari biji. Cocok di dataran sedang - tinggi.</td></tr>
+            <tr><td>40</td><td class="col-nama">Lada Hitam</td><td class="col-fungsi">Melancarkan metabolisme, menghangatkan tubuh, asma.</td><td class="col-olah">Tumbuk kasar, campurkan pada rebusan jahe. (Meningkatkan penyerapan nutrisi jahe/kunyit).</td><td class="col-tanam">Tanaman rambat. Tanam biji/stek, beri tiang panjat (pohon kapuk/dadap).</td></tr>
+            <tr><td>41</td><td class="col-nama">Ketumbar</td><td class="col-fungsi">Pembersih penyumbatan pembuluh darah jantung (Penyakit Jantung Koroner).</td><td class="col-olah">Seduh ketumbar utuh (bukan bubuk saset) semalaman. Minum air rendamannya pagi hari.</td><td class="col-tanam">Tebar biji ketumbar utuh ke tanah basah. Berupa daun seledri kecil.</td></tr>
+            <tr><td>42</td><td class="col-nama">Kayu Manis</td><td class="col-fungsi">Menstabilkan lonjakan insulin (Gula darah), pencernaan lambung.</td><td class="col-olah">Rebus kulit kayunya, atau bubuk dicampur ke dalam teh/kopi pagi hari tanpa gula.</td><td class="col-tanam">Pohon keras. Tumbuh dari biji/cangkok. Kulit batangnya dikelupas saat panen.</td></tr>
+            <tr><td>43</td><td class="col-nama">Kapulaga</td><td class="col-fungsi">Penghilang bau mulut permanen, detoks ginjal, batuk kronis.</td><td class="col-olah">Rebus 3 butir kapulaga bersama cengkeh dan jahe. Minum rutin.</td><td class="col-tanam">Mirip jahe/lengkuas. Tanam rimpangnya, tumbuh berumpun, buah di pangkal tanah.</td></tr>
+
+            <tr><td colspan="5" class="section-header">V. TANAMAN LIAR & PERDU SURVIVAL (WILD HEALERS)</td></tr>
+            <tr><td>44</td><td class="col-nama">Lidah Buaya (Aloe Vera)</td><td class="col-fungsi">Luka bakar api, pendingin lambung akut, penyubur rambut.</td><td class="col-olah">Kupas kulit hijau, ambil lendir/daging beningnya. Tempel ke luka, atau cuci bersih lalu jus.</td><td class="col-tanam">Pisahkan anakan dari induknya. Tanam di pot, jangan terlalu sering disiram (gampang busuk).</td></tr>
+            <tr><td>45</td><td class="col-nama">Alang-Alang (Ilalang)</td><td class="col-fungsi">Panas dalam, kencing batu, radang ginjal kronis.</td><td class="col-olah">Cuci bersih AKAR alang-alang putihnya. Rebus segenggam dengan air, minum rutin.</td><td class="col-tanam">Tumbuh liar tanpa ditanam. Tinggal cari di kebun kosong dan cabut akarnya.</td></tr>
+            <tr><td>46</td><td class="col-nama">Putri Malu</td><td class="col-fungsi">Susah tidur (Insomnia akut), asma, dan hepatitis.</td><td class="col-olah">Rebus daun dan batangnya. Minum airnya sebelum tidur (Efek menenangkan sangat kuat).</td><td class="col-tanam">Gulma liar. Biarkan tumbuh di sela rumput pekarangan. Ciri: Daun menutup jika disentuh.</td></tr>
+            <tr><td>47</td><td class="col-nama">Tapak Dara</td><td class="col-fungsi">Leukemia (Kanker darah), kencing manis, hipertensi.</td><td class="col-olah">Rebus 15 lembar daun tapak dara dengan 3 gelas air sisa 1 gelas. Minum 2x sehari.</td><td class="col-tanam">Tanaman hias bunga (putih/ungu). Stek batang/tanam biji di pekarangan.</td></tr>
+            <tr><td>48</td><td class="col-nama">Meniran</td><td class="col-fungsi">Peningkat imun super (Imunomodulator), malaria, pembersih batu ginjal.</td><td class="col-olah">Cabut seakar-akarnya, cuci, rebus semua bagiannya. Minum airnya.</td><td class="col-tanam">Gulma liar kecil dengan biji-biji halus di bawah daun. Biarkan tumbuh di pekarangan lembab.</td></tr>
+            <tr><td>49</td><td class="col-nama">Patah Tulang</td><td class="col-fungsi">Kutil, kapalan, keseleo, tulang patah (Penggunaan luar).</td><td class="col-olah">Teteskan getah putihnya ke kutil. (AWAS: Getah sangat beracun jika kena mata/dimakan!).</td><td class="col-tanam">Pohon tanpa daun sejati (hanya batang hijau). Patahkan cabangnya, tancap ke tanah.</td></tr>
+            <tr><td>50</td><td class="col-nama">Daun Miana (Iler)</td><td class="col-fungsi">Wasir parah, bisul, demam nifas, penambah darah.</td><td class="col-olah">Rebus 10 lembar daun miana merah, minum airnya. Untuk bisul ditumbuk dan ditempel.</td><td class="col-tanam">Tanaman hias daun merah/ungu. Stek pucuk/batang, tancap di tempat terang.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🔥 DEKLARASI KEDAULATAN BIOLOGIS 🔥</h2>
+        <p>Setiap kali anda membeli obat kimia untuk penyakit ringan, anda sedang mensubsidi mesin korporasi (Sistem Dajjal) yang tak pernah peduli pada kesembuhan total anda.<br><br>
+        <strong>Mulai hari ini:</strong> Tanam minimal 5 jenis herbal di pot atau pekarangan rumah anda. Jadikan dapur anda sebagai ruang farmasi pertama. Pahami dosis alami (Rasa & Pangrasa). Jika tubuh anda merdeka dari farmasi kimia, anda selangkah lebih maju menjadi <strong>Manusia Berdaulat yang tak bisa didikte oleh ketakutan sistem!</strong> 🌱👁️⚡</p>
+    </div>
+</div>
+
+</body>
+</html>

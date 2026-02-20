@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: 50 TATANAN SOSIAL ALAMI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #020502;
+            color: #ccc;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1400px;
+            border: 2px solid #00ff41;
+            padding: 30px;
+            background: #050a05;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
+        }
+
+        /* Scanline Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(0, 255, 0, 0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 255, 0, 0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 1px dashed #ff0055;
+            background-color: rgba(20, 0, 0, 0.8);
+            color: #ffaa00;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            position: relative;
+            z-index: 5;
+        }
+        .alert-box span { color: #fff; font-weight: bold; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            border: 1px solid #1a331a;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #001a00;
+            color: #00ff41;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #00ff41;
+        }
+
+        /* Kolom Styling */
+        .col-palsu { color: #ff4444; width: 30%; background: rgba(255,0,0,0.02); }
+        .col-alami { color: #d4af37; width: 30%; background: rgba(212, 175, 55, 0.02); }
+        .col-aksi { color: #00ff41; width: 35%; font-weight: bold; }
+
+        tr:hover td { background-color: #0a1a0a; }
+
+        .section-header {
+            background-color: #001a00;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            font-size: 1.1rem;
+            border-top: 2px solid #00ff41;
+            border-bottom: 2px solid #00ff41;
+            letter-spacing: 3px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>BLUEPRINT TATANAN SOSIAL ALAMI</h1>
+    <div class="subtitle">MEREBUT KEMBALI KODRAT MANUSIA DARI MESIN MATRIX</div>
+    
+    <div class="alert-box">
+        Orang modern mengira depresi, kesepian, dan krisis moral adalah hal wajar.<br>
+        Itu terjadi karena mereka hidup di <span>Tatanan Sosial Palsu (Sintetik)</span> yang melawan hukum alam.<br>
+        Misi kita: Hancurkan ilusi, bangun kembali <span>Tatanan Organik (Nuswantara)</span> dari skala terkecil.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>TATANAN PALSU (SISTEM DAJJAL)</th>
+                <th>TATANAN ALAMI (KODRAT ORGANIK)</th>
+                <th>CARA BANGUN & EKSEKUSI</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. HUKUM, KEAMANAN & INTEGRITAS</td></tr>
+            <tr><td>01</td><td class="col-palsu"><strong>Hukum Kertas (UU):</strong> Diukur dari pasal, bisa diakali asalkan legal dan punya pengacara.</td><td class="col-alami"><strong>Hukum Iman & Etika:</strong> Diukur dari kepantasan (adab) dan integritas internal seseorang saat tak ada yang melihat.</td><td class="col-aksi">Jadikan IMAN sebagai filter utama bersosialisasi dan berbisnis, bukan sekadar kontrak kertas.</td></tr>
+            <tr><td>02</td><td class="col-palsu"><strong>Polisi & Penjara:</strong> Mengandalkan aparat asing bersenjata untuk menjaga warga. Penghukuman kurungan fisik.</td><td class="col-alami"><strong>Siskamling & Sanksi Adat:</strong> Keamanan dijaga komunal. Hukuman berupa ganti rugi nyata atau sanksi sosial (dikucilkan).</td><td class="col-aksi">Aktifkan kembali ronda malam warga. Selesaikan konflik kecil di teras RT, jangan lapor aparat.</td></tr>
+            <tr><td>03</td><td class="col-palsu"><strong>Pengawasan CCTV:</strong> Takut berbuat salah hanya karena takut terekam kamera dan viral.</td><td class="col-alami"><strong>Pengawasan Muraqabah:</strong> Takut berbuat salah karena sadar Semesta/Tuhan selalu mengawasi niat terdalam.</td><td class="col-aksi">Bina kesadaran spiritual diri. Jadilah manusia 'Sovereign' yang jujur tanpa perlu diawasi.</td></tr>
+            <tr><td>04</td><td class="col-palsu"><strong>Toleransi Campur Aduk (Woke):</strong> Memaksa menerima kerusakan moral tetangga atas nama HAM dan kebebasan.</td><td class="col-alami"><strong>Perpecahan Terhormat:</strong> Membangun pagar yang jelas. Saling menghormati batas, tapi menolak penyimpangan masuk rumah.</td><td class="col-aksi">Jangan ragu menolak pergaulan merusak. Kita berbeda, kita tidak saling ganggu, kita tidak campur aduk.</td></tr>
+            <tr><td>05</td><td class="col-palsu"><strong>Hakim Negara:</strong> Orang asing bergaji yang memutus nasib warga berdasarkan teks kaku.</td><td class="col-alami"><strong>Tetua Bijak (Kokolot):</strong> Sesepuh lokal yang paham konteks budaya dan karakter warganya untuk mencari jalan tengah.</td><td class="col-aksi">Pilih tokoh masyarakat yang berintegritas tinggi sebagai penengah konflik, bukan lapor ke pengadilan.</td></tr>
+            <tr><td>06</td><td class="col-palsu"><strong>Pemilu Populer:</strong> Memilih pemimpin berdasarkan joget, baliho, dan kekuatan uang bandar.</td><td class="col-alami"><strong>Meritokrasi Alamiah:</strong> Pemimpin muncul organik karena terbukti paling berkorban dan melayani komunitasnya.</td><td class="col-aksi">Hormati tokoh lokal yang nyata kerjanya, abaikan politisi TV yang datang 5 tahun sekali.</td></tr>
+            <tr><td>07</td><td class="col-palsu"><strong>Batas Wilayah Negara:</strong> Garis peta buatan penjajah untuk memecah belah suku asli.</td><td class="col-alami"><strong>Batas Kultural:</strong> Geografi (sungai/gunung) dan bahasa/nilai bersama yang menyatukan secara organik.</td><td class="col-aksi">Perkuat persaudaraan suku dan nilai luhur lokal di atas batas paspor politik.</td></tr>
+            <tr><td>08</td><td class="col-palsu"><strong>Pajak Pemerasan:</strong> Uang disedot paksa pusat, dikembalikan berupa sisa proyek yang dikorupsi.</td><td class="col-alami"><strong>Urunan Gotong Royong:</strong> Dana dikumpulkan sukarela warga untuk membangun jembatan/jalan kampung sendiri.</td><td class="col-aksi">Galang dana internal RT/Desa. Bangun fasilitas lokal tanpa menunggu bantuan pemerintah.</td></tr>
+            <tr><td>09</td><td class="col-palsu"><strong>Sertifikat Kertas (BPN):</strong> Ilusi kepemilikan yang bisa dibatalkan negara atas nama "Proyek Strategis".</td><td class="col-realita"><strong>Penguasaan Riil Fisik:</strong> Siapa yang menanam, merawat, dan mematok batas secara komunal, dialah pemiliknya.</td><td class="col-aksi">Jangan biarkan tanah kosong. Garap lahanmu, libatkan tetangga agar jadi saksi alamiah.</td></tr>
+            <tr><td>10</td><td class="col-palsu"><strong>Kewarganegaraan Global:</strong> Manusia tanpa akar yang loyal pada korporasi dunia.</td><td class="col-alami"><strong>Pribumi Sejati (The Native):</strong> Manusia berakar yang siap mati mempertahankan jengkal tanah leluhurnya.</td><td class="col-aksi">Tanamkan kebanggaan pada identitas asli. Jangan mau diganti jadi "Global Citizen".</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. KELUARGA & INTERAKSI SOSIAL</td></tr>
+            <tr><td>11</td><td class="col-palsu"><strong>Individualisme Apartemen:</strong> Tak kenal tetangga sebelah dinding, mati membusuk berhari-hari baru ketahuan.</td><td class="col-alami"><strong>Kekerabatan Kampung (Guyub):</strong> Tahu isi dapur tetangga, saling tukar lauk, saling asuh anak satu sama lain.</td><td class="col-aksi">Sapa tetanggamu. Buat tradisi saling mengantar makanan agar terbentuk ikatan emosional.</td></tr>
+            <tr><td>12</td><td class="col-palsu"><strong>Panti Jompo:</strong> Membuang orang tua ke lembaga asing demi karir anak di kota.</td><td class="col-alami"><strong>Keluarga Multi-Generasi:</strong> Kakek-nenek hidup bersama cucu, menurunkan kebijaksanaan dan sejarah keluarga.</td><td class="col-aksi">Rawat orang tuamu sendiri. Mereka adalah tiang berkah dan guru kebijaksanaan di rumah.</td></tr>
+            <tr><td>13</td><td class="col-palsu"><strong>Pernikahan Pamer (Prestige):</strong> Pesta hutang miliaran demi validasi sosial dan feed Instagram.</td><td class="col-alami"><strong>Sakralitas Janji (Ijab):</strong> Perjanjian suci dua insan di hadapan Tuhan dan keluarga inti. Sederhana, kuat.</td><td class="col-aksi">Normalisasikan nikah sederhana di rumah/tempat ibadah tanpa resepsi gengsi. Uangnya untuk modal hidup.</td></tr>
+            <tr><td>14</td><td class="col-palsu"><strong>Daycare & Suster Anak:</strong> Menyerahkan pembentukan jiwa anak pada pembantu bayaran.</td><td class="col-alami"><strong>Ibu sebagai Madrasah Utama:</strong> Ibu adalah arsitek peradaban pertama yang membentuk mental baja anak.</td><td class="col-aksi">Jika memungkinkan, kembalikan peran Ibu ke rumah. Itu profesi paling mulia, bukan pengangguran.</td></tr>
+            <tr><td>15</td><td class="col-palsu"><strong>Perang Gender (Feminisme Ekstrem):</strong> Pria dan wanita saling sikut, bersaing posisi karir dan dominasi.</td><td class="col-alami"><strong>Fitrah Melengkapi:</strong> Pria memimpin dan melindungi, wanita merawat dan menumbuhkan. Yin dan Yang.</td><td class="col-aksi">Hentikan kompetisi gender. Hormati kodrat biologis dan spiritual masing-masing pasangan.</td></tr>
+            <tr><td>16</td><td class="col-palsu"><strong>Dating Apps (Tinder):</strong> Mengkatalog manusia seperti barang dagangan berdasar foto wajah saja.</td><td class="col-alami"><strong>Perkenalan Komunal:</strong> Bertemu jodoh lewat rekomendasi keluarga, guru, atau lingkaran komunitas terpercaya.</td><td class="col-aksi">Cari pasangan yang track record integritasnya jelas dari mulut saksi hidup, bukan dari profil bio.</td></tr>
+            <tr><td>17</td><td class="col-palsu"><strong>Circle Medsos (Echo Chamber):</strong> Teman virtual ribuan, tapi saat masuk angin tidak ada yang ngerokin.</td><td class="col-alami"><strong>Kawan Senasib Nyata:</strong> Sedikit kawan tapi bersedia meminjamkan tenaga dan hartanya saat kita jatuh.</td><td class="col-aksi">Matikan HP. Ngopi fisik di pos ronda atau teras rumah. Bangun "High-Trust Circle" di dunia nyata.</td></tr>
+            <tr><td>18</td><td class="col-palsu"><strong>Gengsi & Status Barang:</strong> Dihormati karena merk mobil dan baju yang dipakai.</td><td class="col-alami"><strong>Kharisma & Kebaikan:</strong> Dihormati karena berapa banyak orang yang pernah ditolong dan kebijaksanaannya.</td><td class="col-aksi">Buang barang branded palsumu. Berlomba-lombalah memberi manfaat fisik pada tetangga.</td></tr>
+            <tr><td>19</td><td class="col-palsu"><strong>Hiburan Layar (Dopamin):</strong> Mengunci diri di kamar menatap layar HP berjam-jam (isolasi).</td><td class="col-alami"><strong>Cengkerama Fisik:</strong> Duduk melingkar di perapian/bale-bale, bercerita, bermain musik, bertukar pikiran.</td><td class="col-aksi">Adakan malam kumpul tanpa gadget seminggu sekali bersama keluarga atau tetangga ring 1.</td></tr>
+            <tr><td>20</td><td class="col-palsu"><strong>Identitas KTP/Angka:</strong> Manusia diidentifikasi dari Nomor Induk Kependudukan.</td><td class="col-alami"><strong>Nasab & Keturunan:</strong> Diidentifikasi dari anak siapa, dari desa mana, membawa nama baik leluhurnya.</td><td class="col-aksi">Ajarkan silsilah keluarga pada anak-anak. Menjaga nama baik keluarga lebih kuat dari hukum sipil.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. EKONOMI & KEMANDIRIAN PANGAN</td></tr>
+            <tr><td>21</td><td class="col-palsu"><strong>Uang Fiat Bank Sentral:</strong> Angka halusinasi yang terus dicetak hingga inflasi memakan tabungan rakyat.</td><td class="col-alami"><strong>Uang Komoditas & Barter:</strong> Transaksi menggunakan emas, perak, beras, tenaga, atau koin komunitas yang nilainya asli.</td><td class="col-aksi">Terapkan sistem barter tetangga. "Tukar tenagaku benerin genteng dengan hasil panen pisangmu".</td></tr>
+            <tr><td>22</td><td class="col-palsu"><strong>Kerja 9-to-5 Pabrik/Kantor:</strong> Menjual waktu hidup demi memperkaya CEO di menara kaca.</td><td class="col-alami"><strong>Wirausaha Berdaulat:</strong> Menjadi majikan atas waktu sendiri walau hanya jualan tempe atau buka bengkel kecil.</td><td class="col-aksi">Rintis bisnis lokal. Terapkan "8 Jam Nuswantara" agar punya sisa hidup untuk jiwa dan keluarga.</td></tr>
+            <tr><td>23</td><td class="col-palsu"><strong>KPR & Pinjol (Riba):</strong> Membeli kemewahan hari ini dengan cara menggadaikan masa depan ke bank.</td><td class="col-alami"><strong>Sabar & Tabungan Fisik:</strong> Membeli jika uang fisik sudah cukup. Menunda keinginan adalah seni kehidupan.</td><td class="col-aksi">Potong semua akses pinjaman berbunga. Hiduplah sesuai ukuran dompet aslimu hari ini.</td></tr>
+            <tr><td>24</td><td class="col-palsu"><strong>Supermarket Korporat:</strong> Rantai distribusi panjang yang mencekik petani dan menghancurkan warung lokal.</td><td class="col-alami"><strong>Pasar Tradisional & Petani Lokal:</strong> Uang berputar di dalam desa, menghidupi tetangga sendiri secara langsung.</td><td class="col-aksi">Boikot swalayan elit. Biasakan belanja sayur dari mang ujang dan beras langsung dari sawah desa.</td></tr>
+            <tr><td>25</td><td class="col-palsu"><strong>Makanan Kaleng & Impor:</strong> Pangan mati yang penuh pengawet buatan pabrik.</td><td class="col-alami"><strong>Pangan Hidup Pekarangan:</strong> Singkong, ubi, ayam kampung yang ditanam dan dirawat dari pekarangan rumah.</td><td class="col-aksi">Ubah rumput hias rumahmu menjadi kebun sayur produktif (Food Estate Mandiri).</td></tr>
+            <tr><td>26</td><td class="col-palsu"><strong>Asuransi Komersial:</strong> Menjual ketakutan agar anda mencicil tiap bulan ke korporasi raksasa.</td><td class="col-alami"><strong>Lumbung Sosial (Kencleng):</strong> Urunan sukarela warga yang disimpan di masjid/balai desa untuk warga yang sakit.</td><td class="col-aksi">Bangun Dana Kas RT Darurat. Saling menanggung musibah tanpa bunga dan potongan admin.</td></tr>
+            <tr><td>27</td><td class="col-palsu"><strong>Pensiun Negara (Ponzi):</strong> Mengharap jaminan hari tua dari sistem yang bisa bangkrut/devaluasi kapan saja.</td><td class="col-alami"><strong>Investasi Keluarga & Aset Produktif:</strong> Mendidik anak agar berbakti, dan memiliki kebun/ternak yang terus menghasilkan.</td><td class="col-aksi">Jangan bergantung pada JHT BPJS. Anak yang saleh dan sebidang tanah adalah pensiun terbaik.</td></tr>
+            <tr><td>28</td><td class="col-palsu"><strong>Kompetisi Brutal (Kapitalis):</strong> Saling mematikan bisnis tetangga demi memonopoli pasar.</td><td class="col-alami"><strong>Kolaborasi Komunal (Syirkah):</strong> Bekerjasama, berbagi rezeki, sadar bahwa rezeki Tuhan tidak terbatas.</td><td class="col-aksi">Bantu promosikan warung tetanggamu. Jika ada dua warung sejenis, bagi jadwal belanja ke keduanya.</td></tr>
+            <tr><td>29</td><td class="col-palsu"><strong>Konsumsi Tiada Henti:</strong> Kebahagiaan diukur dari seberapa banyak barang baru yang dibeli tiap bulan.</td><td class="col-alami"><strong>Zuhud & Esensialisme:</strong> Kebahagiaan dari kesederhanaan. Membeli barang karena fungsi dan daya tahannya.</td><td class="col-aksi">Hentikan gaya hidup Fast Fashion. Pakai pakaian sampai rusak, perbaiki barang yang rusak.</td></tr>
+            <tr><td>30</td><td class="col-palsu"><strong>Kekayaan Digital (Crypto/Derivatif):</strong> Angka halu di layar kaca yang bisa hilang dalam sekali padam listrik.</td><td class="col-alami"><strong>Aset Berdaulat:</strong> Emas batangan, perak, alat pertukangan, dan benih tanaman di tangan sendiri.</td><td class="col-aksi">Ubah angka bank anda menjadi sesuatu yang bisa dipegang dan berguna saat krisis global tiba.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. PENDIDIKAN & PENGETAHUAN</td></tr>
+            <tr><td>31</td><td class="col-palsu"><strong>Sekolah Pabrik (Prussia):</strong> Mencetak anak menjadi buruh penurut lewat jam belajar kaku dan bel tanda masuk.</td><td class="col-alami"><strong>Pendidikan Alam (Homeschooling):</strong> Belajar dari kehidupan nyata, menyesuaikan dengan bakat unik masing-masing anak.</td><td class="col-aksi">Ambil alih pendidikan anakmu. Ajarkan mereka logika, finansial, dan cara menanam benih.</td></tr>
+            <tr><td>32</td><td class="col-palsu"><strong>Hafalan Kurikulum:</strong> Menghafal teori untuk ujian, lalu dilupakan seminggu kemudian.</td><td class="col-alami"><strong>Skill Bertahan Hidup:</strong> Bisa memasak, bertukang, menjahit, bela diri, dan bernegosiasi.</td><td class="col-aksi">Uji anak anda: Jika dunia mati lampu 1 bulan, apakah ia bisa bertahan hidup? Ajarkan skill fisik!</td></tr>
+            <tr><td>33</td><td class="col-palsu"><strong>Ijazah & Gelar:</strong> Kertas lisensi dari sistem untuk melamar kerja di korporasi Dajjal.</td><td class="col-alami"><strong>Adab, Integritas & Karya:</strong> Rekam jejak karya nyata dan seberapa jujur ia memegang amanah bisnis.</td><td class="col-aksi">Jangan bangga dengan sarjana nganggur. Banggalah walau lulusan SD tapi bisa mempekerjakan tetangga.</td></tr>
+            <tr><td>34</td><td class="col-palsu"><strong>Pakar TV & Influencer:</strong> Mencari kebenaran dari orang asing yang dibayar sponsor di layar kaca.</td><td class="col-alami"><strong>Guru Mursyid & Orang Bijak Lokal:</strong> Belajar pada orang yang jelas jejak kehidupan dan spiritualitasnya di sekitar kita.</td><td class="col-aksi">Carilah guru yang tidak pasang tarif. Ilmu tertinggi ditransfer lewat adab pertemuan langsung.</td></tr>
+            <tr><td>35</td><td class="col-palsu"><strong>Sejarah Pemenang (Buku Teks):</strong> Sejarah bohong yang diedit oleh penjajah dan penguasa agar kita merasa lemah.</td><td class="col-alami"><strong>Sejarah Lisan & Babad:</strong> Ingatan kolektif leluhur yang diturunkan lewat cerita pantun dan silsilah keluarga.</td><td class="col-aksi">Gali lagi naskah kuno (Babad Sunda/Jawa). Temukan fakta Nuswantara yang sengaja ditutupi.</td></tr>
+            <tr><td>36</td><td class="col-palsu"><strong>Ilmu Dikomersilkan (Paten/HAKI):</strong> Pengetahuan obat dan teknologi dimonopoli demi keuntungan konglomerat.</td><td class="col-alami"><strong>Pengetahuan Semesta (Open Source):</strong> Ilmu adalah titipan Tuhan yang wajib disebarkan untuk kemaslahatan umat.</td><td class="col-aksi">Bagikan resep herbal, teknik bertani, dan kodinganmu secara gratis ke komunitas agar mereka berdaya.</td></tr>
+            <tr><td>37</td><td class="col-palsu"><strong>Berita Viral (Clickbait):</strong> Informasi sepotong-potong yang memancing emosi amarah sesaat.</td><td class="col-alami"><strong>Tabayyun & Dialektika:</strong> Mengecek informasi langsung ke sumbernya, berdiskusi mencari akar masalah (Sintesis).</td><td class="col-aksi">Gunakan "Mesin Rembug Tri-Netra". Jangan share berita sebelum melihat dari 3 sudut pandang.</td></tr>
+            <tr><td>38</td><td class="col-palsu"><strong>Edukasi Seks Usia Dini (Woke):</strong> Mengeksploitasi kepolosan anak dengan materi gender prematur.</td><td class="col-alami"><strong>Edukasi Fitrah & Rasa Malu:</strong> Mengajarkan anak menjaga kehormatan tubuh dan batasan aurat secara natural.</td><td class="col-aksi">Lindungi anak dari kurikulum perusak. Tanamkan rasa malu (Iffah) sebagai pelindung jiwa.</td></tr>
+            <tr><td>39</td><td class="col-palsu"><strong>Anak Dititipkan ke Sistem:</strong> Orang tua lepas tangan, menyerahkan moral anak sepenuhnya pada guru sekolah.</td><td class="col-alami"><strong>Anak Magang pada Orang Tua:</strong> Anak ikut ke ladang/bengkel ayah, melihat langsung bagaimana orang tuanya bekerja keras.</td><td class="col-aksi">Bawa anakmu melihat dunia kerjamu. Biarkan mereka melihat keringatmu agar paham nilai uang.</td></tr>
+            <tr><td>40</td><td class="col-palsu"><strong>Membaca Artikel Pendek (Scrolling):</strong> Merusak rentang perhatian (Attention Span) dan kemampuan berpikir kritis.</td><td class="col-alami"><strong>Mengkaji Kitab & Buku Tebal:</strong> Melatih kesabaran otak untuk menyerap informasi mendalam dan runut.</td><td class="col-aksi">Lakukan puasa Sosmed. Paksakan diri membaca buku utuh minimal 1 jam sehari.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. KESEHATAN, LINGKUNGAN & SPIRITUAL</td></tr>
+            <tr><td>41</td><td class="col-palsu"><strong>Rumah Sakit Industri:</strong> Pasien adalah pelanggan (Cash Cow). Menyembuhkan gejala agar terus beli obat seumur hidup.</td><td class="col-alami"><strong>Penyembuhan Diri Alami:</strong> Tubuh didesain Tuhan untuk menyembuhkan diri sendiri jika toksin dihentikan.</td><td class="col-aksi">Pelajari ilmu Puasa (Autophagy) dan Ketosis. Berhenti makan gula buatan.</td></tr>
+            <tr><td>42</td><td class="col-palsu"><strong>Air Galon Plastik (Kemasan):</strong> Air mati terpapar mikroplastik yang dikomersilkan korporasi.</td><td class="col-alami"><strong>Mata Air & Sumur Komunal:</strong> Air hidup yang mengalir dari bumi, dijaga kebersihannya oleh warga desa bersama.</td><td class="col-aksi">Jaga sumber mata air di kampungmu. Hindari monopoli air oleh perusahaan swasta asing.</td></tr>
+            <tr><td>43</td><td class="col-palsu"><strong>Psikiater & Pil Penenang:</strong> Membius stres akibat gaya hidup modern yang kacau, tanpa menyelesaikan akar batinnya.</td><td class="col-alami"><strong>Curhat Komunitas & Ruqyah/Doa:</strong> Kembali ke alam, sujud ke bumi, dan berbagi beban dengan keluarga terdekat.</td><td class="col-aksi">Lepaskan beban pikiran di sajadah atau di tengah hutan. Sistem Dajjal lah yang membuatmu gila.</td></tr>
+            <tr><td>44</td><td class="col-palsu"><strong>Kematian Klinis Terisolasi:</strong> Mati sendirian di ICU dipenuhi selang mesin dan tagihan ratusan juta.</td><td class="col-alami"><strong>Kematian Damai di Rumah:</strong> Melepas nyawa di kasur rumah sendiri, dikelilingi talqin dan doa anak cucu.</td><td class="col-aksi">Normalisasikan mengurus jenazah keluarga sendiri. Jangan jadikan kematian sebagai bisnis mahal.</td></tr>
+            <tr><td>45</td><td class="col-palsu"><strong>Takut Kuman (Higienis Ekstrem):</strong> Mencuci tangan dengan kimia mematikan mikrobioma baik, memicu alergi.</td><td class="col-alami"><strong>Imunitas Kotor Alami:</strong> Anak-anak main di tanah, antibodi kuat karena dilatih mengenali bakteri alam.</td><td class="col-aksi">Biarkan anak kotor saat main di alam. Jangan terlalu steril, itu melemahkan imunitas.</td></tr>
+            <tr><td>46</td><td class="col-palsu"><strong>Pembuangan Limbah Sistem:</strong> Buang sampah ke sungai/TPA, berharap 'petugas' membereskannya.</td><td class="col-alami"><strong>Siklus Ekologi (Zero Waste):</strong> Sampah organik jadi kompos untuk kebun, sisa makanan untuk ayam/ikan.</td><td class="col-aksi">Buat lubang biopori/kompos di halaman. Tutup siklus makananmu sendiri di rumah.</td></tr>
+            <tr><td>47</td><td class="col-palsu"><strong>Agama Formalitas (KTP):</strong> Beragama hanya untuk identitas sipil, kelakuan tetap merusak (Bagong).</td><td class="col-alami"><strong>Iman Internal (Integritas):</strong> Koneksi mutlak dengan Sang Pencipta yang tergambar dari tingkah laku saat sendirian.</td><td class="col-aksi">Gunakan "Metrik Iman" sebagai ukuran utama, bukan kartu anggota ormas agama.</td></tr>
+            <tr><td>48</td><td class="col-palsu"><strong>Takut Denda & Polisi:</strong> Kepatuhan palsu. Taat karena takut tilang, jika polisi pergi, langsung melanggar.</td><td class="col-alami"><strong>Takut Karma/Dosa:</strong> Taat karena sadar ada Hukum Alam (Sebab-Akibat) yang pasti menagih di masa depan.</td><td class="col-aksi">Latih kesadaran dimensi abadi. Hutang 1 perak pun akan dibayar walau beda alam.</td></tr>
+            <tr><td>49</td><td class="col-palsu"><strong>Menyembah Uang & Sistem:</strong> Rela mengorbankan harga diri dan waktu keluarga demi mengabdi pada perusahaan elit.</td><td class="col-alami"><strong>Menghamba Pada Pencipta Mutlak:</strong> Rezeki diatur Tuhan. Manusia hanya berikhtiar tanpa harus melacurkan prinsip.</td><td class="col-aksi">Berani berkata TIDAK pada uang yang dihasilkan dari menipu atau merusak alam.</td></tr>
+            <tr><td>50</td><td class="col-palsu"><strong>Bergantung Pada MATRIX:</strong> Percaya bahwa tanpa negara, bank, dan supermarket, manusia akan mati.</td><td class="col-alami"><strong>Manusia Merdeka (Sovereign Off-Grid):</strong> Sadar bahwa bumi Tuhan luas, alam menyediakan segalanya untuk manusia yang mau berpikir.</td><td class="col-aksi">Bangkitlah! Sadari posisimu. Bangun kemandirian total. Cabut colokanmu dari Matrix sekarang juga!</td></tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
