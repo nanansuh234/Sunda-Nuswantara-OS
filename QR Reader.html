@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara Scanner V.2</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            color: #00ffcc;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h2 {
+            text-shadow: 0 0 10px #00ffcc;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        /* Container Kamera */
+        #reader {
+            width: 320px;
+            height: 320px;
+            border: 2px solid #00ffcc;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+        
+        /* Upload Button styling */
+        .upload-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn-ui {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-ui:hover {
+            background: #00ffcc;
+            color: #000;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+
+        /* Modal Popup Hasil */
+        #result-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10, 20, 30, 0.95);
+            border: 1px solid #00ffcc;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 85%;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(0, 255, 204, 0.5);
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .label-type {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+
+        .scan-content {
+            font-size: 1em;
+            color: #fff;
+            word-wrap: break-word;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .action-area button {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h2>SCANNER OS V.2</h2>
+    
+    <div id="reader"></div>
+    <div id="status" style="margin-top: 10px; font-size: 0.8em; color: #aaa;">SYSTEM READY...</div>
+
+    <div class="upload-area">
+        <label for="qr-input-file" class="btn-ui">
+            📂 UPLOAD IMAGE
+        </label>
+        <input type="file" id="qr-input-file" accept="image/*">
+    </div>
+
+    <div id="result-modal">
+        <span id="type-badge" class="label-type">DETECTING...</span>
+        <div id="result-content" class="scan-content"></div>
+        <div id="action-buttons" class="action-area">
+            </div>
+        <button class="btn-ui" onclick="restartScan()">CLOSE / SCAN AGAIN</button>
+    </div>
+
+    <script>
+        const html5QrCode = new Html5Qrcode("reader");
+        const modal = document.getElementById('result-modal');
+        const badge = document.getElementById('type-badge');
+        const contentDiv = document.getElementById('result-content');
+        const actionDiv = document.getElementById('action-buttons');
+        const statusText = document.getElementById('status');
+        const fileInput = document.getElementById('qr-input-file');
+
+        // Suara Beep Sci-Fi (Pake URL pendek)
+        const scanSound = new Audio('https://www.soundjay.com/buttons/beep-01a.mp3');
+
+        // Logika Deteksi Tipe Data
+        function identifyData(decodedText) {
+            // Cek QRIS (Biasanya diawali '000201')
+            if (decodedText.startsWith('000201')) {
+                return { type: 'QRIS PAYMENT DATA', color: '#ff4444', action: 'copy' }; 
+            }
+            
+            // Cek URL
+            const isUrl = /^(http|https):\/\/[^ "]+$/.test(decodedText);
+            if (isUrl) {
+                if (decodedText.endsWith('.glb') || decodedText.endsWith('.usdz')) {
+                    return { type: 'AR OBJECT (3D)', color: '#ffcc00', action: 'link' }; 
+                } else {
+                    return { type: 'WEB LINK', color: '#00ffcc', action: 'link' }; 
+                }
+            } 
+            
+            // Default Text
+            return { type: 'RAW TEXT / DATA', color: '#ff00ff', action: 'copy' }; 
+        }
+
+        // Fungsi Sukses Scan (Dipake Camera & Upload)
+        const handleResult = (decodedText) => {
+            // Play Sound
+            scanSound.play().catch(e => console.log("Audio play failed")); 
+
+            const info = identifyData(decodedText);
+            
+            badge.innerText = `[ ${info.type} ]`;
+            badge.style.color = info.color;
+            badge.style.borderColor = info.color;
+            contentDiv.innerText = decodedText;
+            
+            actionDiv.innerHTML = ''; // Reset tombol
+
+            if (info.action === 'link') {
+                const btn = document.createElement('button');
+                btn.className = 'btn-ui';
+                btn.innerText = 'ACCESS LINK';
+                btn.onclick = () => window.open(decodedText, '_blank');
+                actionDiv.appendChild(btn);
+            } else {
+                const btn = document.createElement('button');
+                btn.className = 'btn-ui';
+                btn.innerText = 'COPY DATA';
+                btn.onclick = () => {
+                    navigator.clipboard.writeText(decodedText);
+                    btn.innerText = 'COPIED TO CLIPBOARD!';
+                    setTimeout(() => btn.innerText = 'COPY DATA', 2000);
+                };
+                actionDiv.appendChild(btn);
+            }
+
+            modal.style.display = 'block';
+            
+            // Stop kamera kalau lagi nyala biar hemat batre
+            if(html5QrCode.isScanning) {
+                html5QrCode.pause();
+            }
+        };
+
+        // 1. Logic Scan via Kamera
+        function startCamera() {
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                (decodedText) => handleResult(decodedText),
+                (errorMessage) => { /* ignore errors */ }
+            ).catch(err => {
+                statusText.innerText = "Camera blocked / Not available";
+            });
+        }
+
+        // 2. Logic Scan via Upload File
+        fileInput.addEventListener('change', e => {
+            if (e.target.files.length == 0) return;
+            const imageFile = e.target.files[0];
+            
+            statusText.innerText = "Analyzing Image...";
+            
+            // Scan file pake library yang sama
+            html5QrCode.scanFile(imageFile, true)
+                .then(decodedText => {
+                    handleResult(decodedText);
+                    statusText.innerText = "Analysis Complete.";
+                })
+                .catch(err => {
+                    statusText.innerText = "Error: QR Code not found in image.";
+                    alert("Gak nemu QR Code di gambar itu, Bro. Coba gambar lain.");
+                });
+        });
+
+        function restartScan() {
+            modal.style.display = 'none';
+            statusText.innerText = "SYSTEM READY...";
+            // Resume kamera kalau tadi dipause
+            try {
+                html5QrCode.resume();
+            } catch(e) {
+                // Kalau error resume (misal karena upload file), restart camera
+                startCamera(); 
+            }
+            fileInput.value = ''; // Reset input file
+        }
+
+        // Start otomatis
+        startCamera();
+
+    </script>
+</body>
+</html>

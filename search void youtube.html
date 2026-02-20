@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUSWANTARA VOID: 0 VIEWS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+
+        body {
+            background-color: #020205; /* Deep Void Black */
+            color: #a0a0ff; /* Ghostly Blue */
+            font-family: 'Courier Prime', monospace;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 2rem; margin-bottom: 5px;
+            text-shadow: 0 0 10px #a0a0ff;
+            letter-spacing: 3px;
+        }
+
+        .subtitle { font-size: 0.8rem; color: #555; margin-bottom: 30px; }
+
+        .controls {
+            display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+            width: 100%; max-width: 800px; margin-bottom: 30px;
+        }
+
+        input {
+            background: #0a0a10; border: 1px solid #333; color: #fff;
+            padding: 15px; width: 300px; font-family: inherit;
+        }
+
+        button {
+            background: transparent; border: 1px solid #a0a0ff; color: #a0a0ff;
+            padding: 15px 25px; cursor: pointer; font-weight: bold; font-family: inherit;
+            transition: 0.3s;
+        }
+
+        button:hover { background: #a0a0ff; color: #000; box-shadow: 0 0 20px #a0a0ff; }
+
+        .btn-random { border-color: #ff0055; color: #ff0055; }
+        .btn-random:hover { background: #ff0055; color: #000; box-shadow: 0 0 20px #ff0055; }
+
+        /* GRID HASIL */
+        .void-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%; max-width: 1400px;
+        }
+
+        .void-card {
+            background: #05050a; border: 1px solid #222;
+            padding: 10px; cursor: pointer; transition: 0.3s;
+            position: relative; opacity: 0.7;
+        }
+
+        .void-card:hover {
+            opacity: 1; border-color: #fff; transform: scale(1.02); z-index: 10;
+            box-shadow: 0 0 30px rgba(255,255,255,0.1);
+        }
+
+        .thumb-box {
+            width: 100%; aspect-ratio: 16/9; background: #000;
+            overflow: hidden; margin-bottom: 10px; position: relative;
+        }
+        
+        .thumb { width: 100%; height: 100%; object-fit: cover; filter: grayscale(80%); transition: 0.5s; }
+        .void-card:hover .thumb { filter: grayscale(0%); }
+
+        .meta-title { font-size: 0.9rem; font-weight: bold; color: #ddd; margin-bottom: 5px; }
+        .meta-date { font-size: 0.7rem; color: #666; }
+        .meta-raw { 
+            position: absolute; top: 5px; left: 5px; 
+            background: red; color: white; font-size: 0.6rem; padding: 2px 5px; 
+            font-weight: bold;
+        }
+
+        .loading { color: #555; margin-top: 50px; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+    </style>
+</head>
+<body>
+
+    <h1>NUSWANTARA VOID</h1>
+    <div class="subtitle">MENYELAM KE DASAR LAUTAN DATA (NO VIEWS, NO LIKES)</div>
+
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Cari topik (misal: Hantu, UFO)...">
+        <button onclick="diveIntoVoid(false)">CARI BARU</button>
+        <button class="btn-random" onclick="diveIntoVoid(true)">🎲 RAW ROULETTE</button>
+    </div>
+
+    <div id="resultsArea" class="void-grid">
+        <div style="grid-column: 1/-1; text-align: center; color: #444;">
+            Klik "RAW ROULETTE" untuk melihat video mentah yang baru saja diupload detik ini.<br>
+            Atau cari topik spesifik, kami akan urutkan dari yang paling sepi.
+        </div>
+    </div>
+
+    <script>
+        // API KEY (Pake nu maneh)
+        const API_KEY = "AIzaSyA7qvW9P-wffxhMKyhN6ytPEitqcLzo2IQ";
+
+        // KATA KUNCI "FILE MENTAH"
+        // Ieu rahasiana. Orang awam mun upload video tina HP tara diganti ngaranna.
+        const RAW_KEYWORDS = ["IMG_", "DSC_", "MVI_", "VID_", "WhatsApp Video", "Untitled", "Recording"];
+
+        async function diveIntoVoid(isRandom) {
+            const container = document.getElementById('resultsArea');
+            let query = "";
+
+            if (isRandom) {
+                // Pilih acak tina daftar file mentah
+                const randKey = RAW_KEYWORDS[Math.floor(Math.random() * RAW_KEYWORDS.length)];
+                // Tambahkeun angka acak supaya leuwih variatif (misal IMG_4021)
+                const randNum = Math.floor(Math.random() * 9000) + 1000;
+                query = randKey; // Bisa ditambah randNum mun hayang leuwih spesifik, tapi mending umum heula.
+                document.getElementById('searchInput').value = "FILE: " + query;
+            } else {
+                query = document.getElementById('searchInput').value;
+                if (!query) return;
+            }
+
+            container.innerHTML = "<div class='loading'>CONNECTING TO THE VOID...</div>";
+
+            try {
+                // TRIK: order=date (Paling anyar)
+                // Biasana video nu kakara upload 1 menit katukang views-na 0.
+                const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&order=date&maxResults=24&q=${encodeURIComponent(query)}&type=video&key=${API_KEY}`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.error) throw new Error(data.error.message);
+
+                container.innerHTML = ""; // Bersih
+
+                if (data.items.length === 0) {
+                    container.innerHTML = "<div style='color:red; text-align:center; grid-column:1/-1;'>KOSONG. Coba kata kunci lain.</div>";
+                    return;
+                }
+
+                data.items.forEach(item => {
+                    const vid = item.snippet;
+                    const vidId = item.id.videoId;
+                    const timeAgo = new Date(vid.publishedAt).toLocaleString();
+                    const imgUrl = vid.thumbnails.high ? vid.thumbnails.high.url : vid.thumbnails.medium.url;
+
+                    const card = document.createElement('div');
+                    card.className = 'void-card';
+                    
+                    // Cek mun judulna aneh (Raw File)
+                    let isRaw = RAW_KEYWORDS.some(k => vid.title.includes(k.replace('_', '')));
+                    let rawBadge = isRaw ? "<div class='meta-raw'>RAW FILE</div>" : "";
+
+                    card.innerHTML = `
+                        <div class="thumb-box">
+                            ${rawBadge}
+                            <img src="${imgUrl}" class="thumb" loading="lazy">
+                        </div>
+                        <div class="meta-title">${vid.title}</div>
+                        <div class="meta-date">Diaplod: ${timeAgo}</div>
+                        <div class="meta-date">Channel: ${vid.channelTitle}</div>
+                    `;
+
+                    card.onclick = () => {
+                        window.open(`https://www.youtube.com/watch?v=${vidId}`, '_blank');
+                    };
+
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                container.innerHTML = `<div style='color:red; text-align:center; grid-column:1/-1;'>ERROR: ${error.message}</div>`;
+            }
+        }
+    </script>
+
+</body>
+</html>

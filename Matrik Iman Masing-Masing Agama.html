@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>METRIK INTEGRITAS OMNI-FAITH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: #0a0a0a;
+            --border: #333;
+            --cyan: #00f3ff;
+            --gold: #c5a059;
+            --alert: #ff0055;
+            --text: #ccc;
+            --tag-color: #ffcc00;
+        }
+
+        * { box-sizing: border-box; transition: 0.3s; }
+
+        body {
+            background-color: var(--bg); color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .header-box {
+            text-align: center; margin-bottom: 30px; width: 100%; max-width: 800px;
+            border-bottom: 1px dashed var(--gold); padding-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Share Tech Mono', monospace; color: var(--gold);
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 5px;
+        }
+
+        .subtitle { font-size: 1rem; color: #888; }
+        
+        .philosophy {
+            background: rgba(197, 160, 89, 0.05); border-left: 4px solid var(--gold);
+            padding: 15px; text-align: left; font-size: 0.95rem; margin-top: 20px; color: #aaa;
+        }
+
+        /* PLATFORM SELECTOR */
+        .system-select {
+            margin-bottom: 30px; padding: 15px; background: #111;
+            border: 2px solid var(--cyan); color: var(--cyan);
+            font-family: 'Share Tech Mono', monospace; font-size: 1.2rem;
+            outline: none; cursor: pointer; border-radius: 5px; width: 100%; max-width: 600px;
+            text-align: center;
+        }
+        .system-select:hover { background: #00f3ff; color: #000; }
+
+        .grid-container {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px; width: 100%; max-width: 1200px;
+        }
+
+        .pillar-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 8px; padding: 20px; position: relative;
+        }
+        .pillar-card:hover { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 243, 255, 0.1); }
+
+        .card-title {
+            font-size: 1.1rem; font-weight: bold; color: #fff;
+            border-bottom: 1px dashed #444; padding-bottom: 10px; margin-bottom: 15px;
+        }
+        .card-badge { display: block; font-size: 0.8rem; color: var(--cyan); margin-top: 5px; letter-spacing: 1px; }
+
+        .check-group { display: flex; flex-direction: column; gap: 10px; }
+        .check-item {
+            display: flex; align-items: flex-start; gap: 10px;
+            font-size: 0.95rem; cursor: pointer; padding: 5px; color: #aaa;
+        }
+        .check-item:hover { color: #fff; }
+        
+        .core-tag { color: var(--tag-color); font-weight: bold; font-size: 0.8rem; font-family: 'Share Tech Mono', monospace; }
+
+        input[type="checkbox"] {
+            appearance: none; width: 18px; height: 18px; border: 1px solid #555;
+            background: #000; cursor: pointer; position: relative; flex-shrink: 0; margin-top: 2px;
+        }
+        input[type="checkbox"]:checked { background: var(--cyan); border-color: var(--cyan); }
+        input[type="checkbox"]:checked::after { content: '✔'; position: absolute; top: -3px; left: 2px; color: #000; font-weight: bold; }
+
+        .btn-calc {
+            margin-top: 40px; padding: 15px 40px; background: var(--gold); color: #000;
+            border: none; font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; font-weight: bold;
+            cursor: pointer; border-radius: 5px; transition: 0.3s;
+        }
+        .btn-calc:hover { background: #fff; box-shadow: 0 0 20px var(--gold); }
+
+        /* RESULT PANEL */
+        .result-panel {
+            width: 100%; max-width: 800px; margin-top: 40px; margin-bottom: 60px;
+            background: #050505; border: 2px solid var(--cyan);
+            padding: 30px; display: none; text-align: center;
+        }
+
+        .score-big { font-size: 4rem; font-weight: bold; color: var(--cyan); font-family: 'Share Tech Mono', monospace; margin: 10px 0; }
+        
+        .verdict-box {
+            margin-top: 20px; padding: 20px; border: 1px solid #444; background: #111;
+        }
+        .verdict-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .verdict-desc { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header-box">
+        <h1>INTERNAL METRIC SYSTEM</h1>
+        <div class="subtitle">AUDIT KEPALSUAN AGAMA & KUALIFIKASI INTEGRITAS</div>
+        <div class="philosophy">
+            Alat ini mengukur <strong>Hakikat</strong>, bukan <strong>Syariat (Casing)</strong>. Banyak orang beragama secara KTP, namun kelakuannya merusak tatanan alam. Pilih basis kepercayaan anda di bawah ini, dan ujilah apakah anda benar-benar memegang iman tersebut saat tidak ada manusia yang melihat.
+        </div>
+    </div>
+
+    <select class="system-select" id="beliefSystem" onchange="loadDatabase()">
+        <option value="islam">DATABASE: ISLAM (Rukun Iman)</option>
+        <option value="kristen">DATABASE: KRISTEN/KATOLIK (Hukum Kasih & Firman)</option>
+        <option value="hindu">DATABASE: HINDU (Sanatana Dharma & Karma)</option>
+        <option value="buddha">DATABASE: BUDDHA (Dhamma & Jalan Tengah)</option>
+    </select>
+
+    <div class="grid-container" id="pillarsContainer">
+        </div>
+
+    <button class="btn-calc" onclick="calculate()">AUDIT INTERNAL KELAYAKAN</button>
+
+    <div class="result-panel" id="result">
+        <div style="color:#aaa; font-size:1.1rem;">NILAI INTEGRITAS MURNI ANDA:</div>
+        <div class="score-big" id="totalScore">0%</div>
+        
+        <div class="verdict-box" id="verdictBox">
+            <div class="verdict-title" id="verdictTitle">---</div>
+            <div class="verdict-desc" id="verdictDesc">---</div>
+        </div>
+    </div>
+
+    <script>
+        // === DATABASE OMNI-FAITH ===
+        const db = {
+            "islam": [
+                {
+                    title: "1. SISTEM KETUHANAN", badge: "Tauhid & Ketergantungan Vertikal",
+                    items: [
+                        { text: "Saya patuh pada aturan meski tidak ada CCTV/Polisi", tag: "(IHSAN)" },
+                        { text: "Saya jujur dalam berbisnis meski berakibat kerugian sementara", tag: "(INTEGRITAS)" },
+                        { text: "Saya tidak stres / depresi saat kehilangan harta atau jabatan", tag: "(KETERGANTUNGAN)" },
+                        { text: "Saya konsisten berbuat baik walau lingkungan saya buruk", tag: "(ISTIQAMAH)" },
+                        { text: "Saya menahan diri saat ada peluang aman untuk berbuat curang", tag: "(IFFAH)" }
+                    ]
+                },
+                {
+                    title: "2. SISTEM PENGAWASAN", badge: "Malaikat & Integritas Privat",
+                    items: [
+                        { text: "Kelakuan saya saat sendirian SAMA dengan saat di keramaian", tag: "(MURAQABAH)" },
+                        { text: "Saya menjaga lisan/ketikan dari memfitnah & menyebarkan hoax", tag: "(KONTROL LISAN)" },
+                        { text: "Saya merasa sangat bersalah jika melanggar janji sekecil apapun", tag: "(SENSITIVITAS DOSA)" },
+                        { text: "Saya mengembalikan titipan (uang/barang) utuh tanpa dikurangi", tag: "(AMANAH)" },
+                        { text: "Saya bekerja dengan tuntas meski atasan tidak mengawasi", tag: "(ITQAN)" }
+                    ]
+                },
+                {
+                    title: "3. SISTEM NILAI & KITAB", badge: "Al-Qur'an & Konstitusi Ilahi",
+                    items: [
+                        { text: "Saya tidak mencari celah (ngakalan) aturan agama demi hawa nafsu", tag: "(JUJUR ATURAN)" },
+                        { text: "Saya bersikap adil bahkan kepada kelompok yang saya benci", tag: "(OBJEKTIF)" },
+                        { text: "Saya menjadikan nilai spiritual lebih tinggi dari hukum buatan manusia", tag: "(FURQAN)" },
+                        { text: "Saya berani memihak kebenaran walau mayoritas menolak", tag: "(PRINSIP)" },
+                        { text: "Saya tidak akan menjual keyakinan saya demi uang sogokan", tag: "(HARGA DIRI)" }
+                    ]
+                },
+                {
+                    title: "4. SISTEM KETELADANAN", badge: "Rasul & Resonansi Sosial",
+                    items: [
+                        { text: "Saya lebih sering melayani orang lain daripada minta dilayani", tag: "(KHADIM)" },
+                        { text: "Apa yang saya ucapkan sama persis dengan yang saya lakukan", tag: "(SATU KATA)" },
+                        { text: "Saya berani menegur penguasa/pejabat yang mendzalimi rakyat", tag: "(SYAJA'AH)" },
+                        { text: "Saya peduli dan membantu tetangga yang sedang kesulitan", tag: "(UKHUWAH)" },
+                        { text: "Orang lain merasa aman hartanya jika berada di dekat saya", tag: "(AL-AMIN)" }
+                    ]
+                },
+                {
+                    title: "5. SISTEM AKHIRAT", badge: "Visi Ruang-Waktu Tanpa Batas",
+                    items: [
+                        { text: "Saya mengorbankan kesenangan instan demi kedamaian jangka panjang", tag: "(VISIONER)" },
+                        { text: "Saya sering mengingat batas usia & kematian (tidak merasa abadi)", tag: "(MEMENTO MORI)" },
+                        { text: "Saya sadar hutang serupiah pun akan ditagih di dimensi keadilan nanti", tag: "(AKUNTABILITAS)" },
+                        { text: "Saya menghitung kesalahan saya sendiri tiap malam, bukan mengadili orang", tag: "(HISAB DIRI)" },
+                        { text: "Saya tidak pamer kekayaan / flexing di sosial media", tag: "(ZUHUD)" }
+                    ]
+                },
+                {
+                    title: "6. SISTEM TAKDIR", badge: "Qadar & Kematangan Mental",
+                    items: [
+                        { text: "Saya berusaha maksimal sebelum menyerahkan hasil pada Semesta", tag: "(IKHTIAR)" },
+                        { text: "Saya berhenti menyalahkan negara/orang lain atas masalah pribadi saya", tag: "(ANTI-VICTIM)" },
+                        { text: "Saya cepat bangkit & stabil secara emosi saat terkena musibah", tag: "(RESILIENSI)" },
+                        { text: "Saya fokus pada hal yang bisa saya kontrol (diri sendiri)", tag: "(TAWAKAL)" },
+                        { text: "Saya ikhlas dan damai menerima kejadian buruk yang sudah terjadi", tag: "(RIDHA)" }
+                    ]
+                }
+            ],
+            "kristen": [
+                {
+                    title: "1. HUKUM KASIH", badge: "Agape & Keterhubungan Total",
+                    items: [
+                        { text: "Saya mendoakan hal baik untuk orang yang membenci/menyakiti saya", tag: "(KASIH AGAPE)" },
+                        { text: "Saya membantu orang miskin tanpa mengharapkan balasan/pujian", tag: "(TANPA PAMRIH)" },
+                        { text: "Saya mudah memberikan pengampunan pada orang yang bersalah", tag: "(PENGAMPUNAN)" },
+                        { text: "Saya tidak memandang rendah orang dari ras/golongan lain", tag: "(KESETARAAN)" },
+                        { text: "Saya tidak menyimpan dendam amarah hingga matahari terbenam", tag: "(PELEPASAN)" }
+                    ]
+                },
+                {
+                    title: "2. HATI NURANI", badge: "Roh Kudus & Kompas Internal",
+                    items: [
+                        { text: "Saya mendengarkan peringatan nurani saat ada peluang korupsi aman", tag: "(SUARA HATI)" },
+                        { text: "Kelakuan saya di ruang tertutup sama bersihnya dengan di gereja", tag: "(INTEGRITAS)" },
+                        { text: "Saya tidak menggunakan dusta/kebohongan putih demi melancarkan bisnis", tag: "(KEJUJURAN)" },
+                        { text: "Saya merasa resah dan segera memperbaiki diri saat berbuat salah", tag: "(PERTANGGUNGJAWABAN)" },
+                        { text: "Saya menolak pekerjaan yang bertentangan dengan moralitas dasar saya", tag: "(KEMURNIAN)" }
+                    ]
+                },
+                {
+                    title: "3. KEPATUHAN FIRMAN", badge: "The Decalogue & Nilai Absolut",
+                    items: [
+                        { text: "Saya menghormati otoritas orang tua dan orang yang lebih tua", tag: "(HARKAT KELUARGA)" },
+                        { text: "Saya sangat ketat menjaga kesetiaan pada pasangan (tidak berzinah)", tag: "(KESETIAAN)" },
+                        { text: "Saya tidak mengambil hak cipta, barang, atau waktu milik perusahaan", tag: "(TIDAK MENCURI)" },
+                        { text: "Saya tidak memberikan kesaksian palsu / menyebar hoax di sosmed", tag: "(KEBENARAN LISAN)" },
+                        { text: "Saya tidak iri hati/dengki melihat kesuksesan finansial tetangga", tag: "(ANTI SERAKAH)" }
+                    ]
+                },
+                {
+                    title: "4. KETELADANAN", badge: "Karakter Kristus & Pelayanan",
+                    items: [
+                        { text: "Sebagai pemimpin, saya melayani bawahan saya, bukan gila hormat", tag: "(SERVANTHOOD)" },
+                        { text: "Saya menolak membalas kejahatan dengan kejahatan", tag: "(PASIFISME MENTAL)" },
+                        { text: "Saya rela mengorbankan hak ego saya demi kebaikan bersama", tag: "(PENGORBANAN)" },
+                        { text: "Saya tidak menghakimi dosa orang lain dengan standar ganda", tag: "(OBJEKTIFITAS)" },
+                        { text: "Saya membela kaum yang lemah dan tertindas oleh sistem", tag: "(KEADILAN)" }
+                    ]
+                },
+                {
+                    title: "5. AKUNTABILITAS ABADI", badge: "Penghakiman Terakhir",
+                    items: [
+                        { text: "Saya mengumpulkan 'harta' berupa nilai moral, bukan cuma aset fisik", tag: "(VISI KEKAKALAN)" },
+                        { text: "Saya sadar setiap kata dan niat tersembunyi akan dihakimi kelak", tag: "(TRANSPARANSI JIWA)" },
+                        { text: "Saya tidak mencari validasi dan tepuk tangan dari manusia", tag: "(KERENDAHAN HATI)" },
+                        { text: "Saya tidak takut pada ancaman manusia selama saya berdiri di atas kebenaran", tag: "(KEBERANIAN)" },
+                        { text: "Saya menggunakan kekayaan/talenta saya sebagai titipan untuk memberkati sesama", tag: "(PENATALAYANAN)" }
+                    ]
+                },
+                {
+                    title: "6. KEDAULATAN TUHAN", badge: "Penyerahan Total (Providence)",
+                    items: [
+                        { text: "Saya tidak panik saat rencana masa depan saya hancur berkeping-keping", tag: "(PENYERAHAN)" },
+                        { text: "Saya tetap bersyukur meski sedang berada dalam penderitaan sakit/miskin", tag: "(RASA SYUKUR)" },
+                        { text: "Saya tidak memaksakan ambisi pribadi dengan menghalalkan segala cara", tag: "(KESABARAN)" },
+                        { text: "Saya percaya ada hikmah kebaikan di balik tragedi yang paling kelam", tag: "(IMAN REALITAS)" },
+                        { text: "Saya terbebas dari rasa cemas berlebihan mengenai masa depan ekonomi", tag: "(PEMELIHARAAN)" }
+                    ]
+                }
+            ],
+            "hindu": [
+                {
+                    title: "1. BRAHMAN & TAT TVAM ASI", badge: "Kesatuan Spiritual Universal",
+                    items: [
+                        { text: "Saya melihat percikan Illahi pada semua manusia tanpa pandang kasta/status", tag: "(KESETARAAN JIWA)" },
+                        { text: "Saya menghormati kelestarian alam, hewan, dan tumbuhan sebagai bagian dari Semesta", tag: "(EKOLOGI SPIRITUAL)" },
+                        { text: "Saya menyadari bahwa menyakiti orang lain sama dengan menyakiti diri saya sendiri", tag: "(TAT TVAM ASI)" },
+                        { text: "Saya tidak memuja harta materi seolah itu adalah Tuhan saya", tag: "(ANTI HEDONISME)" },
+                        { text: "Saya melakukan ibadah bukan hanya ritual luar, tapi penghayatan internal", tag: "(BHAKTI)" }
+                    ]
+                },
+                {
+                    title: "2. HUKUM KARMA", badge: "Hukum Sebab-Akibat Absolut",
+                    items: [
+                        { text: "Saya sadar menipu pelanggan pasti akan mengundang kerugian di masa depan", tag: "(KEADILAN SEMESTA)" },
+                        { text: "Saya tidak menyimpan dendam karena percaya alam punya cara menghukum", tag: "(NON-REAKTIF)" },
+                        { text: "Saya sangat berhati-hati dalam berpikir, berucap, dan bertindak (Tri Kaya Parisudha)", tag: "(KONTROL DIRI)" },
+                        { text: "Saya menerima kondisi buruk hari ini sebagai pelunasan hutang tindakan masa lalu", tag: "(TANGGUNG JAWAB)" },
+                        { text: "Saya aktif melakukan perbuatan baik (Subha Karma) walau tidak ada yang mengapresiasi", tag: "(INTEGRITAS)" }
+                    ]
+                },
+                {
+                    title: "3. DHARMA", badge: "Kewajiban Moral & Profesi",
+                    items: [
+                        { text: "Saya melakukan pekerjaan/profesi saya secara profesional tanpa pamrih", tag: "(NISHKAMA KARMA)" },
+                        { text: "Saya menolak pekerjaan yang merusak masyarakat, walau gajinya sangat besar", tag: "(ETIKA PROFESI)" },
+                        { text: "Saya memenuhi kewajiban sebagai anak, orang tua, atau warga negara dengan tuntas", tag: "(TANGGUNG JAWAB SOSIAL)" },
+                        { text: "Saya berani membela kebenaran (Dharma) walau harus melawan arus mayoritas", tag: "(PRINSIP)" },
+                        { text: "Saya tidak melarikan diri dari masalah, tapi menghadapinya sesuai porsi saya", tag: "(KSATRIA MENTAL)" }
+                    ]
+                },
+                {
+                    title: "4. AHIMSA & SUSILA", badge: "Anti-Kekerasan & Etika Luhur",
+                    items: [
+                        { text: "Saya tidak melakukan kekerasan fisik kepada yang lebih lemah (anak/hewan/bawahan)", tag: "(ANTI KEKERASAN FISIK)" },
+                        { text: "Saya tidak menggunakan kata-kata kasar, makian, atau cyberbullying", tag: "(AHIMSA LISAN)" },
+                        { text: "Saya tidak memiliki niat jahat/iri hati saat melihat saingan bisnis sukses", tag: "(AHIMSA MENTAL)" },
+                        { text: "Saya menjauhkan diri dari makanan/minuman yang mengeruhkan kesadaran diri", tag: "(KEMURNIAN)" },
+                        { text: "Saya sangat menghormati hak milik orang lain (tidak mencuri/korupsi waktu)", tag: "(ASTEYA)" }
+                    ]
+                },
+                {
+                    title: "5. SAMSARA", badge: "Siklus Kehidupan & Detachment",
+                    items: [
+                        { text: "Saya menghindari keserakahan karena sadar numpuk harta itu fana dan berulang", tag: "(APARIGRAHA)" },
+                        { text: "Saya tidak terikat secara berlebihan pada pujian atau makian netizen", tag: "(DETACHMENT EMOSI)" },
+                        { text: "Saya sadar tubuh ini akan menua dan mati, sehingga saya fokus pada jiwa", tag: "(KEMATANGAN EGO)" },
+                        { text: "Saya tidak takut pada kematian karena ia hanya transisi energi semata", tag: "(KEBERANIAN HIDUP)" },
+                        { text: "Saya berusaha memutus lingkaran kebiasaan buruk yang terus berulang dalam hidup saya", tag: "(EVOLUSI MENTAL)" }
+                    ]
+                },
+                {
+                    title: "6. MOKSHA", badge: "Kebebasan Batin (Ultimate Liberation)",
+                    items: [
+                        { text: "Saya mampu melepaskan masa lalu yang traumatis dengan ikhlas", tag: "(LETTING GO)" },
+                        { text: "Batin saya tetap tenang walau sedang berada di tengah krisis yang kacau", tag: "(KEDAMAIAN INTERNAL)" },
+                        { text: "Saya bermeditasi / hening untuk mengontrol keliaran pikiran saya", tag: "(PENGENDALIAN PIKIRAN)" },
+                        { text: "Saya tidak lagi dikendalikan oleh hawa nafsu perut dan syahwat", tag: "(MASTERY OVER SELF)" },
+                        { text: "Saya hidup di momen saat ini (Present Moment) tanpa terlalu cemas akan masa depan", tag: "(KESADARAN PENUH)" }
+                    ]
+                }
+            ],
+            "buddha": [
+                {
+                    title: "1. KESADARAN PENUH", badge: "Sati (Mindfulness)",
+                    items: [
+                        { text: "Saya sadar saat emosi marah muncul, dan saya diam tidak reaktif menuruti amarah", tag: "(NON-REAKTIF)" },
+                        { text: "Saya tidak membiarkan pikiran saya melamun saat sedang mendengarkan orang lain bicara", tag: "(HADIR PENUH)" },
+                        { text: "Saya mengunyah makanan dengan sadar, bukan sekadar menuruti keserakahan lidah", tag: "(KONTROL NAFSU)" },
+                        { text: "Saya sadar betul setiap ketikan saya di sosial media dan akibatnya", tag: "(JEJAK DIGITAL SADAR)" },
+                        { text: "Saya tidak lari dari penderitaan batin dengan mabuk, judi, atau scrolling sosmed", tag: "(MENGHADAPI REALITAS)" }
+                    ]
+                },
+                {
+                    title: "2. HUKUM KAMMA", badge: "Aksi, Niat & Konsekuensi",
+                    items: [
+                        { text: "Saya sadar bahwa niat (Cetana) di balik tindakan saya akan berbalik kepada saya", tag: "(TANGGUNG JAWAB NIAT)" },
+                        { text: "Saya tidak mencari 'kambing hitam' atas kegagalan saya sendiri", tag: "(ANTI-VICTIM)" },
+                        { text: "Saya tidak menipu takaran/kualitas barang jualan meski pembeli tidak tahu", tag: "(KEJUJURAN BISNIS)" },
+                        { text: "Saya segera meminta maaf dan memperbaiki diri saat melukai orang lain", tag: "(REKONSILIASI)" },
+                        { text: "Saya yakin bahwa karma baik tidak selalu langsung cair, maka saya tetap sabar", tag: "(KONSISTENSI)" }
+                    ]
+                },
+                {
+                    title: "3. EMPAT KEBENARAN MULIA", badge: "Akar Penderitaan & Keserakahan",
+                    items: [
+                        { text: "Saya sadar bahwa memaksakan ekspektasi pada orang lain adalah sumber stres saya", tag: "(ANALISA DERITA)" },
+                        { text: "Saya mampu mengurangi gaya hidup konsumtif yang memicu hutang pinjol", tag: "(MENGENDALIKAN HASRAT)" },
+                        { text: "Saya tidak memaksakan pandangan saya hingga harus berdebat kusir memutus silaturahmi", tag: "(TOLERANSI PANDANGAN)" },
+                        { text: "Saya paham bahwa kebahagiaan sejati tidak berasal dari barang mewah terbaru", tag: "(ANTI-MATERIALISME)" },
+                        { text: "Saya mempraktekkan hidup sederhana walau memiliki kemampuan untuk foya-foya", tag: "(JALAN TENGAH)" }
+                    ]
+                },
+                {
+                    title: "4. SILA (MORALITAS ABSOLUT)", badge: "Pancasila Buddhis",
+                    items: [
+                        { text: "Saya menghindari membunuh makhluk hidup (Ahimsa), termasuk lisan yang membunuh karakter orang", tag: "(PANATIPATA)" },
+                        { text: "Saya tidak mengambil sepeser pun hak orang lain, termasuk korupsi waktu kantor", tag: "(ADINNADANA)" },
+                        { text: "Saya setia pada pasangan dan tidak melakukan pelecehan/manipulasi seksual", tag: "(KAMESU MICCHACARA)" },
+                        { text: "Saya pantang berbohong, memfitnah, atau bergosip di belakang orang lain", tag: "(MUSAVADA)" },
+                        { text: "Saya menjauhi zat adiktif yang melemahkan kesadaran dan akal sehat saya", tag: "(SURA MERAYA)" }
+                    ]
+                },
+                {
+                    title: "5. BRAHMA VIHARA", badge: "Kualitas Hati Luhur",
+                    items: [
+                        { text: "Saya mengharapkan kebahagiaan bahkan untuk saingan bisnis/politik saya (Metta)", tag: "(CINTA KASIH)" },
+                        { text: "Saya turun tangan membantu saat melihat makhluk lain menderita (Karuna)", tag: "(WELAS ASIH)" },
+                        { text: "Saya turut berbahagia dan tidak dengki saat tetangga/teman sukses (Mudita)", tag: "(ANTI IRI HATI)" },
+                        { text: "Batin saya tetap seimbang saat dihina maupun dipuji bertubi-tubi (Upekkha)", tag: "(KESEIMBANGAN BATIN)" },
+                        { text: "Saya mudah memaafkan karena sadar kebencian adalah racun bagi diri saya sendiri", tag: "(PELEPASAN DENDAM)" }
+                    ]
+                },
+                {
+                    title: "6. ANICCA & ANATTA", badge: "Ketidakkekalan & Pelepasan Ego",
+                    items: [
+                        { text: "Saya sadar bahwa masa jaya, jabatan, dan kecantikan pasti akan berakhir (Anicca)", tag: "(MENERIMA PERUBAHAN)" },
+                        { text: "Saya tidak sombong dan gila hormat karena saya sadar 'Ego/Status' itu fiktif (Anatta)", tag: "(KERENDAHAN HATI)" },
+                        { text: "Saya melepaskan kemelekatan pada orang yang pergi meninggalkan saya tanpa depresi", tag: "(DETACHMENT)" },
+                        { text: "Saya tidak membela mati-matian gengsi/identitas kelompok hingga merusak logika kebenaran", tag: "(OBJEKTIFITAS)" },
+                        { text: "Tujuan hidup saya adalah kedamaian batin (Nibbana), bukan pengakuan sosial", tag: "(FOKUS SPIRITUAL)" }
+                    ]
+                }
+            ]
+        };
+
+        function loadDatabase() {
+            const sys = document.getElementById('beliefSystem').value;
+            const data = db[sys];
+            const container = document.getElementById('pillarsContainer');
+            
+            container.innerHTML = ""; // Bersihkan
+            
+            data.forEach((pillar, index) => {
+                let itemsHtml = "";
+                pillar.items.forEach(item => {
+                    itemsHtml += `<label class="check-item"><input type="checkbox"> ${item.text} <span class="core-tag">${item.tag}</span></label>`;
+                });
+
+                let cardHtml = `
+                    <div class="pillar-card">
+                        <div class="card-title">${pillar.title} <span class="card-badge">${pillar.badge}</span></div>
+                        <div class="check-group" id="p${index+1}">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+            
+            // Reset result
+            document.getElementById('result').style.display = 'none';
+        }
+
+        function calculate() {
+            let totalPoints = 0;
+            let totalItems = 30; // 6 pillar * 5 items
+            
+            for(let i=1; i<=6; i++) {
+                let section = document.getElementById(`p${i}`);
+                if(section) {
+                    let checkboxes = section.querySelectorAll('input[type="checkbox"]');
+                    checkboxes.forEach(cb => { if(cb.checked) totalPoints++; });
+                }
+            }
+
+            let finalPercent = Math.floor((totalPoints / totalItems) * 100);
+            
+            let scoreEl = document.getElementById('totalScore');
+            let current = 0;
+            let timer = setInterval(() => {
+                current += 2;
+                if(current >= finalPercent) {
+                    current = finalPercent;
+                    clearInterval(timer);
+                    showVerdict(current);
+                }
+                scoreEl.innerText = current + "%";
+            }, 20);
+
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({behavior: "smooth"});
+        }
+
+        function showVerdict(score) {
+            let title = document.getElementById('verdictTitle');
+            let desc = document.getElementById('verdictDesc');
+            let box = document.getElementById('verdictBox');
+
+            if(score >= 85) {
+                title.innerText = "KELAS SOVEREIGN (MANUSIA INTEGRITAS TINGGI)";
+                title.style.color = "#00f3ff";
+                box.style.borderColor = "#00f3ff";
+                desc.innerHTML = "Anda memegang kendali internal penuh. Ajaran keyakinan anda bukan sekadar 'Casing', tapi telah menjadi 'Sistem Operasi' di otak anda. Anda tidak butuh polisi, hakim, atau ancaman neraka untuk berbuat baik. <strong>Anda adalah fondasi peradaban High-Trust Society.</strong> Komunitas mandiri akan menyambut anda.";
+            } 
+            else if(score >= 60) {
+                title.innerText = "KELAS TRANSISI (MASIH KADANG KOMPROMI)";
+                title.style.color = "#c5a059";
+                box.style.borderColor = "#c5a059";
+                desc.innerHTML = "Anda mengerti ajaran agama anda, namun eksekusi di lapangan masih goyah saat ditekan nafsu, uang, atau kesempatan aman. Anda harus segera menambal kebocoran integritas ini sebelum diasingkan oleh komunitas karena dianggap 'Muka Dua'.";
+            } 
+            else if(score >= 40) {
+                title.innerText = "KELAS HYPOCRITE (PASIEN SISTEM HUKUM)";
+                title.style.color = "#ff8800";
+                box.style.borderColor = "#ff8800";
+                desc.innerHTML = "Agama/Kepercayaan anda HANYA di KTP. Praktiknya, anda berbuat curang saat CCTV dimatikan. <strong>Anda butuh penjara dan hukum Dajjal untuk memaksa anda tertib.</strong> Di era komunitas merdeka, orang seperti anda tidak akan dipercaya berbisnis atau memegang jabatan apapun.";
+            } 
+            else {
+                title.innerText = "KELAS DAJJALIC (BAHAYA SOSIAL - KELAKUAN BAGONG)";
+                title.style.color = "#ff0055";
+                box.style.borderColor = "#ff0055";
+                desc.innerHTML = "Sistem nilai internal anda hancur lebur. Ego, harta, dan keserakahan adalah tuhan anda yang sebenarnya. Anda adalah parasit peradaban. Di tatanan sosial alami, individu dengan metrik ini akan langsung di-<em>Exiled</em> (diasingkan ke hutan) tanpa perlu diadili, karena frekuensi anda merusak komunitas.";
+            }
+        }
+
+        // Load default on start
+        window.onload = () => loadDatabase();
+    </script>
+
+</body>
+</html>
