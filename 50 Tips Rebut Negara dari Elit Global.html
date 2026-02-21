@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: KESADARAN HAK RAKYAT</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #050a14; /* Deep Navy Space */
+            color: #ccc;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1500px;
+            border: 3px solid #00f3ff; /* Cyber Cyan */
+            padding: 30px;
+            background: #02050a;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.15);
+        }
+
+        /* Blueprint Grid Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #00f3ff;
+            text-shadow: 0 0 15px #00f3ff;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #d4af37; /* Gold */
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #d4af37;
+            background-color: rgba(20, 15, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #00f3ff; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #1a3344;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #051a2a;
+            color: #00f3ff;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #00f3ff;
+        }
+
+        /* Kolom Styling */
+        .col-kebijakan { color: #ff5555; width: 25%; font-weight: bold; }
+        .col-hak { color: #d4af37; width: 35%; font-style: italic; }
+        .col-antisipasi { color: #00ff88; width: 35%; font-weight: bold; }
+
+        tr:hover td { background-color: #0a1522; }
+
+        .section-header {
+            background-color: #020a11;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #00f3ff;
+            border-bottom: 2px solid #00f3ff;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #d4af37;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #d4af37; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>THE SOVEREIGN MANUAL</h1>
+    <div class="subtitle">50 CARA RAKYAT MEREBUT KEMBALI HAK DARI SISTEM ELIT GLOBAL</div>
+    
+    <div class="alert-box">
+        KITA TIDAK MEMBENCI NEGARA ATAU PEMERINTAH. NEGARA ADALAH KENDARAAN KITA.<br>
+        <span>Masalahnya: Kendaraan ini sedang dibajak oleh Elit Global untuk menabrak rakyatnya sendiri.</span><br>
+        Rakyat leutik bagaikan ternak yang tidak tahu haknya. Baca 50 aturan tak tertulis ini, sadari hakmu, dan rebut kembali kemudinya melalui aksi nyata di komunitasmu!
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>KEBIJAKAN SISTEM (PRO-ELIT)</th>
+                <th>HAK RAKYAT YANG TERAMPAS</th>
+                <th>ANTISIPASI & REBUT KEMBALI (AKSI)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. AGRARIA, TANAH & PANGAN (HAK HIDUP DASAR)</td></tr>
+            <tr><td>01</td><td class="col-kebijakan">Izin Hak Guna Usaha (HGU) Raksasa</td><td class="col-hak">Tanah jutaan hektar diberikan pada 1 perusahaan, sementara rakyat desa kesulitan mencari 1 hektar lahan garapan.</td><td class="col-antisipasi">Bangun Koperasi Desa. Tuntut redistribusi lahan telantar secara legal. Garap lahan kosong komunal.</td></tr>
+            <tr><td>02</td><td class="col-kebijakan">Monopoli Benih Pabrik (UU Sistem Budidaya)</td><td class="col-hak">Petani dilarang/dipersulit memuliakan benih sendiri, dipaksa membeli benih pabrik berlisensi (Hak kemandirian pangan hilang).</td><td class="col-antisipasi">Lakukan "Seed Saving". Simpan, silangkan, dan barter benih pusaka nusantara (Heirloom) antar petani desa.</td></tr>
+            <tr><td>03</td><td class="col-kebijakan">Ketergantungan Pupuk Subsidi Kimia</td><td class="col-hak">Petani dijebak agar tanahnya kecanduan kimia buatan pabrik elit, merusak kesuburan alami tanah warisan.</td><td class="col-antisipasi">Tinggalkan subsidi! Buat pupuk kompos organik, MOL, dan Bio-ion sendiri dari alam. Mandiri mutlak.</td></tr>
+            <tr><td>04</td><td class="col-kebijakan">Impor Pangan Saat Panen Raya</td><td class="col-hak">Hak petani lokal untuk mendapatkan harga layak dihancurkan oleh kartel impor beras/gula demi fee elit pusat.</td><td class="col-antisipasi">Bangun lumbung RW. Beli gabah langsung dari tetangga petani dengan harga adil, simpan secara komunal.</td></tr>
+            <tr><td>05</td><td class="col-kebijakan">Proyek Strategis Nasional (Penggusuran)</td><td class="col-hak">Ruang hidup dan sejarah masyarakat adat diratakan demi kawasan industri asing/globalis.</td><td class="col-antisipasi">Kuatkan status hukum tanah adat. Jika tak bisa ditahan, pastikan ganti rugi berbentuk SAHAM perusahaan, bukan uang kertas yang habis.</td></tr>
+            <tr><td>06</td><td class="col-kebijakan">Privatisasi Sumber Air & Mata Air</td><td class="col-hak">Air dari gunung disedot perusahaan asing, dimasukkan botol plastik, lalu dijual mahal ke rakyat sekitarnya.</td><td class="col-antisipasi">Jaga sumur bor mandiri dan mata air desa. Tolak perizinan pabrik air kemasan di hulu desa anda.</td></tr>
+            <tr><td>07</td><td class="col-kebijakan">Alih Fungsi Sawah Menjadi Beton</td><td class="col-hak">Ketahanan pangan masa depan ditukar dengan perumahan elit yang mengunci tanah mati selamanya.</td><td class="col-antisipasi">Pemda harus didesak membuat Perda Lahan Pangan Abadi. Warga menolak menjual sawah produktif.</td></tr>
+            <tr><td>08</td><td class="col-kebijakan">Food Estate (Korporasi Pertanian)</td><td class="col-hak">Pertanian diserahkan pada korporasi besar (memakai alat berat asing), mengubah petani pemilik lahan menjadi buruh tani kasar.</td><td class="col-antisipasi">Perkuat Kelompok Tani (Gapoktan). Buktikan bahwa pertanian organik rakyat lebih tangguh dari proyek triliunan.</td></tr>
+            <tr><td>09</td><td class="col-kebijakan">Pengetatan Standar Higienitas Tradisional</td><td class="col-hak">Pasar tradisional digusur dengan alasan kumuh, diganti supermarket ber-AC milik konglomerat.</td><td class="col-antisipasi">Rakyat harus tetap belanja di pasar becek/tradisional. Hidupkan ekonomi tetangga, bukan ekonomi rak minimarket.</td></tr>
+            <tr><td>10</td><td class="col-kebijakan">Izin Tambang Tanpa Reklamasi Kuat</td><td class="col-hak">Elit mengambil emas/nikelnya, rakyat lokal ditinggali kubangan danau beracun dan lingkungan rusak.</td><td class="col-antisipasi">Rakyat lingkar tambang harus menuntut CSR riil (saham, infrastruktur air bersih) dan jaminan reklamasi hidup.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. EKONOMI, KEUANGAN & FINANSIAL (HAK KEKAYAAN)</td></tr>
+            <tr><td>11</td><td class="col-kebijakan">Pencetakan Uang Berlebih (Inflasi)</td><td class="col-hak">Daya beli tabungan rakyat dirampok secara diam-diam oleh bank sentral untuk membiayai utang negara.</td><td class="col-antisipasi">Simpan kekayaan dalam bentuk nyata (Tanah, Logam Mulia, Alat Pertukangan), bukan uang kertas/fiat.</td></tr>
+            <tr><td>12</td><td class="col-kebijakan">Pajak Tinggi untuk UMKM, Tax Amnesty untuk Konglomerat</td><td class="col-hak">Keadilan ekonomi. Rakyat kecil dikejar pajak, sementara triliunan uang elit yang diparkir di luar negeri diampuni.</td><td class="col-antisipasi">Tuntut perlakuan pajak yang adil. Putar uang di sektor riil informal desa yang tidak terdeteksi sistem hisap.</td></tr>
+            <tr><td>13</td><td class="col-kebijakan">Sistem Uang Digital (CBDC/Cashless)</td><td class="col-hak">Hak privasi transaksi. Di sistem CBDC, uang anda bisa dikunci/dihapus kapan saja jika anda mengkritik penguasa (Social Credit).</td><td class="col-antisipasi">Tetap gunakan UANG TUNAI fisik. Tolak penghapusan uang kertas. Bangun sistem barter koin komunal.</td></tr>
+            <tr><td>14</td><td class="col-kebijakan">Pinjaman Online (Pinjol) Dilegalkan</td><td class="col-hak">Hak atas ketenangan mental. Rakyat miskin sengaja dijebak riba berbunga mencekik untuk meraup untung instan.</td><td class="col-antisipasi">Edukasi warga: Haramkan dan boikot Pinjol. Bangun dana "Baitul Mal" atau kas darurat di setiap RT.</td></tr>
+            <tr><td>15</td><td class="col-kebijakan">Sistem KPR (Kredit Perumahan Rakyat) Riba</td><td class="col-hak">Memperbudak waktu rakyat selama 20 tahun hanya untuk menebus kotak semen berukuran 36 meter persegi.</td><td class="col-antisipasi">Beli tanah murah di desa, bangun rumah kayu panggung pelan-pelan tanpa utang bank.</td></tr>
+            <tr><td>16</td><td class="col-kebijakan">Penekanan Upah Minimum (UMR)</td><td class="col-hak">Tenaga manusia dihargai serendah mungkin agar investor asing mau menanamkan modal dan pabriknya.</td><td class="col-antisipasi">Berhenti bergantung pada slip gaji. Bangun keahlian (Skill) mandiri agar anda yang menetapkan harga jasa anda sendiri.</td></tr>
+            <tr><td>17</td><td class="col-kebijakan">Sistem BPJS yang Memaksa</td><td class="col-hak">Rakyat dipaksa membayar iuran bulanan untuk sistem kesehatan yang seringkali diskriminatif pada kelas bawah.</td><td class="col-antisipasi">Pelihara kesehatan secara preventif (Herbal & Puasa). Jangan serahkan nasib sehatmu sepenuhnya pada kartu asuransi.</td></tr>
+            <tr><td>18</td><td class="col-kebijakan">Pembiaran Monopoli Rantai Pasok</td><td class="col-hak">Dari pabrik hulu hingga ritel hilir dikuasai 1-2 perusahaan raksasa, mematikan persaingan sehat warung kecil.</td><td class="col-antisipasi">Belanja di warung tetangga walau beda 1000 perak. Uang yang berputar di desa akan kembali ke desa.</td></tr>
+            <tr><td>19</td><td class="col-kebijakan">Pajak Bumi Bangunan (PBB) Progresif</td><td class="col-hak">Rakyat seperti menyewa tanahnya sendiri kepada negara. Hak milik mutlak dihilangkan.</td><td class="col-antisipasi">Tuntut pemerintah menurunkan PBB lahan produktif (sawah/kebun) agar rakyat tidak terpaksa menjualnya ke developer.</td></tr>
+            <tr><td>20</td><td class="col-kebijakan">Dana Pensiun Dikelola Negara</td><td class="col-hak">Uang hari tua pekerja dipakai untuk investasi infrastruktur berisiko oleh negara tanpa persetujuan langsung pemilik dana.</td><td class="col-antisipasi">Bangun aset pensiun biologi (kebun buah jangka panjang, ternak domba) yang tidak bisa diganggu gugat inflasi/negara.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. KESEHATAN, LINGKUNGAN & KEDAULATAN TUBUH</td></tr>
+            <tr><td>21</td><td class="col-kebijakan">Mandat WHO (Pandemic Treaty)</td><td class="col-hak">Menyerahkan hak penetapan status darurat medis (lockdown/vaksin paksa) kepada lembaga asing (PBB/WHO) di luar negara.</td><td class="col-antisipasi">Kawal dan tolak traktat internasional yang merampas kedaulatan medis nasional. UU lokal harus lebih tinggi dari WHO.</td></tr>
+            <tr><td>22</td><td class="col-kebijakan">Vaksinasi/Medis Syarat Administrasi</td><td class="col-hak">Hak otonomi tubuh (Bodily Autonomy). Negara memaksa memasukkan zat ke tubuh rakyat sebagai syarat naik kereta/mengurus dokumen.</td><td class="col-antisipasi">Tegaskan Hak Asasi Manusia. Tolak pemaksaan medis. Dukung gerakan hukum yang membela kebebasan biologis.</td></tr>
+            <tr><td>23</td><td class="col-kebijakan">Standar Gizi (Piramida Makanan Sintetis)</td><td class="col-hak">Aturan gizi global yang didorong pelobi industri (banyak karbohidrat olahan pabrik, sedikit lemak sehat/hewani alami).</td><td class="col-antisipasi">Abaikan piramida gizi globalis. Kembali ke pola makan luluhur Nuswantara (Whole foods, ubi, daging bersih lokal).</td></tr>
+            <tr><td>24</td><td class="col-kebijakan">Legalisasi Bahan Pengawet Berbahaya (BPA/MSG)</td><td class="col-hak">Hak atas makanan yang aman. Ambang batas racun perlahan-lahan dinaikkan demi efisiensi biaya pabrik raksasa.</td><td class="col-antisipasi">Jadilah konsumen cerdas. Boikot produk berpengawet keras. Konsumsi hasil alam segar.</td></tr>
+            <tr><td>25</td><td class="col-kebijakan">Pajak Karbon Global (Climate Tax)</td><td class="col-hak">Rakyat biasa disuruh membayar pajak polusi karena bernapas dan memakai motor, sementara Elit Global bebas terbang pakai Jet Pribadi.</td><td class="col-antisipasi">Tolak agenda pemiskinan berkedok iklim. Solusi iklim adalah menanam pohon, bukan memungut pajak internasional.</td></tr>
+            <tr><td>26</td><td class="col-kebijakan">Pembungkaman Pengobatan Tradisional/Herbal</td><td class="col-hak">Herbal asli diremehkan dan dipersulit izinnya demi menjaga dominasi penjualan obat kimia Big Pharma.</td><td class="col-antisipasi">Tanam apotek hidup di rumah. Lestarikan jamu dan pengobatan pusaka Nuswantara tanpa perlu izin pabrik.</td></tr>
+            <tr><td>27</td><td class="col-kebijakan">Eksploitasi 15-Minute Cities (Kota 15 Menit)</td><td class="col-hak">Hak bergerak bebas. Dalih kota efisien, tapi berpotensi membatasi pergerakan warga di distrik tertentu jika ada pembatasan sosial.</td><td class="col-antisipasi">Tolak pengurungan. Pertahankan kebebasan mobilitas. Tinggal di desa dengan lahan terbuka luas jauh lebih merdeka.</td></tr>
+            <tr><td>28</td><td class="col-kebijakan">Pembiaran Polusi Industri (Udara)</td><td class="col-hak">Pabrik peleburan dan PLTU batu bara dibiarkan meracuni udara warga sekitar demi cuan perusahaan.</td><td class="col-antisipasi">Rakyat harus bersatu menuntut pemasangan filter industri dan menolak pendirian pabrik kotor di zona permukiman.</td></tr>
+            <tr><td>29</td><td class="col-kebijakan">Sertifikasi Bibit Hewan Ternak</td><td class="col-hak">Memaksa peternak lokal menggunakan bibit unggas asing yang rapuh dan bergantung pada obat pabrik.</td><td class="col-antisipasi">Pertahankan galur murni hewan lokal (Ayam Pelung, Sapi Pasundan). Mereka tahan banting dan tak butuh obat impor.</td></tr>
+            <tr><td>30</td><td class="col-kebijakan">Agenda Bug-Eating (Makan Serangga)</td><td class="col-hak">Memaksa agenda makan ulat/serangga untuk rakyat biasa demi 'menyelamatkan bumi', mematikan peternak sapi lokal.</td><td class="col-antisipasi">Makan daging sapi/domba hasil ternak peternak desa. Tolak agenda perendahan derajat makanan manusia.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. HUKUM, PENDIDIKAN & SOSIAL BUDAYA</td></tr>
+            <tr><td>31</td><td class="col-kebijakan">Pasal Karet / UU ITE</td><td class="col-hak">Hak kemerdekaan berpendapat. UU diciptakan untuk memenjarakan rakyat kecil yang mengkritik keras pejabat atau elit.</td><td class="col-antisipasi">Jangan takut bersuara kebenaran (Haq). Kawal setiap kasus pembungkaman agar menjadi isu nasional yang memukul balik penguasa.</td></tr>
+            <tr><td>32</td><td class="col-kebijakan">Kurikulum Pendidikan Industri</td><td class="col-hak">Mendidik anak bukan untuk menjadi manusia merdeka, tapi untuk menjadi baut mesin (buruh penurut) bagi korporasi.</td><td class="col-antisipasi">Pendidikan utama ada di rumah. Ajarkan anak logika, finansial, agama murni, dan keahlian survival alam.</td></tr>
+            <tr><td>33</td><td class="col-kebijakan">Identitas Digital Tunggal (Digital ID)</td><td class="col-hak">Privasi mutlak. Semua data (kesehatan, pajak, pergerakan) disatukan agar pemerintah/elit mudah memantau dan menghukum warga.</td><td class="col-antisipasi">Lindungi privasi digital anda. Minimalkan jejak digital di internet. Tolak pengintegrasian data jika tidak ada jaminan perlindungan UU.</td></tr>
+            <tr><td>34</td><td class="col-kebijakan">Dana Bantuan LSM Asing (Bawa Agenda LGBT/Woke)</td><td class="col-hak">Hak menjaga nilai adat, moral, dan fitrah ketuhanan generasi muda dari infiltrasi budaya perusak luar.</td><td class="col-antisipasi">Pemerintah daerah dan warga harus memfilter ketat masuknya NGO asing. Tolak dana hibah yang merusak moral anak.</td></tr>
+            <tr><td>35</td><td class="col-kebijakan">Hukum Tumpul ke Atas, Tajam ke Bawah</td><td class="col-hak">Asas kesetaraan hukum. Maling ayam divonis 5 tahun, koruptor 5 triliun dapat diskon hukuman dan sel mewah.</td><td class="col-antisipasi">Selesaikan sengketa warga di balai adat/musyawarah RT. Jangan bawa masalah ke polisi jika bisa diselesaikan dengan kearifan lokal.</td></tr>
+            <tr><td>36</td><td class="col-kebijakan">Gelar Akademik sebagai Syarat Jabatan Publik</td><td class="col-hak">Hak pemimpin alami. Mengunci kepemimpinan hanya untuk mereka yang mampu bayar kuliah mahal, menyingkirkan tetua bijak desa.</td><td class="col-antisipasi">Ukur pemimpin dari rekam jejak, empati, dan kejujurannya di masyarakat, BUKAN dari gelar ijazahnya.</td></tr>
+            <tr><td>37</td><td class="col-kebijakan">Hiburan Massal Pembius (Bread and Circus)</td><td class="col-hak">Menenggelamkan rakyat dengan hiburan murahan, skandal artis, dan algoritma viral agar rakyat lupa masalah ekonomi nyata.</td><td class="col-antisipasi">Lakukan puasa Sosmed (Dopamin Detox). Alihkan perhatian ke masalah riil di desa/komunitas anda.</td></tr>
+            <tr><td>38</td><td class="col-kebijakan">Omnibus Law (Cilaka)</td><td class="col-hak">Aturan sapu jagat yang dibuat terburu-buru, diam-diam, untuk memudahkan perampasan hak buruh dan pelonggaran analisis dampak lingkungan.</td><td class="col-antisipasi">Rakyat harus mengerti isi hukumnya. Gunakan kekuatan konsumen untuk menekan perusahaan yang sewenang-wenang.</td></tr>
+            <tr><td>39</td><td class="col-kebijakan">Rekayasa Konflik Identitas (Divide and Rule)</td><td class="col-hak">Hak untuk bersatu. Elit sengaja memanaskan isu SARA (Agama/Suku) menjelang Pemilu agar rakyat saling cakar.</td><td class="col-antisipasi">Gunakan Mata Ketiga. Jika ada isu agama mendadak panas, tanya: Siapa elit yang sedang diuntungkan/menutupi kasus saat ini?</td></tr>
+            <tr><td>40</td><td class="col-kebijakan">Pemberangusan Sejarah Asli Nuswantara</td><td class="col-hak">Sejarah heroik kerajaan asli ditutupi atau dikecilkan perannya, diganti narasi sejarah buatan penjajah VOC agar mental bangsa kerdil.</td><td class="col-antisipasi">Pelajari kembali Babad, Naskah Kuno, dan silsilah keluarga. Bangsa yang bangga pada akar leluhurnya tidak bisa dijajah.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. PROTOKOL AKSI: MENUNTUT PEMERINTAH, MENGUSIR ELIT</td></tr>
+            <tr><td>41</td><td class="col-kebijakan">Kontrak Perdagangan Bebas Terselubung</td><td class="col-hak">Hak melindungi produk lokal. Pasar dibanjiri barang impor murah yang membunuh industri pabrik lokal.</td><td class="col-antisipasi">Nasionalisme Konsumsi! Beli produk buatan tetangga/bangsa sendiri walau sedikit lebih mahal. Ini menghidupkan ekonomi dalam negeri.</td></tr>
+            <tr><td>42</td><td class="col-kebijakan">Kewarganegaraan Ganda bagi Investor</td><td class="col-hak">Hak tanah air murni. Memberikan paspor bagi elit global tanpa loyalitas jiwa raga pada bumi pertiwi.</td><td class="col-antisipasi">Tuntut pemerintah membatasi aset strategis hanya untuk WNI tunggal. Nasionalisme tak bisa dibagi dua.</td></tr>
+            <tr><td>43</td><td class="col-kebijakan">Sentralisasi Anggaran di Ibukota</td><td class="col-hak">Hak pemerataan. Uang pajak daerah disedot ke pusat, dikembalikan sedikit. Daerah kaya SDA tapi rakyatnya miskin gizi.</td><td class="col-antisipasi">Tuntut DESENTRALISASI. Dana Bagi Hasil SDA harus maksimal untuk desa penghasil, bukan untuk elit di gedung kaca pusat.</td></tr>
+            <tr><td>44</td><td class="col-kebijakan">Penggunaan Buzzer Politik Pemerintah</td><td class="col-hak">Hak atas informasi jujur. Menggunakan uang pajak untuk membayar pasukan bot/akun palsu guna memanipulasi opini publik.</td><td class="col-antisipasi">Latih logika anti-manipulasi. Abaikan kolom komentar yang bernada seragam dan tidak organik. Sampaikan kebenaran di dunia nyata.</td></tr>
+            <tr><td>45</td><td class="col-kebijakan">Komersialisasi Fasilitas Dasar Publik</td><td class="col-hak">Jalan tol, air bersih, listrik yang dibangun dari pajak rakyat dikelola swasta/asing dengan tarif selangit.</td><td class="col-antisipasi">Rakyat berhak menuntut transparansi tarif BUMN. Rintis energi mandiri surya/mikrohidro untuk melawan tarif listrik oligopoli.</td></tr>
+            <tr><td>46</td><td class="col-kebijakan">Privatisasi Bibit Unggul Lokal (Paten)</td><td class="col-hak">Ilmuwan asing/korporat mematenkan genetik tanaman/hewan asli Indonesia, lalu kita disuruh bayar royalti.</td><td class="col-antisipasi">Lembaga riset nasional dan warga harus mengamankan/mendaftarkan DNA flora fauna Nuswantara sebagai kekayaan komunal (Open Source).</td></tr>
+            <tr><td>47</td><td class="col-kebijakan">Pelarangan Pertambangan Rakyat</td><td class="col-hak">Rakyat kecil dilarang mendulang emas (dicap Ilegal/PETI), tapi perusahaan asing diberi izin mengeruk gunung hingga rata.</td><td class="col-antisipasi">Pemerintah harus membina dan melegalkan tambang rakyat (WPR) dengan amdal yang diatur, bukan memusuhinya demi konglomerat.</td></tr>
+            <tr><td>48</td><td class="col-kebijakan">Kriminalisasi Masyarakat Adat</td><td class="col-hak">Sesepuh suku yang menjaga hutan dari penebangan kayu korporat malah ditangkap polisi dengan alasan masuk lahan perusahaan.</td><td class="col-antisipasi">Seluruh rakyat Nusantara harus berdiri di belakang masyarakat adat. Hutan mereka adalah pabrik oksigen kita semua!</td></tr>
+            <tr><td>49</td><td class="col-kebijakan">Narasi "Bantuan Asing itu Mutlak"</td><td class="col-hak">Ilusi bahwa tanpa investasi Asing dan hutang IMF, negara ini akan runtuh.</td><td class="col-antisipasi">Sadarilah bahwa MEREKA yang butuh pasar kita (270 juta orang) dan nikel kita. Kita punya posisi tawar (Bargaining Power) tertinggi!</td></tr>
+            <tr><td>50</td><td class="col-kebijakan">PENYERAHAN KEDAULATAN KEPADA SISTEM DAJJAL</td><td class="col-hak">HAK ASASI MANUSIA SEBAGAI PEMIMPIN (KHALIFAH) DI BUMI, TUNDUK HANYA PADA SANG PENCIPTA.</td><td class="col-antisipasi">GUNAKAN IMAN = UKURAN. Pelihara integritasmu. Kita rebut kembali arah negara ini dengan membangun tatanan sosial alami, mandiri pangan, kuat mental, dan tak bisa disuap oleh ilusi!</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🔥 KITA ADALAH PEMEGANG SAHAM UTAMA 🔥</h2>
+        <p>Pemerintah sejatinya adalah pelayan pelaksana (karyawan). Mereka digaji dari keringat kita untuk mengelola administrasi. Namun, ketika sang Pelayan mulai berkolaborasi dengan Perampok (Elit Global) untuk menjual aset Majikannya (Rakyat), maka sang Majikan harus sadar dan mengambil tindakan.<br><br>
+        <strong>Aksi kita BUKAN pemberontakan tanpa arah.</strong> Aksi kita adalah menolak patuh pada aturan yang dzalim, memutus ketergantungan ekonomi dari sistem mereka, dan mulai membangun kedaulatan desa/komunitas dari titik nol.<br><br>
+        Tuntun pemerintah kita agar kembali ke jalan yang benar. Jika mereka takut pada ancaman Globalis, biarkan RAKYAT NUSWANTARA yang menjadi tameng dan barisan terdepan untuk menghadapinya! 👁️⚡🛡️</p>
+    </div>
+</div>
+
+</body>
+</html>

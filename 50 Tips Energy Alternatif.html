@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: TRANSISI ENERGI MANDIRI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #110800; /* Dark Rust/Oil */
+            color: #ccc;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1400px;
+            border: 3px solid #ff6600; /* Industrial Orange */
+            padding: 30px;
+            background: #0a0500;
+            position: relative;
+            box-shadow: 0 0 40px rgba(255, 102, 0, 0.15);
+        }
+
+        /* Grid/Circuit Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(255, 102, 0, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 102, 0, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #ff6600;
+            text-shadow: 0 0 15px #ff6600;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #00f3ff;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #ff0055;
+            background-color: rgba(30, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #ff6600; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #331a00;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #220f00;
+            color: #ff6600;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #ff6600;
+        }
+
+        /* Kolom Styling */
+        .col-energi { color: #ff6600; width: 25%; font-weight: bold; }
+        .col-fungsi { color: #ccc; width: 45%; }
+        .col-aksi { color: #00f3ff; width: 30%; font-style: italic; }
+
+        tr:hover td { background-color: #1a0c00; }
+
+        .section-header {
+            background-color: #0d0600;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #ff6600;
+            border-bottom: 2px solid #ff6600;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #ff6600;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #ff6600; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>ENERGY REBELLION</h1>
+    <div class="subtitle">50 PROTOKOL TRANSISI: DARI KETERGANTUNGAN FOSIL MENUJU ETHER</div>
+    
+    <div class="alert-box">
+        JANGAN BERMIMPI TENTANG ENERGI ETHER JIKA MENGHIDUPKAN KOMPOR SAJA MASIH BERGANTUNG PADA GAS MONOPOLI.<br>
+        <span>Putuskan Ketergantungan Secara Bertahap!</span><br>
+        Ubah sampah jadi BBM, kotoran jadi Gas, dan gerak alam jadi Listrik. Ini adalah fase adaptasi dan kemandirian fisik sebelum kita menyentuh teknologi energi murni (Free Energy).
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>JENIS ENERGI ALTERNATIF</th>
+                <th>FUNGSI & PENJELASAN (CARA KERJA)</th>
+                <th>PROTOKOL EKSEKUSI</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. BIO-FUEL & BAHAN BAKAR CAIR (PENGGANTI BENSIN/SOLAR)</td></tr>
+            <tr><td>01</td><td class="col-energi">Pirolisis Plastik (BBM Sintetis)</td><td class="col-fungsi">Membakar sampah plastik tanpa oksigen. Uapnya dikondensasikan menjadi minyak tanah, solar, dan bensin (tergantung fraksi suhunya).</td><td class="col-aksi">Rakit tabung reaktor baja kedap udara + pipa tembaga pendingin air. Masukkan plastik kresek/botol.</td></tr>
+            <tr><td>02</td><td class="col-energi">Biodiesel Jelantah (WCO)</td><td class="col-fungsi">Minyak goreng bekas dicampur Metanol + Soda Api (Katalis NaOH). Hasilnya: Biodiesel murni untuk mesin diesel/traktor, dan Gliserin (untuk sabun).</td><td class="col-aksi">Kumpulkan jelantah 1 kampung. Saring bersih, panaskan, campur kimia katalis, endapkan 24 jam.</td></tr>
+            <tr><td>03</td><td class="col-energi">Bioetanol Singkong/Tebu</td><td class="col-fungsi">Fermentasi singkong busuk/tetes tebu menggunakan ragi, lalu disuling (Destilasi) hingga kadar alkohol 90%+. Pengganti bensin motor (Oktan tinggi).</td><td class="col-aksi">Buat alat penyuling (Destilator) tembaga. Fermentasi karbohidrat sisa panen jadi alkohol murni.</td></tr>
+            <tr><td>04</td><td class="col-energi">Minyak Jarak (Jatropha)</td><td class="col-fungsi">Biji jarak pagar dipres/diperas mengeluarkan minyak yang bisa langsung dibakar di lampu tempel atau diproses jadi Biodiesel.</td><td class="col-aksi">Tanam pohon jarak sebagai pagar kebun. Bijinya dipanen dan dipres manual.</td></tr>
+            <tr><td>05</td><td class="col-energi">Minyak Kemiri Sunan</td><td class="col-fungsi">Pohon konservasi tanah yang bijinya mengandung minyak beroktan tinggi. Tidak bisa dimakan (beracun) tapi sangat bagus untuk mesin.</td><td class="col-aksi">Tanam di lereng bukit kritis. Panen biji, pres, minyaknya untuk genset desa.</td></tr>
+            <tr><td>06</td><td class="col-energi">Getah Pinus (Terpentin)</td><td class="col-fungsi">Getah pohon pinus disuling menghasilkan terpentin dan gondorukem. Terpentin sangat mudah terbakar, bisa jadi campuran BBM darurat.</td><td class="col-aksi">Sadap pohon pinus liar di hutan (seperti menyadap karet), suling getahnya.</td></tr>
+            <tr><td>07</td><td class="col-energi">Minyak Nyamplung</td><td class="col-fungsi">Biji pohon nyamplung (tumbuh di pesisir pantai) menghasilkan minyak rendemen tinggi untuk lampu penerangan anti-badai.</td><td class="col-aksi">Pres biji nyamplung pesisir. Minyaknya awet dan apinya sangat stabil.</td></tr>
+            <tr><td>08</td><td class="col-danger col-energi">Ekstrak Lemak Hewan (Tallow)</td><td class="col-fungsi">Gajih/lemak sapi/kambing sisa kurban direbus perlahan hingga menjadi minyak bening padat. Bahan baku lilin darurat tahan lama.</td><td class="col-aksi">Lelehkan lemak, cetak di gelas bambu dengan sumbu kapas. Lilin survival abadi.</td></tr>
+            <tr><td>09</td><td class="col-energi">Biomassa Briket Arang Batok</td><td class="col-fungsi">Menghancurkan ketergantungan pada batu bara. Batok kelapa dibakar pirolisis, ditumbuk, dicampur lem kanji, dicetak. Panas luar biasa.</td><td class="col-aksi">Cetak briket silinder (berlubang tengah). Untuk pandai besi atau masak harian.</td></tr>
+            <tr><td>10</td><td class="col-energi">Briket Serbuk Gergaji & Daun</td><td class="col-fungsi">Limbah gergaji kayu atau daun kering yang dipres sekeras batu. Terbakar lambat menggantikan kayu bakar konvensional.</td><td class="col-aksi">Buat tuas pres manual baja (Dongkrak botol). Pres limbah organik jadi briket padat.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. BIO-GAS & PENGGANTI LPG (MEMASAK OFF-GRID)</td></tr>
+            <tr><td>11</td><td class="col-energi">Biogas Kotoran Sapi/Ternak</td><td class="col-fungsi">Reaktor kubah/plastik yang memfermentasi kotoran hewan tanpa oksigen (Anaerob), menghasilkan Gas Metana (CH4) murni. Api biru.</td><td class="col-aksi">Bangun bak digester semen di bawah tanah kandang sapi. Salurkan gas pakai pipa ke dapur.</td></tr>
+            <tr><td>12</td><td class="col-energi">Biogas Skala Drum (Limbah Dapur)</td><td class="col-fungsi">Menggunakan 2 tong plastik besar yang disusun terbalik. Diisi sisa nasi, sayur busuk, dan air. Gas mengambangkan tong atas.</td><td class="col-aksi">Sistem biogas portabel (Floating drum) untuk 1 keluarga tanpa ternak.</td></tr>
+            <tr><td>13</td><td class="col-energi">Gasifikasi Kayu (Syngas / Wood Gas)</td><td class="col-fungsi">Kayu dibakar dengan oksigen super minim. Mengeluarkan asap gas karbon monoksida (CO) dan hidrogen yang bisa dibakar jadi api biru, atau disalurkan ke mesin genset bensin!</td><td class="col-aksi">Buat tabung gasifier baja. Nyalakan genset bensin HANYA menggunakan asap kayu! (Ilmu Perang Dunia 2).</td></tr>
+            <tr><td>14</td><td class="col-energi">Biogas Eceng Gondok</td><td class="col-fungsi">Eceng gondok adalah gulma danau pengganggu. Tapi jika dicacah dan difermentasi, menghasilkan gas metana super cepat karena berserat lunak.</td><td class="col-aksi">Panen eceng gondok di rawa, haluskan, masukkan ke digester. Merubah hama jadi energi.</td></tr>
+            <tr><td>15</td><td class="col-energi">Kompor Spirtus (Alkohol Kayu)</td><td class="col-fungsi">Memasak menggunakan alkohol cair (Etanol/Metanol). Api sangat panas, bersih, tanpa jelaga. Digunakan dengan kompor kaleng portabel bertekanan.</td><td class="col-aksi">Buat kompor dari 2 kaleng soda bekas (Penny Stove). Isi etanol buatan sendiri.</td></tr>
+            <tr><td>16</td><td class="col-energi">Gas Rawa (Methane Trap)</td><td class="col-fungsi">Menangkap gas metana alami yang gelembung-gelembung di dasar rawa berlumpur tebal dengan memasang corong terpal terbalik.</td><td class="col-aksi">Bentangkan terpal corong di atas rawa dangkal. Salurkan gasnya perlahan ke penampung karet.</td></tr>
+            <tr><td>17</td><td class="col-energi">Gasifikasi Sekam Padi</td><td class="col-fungsi">Tungku khusus (Top-Lit Updraft) yang membakar sekam padi dari atas ke bawah. Gas buangnya terbakar jadi api kompor, sisa akhirnya jadi Biochar.</td><td class="col-aksi">Buat kompor sekam padi. Sangat melimpah saat musim panen padi di desa.</td></tr>
+            <tr><td>18</td><td class="col-energi">Penyimpan Gas Kantong Karet (Balon Gas)</td><td class="col-fungsi">Menyimpan kelebihan biogas di siang hari ke dalam balon/kantung karet (Ban dalam bekas traktor) besar untuk dipakai malam hari.</td><td class="col-aksi">Gunakan ban dalam truk/traktor besar sebagai reservoir gas metana bertekanan rendah.</td></tr>
+            <tr><td>19</td><td class="col-energi">Kompor Minyak Jelantah Bertekanan</td><td class="col-fungsi">Jelantah sulit terbakar normal. Kompor ini meniupkan udara (blower DC/Kipas angin) ke genangan jelantah panas hingga menjadi api jet bersuhu tinggi.</td><td class="col-aksi">Rakit kompor baja dengan kipas keong (Blower). Minyak bekas restoran jadi api biru jet.</td></tr>
+            <tr><td>20</td><td class="col-energi">Hidrogen Elektrolisis (Skala Kecil)</td><td class="col-fungsi">Memisahkan Air (H2O) menjadi Hidrogen (H2) dan Oksigen (O) dengan listrik DC kecil (Aki/Panel Surya). Gas HHO (Brown's Gas) adalah gas paling mudah meledak/terbakar.</td><td class="col-aksi">Eksperimen tabung Mason Jar + Plat Stainless + Baking Soda + Aki 12v. Api super panas!</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. TERMAL & KINETIK (TEKNOLOGI FISIK MANUAL)</td></tr>
+            <tr><td>21</td><td class="col-energi">Tungku Roket (Rocket Stove)</td><td class="col-fungsi">Desain ruang bakar berbentuk "J" berinsulasi abu gosok. Menyedot oksigen kuat, membakar kayu kecil tanpa asap, 90% panas fokus ke panci.</td><td class="col-aksi">Susun 16 buah bata merah di halaman belakang. Hemat kayu bakar hingga 80% dibanding tungku biasa.</td></tr>
+            <tr><td>22</td><td class="col-energi">Kompor Parabola Surya (Solar Cooker)</td><td class="col-fungsi">Payung parabola dilapisi alumunium foil/cermin memfokuskan sinar matahari ke 1 titik (panci hitam). Air mendidih dalam 15 menit tanpa bahan bakar.</td><td class="col-aksi">Ubah antena parabola bekas TV jadi kompor tenaga surya raksasa.</td></tr>
+            <tr><td>23</td><td class="col-energi">Oven Tenaga Surya (Solar Box)</td><td class="col-fungsi">Kotak kayu tertutup kaca dengan dinding dalam hitam. Memanggang ubi/kue pelan-pelan (Slow cooking) dengan suhu terperangkap 150°C.</td><td class="col-aksi">Bikin kotak kayu + insulasi kertas koran + kaca penutup 2 lapis. Taruh di terik siang.</td></tr>
+            <tr><td>24</td><td class="col-energi">Pompa Hidram (Hydraulic Ram Pump)</td><td class="col-fungsi">Pompa air ajaib TANPA LISTRIK/BBM. Memanfaatkan gaya dorong (Water Hammer) dari air sungai yang mengalir turun untuk memompa sebagian air ke atas bukit 24 jam nonstop.</td><td class="col-aksi">Rakit pakai pipa Paralon PVC + 2 Klep (Check Valve). Menyuplai air desa dari jurang sungai.</td></tr>
+            <tr><td>25</td><td class="col-energi">Pompa Tali (Rope Pump)</td><td class="col-fungsi">Tali tambang bersimpul karet ditarik ke atas melalui pipa PVC, mengangkat air dari sumur sangat dalam (30 meter) hanya dengan putaran tangan ringan.</td><td class="col-aksi">Gunakan pelek sepeda bekas + tali tambang + karet ban bekas. Murah meriah tahan banting.</td></tr>
+            <tr><td>26</td><td class="col-energi">Kincir Air Bambu Tradisional</td><td class="col-fungsi">Mengubah arus sungai horizontal menjadi gerak putar vertikal. Digunakan untuk menumbuk padi (Lesung air) atau memutar generator.</td><td class="col-aksi">Rakit dari bambu petung ukuran raksasa di aliran irigasi desa.</td></tr>
+            <tr><td>27</td><td class="col-energi">Mesin Genjot (Pedal Powered Machine)</td><td class="col-fungsi">Sepeda statis yang rantainya dihubungkan ke mesin penggiling jagung, blender, atau pompa air. Mengubah tenaga kaki menjadi kerja mekanik.</td><td class="col-aksi">Modifikasi sepeda onthel lama. Sehat, berkeringat, dan produktif secara bersamaan.</td></tr>
+            <tr><td>28</td><td class="col-energi">Tungku Penghangat Massa (Thermal Mass Heater)</td><td class="col-fungsi">Asap knalpot tungku kayu disalurkan melalui pipa di dalam bangku tanah liat tebal (Cob). Tanah liat menyerap panas, menghangatkan ruangan semalaman walau api sudah mati.</td><td class="col-aksi">Bangun bangku tanah liat pemanas di ruang keluarga untuk persiapan suhu anomali bumi (Ice Age).</td></tr>
+            <tr><td>29</td><td class="col-energi">Kulkas Pot dalam Pot (Zeer Pot)</td><td class="col-fungsi">Kulkas tanpa listrik! Pot tanah liat kecil di dalam pot tanah liat besar. Celahnya diisi pasir basah. Penguapan pasir akan mendinginkan suhu pot dalam (Hukum Termodinamika).</td><td class="col-aksi">Beli gerabah tanah liat, jaga pasir tetap basah. Sayuran awet 3 minggu di suhu tropis.</td></tr>
+            <tr><td>30</td><td class="col-energi">Turbin Angin Savonius (Vertikal)</td><td class="col-fungsi">Kincir angin berbentuk tong dibelah dua. Berputar dari arah angin mana saja, tidak butuh ekor. Torsinya sangat kuat untuk memompa air tanah.</td><td class="col-aksi">Belah drum oli bekas menjadi 2, las ke as poros vertikal.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. LISTRIK DESENTRALISASI (THE GRID-DEFECTOR)</td></tr>
+            <tr><td>31</td><td class="col-energi">Pembangkit Tenaga Mikrohidro (PLTMH)</td><td class="col-fungsi">Turbin kecil (Kaplan/Pelton) yang dipasang di selokan sawah atau air terjun kecil. Menghasilkan listrik 220V stabil siang malam nonstop!</td><td class="col-aksi">Ubah dinamo motor mesin cuci / alternator bekas jadi generator Mikrohidro desa.</td></tr>
+            <tr><td>32</td><td class="col-energi">Panel Surya Off-Grid (DC System)</td><td class="col-fungsi">Kemandirian dasar. Jangan ubah listrik ke AC (boros Inverter). Gunakan listrik DC 12V murni untuk menyalakan lampu LED, ngecas HP, dan Radio.</td><td class="col-aksi">Beli 2 Panel 100WP + Aki Mobil/VRLA + Solar Charge Controller (SCC). Bebas tagihan PLN.</td></tr>
+            <tr><td>33</td><td class="col-energi">Modul Termoelektrik (Peltier/TEG)</td><td class="col-fungsi">Keramik ajaib. Jika sisi bawah dipanaskan (api lilin/tungku) dan sisi atas didinginkan (air/es), lempengan ini akan menghasilkan listrik DC.</td><td class="col-aksi">Tempelkan plat TEG di dinding luar tungku kayu. Panas masak otomatis men-charge aki darurat.</td></tr>
+            <tr><td>34</td><td class="col-energi">Dinamo Sepeda Onthel (Kinetik)</td><td class="col-fungsi">Gesekan ban memutar dinamo menghasilkan listrik 6V-12V. Bisa dipakai di sepeda berjalan atau sepeda statis.</td><td class="col-aksi">Pasang 2-3 dinamo sepeda onthel. Gowes 1 jam = lampu menyala 3 jam.</td></tr>
+            <tr><td>35</td><td class="col-energi">Motor DC Bekas Printer / Treadmill</td><td class="col-fungsi">Motor DC magnet permanen bekas treadmill (alat lari) adalah generator angin/air terbaik jika diputar. Putaran lambat sudah menghasilkan Voltase tinggi.</td><td class="col-aksi">Cari motor DC 180V di pasar loak. Pasang baling-baling angin kayu.</td></tr>
+            <tr><td>36</td><td class="col-energi">Sirkuit Joule Thief (Pencuri Voltase)</td><td class="col-fungsi">Rangkaian elektronik sangat sederhana (toroid+transistor) yang bisa menyedot daya baterai 1.5V yang 'sudah mati/dibuang' hingga tetes terakhir untuk menyalakan LED 3V.</td><td class="col-aksi">Rakit Joule Thief. Anda bisa memungut baterai mati di tong sampah untuk menerangi rumah semalaman.</td></tr>
+            <tr><td>37</td><td class="col-energi">Baterai Galvani (Air Garam / Laut)</td><td class="col-fungsi">Elektroda Seng (Zn) dan Tembaga (Cu) direndam dalam air garam/laut. Ion berpindah menciptakan arus listrik darurat.</td><td class="col-aksi">Rakit gelas-gelas air garam secara seri. Cukup untuk menyalakan radio HT saat badai.</td></tr>
+            <tr><td>38</td><td class="col-energi">Lampu Gravitasi (Gravity Light)</td><td class="col-fungsi">Karung berisi batu 10kg ditarik ke atas. Saat batu perlahan turun tertarik gravitasi bumi, gear akan memutar dinamo pelan-pelan menyalakan LED selama 30 menit.</td><td class="col-aksi">Energi 100% gratis tak terbatas (Gravitasi bumi). Angkat beban lagi saat lampu mati.</td></tr>
+            <tr><td>39</td><td class="col-energi">Alternator Mobil Bekas</td><td class="col-fungsi">Mesin pembuat listrik tegangan besar (Volt/Ampere). Digabungkan dengan kincir angin atau kincir air deras ber-puli (pulley) untuk putaran cepat.</td><td class="col-aksi">Ubah sistem kelistrikan (modifikasi lilitan) alternator bekas truk jadi generator permanen desa.</td></tr>
+            <tr><td>40</td><td class="col-energi">Lampu Botol Matahari (Solar Tube Light)</td><td class="col-fungsi">Botol sprite bening diisi air + sedikit pemutih (bayclin). Dipasang menembus atap seng yang gelap. Membiaskan sinar matahari sekuat bohlam 55 Watt ke dalam ruangan.</td><td class="col-aksi">Pasang di atap gudang, kandang, atau bengkel kayu yang gelap gulita di siang hari. Tanpa kabel!</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. JEMBATAN ETHER & RESONANSI (AWAKENING TECH)</td></tr>
+            <tr><td>41</td><td class="col-energi">Earth Battery (Baterai Bumi/Tanah)</td><td class="col-fungsi">Bumi adalah lautan elektron bebas. Menancapkan batang Tembaga murni dan batang Seng/Besi Galvanis di tanah basah (dengan jarak tertentu) menangkap Voltase gratis dari tanah.</td><td class="col-aksi">Eksperimen tancapkan lempeng Cu & Zn seri di pekarangan basah. Cek dengan Multitester (Menghasilkan DC kecil tanpa henti).</td></tr>
+            <tr><td>42</td><td class="col-energi">Antena Penangkap Ion Atmosfer (Tesla Dasar)</td><td class="col-fungsi">Atmosfer semakin tinggi semakin tinggi Voltase statisnya (+100V tiap 1 meter). Antena setinggi pohon dengan kawat berduri menangkap muatan listrik statis dari udara.</td><td class="col-aksi">Terbang-kan layang-layang kawat logam ke udara saat cuaca berawan gelap (Hati-hati petir!), tangkap energi kapasitor.</td></tr>
+            <tr><td>43</td><td class="col-energi">Bedini Motor / Solid State Generator</td><td class="col-fungsi">Desain sirkuit John Bedini: Menggunakan pulsa energi tajam (Radiant Energy/Back EMF) dari kumparan untuk men-charge aki yang kosong dengan sangat efisien melampaui logika Ohm.</td><td class="col-aksi">Rakit kumparan Bifilar (kawat ganda) dan rotor magnet neodymium untuk menangkap "energi negatif" ruang hampa.</td></tr>
+            <tr><td>44</td><td class="col-energi">Motor Magnet Neodymium (Perpetual Basic)</td><td class="col-fungsi">Tatanan V-Gate (bentuk V) magnet super kuat di rotor dan stator, membuat roda berputar terus menolak gaya magnet. Masih sebatas eksperimen fisika pinggiran.</td><td class="col-aksi">Coba susun magnet neodymium miring di kipas angin PC. Lihat bagaimana ia berputar menolak keseimbangan.</td></tr>
+            <tr><td>45</td><td class="col-energi">Generator HHO (Air sebagai Pendorong)</td><td class="col-fungsi">Sistem elektrolisis cerdas. Memasukkan uap HHO murni ke karburator genset bensin/motor. Pembakaran mesin jadi super sempurna, menghemat BBM fosil 40-60%.</td><td class="col-aksi">Ubah mesin bensin lama jadi mesin Hybrid Air! Jembatan sebelum mesin murni air (Stanley Meyer).</td></tr>
+            <tr><td>46</td><td class="col-energi">Leyden Jar (Kapasitor Klasik)</td><td class="col-fungsi">Botol kaca dilapisi timah foil luar dalam, diisi air garam. Menyimpan daya listrik statis tegangan ribuan volt (petir/gesekan) dalam sekejap layaknya baterai instan.</td><td class="col-aksi">Pelajari cara menyimpan energi listrik statis (tegangan tinggi, arus rendah) sebelum memanen listrik atmosfer.</td></tr>
+            <tr><td>47</td><td class="col-energi">Kristal Kuarsa (Piezoelektrik Alam)</td><td class="col-fungsi">Batu kuarsa alami jika ditekan/diketuk (tekanan mekanis) akan menghasilkan loncatan elektron (listrik). Teknologi dasar osilator radio purba.</td><td class="col-aksi">Kumpulkan batu kuarsa jernih di sungai. Pahami bahwa batu/mineral bukanlah benda mati, mereka adalah baterai frekuensi.</td></tr>
+            <tr><td>48</td><td class="col-energi">Elektrokultur (Electro-Culture)</td><td class="col-fungsi">Menggali energi Ether/Magnet bumi untuk pertanian. Antena tembaga spiral spiral menancap ke tanah kebun, mengalirkan listrik statis kosmik penyubur tanaman.</td><td class="col-aksi">Pasang lilitan tembaga Fibonacci (Searah jarum jam) menghadap utara magnetik di ladang Anda.</td></tr>
+            <tr><td>49</td><td class="col-energi">Kabel Grounding Tunggal (Single Wire Transmission)</td><td class="col-fungsi">Konsep Tesla mengirimkan energi hanya dengan 1 kabel tipis (atau tanpa kabel), menggunakan resonansi frekuensi, bukan arus (Amper) konvensional PLN.</td><td class="col-aksi">Ubah paradigma listrik konvensional. Pahami perbedaan Electron Flow (PLN) vs Radiant Energy (Ether/Tesla).</td></tr>
+            <tr><td>50</td><td class="col-energi">Kesadaran Bahwa "RUANG HAMPA ITU PENUH"</td><td class="col-fungsi">Kunci ilmu Ether. Vakum alam semesta bukanlah kosong, melainkan lautan energi padat (Zero Point Energy). Alam semesta siap dipanen asal kita paham frekuensinya.</td><td class="col-aksi">Bersihkan batinmu. Pemahaman teknologi Free Energy kelas tinggi tidak diturunkan pada manusia berhati tamak/kapitalis. (Ilham = Tanggung Jawab).</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>⚡ ENERGI ADALAH KENDALI MATRIX ⚡</h2>
+        <p>Bila anda mengontrol makanan, anda mengontrol manusia. <strong>Bila anda mengontrol Energi, anda mengontrol Dunia (Matrix).</strong><br><br>
+        Tujuan dari 50 protokol ini bukan sekadar menghemat uang jajan bulanan. Tujuannya adalah <strong>DE-SENTRALISASI KEKUASAAN</strong>. Semakin banyak kampung yang membuat biogas sendiri, kincir air sendiri, dan BBM dari plastiknya sendiri, semakin rapuh cengkeraman korporasi elit terhadap bangsa ini.<br><br>
+        <strong>Mulai dari hal yang kotor dan terlihat nyata (Kotoran, Plastik, Air)</strong>, sebelum kita meloncat pada pemahaman tinggi tentang Getaran (Vibration), Frekuensi, dan Energi Murni (Ether). Bral ah, rakit mesin kemerdekaanmu hari ini! 👁️⚡⚙️</p>
+    </div>
+</div>
+
+</body>
+</html>
