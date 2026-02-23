@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: ARSITEKTUR PERADABAN ALAMI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0d0402; /* Dark Terracotta / Majapahit Brick */
+            color: #e0cda9;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1500px;
+            border: 3px solid #cc4400; /* Majapahit Red/Orange */
+            padding: 30px;
+            background: #0a0301;
+            position: relative;
+            box-shadow: 0 0 40px rgba(204, 68, 0, 0.2);
+        }
+
+        /* Brick/Stone Texture Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(204, 68, 0, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(204, 68, 0, 0.05) 1px, transparent 1px);
+            background-size: 40px 20px; /* Brick ratio */
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #cc4400;
+            text-shadow: 0 0 15px #cc4400;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #d4af37; /* Gold */
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #ffaa00;
+            background-color: rgba(30, 10, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #cc4400; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #331100;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #1a0600;
+            color: #cc4400;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #cc4400;
+        }
+
+        /* Kolom Styling */
+        .col-wangunan { color: #ffaa00; width: 25%; font-weight: bold; background: rgba(255,170,0,0.02); }
+        .col-kategori { color: #d4af37; width: 15%; font-style: italic; text-align: center; }
+        .col-fungsi { color: #e0cda9; width: 60%; }
+
+        tr:hover td { background-color: #150800; }
+
+        .section-header {
+            background-color: #110400;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #cc4400;
+            border-bottom: 2px solid #cc4400;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #cc4400;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #cc4400; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>THE ANCIENT SPATIAL ORDER</h1>
+    <div class="subtitle">50 RUANG PUBLIK & ARSITEKTUR KEDAULATAN NUSWANTARA</div>
+    
+    <div class="alert-box">
+        KOTA MODERN MENGHANCURKAN JIWA MANUSIA DENGAN MENGURUNG MEREKA DI KOTAK BETON INDIVIDUAL.<br>
+        <span>Arsitektur Karuhun (Sunda/Majapahit/Sriwijaya) mendesain ruang untuk meleburkan ego.</span><br>
+        Ruang publik bukan sekadar taman untuk duduk diam, melainkan sentra produksi, riset teknologi alam, militer, dan resonansi energi. Kembalikan fungsi ruang komunal untuk mematikan sifat parasit!
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>NAMA WANGUNAN / RUANG</th>
+                <th>KATEGORI</th>
+                <th>FUNGSI & FILOSOFI KOMUNAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. PUSAT KEBIJAKSANAAN & HUKUM (THE CROWN)</td></tr>
+            <tr><td>01</td><td class="col-wangunan">Alun-Alun Nagari</td><td class="col-kategori">Pusat Makro</td><td class="col-fungsi">Tanah lapang luas berumput di pusat wilayah. Titik kumpul massa untuk pengumuman darurat, eksekusi hukum publik, dan poros/jangkar (Grounding) kota.</td></tr>
+            <tr><td>02</td><td class="col-wangunan">Pendopo Resi (Balé Rumawat)</td><td class="col-kategori">Pemerintahan</td><td class="col-fungsi">Bangunan terbuka tanpa dinding. Tempat para tetua, cendekiawan, dan resi berdebat menyusun strategi negara. Tanpa dinding melambangkan transparansi mutlak.</td></tr>
+            <tr><td>03</td><td class="col-wangunan">Balé Indung (Bilik Ibu)</td><td class="col-kategori">Sosial Politik</td><td class="col-fungsi">Ruang khusus perkumpulan para Ibu/Wanita. Di sini mereka merancang logistik dapur umum, menjodohkan pemuda, dan memegang hak veto sosial (Kekuatan Matriarki Nusantara).</td></tr>
+            <tr><td>04</td><td class="col-wangunan">Paseban Agung</td><td class="col-kategori">Diplomasi</td><td class="col-fungsi">Balai tamu negara/antar-desa. Tempat duta dari suku lain dijamu. Bukti adab dan kesopanan bangsa sebelum membicarakan urusan geopolitik/barter.</td></tr>
+            <tr><td>05</td><td class="col-wangunan">Balé Timbangan (Baitul Mal)</td><td class="col-kategori">Ekonomi</td><td class="col-fungsi">Ruang publik tempat menguji kemurnian emas/perak, menimbang hasil panen zakat, dan mendistribusikan ransum secara adil di depan mata warga. Menolak korupsi pintu tertutup.</td></tr>
+            <tr><td>06</td><td class="col-wangunan">Balé Pangadilan Adat</td><td class="col-kategori">Hukum</td><td class="col-fungsi">Tempat sidang terbuka. Terdakwa dan penuduh duduk sejajar. Disaksikan seluruh warga desa agar sanksi sosial/rasa malu bekerja lebih efektif daripada sel penjara.</td></tr>
+            <tr><td>07</td><td class="col-wangunan">Tugu Titik Nol (Pancamarga)</td><td class="col-kategori">Navigasi</td><td class="col-fungsi">Tugu batu/monumen penanda pusat gravitasi kota. Awal mula perhitungan jarak ke segala arah (Utara, Selatan, Barat, Timur).</td></tr>
+            <tr><td>08</td><td class="col-wangunan">Kaputren / Kaputran</td><td class="col-wangunan" style="color:#d4af37; text-align:center;">Pendidikan</td><td class="col-fungsi">Asrama komunal khusus pemuda/pemudi yang disiapkan menjadi pemimpin. Tempat menempa mental jauh dari kemanjaan orang tua.</td></tr>
+            <tr><td>09</td><td class="col-wangunan">Balé Pangrungu</td><td class="col-kategori">Kesehatan Mental</td><td class="col-fungsi">Balai pendengaran. Tempat warga yang sedang stres/depresi mencurahkan isi hatinya kepada tetua bijak. Menolak bunuh diri/gila karena kesepian.</td></tr>
+            <tr><td>10</td><td class="col-wangunan">Sasana Pameuleuman</td><td class="col-kategori">Ekologi Akhir</td><td class="col-fungsi">Tungku kremasi atau pembakaran limbah/wabah bersuhu ekstrem yang diletakkan jauh di hilir angin. Mencegah penularan penyakit di pemukiman.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. KEDAULATAN LOGISTIK & AGRARIA (THE BELLY)</td></tr>
+            <tr><td>11</td><td class="col-wangunan">Leuit Nagari (Lumbung Raksasa)</td><td class="col-kategori">Logistik</td><td class="col-fungsi">Bangunan panggung anti-tikus penyimpan gabah cadangan desa. Kunci kedaulatan. Tidak boleh disentuh kecuali saat perang atau kemarau ekstrem (Panceklik).</td></tr>
+            <tr><td>12</td><td class="col-wangunan">Karang Kitri (Permaculture Zone)</td><td class="col-kategori">Agrikultur</td><td class="col-fungsi">Halaman publik yang ditanami sayuran, ubi, dan buah. Siapapun yang lapar boleh memetik secukupnya. Menghilangkan konsep kelaparan di jalanan.</td></tr>
+            <tr><td>13</td><td class="col-wangunan">Kebun Ambu (Apotek Hidup)</td><td class="col-kategori">Kesehatan</td><td class="col-fungsi">Taman raya khusus tanaman herbal (Jahe, Sambiloto, Kumis Kucing). Dikelola oleh tabib desa. Pabrik obat organik gratis untuk rakyat.</td></tr>
+            <tr><td>14</td><td class="col-wangunan">Pawon Komunal (Dapur Umum)</td><td class="col-kategori">Sosial/Pangan</td><td class="col-fungsi">Dapur raksasa dengan tungku kayu yang selalu menyala. Ibu-ibu memasak di sini untuk milisi, musafir, atau saat ada hajatan/bencana massal.</td></tr>
+            <tr><td>15</td><td class="col-wangunan">Balé Pangairan / Mitra Cai</td><td class="col-kategori">Infrastruktur</td><td class="col-fungsi">Posko pengatur bendungan dan pintu air (Subak). Tempat insinyur air memastikan sawah terjauh tetap mendapat aliran tanpa di-monopoli sawah hulu.</td></tr>
+            <tr><td>16</td><td class="col-wangunan">Tirta Empul (Pemandian Suci)</td><td class="col-kategori">Sanitasi</td><td class="col-fungsi">Mata air jernih dengan pancuran batu. Tempat warga mandi, berendam (hidroterapi), dan bersosialisasi secara sehat. Kebersihan fisik adalah bagian dari iman.</td></tr>
+            <tr><td>17</td><td class="col-wangunan">Balé Siki (Bank Benih)</td><td class="col-kategori">Riset/Pangan</td><td class="col-fungsi">Bunker sejuk untuk menyimpan dan memuliakan DNA ribuan biji/benih pusaka (Heirloom). Melawan monopoli benih mandul buatan korporat Dajjal.</td></tr>
+            <tr><td>18</td><td class="col-wangunan">Kandang Banténg/Munding Komunal</td><td class="col-kategori">Peternakan</td><td class="col-fungsi">Area padang rumput terpusat. Hewan besar milik warga digembalakan bersama di sini. Kotorannya langsung dialirkan ke reaktor Biogas kota.</td></tr>
+            <tr><td>19</td><td class="col-wangunan">Balé Paningal Musim</td><td class="col-kategori">Observatorium</td><td class="col-fungsi">Menara kayu/batu untuk mengamati rasi bintang (Pranata Mangsa). Menentukan waktu yang tepat untuk tebar benih atau waspada badai.</td></tr>
+            <tr><td>20</td><td class="col-wangunan">Susukan Herang / Parit Jernih</td><td class="col-kategori">Infrastruktur</td><td class="col-fungsi">Kanal air melingkari desa. Selain fungsi irigasi, juga menjadi habitat ikan liar. Dilarang keras membuang hajat/modol di sini (Ada sanksi adat).</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. KSATRIA, FISIK & PERTAHANAN (THE SHIELD)</td></tr>
+            <tr><td>21</td><td class="col-wangunan">Sasana Panahan</td><td class="col-kategori">Militer/Olahraga</td><td class="col-fungsi">Fasilitas publik untuk melatih fokus, pernapasan, dan insting membunuh jarak jauh. Wajib bagi pria dan wanita sebagai skill pertahanan desa.</td></tr>
+            <tr><td>22</td><td class="col-wangunan">Kalang Kuda (Equestrian Center)</td><td class="col-kategori">Transportasi/Militer</td><td class="col-fungsi">Pusat peternakan, pelatihan, dan adu pacu kuda tempur/beban. Mengembalikan kuda sebagai mesin logistik utama jika BBM fosil musnah.</td></tr>
+            <tr><td>23</td><td class="col-wangunan">Padepokan Maenpo / Silat</td><td class="col-kategori">Militer/Mental</td><td class="col-fungsi">Ruang terbuka beralas tanah liat empuk/pasir. Tempat pemuda diadu secara ksatria (Sparing). Melatih reflek, menghilangkan sifat pengecut dan mental lembék.</td></tr>
+            <tr><td>24</td><td class="col-wangunan">Bénténg Palisade (Cucuk Kayu)</td><td class="col-kategori">Pertahanan</td><td class="col-fungsi">Pagar kayu keras setinggi 4 meter berujung runcing yang mengelilingi batas vital desa/kota. Pertahanan fisik pertama dari serangan luar.</td></tr>
+            <tr><td>25</td><td class="col-wangunan">Menara Pantau (Watchtower)</td><td class="col-kategori">Intelijen</td><td class="col-fungsi">Didirikan di 4 penjuru mata angin dan di puncak bukit. Dilengkapi kentongan/bedug raksasa (Sandi Morse Karuhun) untuk peringatan dini.</td></tr>
+            <tr><td>26</td><td class="col-wangunan">Bengkel Pakarang (Armory)</td><td class="col-kategori">Produksi Senjata</td><td class="col-fungsi">Area dengan banyak tungku pandai besi (Undagi). Memproduksi ujung tombak, parang tebas, dan perisai kulit. Pabrik pertahanan teritorial.</td></tr>
+            <tr><td>27</td><td class="col-wangunan">Alun-Alun Tanding (Colosseum Lokal)</td><td class="col-kategori">Olahraga</td><td class="col-fungsi">Arena unjuk kekuatan otot (Gulat, Ujungan). Membuang energi agresif pemuda secara positif agar tidak menjadi perusuh/kriminal di jalanan.</td></tr>
+            <tr><td>28</td><td class="col-wangunan">Gudang Mesiu / Sendawa</td><td class="col-kategori">Logistik Militer</td><td class="col-fungsi">Bunker batu bawah tanah (Tahan ledak). Tempat menyimpan belerang, arang, dan sendawa untuk amunisi bedil locok atau meriam cetaka (Cetbang).</td></tr>
+            <tr><td>29</td><td class="col-wangunan">Posko Ronda / Gardu Lapis</td><td class="col-kategori">Keamanan</td><td class="col-fungsi">Bangunan kecil di tiap perempatan jalan. Tempat pemuda bergadang, ngopi, dan menjaga keamanan shift malam. Pusat pertukaran gosip/informasi bawah tanah.</td></tr>
+            <tr><td>30</td><td class="col-wangunan">Jalur Evakuasi Hutan (Sandi Margi)</td><td class="col-kategori">Survival Taktis</td><td class="col-fungsi">Jalan rahasia menuju bunker/goa alam di gunung yang hanya diketahui warga lokal. Digunakan jika kota diserang musuh bersenjata berat.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. RISET, PRODUKSI & TEKNOLOGI (THE HANDS)</td></tr>
+            <tr><td>31</td><td class="col-wangunan">Mandala Kriya (Maker Space)</td><td class="col-kategori">Industri/Riset</td><td class="col-fungsi">Pabrik riset komunal. Berisi mesin bubut kayu manual, alat ekstrak minyak, dan mesin serut. Warga bebas datang untuk menciptakan purwarupa (Prototype) alat baru.</td></tr>
+            <tr><td>32</td><td class="col-wangunan">Panggilingan Kincir Cai (Watermill)</td><td class="col-kategori">Energi Kinetik</td><td class="col-fungsi">Pabrik mekanik di pinggir sungai. Menggunakan kincir air raksasa untuk memutar batu gilingan gandum/kopi atau memukul besi secara otomatis.</td></tr>
+            <tr><td>33</td><td class="col-wangunan">Mandala Alkimia</td><td class="col-kategori">Riset Kimia Alam</td><td class="col-fungsi">Laboratorium penyulingan (Destilasi). Tempat meracik alkohol murni dari singkong, cuka, sabun lerak, dan minyak atsiri.</td></tr>
+            <tr><td>34</td><td class="col-wangunan">Pabrik Bata & Keramik Pembakaran</td><td class="col-kategori">Konstruksi</td><td class="col-fungsi">Tungku raksasa komunal (Kiln). Tempat warga membakar tanah liat menjadi bata merah, genteng, dan kendi untuk kebutuhan pembangunan kota mandiri.</td></tr>
+            <tr><td>35</td><td class="col-wangunan">Tenun Tarum (Pabrik Tekstil)</td><td class="col-kategori">Sandang</td><td class="col-fungsi">Ruang bising berisi ratusan Alat Tenun Bukan Mesin (ATBM). Tempat para wanita mengolah benang sutra/kapas menjadi kain, dan mewarnainya dengan pewarna alam.</td></tr>
+            <tr><td>36</td><td class="col-wangunan">Balé Panyalupan (Samak Kulit)</td><td class="col-kategori">Industri</td><td class="col-fungsi">Area di hilir sungai (karena baunya menyengat) untuk memproses kulit hewan mentah menjadi bahan pembuat sepatu, pelana kuda, dan baju zirah.</td></tr>
+            <tr><td>37</td><td class="col-wangunan">Bengkel Parahu / Galangan (Dock)</td><td class="col-kategori">Navigasi</td><td class="col-fungsi">Bagi kota pesisir/danau. Tempat membuat perahu cadik atau kapal layar Jung Jawa. Kunci pergerakan dagang bangsa bahari.</td></tr>
+            <tr><td>38</td><td class="col-wangunan">Pustaka Lontar (Library of Knowledge)</td><td class="col-kategori">Arsip Intelijen</td><td class="col-fungsi">Gedung pengarsipan rahasia. Menyimpan gulungan daun lontar/buku berisi sejarah asli, resep alkemia, dan teknologi kuno yang dihapus oleh sejarah modern.</td></tr>
+            <tr><td>39</td><td class="col-wangunan">Padepokan Alam / Pesantren Terbuka</td><td class="col-kategori">Pendidikan</td><td class="col-fungsi">Bukan sekolah formal berdinding. Belajar di bawah pohon atau saung. Mentransfer ilmu logika, matematika alam, dan tauhid langsung dengan praktik fisik.</td></tr>
+            <tr><td>40</td><td class="col-wangunan">Ruang Kesenian Gamelan (Resonator)</td><td class="col-kategori">Frekuensi</td><td class="col-fungsi">Pabrik pembuat dan tempat main alat musik perunggu. Gamelan bukan sekadar musik, ini adalah alat terapi frekuensi cymatics (Solfeggio) penyembuh saraf otak warga.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. SPIRITUAL, ENERGI & ALAM BAWAH SADAR (THE PINEAL)</td></tr>
+            <tr><td>41</td><td class="col-wangunan">Candi / Reaktor Purba</td><td class="col-kategori">Energi/Spiritual</td><td class="col-fungsi">Bangunan batu berongga yang didirikan di atas titik persimpangan magnetik bumi (Ley Lines). Berfungsi sebagai penstabil frekuensi wilayah, osilator gempa, dan tempat kontemplasi.</td></tr>
+            <tr><td>42</td><td class="col-wangunan">Kabuyutan / Leuweung Larangan</td><td class="col-kategori">Konservasi Ekstrim</td><td class="col-fungsi">Hutan sakral tak tersentuh di hulu mata air. Haram ditebang satu ranting pun. Menjaga cadangan air dan mikrobioma asli bumi agar tidak punah.</td></tr>
+            <tr><td>43</td><td class="col-wangunan">Punden Berundak</td><td class="col-kategori">Fokus Kosmik</td><td class="col-fungsi">Terasering batu menanjak ke atas bukit. Tempat warga melakukan penyelarasan diri (Grounding) menghadap gunung/langit. Mengaktifkan kelenjar Pineal massal.</td></tr>
+            <tr><td>44</td><td class="col-wangunan">Goa Tapa (Sensory Deprivation)</td><td class="col-kategori">Mental Awakening</td><td class="col-fungsi">Goa gelap gulita tanpa suara. Tempat ksatria/pemimpin diisolasi berhari-hari agar matanya buta sementara, memaksa "Mata Ketiga" (Firasat Batin) terbuka secara paksa.</td></tr>
+            <tr><td>45</td><td class="col-wangunan">Lingga Yoni Monument</td><td class="col-kategori">Simbol Keseimbangan</td><td class="col-fungsi">Monumen batu lambang Maskulin (Tegas/Perang) dan Feminin (Merawat/Bumi). Mengingatkan warga bahwa peradaban hancur jika salah satu peran ini mendominasi secara absolut (Wokeism).</td></tr>
+            <tr><td>46</td><td class="col-wangunan">Balé Upacara Panén (Pujawali)</td><td class="col-kategori">Rasa Syukur</td><td class="col-fungsi">Plaza terbuka tempat warga menaruh hasil bumi terbaiknya setahun sekali. Menghancurkan ego kepemilikan pribadi dan merayakan kesuburan Indung Bumi.</td></tr>
+            <tr><td>47</td><td class="col-wangunan">Pabrik Elektrokultur (Antena Eter)</td><td class="col-kategori">Teknologi Semesta</td><td class="col-fungsi">Menara kayu/tembaga berbentuk spiral (Fibonacci) di tengah ladang. Menangkap listrik statis atmosfer untuk diturunkan ke tanah, menyuburkan tanaman tanpa pupuk kimia.</td></tr>
+            <tr><td>48</td><td class="col-wangunan">Mata Air Penyembuh (Petirtaan)</td><td class="col-kategori">Terapi Medis</td><td class="col-fungsi">Kolam khusus di sumber air vulkanik ber-belerang. Warga yang sakit kulit, rematik, atau saraf kaku direndam di sini sebagai metode hidroterapi alam.</td></tr>
+            <tr><td>49</td><td class="col-wangunan">Pemakaman / Lemah Cai</td><td class="col-kategori">Pengingat Kematian</td><td class="col-fungsi">Diletakkan tidak terlalu jauh dari kota. Sebagai pengingat visual harian (Memento Mori) bagi para pejabat dan warga bahwa keserakahan dunia akan berakhir di lubang tanah.</td></tr>
+            <tr><td>50</td><td class="col-wangunan">RUMAH IBADAH TERBUKA (MASJID/LANGGAR)</td><td class="col-kategori">Pusat Tauhid</td><td class="col-fungsi">Tempat sujud tertinggi kepada Sang Pencipta Tunggal. Bukan sekadar tempat sholat, tapi benteng perlindungan, lumbung amal, dan markas komando logistik (Integrasi total Dunia & Akhirat).</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🔥 RUANG PUBLIK ADALAH MESIN PENGHANCUR EGO 🔥</h2>
+        <p>Lihatlah perumahan Elit Modern hari ini: Pagar setinggi 3 meter, jalanan sepi, tidak ada interaksi, dan manusia mati di dalam kamarnya tanpa diketahui tetangganya. Itu bukan peradaban, itu adalah <strong>PETERNAKAN MANUSIA (Human Zoo)</strong> yang didesain agar kalian individualis dan penakut.<br><br>
+        <strong>Arsitektur Nuswantara (Tarumanagara hingga Majapahit) memaksa manusia untuk KELUAR RUMAH.</strong><br>
+        Kalian harus mencuci di pancuran, menumbuk padi di lesung balai, mengasah pedang di bengkel, dan rapat di Pendopo. Dengan berkumpul, informasi mengalir, empati terbentuk, dan KEKUATAN KOMUNAL meledak. Hancurkan dinding egomu, bangun kembali ruang-ruang fungsional ini di komunitasmu! Bral ah! 👁️⚡🛖</p>
+    </div>
+</div>
+
+</body>
+</html>

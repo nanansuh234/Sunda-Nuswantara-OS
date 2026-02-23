@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: PABRIK RAKYAT & KEMANDIRIAN</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0d0800; /* Dark Bronze/Dirt */
+            color: #d4af37;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1500px;
+            border: 3px solid #ffaa00; /* Amber/Rust */
+            padding: 30px;
+            background: #0a0500;
+            position: relative;
+            box-shadow: 0 0 40px rgba(255, 170, 0, 0.15);
+        }
+
+        /* Blueprint/Wood Grain Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(255, 170, 0, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 170, 0, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #ffaa00;
+            text-shadow: 0 0 15px #ffaa00;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #00f3ff;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #00f3ff;
+            background-color: rgba(0, 20, 30, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #ffaa00; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #331a00;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #1a0d00;
+            color: #ffaa00;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #ffaa00;
+        }
+
+        /* Kolom Styling */
+        .col-alat { color: #ffaa00; width: 25%; font-weight: bold; background: rgba(255,170,0,0.02); }
+        .col-fungsi { color: #00f3ff; width: 25%; font-style: italic; }
+        .col-kerja { color: #ccc; width: 50%; }
+
+        tr:hover td { background-color: #1a0f00; }
+
+        .section-header {
+            background-color: #110800;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #ffaa00;
+            border-bottom: 2px solid #ffaa00;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #00f3ff;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #00f3ff; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>THE MAKER'S PROTOCOL</h1>
+    <div class="subtitle">50 ALAT & SKILL PRODUKSI RUMAHAN: DE-INDUSTRIALISASI MANDIRI</div>
+    
+    <div class="alert-box">
+        JIKA ANDA HANYA BISA MEMBELI TAPI TIDAK BISA MEMBUAT, ANDA ADALAH BUDAK PABRIK.<br>
+        <span>Setiap rumah di Nuswantara pada hakikatnya adalah pabrik otonom.</span><br>
+        Kembalikan kedaulatan logistik dengan menguasai kembali alat-alat produksi dasar ini. Jangan biarkan generasi muda buta terhadap cara alam dan barang bekerja.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>NAMA ALAT / PROSES</th>
+                <th>FUNGSI & HASIL PRODUKSI</th>
+                <th>CARA KERJA MANUAL / KREATIF</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. PANGAN & NUTRISI (FOOD INDEPENDENCE)</td></tr>
+            <tr><td>01</td><td class="col-alat">Alat Press VCO & Dongkrak</td><td class="col-fungsi">Minyak Kelapa Murni (VCO) tanpa Pemanasan</td><td class="col-kerja">Parut kelapa, peras santan, diamkan 24 jam hingga fermentasi (terpisah air, minyak, dan blondo). Saring minyak beningnya. Ampas kelapa dipres pakai dongkrak hidrolik botol untuk memeras sisa minyak (Minyak Klentik).</td></tr>
+            <tr><td>02</td><td class="col-alat">Tampah Bambu & Daun Pisang</td><td class="col-fungsi">Pembuatan Tempe & Oncom</td><td class="col-kerja">Rebus kedelai (atau ampas tahu untuk oncom), kupas kulit arinya, tiriskan di tampah bambu. Taburi Ragi (Rhizopus / Neurospora), bungkus rapat daun pisang. Biarkan miselium jamur merajut biji dalam 48 jam.</td></tr>
+            <tr><td>03</td><td class="col-alat">Tungku Tanah Liat Sangrai</td><td class="col-fungsi">Roasting Kopi & Kacang Manual</td><td class="col-kerja">Wajan tanah liat dipanaskan di atas kayu bakar. Biji kopi mentah diputar perlahan menggunakan sudip kayu hingga matang (crack). Bebas dari mesin roasting listrik jutaan rupiah.</td></tr>
+            <tr><td>04</td><td class="col-alat">Lesung Kayu & Alu</td><td class="col-fungsi">Menumbuk Padi, Kopi & Tepung</td><td class="col-kerja">Alat tumbuk vertikal. Padi ditumbuk manual untuk memisahkan gabah (Beras Pecah Kulit) sehingga nutrisi bekatul tetap utuh. Tidak merusak enzim seperti mesin giling modern.</td></tr>
+            <tr><td>05</td><td class="col-alat">Saringan Kain Balacu</td><td class="col-fungsi">Produksi Tahu Susu & Sari Kedelai</td><td class="col-kerja">Kedelai giling direbus, lalu diperas kuat-kuat di dalam kantong kain balacu tipis. Air perasannya diberi cuka/batu tahu (Nigari) agar mengendap jadi balok tahu murni.</td></tr>
+            <tr><td>06</td><td class="col-alat">Cetakan Batok / Bambu</td><td class="col-fungsi">Pencetak Gula Aren / Merah</td><td class="col-olah col-kerja">Nira sadapan pohon kawung direbus berjam-jam hingga mengental jadi karamel. Dituang ke dalam potongan bambu atau setengah batok kelapa. Mengeras tanpa pengawet sintetik.</td></tr>
+            <tr><td>07</td><td class="col-alat">Meja Kristalisasi Tarpaulin</td><td class="col-fungsi">Garam Krosok Laut (Brine)</td><td class="col-kerja">Air laut tua (pekat) dialirkan ke atas meja kayu berlapis terpal hitam. Dijemur matahari terik. Air menguap, meninggalkan kristal garam murni tanpa pemutih kimia pabrik.</td></tr>
+            <tr><td>08</td><td class="col-alat">Lemari Asap Bambu</td><td class="col-fungsi">Pengawetan Ikan & Daging (Dendeng)</td><td class="col-kerja">Rak bambu bertingkat. Di bawahnya dibakar sabut kelapa atau kayu keras (tanpa api besar, hanya asap tebal). Mengawetkan protein hingga berbulan-bulan tanpa kulkas.</td></tr>
+            <tr><td>09</td><td class="col-alat">Toples Kaca Kedap Udara</td><td class="col-fungsi">Cuka Apel / Nanas (Fermentasi)</td><td class="col-kerja">Kulit/sisa apel dan nanas dicampur gula aren dan air. Tutup toples dengan kain kasa. Bakteri Acetobacter merubah alkohol alami menjadi asam asetat (Cuka) penyembuh berbagai penyakit.</td></tr>
+            <tr><td>10</td><td class="col-alat">Alat Peras Putar Besi/Kayu</td><td class="col-fungsi">Sari Tebu / Madu Mongso</td><td class="col-kerja">Dua silinder bergerigi yang diputar dengan tuas tangan. Tebu dimasukkan di tengahnya untuk memeras air manis alami pengganti gula pabrik.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. SANDANG & SERAT ALAM (TEXTILE CRAFTING)</td></tr>
+            <tr><td>11</td><td class="col-alat">Jantra Kayu / Spinning Wheel</td><td class="col-fungsi">Memintal Benang Sutra / Kapas</td><td class="col-kerja">Kepompong ulat sutra direbus air hangat untuk melonggarkan lemnya. Ujung serat sutra ditarik dan diputar ke roda jantra (kincir kayu manual) hingga menjadi gulungan benang kuat.</td></tr>
+            <tr><td>12</td><td class="col-alat">Alat Serut Botol PET</td><td class="col-fungsi">Merubah Sampah Plastik Jadi Tali/Benang</td><td class="col-kerja">Botol plastik bekas air mineral ditarik melewati silet/pisau serut kecil, memotong botol melingkar menjadi pita nilon tipis panjang. Bisa digunakan untuk mengikat pagar atau diurai jadi dakron isian bantal.</td></tr>
+            <tr><td>13</td><td class="col-alat">Galah Pemukul Kapuk</td><td class="col-fungsi">Pemisah Biji Kapuk Randu</td><td class="col-kerja">Bongkahan kapuk randu tua dipukul-pukul di atas saringan bambu atau keranjang. Bijinya akan jatuh ke bawah, menyisakan serat kapuk putih bersih dan mengembang untuk kasur/bantal.</td></tr>
+            <tr><td>14</td><td class="col-alat">ATBM (Alat Tenun Bukan Mesin)</td><td class="col-fungsi">Menenun Kain & Selimut</td><td class="col-kerja">Mesin rakitan kayu bersistem pedal dan tuas. Menganyam benang lungsin (vertikal) dan pakan (horizontal) dengan tenaga tangan dan kaki. Menghasilkan kain tahan banting.</td></tr>
+            <tr><td>15</td><td class="col-alat">Panci Ekstraksi Warna Alam</td><td class="col-fungsi">Pewarna Baju Non-Kimia</td><td class="col-kerja">Rebusan daun Tarum/Indigo (Biru), Kunyit (Kuning), Kayu Secang (Merah). Kain direndam lalu difiksasi pakai air tawas atau tunjung agar warnanya tidak luntur.</td></tr>
+            <tr><td>16</td><td class="col-alat">Canting Tembaga & Malam</td><td class="col-fungsi">Batik Tulis Tahan Air</td><td class="col-kerja">Lilin lebah (Malam) dipanaskan. Digambar ke kain pakai canting. Bagian yang terkena lilin tidak akan menyerap warna saat direndam. Teknik pertahanan visual budaya.</td></tr>
+            <tr><td>17</td><td class="col-alat">Alat Ekstrak Serat Pisang/Nanas</td><td class="col-fungsi">Tali Tambang Super Kuat</td><td class="col-kerja">Pelepah pisang atau daun nanas ditarik melewati pisau tumpul yang menjepitnya. Daging daun terkelupas, menyisakan serat halus yang sangat kuat untuk tali pancing/tambang jaring.</td></tr>
+            <tr><td>18</td><td class="col-alat">Tong Penyamakan Kulit</td><td class="col-fungsi">Merubah Kulit Hewan Jadi Jaket/Tas</td><td class="col-kerja">Kulit sapi/kambing dikerok lemaknya, direndam dalam tong berisi air rebusan kulit kayu (Tanin) berhari-hari agar tidak membusuk dan menjadi lentur (Leather).</td></tr>
+            <tr><td>19</td><td class="col-alat">Tulang & Tanduk Rusa</td><td class="col-fungsi">Jarum Jahit Tradisional & Kancing</td><td class="col-kerja">Diukir tajam dan dilubangi ujungnya. Digunakan untuk menjahit kulit hewan menggunakan urat hewan kering atau serat nanas sebagai benangnya.</td></tr>
+            <tr><td>20</td><td class="col-alat">Mesin Jahit Engkol/Genjot</td><td class="col-fungsi">Menjahit Tanpa Listrik PLN</td><td class="col-kerja">Mesin jahit besi klasik (Singer lama) yang diputar dengan pedal kaki atau tuas putar tangan. Bebas dari ketergantungan dinamo motor.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. ENERGI & PENGOLAHAN LIMBAH (POWER & RECYCLING)</td></tr>
+            <tr><td>21</td><td class="col-alat">Ketel Suling Tembaga (Destilator)</td><td class="col-fungsi">Minyak Atsiri & Bio-Etanol</td><td class="col-kerja">Daun cengkeh/sereh direbus. Uapnya dialirkan lewat pipa tembaga spiral yang didinginkan air. Uap mengembun jadi Minyak Atsiri mahal (atau alkohol dari fermentasi singkong).</td></tr>
+            <tr><td>22</td><td class="col-alat">Mesin Cincang Botol Plastik</td><td class="col-fungsi">Bahan Baku Bensin (Pirolisis)</td><td class="col-kerja">Pipa/pisau putar manual untuk mencacah sampah plastik menjadi serpihan kecil (flakes), siap dibakar tanpa oksigen untuk dikembalikan menjadi minyak mentah/BBM.</td></tr>
+            <tr><td>23</td><td class="col-alat">Keranjang Komposter Takakura</td><td class="col-fungsi">Pengolah Sampah Dapur Jadi Pupuk</td><td class="col-kerja">Keranjang berlubang diisi sekam dan mikroba lokal (MOL). Masukkan sisa nasi/sayur busuk, tutup. Menjadi pupuk kompos organik kering tanpa bau belatung dalam 2 minggu.</td></tr>
+            <tr><td>24</td><td class="col-alat">Alat Cetak Briket Pipa PVC</td><td class="col-fungsi">Arang Padat Pengganti Gas</td><td class="col-kerja">Serbuk gergaji atau batok kelapa di-karbonisasi (dibakar hampa udara), ditumbuk campur lem kanji, lalu dipres masuk ke pipa PVC menggunakan dongkrak. Arang tahan lama!</td></tr>
+            <tr><td>25</td><td class="col-alat">Tungku Gasifikasi (Wood Gasifier)</td><td class="col-fungsi">Membuat Gas Api Biru dari Kayu</td><td class="col-kerja">Kaleng/drum berlapis ganda. Kayu dibakar dengan oksigen super minim dari bawah. Mengeluarkan asap Syngas yang terbakar di atas kaleng menjadi api biru bersih pengganti LPG.</td></tr>
+            <tr><td>26</td><td class="col-alat">Drum Pembakar Arang Aktif</td><td class="col-fungsi">Filter Air Bersih Darurat</td><td class="col-kerja">Batok kelapa dibakar jadi arang. Lalu dicuci dengan air garam pekat atau perasan jeruk nipis (aktivasi kimia) untuk membuka pori-pori arang. Ampuh menyaring racun dari air sungai.</td></tr>
+            <tr><td>27</td><td class="col-alat">Tabung Reaktor Biogas Karet</td><td class="col-fungsi">Gas Metana dari Kotoran Hewan</td><td class="col-kerja">Kotoran sapi dan air dimasukkan ke dalam plastik tebal / ban dalam traktor raksasa. Bakteri anaerob bekerja, ban akan menggelembung terisi gas CH4 gratis untuk kompor dapur.</td></tr>
+            <tr><td>28</td><td class="col-alat">Kincir Air Bambu Raksasa</td><td class="col-fungsi">Pembangkit Tenaga Kinetik</td><td class="col-kerja">Dipasang di arus sungai. Putarannya dihubungkan pakai tali tambang atau gir kayu ke alat penumbuk padi, pemeras tebu, atau dinamo bekas untuk listrik gratis.</td></tr>
+            <tr><td>29</td><td class="col-alat">Penyuling Surya (Solar Still)</td><td class="col-fungsi">Merubah Air Laut/Kotor Jadi Air Minum</td><td class="col-kerja">Galian tanah diisi air laut/kotor. Tutup dengan plastik bening, taruh batu kecil di tengah plastik. Matahari menguapkan air, embun menetes murni jatuh ke gelas di tengah galian.</td></tr>
+            <tr><td>30</td><td class="col-alat">Gilingan Daging Manual</td><td class="col-fungsi">Pencetak Pelet Pakan Ikan/Ternak</td><td class="col-kerja">Sisa kepala ikan, dedak, dan daun kelor digiling halus melewati mesin putar tangan bergerigi. Keluar menjadi butiran panjang pelet ternak kaya protein.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. PAPAN, PERKAKAS & MATERIAL (SHELTER & TOOLS)</td></tr>
+            <tr><td>31</td><td class="col-alat">Tungku Blower Pandai Besi</td><td class="col-fungsi">Merakit Parang & Alat Pertanian</td><td class="col-kerja">Arang batok dibakar. Kipas tangan keong meniupkan udara, menaikkan suhu hingga 1200°C. Besi per mobil bekas dibakar merah, lalu dipukul dengan palu godam di atas paron (Anvil) jadi parang.</td></tr>
+            <tr><td>32</td><td class="col-alat">Cetakan Batako Pelat Besi</td><td class="col-fungsi">Batu Bata Semen Mandiri</td><td class="col-kerja">Campuran pasir, semen sedikit, dan air dipadatkan ke dalam kotak besi pelat manual. Dipukul rata, dibuka. Membangun rumah tanpa harus membeli bata dari pabrik raksasa.</td></tr>
+            <tr><td>33</td><td class="col-alat">Mesin Bubut Pedal Genjot</td><td class="col-fungsi">Pilar Kayu & Perabot Mebel</td><td class="col-kerja">Balok kayu dijepit. Sebuah tali dan pedal injak memutar kayu dengan cepat. Pengrajin memegang pahat besi (tatah) memahat kayu yang berputar jadi kaki meja/pilar bundar (Lathe).</td></tr>
+            <tr><td>34</td><td class="col-alat">Gergaji Belah (Pit Saw)</td><td class="col-fungsi">Memotong Balok Kayu Raksasa</td><td class="col-kerja">Dua orang (satu di atas kayu, satu di lubang bawah tanah) menarik gergaji super panjang bolak-balik untuk membelah batang pohon besar jadi papan kayu tanpa gergaji mesin (Chainsaw).</td></tr>
+            <tr><td>35</td><td class="col-alat">Pahat Rautan Bambu</td><td class="col-fungsi">Membuat Anyaman Bubu & Bilik</td><td class="col-kerja">Bambu dibelah kecil, diserut pakai pisau khusus hingga tipis namun tidak putus seratnya. Dianyam menjadi bilik dinding, keranjang, atau perangkap ikan (Bubu).</td></tr>
+            <tr><td>36</td><td class="col-alat">Screen Sablon & Blender</td><td class="col-fungsi">Pabrik Kertas Daur Ulang</td><td class="col-kerja">Kertas koran bekas atau pelepah pisang diblender jadi bubur kertas. Disaring pakai bingkai kawat kasa/sablon, dijemur rata. Menjadi lembaran kertas berserat estetik.</td></tr>
+            <tr><td>37</td><td class="col-alat">Ayakan Pasir Kawat Bertingkat</td><td class="col-fungsi">Menyortir Pasir Bangunan & Emas</td><td class="col-kerja">Kawat kasa berbagai ukuran bolongan. Digoyang manual untuk memisahkan kerikil besar dari pasir halus untuk plesteran dinding, atau mencari butiran emas/mineral di sungai.</td></tr>
+            <tr><td>38</td><td class="col-alat">Alat Pemotong Kaca Biasa</td><td class="col-fungsi">Daur Ulang Botol Kaca Jadi Gelas</td><td class="col-kerja">Botol kaca diikat benang yang dibasahi minyak tanah, dibakar muter, lalu dicelup ke air es mendadak. Kaca akan putus rapih karena *thermal shock*, lalu diamplas jadi gelas minum.</td></tr>
+            <tr><td>39</td><td class="col-alat">Pemanas Kawat Nikrom</td><td class="col-fungsi">Pres Plastik Kedap Udara (Sealer)</td><td class="col-kerja">Kawat nikelin/nikrom disambung ke aki 12V. Saat kawat panas, tempelkan plastik kemasan makanan. Plastik meleleh menyatu rapi, mengawetkan makanan awet bertahun-tahun (Vacuum darurat).</td></tr>
+            <tr><td>40</td><td class="col-alat">Cetakan Lilin Bambu</td><td class="col-fungsi">Penerangan Darurat (Tallow Candle)</td><td class="col-kerja">Lemak sapi cair atau getah pinus dituang ke dalam potongan bambu yang di tengahnya sudah dipasang benang katun. Bambu dibelah saat lemak membeku.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. KIMIA TERAPAN & UTILITAS (APPLIED ALCHEMY)</td></tr>
+            <tr><td>41</td><td class="col-alat">Panci Saponifikasi Lemak</td><td class="col-fungsi">Sabun Mandi & Cuci Mandiri</td><td class="col-kerja">Campur minyak kelapa/minyak jelantah bersih dengan air abu kayu murni (Kalium Hidroksida) atau Soda Api (NaOH). Aduk perlahan hingga mengental, cetak. Jadi sabun padat organik pengangkat kotoran.</td></tr>
+            <tr><td>42</td><td class="col-alat">Abu Gosok & Lerak</td><td class="col-fungsi">Deterjen Alami Tanpa Busa Kimia</td><td class="col-kerja">Biji buah Lerak ditumbuk, direndam air. Mengeluarkan saponin (busa alami) yang sangat efektif mencuci kain batik/pakaian tanpa merusak serat dan tidak mencemari sungai desa.</td></tr>
+            <tr><td>43</td><td class="col-alat">Alat Peras Kemiri & Kluwek</td><td class="col-fungsi">Minyak Pelumas Mesin Organik</td><td class="col-kerja">Kemiri disangrai, dihancurkan, dan dipres kuat pakai tabung baja baut. Keluar minyak kental yang sangat bagus sebagai pelumas engsel pintu/mesin ringan pengganti oli pabrik.</td></tr>
+            <tr><td>44</td><td class="col-alat">Tong Fermentasi Daun Mimba</td><td class="col-fungsi">Pestisida Nabati (Racun Hama)</td><td class="col-kerja">Daun mimba, brotowali pahit, dan bawang putih dihaluskan, direndam air kencing sapi selama seminggu. Cairan disaring, disemprotkan ke tanaman padi. Hama kabur tanpa merusak tanah.</td></tr>
+            <tr><td>45</td><td class="col-alat">Bak Endapan Tanah Liat</td><td class="col-fungsi">Bahan Keramik & Tembikar Kuat</td><td class="col-kerja">Tanah sawah dicampur air di drum, diaduk. Air keruh di atasnya dipindah ke bak lain, diendapkan. Endapan halus ini jadi tanah liat murni (Clay) super kuat untuk dibakar jadi bata/panci.</td></tr>
+            <tr><td>46</td><td class="col-alat">Kapur Sirih (Gamping)</td><td class="col-fungsi">Sterilisasi Air & Pengeras Makanan</td><td class="col-kerja">Batu gamping dibakar, disiram air mendidih (Slaked lime). Sedikit kapur sirih dimasukkan ke dalam air kotor akan membunuh bakteri, atau dipakai merendam keripik pisang agar renyah keras.</td></tr>
+            <tr><td>47</td><td class="col-alat">Perekat Getah Karet / Nangka</td><td class="col-fungsi">Lem Anti Air (Super Glue Alam)</td><td class="col-kerja">Menyadap pohon karet, pinus, atau nangka. Getah putih dicampur sedikit abu kapur. Menjadi dempul atau lem perahu bocor yang tahan badai dan kedap air.</td></tr>
+            <tr><td>48</td><td class="col-alat">Kristalisasi Tawas / Tunjung</td><td class="col-fungsi">Penjernih Air & Pengunci Warna Kain</td><td class="col-kerja">Mineral tawas ditumbuk. Cukup taburkan seujung sendok ke drum air keruh penuh lumpur, dalam 2 jam lumpur akan mengendap sempurna ke dasar drum. Air atasnya bisa diminum.</td></tr>
+            <tr><td>49</td><td class="col-alat">Bio-Bakteri Penambat Nitrogen</td><td class="col-fungsi">Pupuk Cair Akar Bambu (PGPR)</td><td class="col-kerja">Ambil segenggam tanah di bawah perakaran bambu tua (penuh bakteri baik). Fermentasi dengan air gula aren. Cairannya disiramkan ke kebun, menyuburkan tanaman tanpa butuh Urea pabrik!</td></tr>
+            <tr><td>50</td><td class="col-alat">LOGIKA & NALAR MANUSIA</td><td class="col-fungsi">Mesin Produksi Paling Mematikan</td><td class="col-kerja">Alat ini gratis di dalam kepalamu. Sistem elit menumpulkannya lewat TikTok dan sekolah hapalan. Saat iman (Integritas) dan nalar disatukan, manusa Nuswantara bisa menciptakan apa saja!</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🔥 DE-INDUSTRIALISASI DIMULAI DARI GARASI 🔥</h2>
+        <p>Konsumerisme (budaya terus membeli) adalah senjata utama Matrix untuk membuatmu tetap lemah dan patuh.<br><br>
+        <strong>Kapan terakhir kali kamu MEMBUAT sesuatu dengan tanganmu sendiri, alih-alih MEMBELINYA?</strong><br>
+        Generasi instan hari ini akan kebingungan jika listrik mati 3 hari. Mereka tidak tahu cara memintal tali, tidak paham cara membuat sabun, apalagi meracik obat dari rumput. <br><br>
+        Ayo, kembali ke akar! Mulailah dengan membuat tempe atau menyuling cuka apel sendiri di dapurmu. Ajarkan anak-anakmu memegang palu, mencangkul tanah, dan memahami cara kerja alam. <strong>Berhenti menjadi konsumen, jadilah Produsen. Bral ah! 👁️⚡⚙️</strong></p>
+    </div>
+</div>
+
+</body>
+</html>

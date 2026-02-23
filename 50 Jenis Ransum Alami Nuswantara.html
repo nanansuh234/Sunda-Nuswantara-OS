@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: RANSUM DARURAT NUSWANTARA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0a0a05; /* Dark Earth */
+            color: #d4af37;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1400px;
+            border: 3px solid #228b22; /* Forest Green */
+            padding: 30px;
+            background: #050a05;
+            position: relative;
+            box-shadow: 0 0 40px rgba(34, 139, 34, 0.2);
+        }
+
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(34, 139, 34, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(34, 139, 34, 0.05) 1px, transparent 1px);
+            background-size: 25px 25px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #228b22;
+            text-shadow: 0 0 15px #228b22;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #ffaa00;
+            background-color: rgba(20, 10, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #228b22; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #1a2a1a;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #0a1a0a;
+            color: #228b22;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #228b22;
+        }
+
+        .col-nama { color: #ffaa00; width: 25%; font-weight: bold; background: rgba(255,170,0,0.02); }
+        .col-kategori { color: #d4af37; width: 25%; font-style: italic; }
+        .col-olah { color: #ccc; width: 50%; }
+
+        tr:hover td { background-color: #111a11; }
+
+        .section-header {
+            background-color: #051105;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #228b22;
+            border-bottom: 2px solid #228b22;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #ffaa00;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #ffaa00; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>AGRO SURVIVAL RATIONS</h1>
+    <div class="subtitle">50 RANSUM DARURAT PENGGANTI BERAS & LOGISTIK KRISIS</div>
+    
+    <div class="alert-box">
+        JIKA KETAHANAN PANGANMU HANYA BERGANTUNG PADA KARUNG BERAS IMPOR, KAMU SUDAH KALAH SEBELUM PERANG.<br>
+        <span>Tanah Nuswantara menumbuhkan karbohidrat abadi.</span><br>
+        Keringkan, simpan, dan awetkan. Saat distribusi kota terputus dan rak supermarket kosong, lumbung desamu akan menjadi benteng kehidupan.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>NAMA RANSUM (KARUHUN)</th>
+                <th>SUMBER / BAHAN DASAR</th>
+                <th>TEKNIK OLAH & KETAHANAN (SHELF-LIFE)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. UMBI-UMBIAN PENYIMPAN KALORI (THE ROOT CELLAR)</td></tr>
+            <tr><td>01</td><td class="col-nama">Gaplek / Tiwul</td><td class="col-kategori">Singkong (Kaso)</td><td class="col-olah">Kupas, jemur matahari terik hingga mengeras seperti batu. Tahan <b>1-2 tahun</b>. Ditumbuk jadi tiwul saat mau dimakan.</td></tr>
+            <tr><td>02</td><td class="col-nama">Oyék Fermentasi</td><td class="col-kategori">Singkong (Kaso)</td><td class="col-olah">Singkong direndam air berhari-hari, dihancurkan, dibentuk butiran, lalu dijemur. Tahan <b>1 tahun</b>. Karbohidrat probiotik pengganti nasi pulen.</td></tr>
+            <tr><td>03</td><td class="col-nama">Tepung Mocaf</td><td class="col-kategori">Singkong Fermentasi</td><td class="col-olah">Modifikasi singkong agar bebas gluten. Disimpan dalam jerigen kedap udara. Tahan <b>2 tahun</b>. Bisa jadi roti/mie darurat.</td></tr>
+            <tr><td>04</td><td class="col-nama">Sabi (Ubi Jalar Kering)</td><td class="col-kategori">Ubi Jalar / Mantang</td><td class="col-olah">Ubi diiris tipis, dijemur kering kerontang. Tahan <b>1 tahun</b>. Sumber karbohidrat kompleks dengan antioksidan tinggi (terutama ubi ungu).</td></tr>
+            <tr><td>05</td><td class="col-nama">Tepung Garut (Arrowroot)</td><td class="col-kategori">Umbi Garut (Irut)</td><td class="col-olah">Diparut, diperas, endapkan patinya, lalu jemur. Tahan <b>2 tahun+</b>. Sangat ampuh untuk penderita maag saat stres krisis.</td></tr>
+            <tr><td>06</td><td class="col-nama">Ganyong Kering</td><td class="col-kategori">Umbi Ganyong</td><td class="col-olah">Umbi liar tahan hama. Iris dan jemur. Patinya bisa dibuat soun/mie bening. Tahan <b>1 tahun</b> di wadah kering.</td></tr>
+            <tr><td>07</td><td class="col-nama">Keripik Talas (Bohéi)</td><td class="col-kategori">Talas / Taro</td><td class="col-olah">Rebus setengah matang, iris tipis, jemur kering (menghilangkan kalsium oksalat gatal). Tahan <b>6 bulan</b>. Seduh air panas sebelum dimasak.</td></tr>
+            <tr><td>08</td><td class="col-nama">Gembili Rebus Kering</td><td class="col-kategori">Umbi Gembili</td><td class="col-olah">Umbi merambat yang mudah ditanam di pekarangan. Rebus dengan kulit, jemur. Tahan <b>6 bulan</b>.</td></tr>
+            <tr><td>09</td><td class="col-nama">Tepung Porang / Iles-iles</td><td class="col-kategori">Umbi Porang</td><td class="col-olah">Superfood tinggi Glukomanan. Kenyang lebih lama. Iris tipis, oven/jemur, giling. Tahan <b>2 tahun</b>. (Awas gatal, perlu proses cuci garam).</td></tr>
+            <tr><td>10</td><td class="col-nama">Suweg</td><td class="col-kategori">Keluarga Bunga Bangkai</td><td class="col-olah">Pangan purba. Batangnya dipotong, umbinya dikeringkan. Sumber serat luar biasa kuat untuk pencernaan saat kurang gizi.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. BIJI-BIJI & SEREALIA TAHAN BANTING (THE ANCIENT GRAINS)</td></tr>
+            <tr><td>11</td><td class="col-nama">Jagung Pipil Kering</td><td class="col-kategori">Jagung Keras</td><td class="col-olah">Simpan jagung utuh beserta tongkolnya di atas tungku dapur (diasap) atau pipil jemur kering. Tahan <b>1-3 tahun</b>. Direbus campur kapur sirih (Nixtamalization) agar nutrisi B3 keluar.</td></tr>
+            <tr><td>12</td><td class="col-nama">Nasi Jagung (Sangu Jagong)</td><td class="col-kategori">Jagung Sosoh & Beras</td><td class="col-olah">Beras dicampur butiran jagung tumbuk. Memperpanjang umur stok beras 2x lipat. Sangat mengenyangkan.</td></tr>
+            <tr><td>13</td><td class="col-nama">Sorgum (Cantel)</td><td class="col-kategori">Biji Sorgum</td><td class="col-olah">Tanaman ajaib yang bisa hidup di tanah kering/kemarau panjang. Biji dijemur, disosoh seperti beras. Tahan <b>2 tahun+</b>. Pengganti nasi paling masuk akal.</td></tr>
+            <tr><td>14</td><td class="col-nama">Hanjeli (Jali-jali)</td><td class="col-kategori">Serealia Lokal Tropis</td><td class="col-olah">Pengganti gandum lokal. Bertekstur kenyal, tinggi protein. Jemur dan simpan dalam kendi tanah liat. Tahan <b>1 tahun</b>.</td></tr>
+            <tr><td>15</td><td class="col-nama">Jewawut (Foxtail Millet)</td><td class="col-kategori">Millet Purba</td><td class="col-olah">Makanan burung yang dulu adalah makanan pokok manusia Nusantara. Sangat mudah tumbuh tanpa pupuk kimia. Tahan simpan <b>2 tahun</b>.</td></tr>
+            <tr><td>16</td><td class="col-nama">Kacang Hijau (Tauge Darurat)</td><td class="col-kategori">Kacang-kacangan</td><td class="col-olah">Simpan di botol plastik kedap udara campur daun jeruk kering (anti kutu). Jika kekurangan sayur, siram air sedikit, jadikan Tauge dalam 3 hari. Gizi hidup!</td></tr>
+            <tr><td>17</td><td class="col-nama">Padi Gogo (Beras Gunung)</td><td class="col-kategori">Padi Lahan Kering</td><td class="col-olah">Padi yang ditanam tanpa butuh genangan air sawah. Simpan dalam bentuk Gabah (belum digiling) di lumbung kayu. Tahan <b>5-10 tahun</b>!</td></tr>
+            <tr><td>18</td><td class="col-nama">Kacang Merah / K. Tolo</td><td class="col-kategori">Kacang-kacangan</td><td class="col-olah">Sumber protein nabati pengganti daging. Jemur hingga kadar air &lt;10%. Tahan <b>2 tahun</b> dalam toples kaca.</td></tr>
+            <tr><td>19</td><td class="col-nama">Kacang Koro Pedang</td><td class="col-kategori">Kacang Hutan Rambat</td><td class="col-olah">Sangat produktif. Harus direbus dan dibuang airnya 2-3 kali untuk menghilangkan racun HCN sebelum dikeringkan/dimakan.</td></tr>
+            <tr><td>20</td><td class="col-nama">Biji Teratai</td><td class="col-kategori">Bunga Teratai Rawa</td><td class="col-olah">Diambil dari rawa/danau. Bijinya dijemur, ditumbuk, atau direbus. Karbohidrat cadangan yang sering dilupakan.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. POHON, BUAH & HASIL HUTAN (FORAGING RATIONS)</td></tr>
+            <tr><td>21</td><td class="col-nama">Tepung Sukun</td><td class="col-kategori">Buah Sukun (Breadfruit)</td><td class="col-olah">Satu pohon sukun setara dengan ratusan kilo beras. Iris tipis sukun mengkal, jemur hingga kaku, giling jadi tepung. Tahan <b>1 tahun</b>.</td></tr>
+            <tr><td>22</td><td class="col-nama">Beton Nangka Kering</td><td class="col-kategori">Biji Buah Nangka</td><td class="col-olah">Biji nangka yang sering dibuang dikumpulkan, direbus pakai garam, lalu dijemur kering matahari. Karbohidrat padat, direbus ulang saat darurat.</td></tr>
+            <tr><td>23</td><td class="col-nama">Sagu Aren / Rumbia</td><td class="col-kategori">Teras Pohon Palma</td><td class="col-olah">Tebang pohon aren tua, parut teras batangnya, peras sarinya. Patinya dikeringkan. Tahan <b>3-5 tahun</b> tanpa basi. Makanan survival sejati di rawa/hutan.</td></tr>
+            <tr><td>24</td><td class="col-nama">Tepung Pisang Mentah</td><td class="col-kategori">Pisang Gepok/Kepok</td><td class="col-olah">Pisang yang masih hijau keras diiris tipis, dijemur, lalu ditumbuk. Tahan <b>1 tahun</b>. Kaya akan "Resistant Starch" yang menguatkan mikrobioma usus.</td></tr>
+            <tr><td>25</td><td class="col-nama">Kopra Kelapa</td><td class="col-kategori">Daging Kelapa Tua</td><td class="col-olah">Daging kelapa dijemur terik atau diasap hingga minyaknya terkunci. Tahan <b>6 bulan</b>. Sumber lemak tinggi energi untuk fisik lelah.</td></tr>
+            <tr><td>26</td><td class="col-nama">Serundeng Kering</td><td class="col-kategori">Kelapa Parut Sangrai</td><td class="col-olah">Sangrai kelapa parut tanpa minyak di wajan tanah liat hingga coklat kering. Lauk penambah kalori abadi, tahan <b>3 bulan</b> di suhu ruang.</td></tr>
+            <tr><td>27</td><td class="col-nama">Buah Lindur (Mangrove)</td><td class="col-kategori">Pohon Bakau Pesisir</td><td class="col-olah">Buah pesisir yang direbus, dibelah, dijemur, dan direndam air mengalir 2 hari (buang tanin pahit). Pengganti beras bagi warga pesisir laut.</td></tr>
+            <tr><td>28</td><td class="col-nama">Biji Karet Peram</td><td class="col-kategori">Pohon Karet Hutan</td><td class="col-olah">Pangan krisis ekstrem. Rebus biji karet, buang airnya, rendam di sungai mengalir 3 hari untuk membuang racun sianida. Fermentasi jadi tempe/kering.</td></tr>
+            <tr><td>29</td><td class="col-nama">Tepung Biji Durian</td><td class="col-kategori">Biji Buah Durian</td><td class="col-olah">Mirip beton nangka. Iris tipis, jemur kering, jadikan bubuk. Karbohidrat ekstra setelah musim buah habis.</td></tr>
+            <tr><td>30</td><td class="col-nama">Abon Jantung Pisang</td><td class="col-kategori">Jantung (Bunga) Pisang</td><td class="col-olah">Rebus, cacah halus, peras airnya sampai kering, sangrai bumbu hingga kering kecoklatan. Lauk kaya serat pengganti abon daging sapi.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. PROTEIN AWETAN & PENYEDAP (THE PRESERVED MEATS)</td></tr>
+            <tr><td>31</td><td class="col-nama">Ikan Asin Batu</td><td class="col-kategori">Ikan Laut / Tawar</td><td class="col-olah">Bedah, buang isi perut, rendam garam pekat (brine), jemur terik berminggu-minggu hingga sekeras papan. Tahan <b>1-2 tahun</b>.</td></tr>
+            <tr><td>32</td><td class="col-nama">Dendeng Kering Asap</td><td class="col-kategori">Daging Sapi / Domba</td><td class="col-olah">Iris sangat tipis searah serat, lumuri garam & ketumbar, gantung di atas tungku kayu berasap (Smoking). Tahan <b>6-12 bulan</b> tanpa kulkas.</td></tr>
+            <tr><td>33</td><td class="col-nama">Abon Ikan Gabus (Channa)</td><td class="col-kategori">Ikan Gabus Rawa</td><td class="col-olah">Kukus, suwir halus, sangrai kering tanpa minyak hingga renyah. Tahan <b>6 bulan</b>. Protein Albumin tinggi penutup luka fisik.</td></tr>
+            <tr><td>34</td><td class="col-nama">Telur Asin Panggang/Bakar</td><td class="col-kategori">Telur Bebek</td><td class="col-olah">Asinkan 14 hari dengan abu gosok+garam, lalu <b>dibakar/dioven</b> pelan hingga minyak telurnya keluar. Tahan <b>1 bulan+</b> tanpa pendingin.</td></tr>
+            <tr><td>35</td><td class="col-nama">Kering Tempe (Orek Keras)</td><td class="col-kategori">Tempe Kedelai</td><td class="col-olah">Iris setipis silet, goreng garing, campur karamel gula merah & asam jawa (pengawet alami). Jangan ada air setetespun. Tahan <b>3 bulan</b>.</td></tr>
+            <tr><td>36</td><td class="col-nama">Belalang Kayu Goreng</td><td class="col-kategori">Serangga Ladang (Halal)</td><td class="col-olah">Sumber protein melimpah saat panen jagung/jati. Buang sayap & kotoran, goreng garing. Tahan <b>2 bulan</b> di stoples.</td></tr>
+            <tr><td>37</td><td class="col-nama">Keong / Tutut Kering</td><td class="col-kategori">Siput Sawah</td><td class="col-olah">Rebus pakai daun salam (buang amis/parasit), cungkil dagingnya, jemur kering kerontang. Rendam air panas sebelum diolah saat krisis.</td></tr>
+            <tr><td>38</td><td class="col-nama">Udang Rebon Kering</td><td class="col-kategori">Udang Kecil Pesisir</td><td class="col-olah">Jemur langsung di bawah matahari tambak. Selain lauk, kalsiumnya sangat tinggi untuk menjaga kepadatan tulang saat asupan gizi turun.</td></tr>
+            <tr><td>39</td><td class="col-nama">Jamur Kuping / Tiram Kering</td><td class="col-kategori">Jamur Kayu</td><td class="col-olah">Jemur jamur hasil budidaya kayu lapuk. Tahan <b>1 tahun+</b>. Akan mengembang kembali (Rehidrasi) saat diseduh kuah kaldu.</td></tr>
+            <tr><td>40</td><td class="col-nama">Terasi / Belacan Keras</td><td class="col-kategori">Fermentasi Rebon</td><td class="col-olah">Dicetak padat dan dibakar/dijemur. Bumbu penyedap umami penambah nafsu makan saat hanya ada karbohidrat hambar.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. TEKNIK KONSENTRAT SURVIVAL (HARDCORE RATIONS)</td></tr>
+            <tr><td>41</td><td class="col-nama">Pemmican Nusantara</td><td class="col-kategori">Dendeng + Lemak Sapi (Tallow)</td><td class="col-olah">Tumbuk dendeng kering jadi bubuk, campur dengan lemak gajih sapi yang dilelehkan panas, cetak kotak. <b>Ransum militer kuno, tahan 5 tahun!</b> 1 gigitan = 500 Kalori.</td></tr>
+            <tr><td>42</td><td class="col-nama">Biskuit Hardtack Singkong</td><td class="col-kategori">Tepung Gaplek + Garam</td><td class="col-olah">Uleni tepung, garam, air sedikit. Panggang oven berkali-kali sampai kelembaban 0%. Sekeras batu bata. Tahan <b>10 tahun</b>! (Rendam kopi/kuah sebelum dimakan).</td></tr>
+            <tr><td>43</td><td class="col-nama">Nasi Aking (Karak)</td><td class="col-kategori">Sisa Nasi Bersih</td><td class="col-olah">Cuci sisa nasi utuh, jemur kering di atas atap. Tahan <b>1 tahun</b>. Digoreng jadi karak atau dikukus ulang. Prinsip <i>Zero Waste</i> mutlak.</td></tr>
+            <tr><td>44</td><td class="col-nama">Garam Krosok Laut (Brine)</td><td class="col-kategori">Mineral Air Laut</td><td class="col-olah">Bukan makanan, tapi <b>SENJATA UTAMA PENGAWETAN</b>. Garam curah kristal menarik air dari sel bakteri, membunuh kebusukan. Timbun garam dari sekarang!</td></tr>
+            <tr><td>45</td><td class="col-nama">Gula Aren Cetak Batu</td><td class="col-kategori">Nira Pohon Kawung</td><td class="col-olah">Gula murni cetak padat. Tidak akan pernah basi. Menjadi peluru energi instan saat gula darah drop di tengah evakuasi/kerja keras.</td></tr>
+            <tr><td>46</td><td class="col-nama">Madu Hutan Liar (Odeng)</td><td class="col-kategori">Nektar Alam</td><td class="col-olah">Karbohidrat murni anti-bakteri. Ditemukan madu usia 3000 tahun di Mesir masih bisa dimakan. Simpan botol kaca, tutup rapat.</td></tr>
+            <tr><td>47</td><td class="col-nama">Tepung Daun Kelor (Moringa)</td><td class="col-kategori">Daun Kelor</td><td class="col-olah">Jemur daun kelor di tempat teduh (jangan kena matahari langsung), blender. Taburkan 1 sendok ke makanan darurat. Menutup defisit vitamin & mineral!</td></tr>
+            <tr><td>48</td><td class="col-nama">Minyak Kelapa Murni (VCO)</td><td class="col-kategori">Ekstrak Santan Fermentasi</td><td class="col-olah">Lemak rantai menengah (MCT) langsung jadi energi di liver. Minum 2 sendok saat kelaparan parah mencegah tubuh memakan ototnya sendiri.</td></tr>
+            <tr><td>49</td><td class="col-nama">Black Garlic (Bawang Hitam)</td><td class="col-kategori">Bawang Putih Tunggal</td><td class="col-olah">Panaskan bawang putih di *Rice Cooker* mode 'Warm' selama 14 hari nonstop. Jadi hitam, manis, dan Antibiotik alami super kuat untuk musim wabah.</td></tr>
+            <tr><td>50</td><td class="col-nama">Ragi Tempe & Ragi Tape</td><td class="col-kategori">Spora Kapang Lokal</td><td class="col-olah">Penyelamat nutrisi! Ragi mampu mengubah biji-bijian keras/kacang hutan yang sulit dicerna menjadi makanan lunak (fermentasi) kaya asam amino dalam 48 jam.</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>🔥 LUMBUNG ADALAH BENTENG KEDAULATAN 🔥</h2>
+        <p>Rakyat yang lapar adalah rakyat yang mudah dikendalikan. Sistem Dajjal/Elit Global tahu persis bahwa menghancurkan kedaulatan sebuah bangsa dimulai dari merusak kemandirian benih dan lahan pangannya.<br><br>
+        <strong>Mulai hari ini, hidupkan kembali budaya "LEUIT" (Lumbung Padi/Pangan).</strong><br>
+        Tanam sukun di pekarangan, jemur singkong jadi gaplek, dan timbun garam laut. Jika skenario terburuk kelangkaan logistik terjadi, kamu tidak akan ikut dalam antrean bansos beras yang penuh kepanikan. <br><br>
+        Kamu akan duduk tenang di beranda desa, menyeduh tiwul dan merebus ubi jalar dari lumbungmu sendiri. Bral ah, persiapan adalah kunci Manusa Merdeka! 👁️⚡🌾</p>
+    </div>
+</div>
+
+</body>
+</html>

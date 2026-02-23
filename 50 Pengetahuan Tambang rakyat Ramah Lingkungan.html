@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: THE EARTH ALCHEMY</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0d0903; /* Deep Earth/Copper */
+            color: #ccc;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1500px;
+            border: 3px solid #cd7f32; /* Bronze/Copper */
+            padding: 30px;
+            background: #0a0602;
+            position: relative;
+            box-shadow: 0 0 40px rgba(205, 127, 50, 0.2);
+        }
+
+        /* Topo Map Overlay */
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(205, 127, 50, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(205, 127, 50, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #cd7f32;
+            text-shadow: 0 0 15px #cd7f32;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #00ff88;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #ffaa00;
+            background-color: rgba(30, 20, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #cd7f32; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #3a220a;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #1a0f05;
+            color: #cd7f32;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #cd7f32;
+        }
+
+        /* Kolom Styling */
+        .col-mineral { color: #ffaa00; width: 20%; font-weight: bold; background: rgba(255,170,0,0.02); }
+        .col-tanah { color: #d4af37; width: 35%; font-style: italic; }
+        .col-ekstraksi { color: #00ff88; width: 45%; }
+
+        tr:hover td { background-color: #150c04; }
+
+        .section-header {
+            background-color: #110902;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #cd7f32;
+            border-bottom: 2px solid #cd7f32;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #cd7f32;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #cd7f32; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>EARTH ALCHEMY PROTOCOL</h1>
+    <div class="subtitle">50 PENGETAHUAN TAMBANG RAKYAT (ECO-MINING) & ALKEMIA ALAM</div>
+    
+    <div class="alert-box">
+        JIKA ANDA TIDAK MENGENALI TANAH YANG ANDA INJAK, ORANG ASING AKAN DATANG MEMBAWA BEKO UNTUK MENGURUKNYA.<br>
+        <span>Pertambangan Rakyat BUKAN kejahatan jika dilakukan selaras dengan ritme alam (Zero Waste/No Mercury).</span><br>
+        Kuasai ilmu ekstraksi tanah, air, dan batu. Jadikan desa-desa kita berdaulat secara logam, energi, dan mineral tanpa meracuni sungai warisan karuhun.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>JENIS MINERAL / MATERIAL</th>
+                <th>CIRI TANAH & LOKASI ALAMI</th>
+                <th>TEKNIK EKSTRAKSI (ECO-FRIENDLY)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. LOGAM MULIA & ALAT TUKAR (THE BAITUL MAL)</td></tr>
+            <tr><td>01</td><td class="col-mineral">Emas Aluvial (Placer Gold)</td><td class="col-tanah">Pasir di belokan dalam sungai arus deras, endapan kerikil hitam/kuarsa, atau di bawah batu besar sungai.</td><td class="col-ekstraksi"><b>Dulang Kayu (Panning).</b> Gunakan gravitasi. Haram pakai Merkuri! Emas 19x lebih berat dari air, ia akan diam di dasar piringan dulang saat pasir lain hanyut.</td></tr>
+            <tr><td>02</td><td class="col-mineral">Emas Urat (Epithermal)</td><td class="col-tanah">Urat batu kuarsa putih susu yang menembus bukit/gunung, sering disertai noda garis hitam (oksidasi besi).</td><td class="col-ekstraksi">Pecah batu kuarsa manual. Tumbuk jadi tepung pakai lesung baja (Gelondong). Dulang tepungnya di air.</td></tr>
+            <tr><td>03</td><td class="col-mineral">Perak (Argentum)</td><td class="col-tanah">Sering menempel pada batu urat emas atau batu galena (timbal) yang berwarna abu-abu mengkilap.</td><td class="col-ekstraksi"><b>Peleburan Cupellation (Bakar Tulang).</b> Lebur batu perak campur timbal di mangkuk dari abu tulang sapi. Timbal akan terserap tulang, perak murni tertinggal di atas.</td></tr>
+            <tr><td>04</td><td class="col-mineral">Intan (Diamond Placer)</td><td class="col-tanah">Kerikil sungai purba berpasir putih/kuning di Kalimantan (Cempaka), berlapis tanah lempung.</td><td class="col-ekstraksi">Dulang anyaman kawat (Linggangan). Intan menempel pada lemak/gemuk. Olesi dulang dengan pelumas, batu biasa akan hanyut, intan menempel di pelumas.</td></tr>
+            <tr><td>05</td><td class="col-mineral">Platina (Platinum)</td><td class="col-tanah">Pasir sungai berwarna sangat hitam pekat, berdampingan dengan butiran emas, tapi warnanya perak pucat.</td><td class="col-ekstraksi">Pemisahan gravitasi super ketat. Platina sangat berat, tidak akan menempel pada magnet, dan tidak leleh oleh api biasa (butuh 1700°C).</td></tr>
+            <tr><td>06</td><td class="col-mineral">Batu Giok / Nefrit</td><td class="col-tanah">Bongkahan batu besar berwarna hijau berminyak/kusam di aliran hulu sungai pegunungan berarus deras.</td><td class="col-ekstraksi">Ambil bongkahan yang lepas dari tebing (Float). Pahat manual. Jangan meledakkan tebing. Asah dengan pasir kuarsa.</td></tr>
+            <tr><td>07</td><td class="col-mineral">Kristal Kuarsa (Batu Es)</td><td class="col-tanah">Gua atau rongga di dalam batuan beku. Bentuknya menonjol heksagonal bening seperti kaca/es batu.</td><td class="col-ekstraksi">Pahat pangkalnya dengan hati-hati. Ini adalah komponen dasar Radio Purba (Osilator) dan teknologi frekuensi Ether.</td></tr>
+            <tr><td>08</td><td class="col-mineral">Batu Bacan / Krisokola</td><td class="col-tanah">Tanah pegunungan vulkanik yang banyak mengandung tembaga. Batu berwarna hijau/kebiruan.</td><td class="col-ekstraksi">Gali lubang (sumur) manual pakai linggis. Ikuti urat batunya. Tutup kembali sumur dengan tanah sisa (Backfill) agar tidak jadi danau racun.</td></tr>
+            <tr><td>09</td><td class="col-mineral">Mutiara Sungai (Mussel)</td><td class="col-tanah">Kerang air tawar raksasa di dasar danau atau sungai berlumpur yang belum tercemar limbah pabrik.</td><td class="col-ekstraksi">Menyelam manual (Apnea). Jangan merusak ekosistem dasar danau dengan pukat harimau.</td></tr>
+            <tr><td>10</td><td class="col-mineral">Amethyst (Kecubung)</td><td class="col-tanah">Di dalam geode (batu bulat yang isinya rongga kristal ungu), sering ditemukan di endapan abu vulkanik kuno.</td><td class="col-ekstraksi">Ketuk batu curiga dengan palu. Jika suaranya nyaring/kosong, belah menjadi dua perlahan.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. LOGAM INDUSTRI & METALURGI (THE FORGE)</td></tr>
+            <tr><td>11</td><td class="col-mineral">Biji Besi Limonit/Hematit</td><td class="col-tanah">Tanah berwarna merah karat / kuning oranye pekat, atau bongkahan batu berat di rawa-rawa (Bog iron).</td><td class="col-ekstraksi"><b>Bloomery Furnace.</b> Tumpuk biji besi merah berselang-seling dengan arang kayu di tungku tanah liat. Tiup udara (Blower). Oksigen akan terbuang, menyisakan gumpalan besi mentah berongga.</td></tr>
+            <tr><td>12</td><td class="col-mineral">Pasir Besi (Magnetit)</td><td class="col-tanah">Hamparan pasir pantai pesisir selatan yang berwarna hitam kelam dan sangat panas jika diinjak siang hari.</td><td class="col-ekstraksi">Tarik magnet Neodymium kuat yang dibungkus plastik di atas pasir. Pasir hitam akan menempel. Langsung lebur jadi baja tanpa merusak pantai.</td></tr>
+            <tr><td>13</td><td class="col-mineral">Tembaga (Malasit/Kalkopirit)</td><td class="col-tanah">Batu urat yang memiliki corak/noda hijau terang, biru, atau kuning keemasan palsu (Fool's gold).</td><td class="col-ekstraksi">Hancurkan batu, bakar di tungku bersama arang. Tembaga akan meleleh di suhu 1085°C dan mengalir ke bawah tungku.</td></tr>
+            <tr><td>14</td><td class="col-mineral">Timah Putih (Cassiterite)</td><td class="col-tanah">Pasir sungai atau lepas pantai di daerah kepulauan (Bangka Belitung). Pasirnya sangat berat, coklat gelap.</td><td class="col-ekstraksi">Dulang kayu di air mengalir. Timah sangat mudah dilebur (suhu 232°C). Cukup pakai api unggun arang batok kelapa tebal.</td></tr>
+            <tr><td>15</td><td class="col-mineral">Timbal (Galena)</td><td class="col-tanah">Batu berbentuk kotak-kotak kubus sempurna, abu-abu perak mengkilap, dan sangat berat.</td><td class="col-ekstraksi">Bakar di api unggun terbuka (Suhu sangat rendah 327°C). Timbal akan meleleh seperti air mata perak. (Awas uapnya beracun, lakukan berlawanan arah angin!).</td></tr>
+            <tr><td>16</td><td class="col-mineral">Seng (Sphalerite)</td><td class="col-tanah">Sering menempel bersama batu timbal (Galena), berwarna coklat kekuningan bergetah.</td><td class="col-ekstraksi">Sedikit sulit. Dibakar tertutup (Destilasi), uap seng disalurkan ke pipa dingin agar mengembun jadi logam pelapis anti-karat (Galvanis).</td></tr>
+            <tr><td>17</td><td class="col-mineral">Nikel Laterit (Eco-Extract)</td><td class="col-tanah">Tanah merah kecoklatan di wilayah Sulawesi/Maluku. (Beko perusahaan merusak hutan demi nikel ini).</td><td class="col-ekstraksi"><b>Phytomining (Tambang Tanaman).</b> Tanam rumput/tanaman hiperakumulator (penyerap logam). Tanaman ini menyerap nikel ke daunnya. Bakar daunnya, abunya adalah nikel kualitas tinggi! Nol kerusakan tanah!</td></tr>
+            <tr><td>18</td><td class="col-mineral">Bauksit (Alumunium Oksida)</td><td class="col-tanah">Batu lempung bintik-bintik seukuran kelereng, warna merah/kuning di hutan tropis.</td><td class="col-ekstraksi">Sulit dilebur manual karena butuh listrik besar. Di kampung, tanah bauksit ini sangat bagus ditumbuk dijadikan <b>Bata Tahan Api</b> untuk tungku peleburan logam lain.</td></tr>
+            <tr><td>19</td><td class="col-mineral">Mangan (Pyrolusite)</td><td class="col-tanah">Bongkahan batu nodul hitam pekat yang mengotori tangan seperti arang.</td><td class="col-ekstraksi">Ditumbuk halus. Digunakan sebagai campuran baja agar tidak gampang retak, atau penjernih kaca tradisional.</td></tr>
+            <tr><td>20</td><td class="col-mineral">Antimon (Stibnite)</td><td class="col-tanah">Batu abu-abu mengkilat dengan bentuk berserat seperti jarum.</td><td class="col-ekstraksi">Dilebur bersama timbal untuk membuat paduan logam peluru senapan angin yang keras dan presisi.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. MATERIAL DASAR & UTILITAS (THE FOUNDATION)</td></tr>
+            <tr><td>21</td><td class="col-mineral">Tanah Liat (Clay / Lempung)</td><td class="col-tanah">Di tepi sungai atau lapisan bawah sawah. Basah, lengket, bisa dibentuk tanpa hancur.</td><td class="col-ekstraksi">Gali manual. Cuci di bak air, aduk, buang pasir kasarnya. Endapan halusnya dijemur. Jadi bahan kendi, genteng, bata merah, dan tungku.</td></tr>
+            <tr><td>22</td><td class="col-mineral">Pasir Kuarsa (Silica)</td><td class="col-tanah">Pasir sungai / laut yang berwarna putih bersih, bening tembus cahaya seperti pecahan kaca.</td><td class="col-ekstraksi">Ayak dari kerikil. Dilebur pada suhu 1700°C campur abu kayu (Kalium) untuk membuat <b>Kaca Murni</b> atau lensa panel surya lokal.</td></tr>
+            <tr><td>23</td><td class="col-mineral">Batu Kapur (Gamping/Karst)</td><td class="col-tanah">Bukit-bukit batu putih karang purba. Sering berongga dan ada gua kelelawar.</td><td class="col-ekstraksi">Pecah batunya, bakar di tungku kayu raksasa berhari-hari. Berubah jadi Kapur Tohor. Jika disiram air akan mendidih jadi semen perekat/cat putih bangunan.</td></tr>
+            <tr><td>24</td><td class="col-mineral">Kaolin (Lempung Putih)</td><td class="col-tanah">Lereng bukit yang terlihat putih susu seperti kapur, tapi lunak jika kena air.</td><td class="col-ekstraksi">Cangkul dan larutkan dalam air. Endapannya sangat halus, digunakan untuk obat maag (Norit alami) dan bahan baku keramik porselen estetik.</td></tr>
+            <tr><td>25</td><td class="col-mineral">Tras (Tuff Vulkanik)</td><td class="col-tanah">Lereng pegunungan berapi. Tanah/batu abu-abu muda hasil endapan abu vulkanik purba.</td><td class="col-ekstraksi">Digali, dijemur kering, ditumbuk halus. Jika dicampur dengan kapur gamping dan air, akan mengeras menjadi <b>Semen Pozzolan (Semen Roman Kuno)</b> yang tahan air laut!</td></tr>
+            <tr><td>26</td><td class="col-mineral">Batu Kali (Andesit)</td><td class="col-tanah">Bongkahan batu bundar hitam keras berserakan di dasar sungai arus pegunungan.</td><td class="col-ekstraksi">Pungut manual. Dipahat perlahan menggunakan besi tatah dan palu godam untuk membuat pondasi rumah anti-gempa atau lesung tumbuk.</td></tr>
+            <tr><td>27</td><td class="col-mineral">Batu Apung (Pumice)</td><td class="col-tanah">Batu vulkanik berpori banyak berwarna putih pucat yang mengambang di pesisir selat/pantai.</td><td class="col-ekstraksi">Serok pakai jaring. Sangat bagus dihancurkan sebagai filter air hidroponik, penyaring limbah, atau bahan campuran semen ringan.</td></tr>
+            <tr><td>28</td><td class="col-mineral">Oker (Ochre Hitam/Merah)</td><td class="col-tanah">Tanah lempung lunak yang warnanya sangat mencolok (Merah darah, kuning terang, atau coklat karat).</td><td class="col-ekstraksi">Keringkan, tumbuk jadi tepung. Campur dengan getah pohon atau minyak kemiri untuk membuat cat rumah/pelapis perahu anti air yang abadi.</td></tr>
+            <tr><td>29</td><td class="col-mineral">Tanah Diatom</td><td class="col-tanah">Endapan dasar danau purba berkapur putih (Terbuat dari fosil jutaan alga bercangkang silika).</td><td class="col-ekstraksi">Gali, jemur, hancurkan. Bubuk ini adalah pembunuh hama kutu/serangga paling alami (merobek perut serangga level mikro) dan filter air kotor paling mematikan.</td></tr>
+            <tr><td>30</td><td class="col-mineral">Obsidian (Kaca Vulkanik)</td><td class="col-tanah">Batu kaca hitam pekat dan sangat mengkilap di lereng gunung api tua.</td><td class="col-ekstraksi">Pukul dengan teknik *Knapping* (Ketukan bersudut). Akan terbelah menjadi serpihan pisau yang 10x lebih tajam dari pisau bedah baja modern.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. KIMIA, ENERGI BUMI & NUTRISI AGRARIA (ALCHEMICAL SOIL)</td></tr>
+            <tr><td>31</td><td class="col-mineral">Garam Krosok Laut (Halit)</td><td class="col-tanah">Tambak pesisir berair laut tua, atau rembesan mata air asin di pegunungan (Bledug Kuwu).</td><td class="col-ekstraksi">Jemur di atas meja kayu berlapis terpal. Garam organik mengandung 80+ mineral bumi lengkap (Bukan garam dapur yodium pabrik yang sudah direkayasa).</td></tr>
+            <tr><td>32</td><td class="col-mineral">Belerang Murni (Sulfur)</td><td class="col-tanah">Dinding kawah gunung berapi (seperti Ijen), berbentuk kristal/bongkahan kuning cerah berbau gas.</td><td class="col-ekstraksi">Patahkan dengan linggis, pikul turun gunung. Bahan utama pembuat Asam Sulfat, obat gatal kulit, dan bahan mesiu survival bedil locok.</td></tr>
+            <tr><td>33</td><td class="col-mineral">Tawas Alam (Alum)</td><td class="col-tanah">Kristal keputihan/bening di sekitar mata air panas vulkanik berbau belerang.</td><td class="col-ekstraksi">Kumpulkan, rebus airnya, lalu dinginkan hingga mengkristal. Obat ketiak/bau badan darurat, penjernih air keruh, dan pengunci warna kain batik (Mordant).</td></tr>
+            <tr><td>34</td><td class="col-mineral">Batu Bara Dangkal (Lignit)</td><td class="col-tanah">Lapisan tanah berwarna hitam kayu/arang di tebing sungai dangkal (Banyak di Sumatera/Kalimantan).</td><td class="col-ekstraksi">Gali parit dangkal dengan cangkul (Tambang parit). Cukup untuk memanaskan tungku kerajinan besi tanpa harus mengebor gunung ratusan meter.</td></tr>
+            <tr><td>35</td><td class="col-mineral">Minyak Lantung (Crude Seep)</td><td class="col-tanah">Tanah rawa/sungai yang permukaannya mengkilap pelangi dan berbau minyak tanah/bensin murni.</td><td class="col-ekstraksi">Teknik Bojonegoro: Gali sumur sedalam 10 meter, timba cairan hitamnya pakai ember kulit. Suling (Destilasi) sederhana jadi Solar/Minyak Tanah.</td></tr>
+            <tr><td>36</td><td class="col-mineral">Gambut (Peat)</td><td class="col-tanah">Rawa dengan tumpukan dedaunan busuk berwarna hitam gembur dan berair, tebalnya ber-meter-meter.</td><td class="col-ekstraksi">Potong gambut berbentuk balok bata pakai sekop tajam. Jemur di bawah matahari sampai kering ringan. Bakar di tungku, panasnya setara batu bara muda!</td></tr>
+            <tr><td>37</td><td class="col-mineral">Gypsum Alam</td><td class="col-tanah">Kristal putih kapur di endapan dasar danau kering atau lereng bukit purba.</td><td class="col-ekstraksi">Bakar pada suhu rendah 150°C, hancurkan jadi serbuk. Jika diseduh air akan langsung mengeras dalam 10 menit. (Bahan pembalut patah tulang darurat).</td></tr>
+            <tr><td>38</td><td class="col-mineral">Fosfat Guano (Pupuk Dewa)</td><td class="col-tanah">Lapisan tebal kotoran kelelawar purba di dasar gua kapur yang sudah membatu.</td><td class="col-ekstraksi">Gali secukupnya (jangan usir kelelawarnya). Pupuk organik pamungkas dengan kadar Fosfor & Nitrogen super gila untuk meledakkan hasil panen tanpa pupuk Urea pabrik.</td></tr>
+            <tr><td>39</td><td class="col-mineral">Zeolit (Batu Penawar Racun)</td><td class="col-tanah">Batuan vulkanik berpori lembut, berwarna hijau pucat/putih, menyerap air dengan cepat.</td><td class="col-ekstraksi">Pecahkan jadi kerikil kecil. Letakkan di saluran air sungai yang kotor. Zeolit mampu mengikat logam berat pabrik (Timbal/Merkuri) agar air aman untuk kolam ikan.</td></tr>
+            <tr><td>40</td><td class="col-mineral">Sendawa (Kalium Nitrat)</td><td class="col-tanah">Serbuk kristal halus berwarna putih seperti salju di dinding/lantai gua kering, atau di bawah kandang kambing tua.</td><td class="col-ekstraksi">Sapu serbuknya, larutkan dalam air panas, saring, dan kristalkan kembali. Ini adalah bahan inti pembuat Black Powder (Mesiu) untuk pertahanan teritorial milisi.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. TANAH LANGKA & URBAN MINING (THE FUTURE & RECYCLED)</td></tr>
+            <tr><td>41</td><td class="col-mineral">Monasit (Pasir Rare Earth)</td><td class="col-tanah">Pasir pantai sisa pencucian timah (Tailing). Berwarna kecoklatan/kuning kotor dan berat.</td><td class="col-ekstraksi"><b>Meja Goyang (Shaking Table) Manual.</b> Pisahkan berdasarkan berat jenis dengan air mengalir pelan. Tanah ini bahan dasar magnet motor listrik/dinamo kincir air masa depan.</td></tr>
+            <tr><td>42</td><td class="col-mineral">Zirkon (Pasir Kilap)</td><td class="col-tanah">Menempel bersama Monasit dan Emas di pasir aluvial. Warnanya tembus pandang atau kecoklatan kemilau.</td><td class="col-ekstraksi">Dulang air. Lebur menjadi pasir tahan panas ekstrim untuk mencetak tuangan logam (Foundry sand).</td></tr>
+            <tr><td>43</td><td class="col-mineral">Ilmenit (Titanium Ore)</td><td class="col-tanah">Bagian dari pasir hitam besi di pantai, namun memiliki corak lebih keabu-abuan.</td><td class="col-ekstraksi">Tarik dengan magnet kekakuan sedang (Ilmenit tertarik, pasir biasa tidak). Lebur untuk lapisan titanium oksida (Cat putih abadi).</td></tr>
+            <tr><td>44</td><td class="col-mineral">Graphen Organik (Arang)</td><td class="col-tanah">Bukan dari tanah, tapi dari arang batok kelapa atau kayu jati tua yang dibakar hampa udara.</td><td class="col-ekstraksi">Tumbuk arang super halus. Super-kapasitor alam untuk pembuatan baterai basah (Earth Battery) rakitan desa!</td></tr>
+            <tr><td>45</td><td class="col-mineral">Silika Kemurnian Tinggi</td><td class="col-tanah">Urat kuarsa putih yang benar-benar jernih tanpa noda besi sedikitpun.</td><td class="col-ekstraksi">Gali manual. Dipecah dan dilebur tanpa kontaminasi. Cikal bakal pembuat modul chip silikon jika peradaban elektronik harus dimulai dari awal (Post-Reset).</td></tr>
+            <tr><td>46</td><td class="col-mineral">Emas & Perak Urban (E-Waste)</td><td class="col-tanah">Tumpukan papan sirkuit (Motherboard), RAM, dan prosesor CPU komputer/HP rongsokan di tong sampah.</td><td class="col-ekstraksi"><b>Eco-Leaching.</b> Rendam pin emas konektor CPU dengan cairan Cuka Konsentrat (Asam asetat) + Garam Laut + Perasan Jeruk Nipis berhari-hari. Jangan pakai Sianida! Logam dasar hancur, emasnya rontok utuh.</td></tr>
+            <tr><td>47</td><td class="col-mineral">Tembaga Urban</td><td class="col-tanah">Kabel instalasi bangunan tua, kumparan dinamo rusak, gulungan trafo PLN mati.</td><td class="col-ekstraksi">Kelupas isolator plastiknya dengan pisau (Jangan dibakar karena asap plastiknya beracun merusak syaraf!). Tembaga murni 99% siap dilebur jadi kabel generator turbin air kincir.</td></tr>
+            <tr><td>48</td><td class="col-mineral">Timbal Urban (Aki Bekas)</td><td class="col-tanah">Tumpukan Aki/Baterai mobil bekas (Accu) di bengkel-bengkel rongsokan kota.</td><td class="col-ekstraksi">Bongkar plastiknya (awas air asam sulfatnya gatal). Cuci plat timbalnya dengan kapur sirih, lebur api kecil untuk merakit sel aki baru (Renewable battery).</td></tr>
+            <tr><td>49</td><td class="col-mineral">Alumunium Urban</td><td class="col-tanah">Kaleng soda, velg motor pecah, wajan jebol, rongsokan pesawat/mesin.</td><td class="col-ekstraksi">Bikin tungku arang dengan tiupan Blower kuat (suhu 660°C). Kaleng dilebur, bersihkan kotoran/cat yang mengambang di atas cairan (Dross). Cetak jadi katrol atau body kincir.</td></tr>
+            <tr><td>50</td><td class="col-mineral">KESADARAN MERDEKA BUMI</td><td class="col-tanah">Di dalam dada dan pikiran Rakyat Nuswantara.</td><td class="col-ekstraksi"><b>Tolak Penyerahan Lahan!</b> Gali pengetahuanmu. Jika negara mengizinkan korporat merusak hutanimu untuk mengekstrak tanahmu, cabut izinya dengan kekuatan komunal. <b>Tanah Air adalah milik Air dan Tanah, bukan sertifikat investasi oligarki!</b></td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>⛏️ ALKEMIA NUSWANTARA: MENGEDUK TANPA MERUSAK ⛏️</h2>
+        <p>Narasi Elit Global (Matrix) selalu berkata: <em>"Biar korporat raksasa yang menambang bumi kalian, karena mereka punya teknologi hijau."</em><br><br>
+        <strong>Kenyataannya:</strong> Mereka menggundulkan jutaan hektar hutan, membuang limbah asam ke laut, dan meninggalkan danau beracun. Sementara itu, saat warga desa mendulang emas 1 gram di sungai warisan leluhurnya untuk membeli beras, warga ditangkap dan dicap sebagai "Penambang Ilegal".<br><br>
+        Sudah waktunya mematahkan ilusi ini. <strong>Tambang Rakyat yang memakai Dulang, Magnet, dan Ekstraksi Tanaman (Phytomining) adalah sebenar-benarnya Eco-Mining.</strong> Hentikan pemakaian Merkuri/Raksa dan Sianida. Kembalilah pada alkemia karuhun yang memanfaatkan api, gravitasi, dan kesabaran. Bral ah, rebut kembali tanahmu! 👁️⚡🌿</p>
+    </div>
+</div>
+
+</body>
+</html>
