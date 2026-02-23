@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT QORIN: ALAT TUKAR NUSWANTARA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0d0a00; /* Dark Gold/Spice */
+            color: #ccc;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .manifesto-container {
+            width: 100%;
+            max-width: 1500px;
+            border: 3px solid #d4af37; /* Pure Gold */
+            padding: 30px;
+            background: #0a0800;
+            position: relative;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .manifesto-container::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Black Ops One', cursive;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: #d4af37;
+            text-shadow: 0 0 15px #d4af37;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #ffaa00;
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .alert-box {
+            border: 2px dashed #ff3333;
+            background-color: rgba(30, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.2);
+            line-height: 1.6;
+        }
+        .alert-box span { color: #d4af37; font-weight: bold; font-size: 1.2rem; text-transform: uppercase; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+            z-index: 5;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            border: 1px solid #332200;
+            padding: 12px;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #1a1100;
+            color: #d4af37;
+            font-family: 'Black Ops One', cursive;
+            letter-spacing: 2px;
+            border-bottom: 3px solid #d4af37;
+        }
+
+        /* Kolom Styling */
+        .col-nama { color: #ffaa00; width: 25%; font-weight: bold; background: rgba(255,170,0,0.02); }
+        .col-gramasi { color: #00ffcc; width: 25%; font-style: italic; }
+        .col-fungsi { color: #e0cda9; width: 50%; }
+
+        tr:hover td { background-color: #1a1400; }
+
+        .section-header {
+            background-color: #110d00;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            font-size: 1.2rem;
+            border-top: 2px solid #d4af37;
+            border-bottom: 2px solid #d4af37;
+            letter-spacing: 4px;
+        }
+
+        .footer-note {
+            margin-top: 40px;
+            padding: 30px;
+            border: 2px solid #d4af37;
+            background: #000;
+            color: #ccc;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            line-height: 1.6;
+        }
+        .footer-note h2 { color: #d4af37; font-family: 'Black Ops One', cursive; margin-top: 0; }
+
+    </style>
+</head>
+<body>
+
+<div class="manifesto-container">
+    <h1>SYSTEM STABILITY SETTLEMENT</h1>
+    <div class="subtitle">50 ALAT TUKAR ANTI-INFLASI: STANDAR MATARAM & REMPAH EMAS</div>
+    
+    <div class="alert-box">
+        HARAM HUKUMNYA MEMBAYAR KERINGAT RAKYAT DENGAN KERTAS FIAT YANG DICETAK TANPA BATAS.<br>
+        <span>Nilai tukar harus memiliki "Jasad" (Intrinsik). Jika bukan Logam Mulia, maka Komoditas Alam.</span><br>
+        Inilah standar gramasi koin leluhur Nusantara (Mataram/Majapahit) yang disandingkan dengan Dinar/Dirham universal, serta komoditas rempah yang dulu digunakan VOC untuk menguasai dunia.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width:5%">NO</th>
+                <th>JENIS ALAT TUKAR</th>
+                <th>STANDAR / GRAMASI FISIK</th>
+                <th>FUNGSI & NILAI SETARA (BARTER)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="4" class="section-header">I. LOGAM MULIA KARUHUN (STANDAR MATARAM KUNO)</td></tr>
+            <tr><td>01</td><td class="col-nama">Masa (Ma) Emas</td><td class="col-gramasi">2.40 Gram Emas Murni</td><td class="col-fungsi">Koin standar kerajaan Mataram Kuno (Bentuk bulat kancing/biji jagung bertuliskan huruf Jawa Kuno 'Ma'). Digunakan untuk transaksi besar seperti beli sapi atau tanah.</td></tr>
+            <tr><td>02</td><td class="col-nama">Atak Emas</td><td class="col-gramasi">1.20 Gram Emas Murni</td><td class="col-fungsi">Pecahan setengah Masa (1/2 Masa). Setara dengan biaya sewa lahan bulanan atau beli hasil panen sekarung penuh.</td></tr>
+            <tr><td>03</td><td class="col-nama">Kupang (Ku) Emas</td><td class="col-gramasi">0.60 Gram Emas Murni</td><td class="col-fungsi">Pecahan seperempat Masa (1/4 Masa). Alat tukar untuk belanja kebutuhan dapur bulanan, baju tenun, atau ayam beberapa ekor.</td></tr>
+            <tr><td>04</td><td class="col-nama">Tahil (Ta) Emas</td><td class="col-gramasi">38.40 Gram Emas Murni</td><td class="col-fungsi">Setara 16 Masa. Ini adalah ukuran "Wholesale" saudagar pelabuhan. Dipakai untuk beli kapal, pembebasan lahan, atau upeti antar wilayah.</td></tr>
+            <tr><td>05</td><td class="col-nama">Kati Emas</td><td class="col-gramasi">768 Gram Emas (20 Tahil)</td><td class="col-fungsi">Cadangan devisa lumbung negara (Baitul Mal Nusantara). Tidak untuk eceran, khusus untuk biaya militer dan infrastruktur makro.</td></tr>
+            <tr><td>06</td><td class="col-nama">Masa Perak</td><td class="col-gramasi">2.40 Gram Perak Murni</td><td class="col-fungsi">Sama dengan koin Masa, tapi berbahan perak. Untuk transaksi menengah ke bawah di pasar tradisional desa.</td></tr>
+            <tr><td>07</td><td class="col-nama">Kupang Perak</td><td class="col-gramasi">0.60 Gram Perak Murni</td><td class="col-fungsi">Koin perak kecil. Setara dengan ongkos tebas rumput harian atau jasa cukur rambut.</td></tr>
+            <tr><td>08</td><td class="col-nama">Kepeng / Gobog</td><td class="col-gramasi">Koin Tembaga / Perunggu (Berlubang)</td><td class="col-fungsi">Uang receh Majapahit. Lubang di tengahnya dipakai untuk mengikat ribuan koin dengan tali bambu. Untuk beli sayur ikat, secangkir kopi, atau jajan pasar.</td></tr>
+            <tr><td>09</td><td class="col-nama">Picis Timah</td><td class="col-gramasi">Koin Timah Murni / Kuningan</td><td class="col-fungsi">Pecahan paling kecil di Kesultanan Banten/Cirebon. Dipakai anak-anak jajan atau bayar parkir/tol jembatan desa.</td></tr>
+            <tr><td>10</td><td class="col-nama">Koin Suwasa</td><td class="col-gramasi">Campuran Emas & Tembaga</td><td class="col-fungsi">Koin campuran yang nilainya ada di antara emas dan perak. Kuat, tidak mudah luntur, populer di wilayah Sumatera.</td></tr>
+
+            <tr><td colspan="4" class="section-header">II. LOGAM MULIA UNIVERSAL & KONTEMPORER (HARTA AMAN)</td></tr>
+            <tr><td>11</td><td class="col-nama">Dinar Emas</td><td class="col-gramasi">4.25 Gram Emas (22k / 24k)</td><td class="col-fungsi">Standar Islam universal. 1 Dinar sejarahnya mampu membeli 1 ekor kambing kelas A. Nilainya tidak pernah berubah sejak zaman Nabi.</td></tr>
+            <tr><td>12</td><td class="col-nama">Dirham Perak</td><td class="col-gramasi">2.975 Gram Perak Murni (99.9%)</td><td class="col-fungsi">Standar harian universal. 1 Dirham cukup untuk makan ayam/roti kenyang untuk sekeluarga sehari. Alat tukar paling ideal untuk ekonomi desa.</td></tr>
+            <tr><td>13</td><td class="col-nama">Danig / Qirat</td><td class="col-gramasi">1/6 Dirham Perak (0.49 Gram)</td><td class="col-fungsi">Pecahan dirham. Untuk bayar parkir gerobak, seikat sayur sawi, atau jasa tukang pijat.</td></tr>
+            <tr><td>14</td><td class="col-nama">Fulus Tembaga</td><td class="col-gramasi">Tembaga Murni Koin</td><td class="col-fungsi">Uang receh dalam sistem Dinar/Dirham. Menggantikan peran kertas parkir. Tidak bisa ditimbun, harus diputar agar ekonomi bawah jalan.</td></tr>
+            <tr><td>15</td><td class="col-nama">Mini Gold (Pecahan Kecil)</td><td class="col-gramasi">0.05g, 0.1g, 0.25g, 0.5g Emas Murni</td><td class="col-fungsi">Solusi modern. Emas lempengan kecil yang di-laminating rapi. Memungkinkan rakyat biasa menabung emas dari uang receh dan dipakai barter sembako.</td></tr>
+            <tr><td>16</td><td class="col-nama">Lantakan Emas (Batangan)</td><td class="col-gramasi">10g, 50g, 100g, 1 Kg Emas Murni</td><td class="col-fungsi">Logam mulia batangan (Antam/Lokal). Penyimpan kekayaan jangka panjang (Store of Value) yang kebal inflasi krisis perang dunia.</td></tr>
+            <tr><td>17</td><td class="col-nama">Lantakan Perak (Silver Bar)</td><td class="col-gramasi">100g, 250g, 1 Kg Perak Murni</td><td class="col-fungsi">Cadangan perak industri dan moneter. Sangat mudah dicairkan saat sistem fiat collapse, karena harganya lebih terjangkau dari emas.</td></tr>
+            <tr><td>18</td><td class="col-nama">Dirham Cetak Lokal (Desa)</td><td class="col-gramasi">2.975 Gram Perak Lebur Sendiri</td><td class="col-fungsi">Desa yang punya alat pres bisa melebur perak rongsokan menjadi Dirham berstempel desa sendiri. Bukti kedaulatan Baitul Mal.</td></tr>
+            <tr><td>19</td><td class="col-nama">Perhiasan Emas Harian</td><td class="col-gramasi">Cincin / Gelang Emas Berbagai Karat</td><td class="col-fungsi">Di potong atau dinilai karatnya oleh penguji pasar (Balé Timbangan) untuk transaksi darurat ibu-ibu.</td></tr>
+            <tr><td>20</td><td class="col-nama">Uang Kampua (Kain Tenun)</td><td class="col-gramasi">1 Helai Kain Standar Buton</td><td class="col-fungsi">Uang khas Buton kuno. Secarik kain tenun murni yang disahkan cap kerajaan. Contoh nyata barter barang yang memiliki nilai pakai jasmani.</td></tr>
+
+            <tr><td colspan="4" class="section-header">III. REMPAH EMAS NUSWANTARA (THE COLONIAL SPICE CURRENCY)</td></tr>
+            <tr><td>21</td><td class="col-nama">Lada Hitam (Black Pepper)</td><td class="col-gramasi">Per Karung (50 Kg) / Per Takar (Batok)</td><td class="col-fungsi">"Emas Hitam" Nusantara. Di abad 16, segenggam lada di Eropa setara nilainya dengan segenggam emas. Pengawet daging tak tertandingi saat winter/krisis.</td></tr>
+            <tr><td>22</td><td class="col-nama">Lada Putih (Muntok White)</td><td class="col-gramasi">Per Kilo (Kualitas Ekspor)</td><td class="col-fungsi">Lebih mahal dari lada hitam. Proses perendamannya rumit. Alat tukar barter tingkat elit untuk senjata atau kain sutra.</td></tr>
+            <tr><td>23</td><td class="col-nama">Biji Pala (Nutmeg)</td><td class="col-gramasi">Per Biji Utuh Kering</td><td class="col-fungsi">Hanya tumbuh di Kepulauan Banda awalnya. Rempah magis pengobat wabah (Black Death). 1 Karung pala dulu ditukar dengan pulau Manhattan oleh Belanda!</td></tr>
+            <tr><td>24</td><td class="col-nama">Bunga Pala (Fuli / Mace)</td><td class="col-gramasi">Per Ons (Dikeringkan Merah)</td><td class="col-fungsi">Selaput biji pala. Jauh lebih langka dan mahal dari bijinya. Aromanya sangat kuat. Barter kelas atas untuk obat-obatan tabib.</td></tr>
+            <tr><td>25</td><td class="col-nama">Cengkeh Kering (Cloves)</td><td class="col-gramasi">Per Kilo / Per Bambu Takar</td><td class="col-fungsi">Bunga belum mekar dari pohon endemik Maluku. Kaya eugenol (antiseptik/obat gigi). Alat tukar yang sangat liquid (laku cepat) di seluruh benua.</td></tr>
+            <tr><td>26</td><td class="col-nama">Kayu Manis (Cinnamon / Cassia)</td><td class="col-gramasi">Per Ikat Batang Kering (Gulungan)</td><td class="col-fungsi">Kerincian/Sumatera. Kulit pohon wangi pengawet makanan dan gula alami. Barter harian antar desa untuk sembako pokok.</td></tr>
+            <tr><td>27</td><td class="col-nama">Kapulaga (Cardamom)</td><td class="col-gramasi">Per Kilo Biji Kering</td><td class="col-fungsi">Rempah termahal ketiga di dunia (setelah Saffron & Vanili). Pembersih paru-paru dan campuran kopi elit. Punya nilai tukar sangat tinggi.</td></tr>
+            <tr><td>28</td><td class="col-nama">Vanili Kering (Vanilla Pods)</td><td class="col-gramasi">Per Batang Utuh Kering (Fermentasi)</td><td class="col-fungsi">"Emas Hijau". Perawatannya harus dikawinkan manual oleh manusia. 1 Kilo Vanili super bisa ditukar dengan 1 motor bebek di masa panen!</td></tr>
+            <tr><td>29</td><td class="col-nama">Kemukus (Cubeb / Tailed Pepper)</td><td class="col-gramasi">Per Kilo Kering</td><td class="col-fungsi">Lada berekor. Obat asma dan disfungsi pria. Komoditas langka Jawa yang dulu jadi harta karun rahasia pelaut Arab.</td></tr>
+            <tr><td>30</td><td class="col-nama">Bunga Lawang (Star Anise)</td><td class="col-gramasi">Per Karung Kering</td><td class="col-fungsi">Rempah anti-virus murni (Bahan dasar obat Tamiflu). Alat tukar paling dicari oleh tabib desa saat musim wabah influenza/demam melanda.</td></tr>
+            <tr><td>31</td><td class="col-nama">Kayu Secang (Sappanwood)</td><td class="col-gramasi">Serutan Kering (Per Ikat)</td><td class="col-fungsi">Pewarna merah alami dan anti-oksidan tinggi penambah imun. Alat barter harian untuk pengrajin tekstil dan pembuat jamu.</td></tr>
+            <tr><td>32</td><td class="col-nama">Kunyit Kering & Jahe Merah</td><td class="col-gramasi">Irisan Kering (Simplisia)</td><td class="col-fungsi">Antibiotik alam. Dalam sistem barter, 1 Kg simplisia jahe merah bisa ditukar dengan ayam hidup karena fungsinya menyelamatkan nyawa dari demam.</td></tr>
+
+            <tr><td colspan="4" class="section-header">IV. KOMODITAS CAIR & ENERGI (LIQUID ASSETS)</td></tr>
+            <tr><td>33</td><td class="col-nama">Madu Hutan Liar (Odeng)</td><td class="col-gramasi">Per Botol Kaca (Lebah Apis Dorsata)</td><td class="col-fungsi">Gula abadi yang tidak pernah basi. Antibiotik cair. Sangat dihargai mahal. 1 Botol madu asli setara dengan 1 Gram Dinar emas di pasar barter darurat.</td></tr>
+            <tr><td>34</td><td class="col-nama">Minyak Kelapa Murni (VCO)</td><td class="col-gramasi">Per Liter / Jerigen</td><td class="col-fungsi">Bahan bakar tubuh darurat, obat luka luar, dan minyak goreng murni yang tidak bikin batuk. Cairan tukar harian yang sangat berharga.</td></tr>
+            <tr><td>35</td><td class="col-nama">Minyak Atsiri (Essential Oils)</td><td class="col-gramasi">Per Botol Kaca Kecil (50ml)</td><td class="col-fungsi">Minyak Nilam, Sereh Wangi, atau Cengkeh. Diperas dan disuling manual. Harganya selangit, dipakai barter dengan perangkat besi/senjata.</td></tr>
+            <tr><td>36</td><td class="col-nama">Garam Krosok Laut (Brine)</td><td class="col-gramasi">Per Karung (50 Kg)</td><td class="col-fungsi">PENGUASA BARTER. Tanpa garam, manusia mati lemas dan semua daging akan busuk. Di jaman krisis, garam lebih berharga dari uang segepok!</td></tr>
+            <tr><td>37</td><td class="col-nama">Gula Aren Cetak Batu</td><td class="col-gramasi">Per Gandu (Batok Cetakan)</td><td class="col-fungsi">Karbohidrat instan. Penyelamat petani saat kelaparan di kebun. Bisa disimpan berbulan-bulan tanpa kulkas. Alat tukar harian rakyat.</td></tr>
+            <tr><td>38</td><td class="col-nama">Kopi Biji Mentah (Green Beans)</td><td class="col-gramasi">Per Karung Guni (Arabika/Robusta)</td><td class="col-fungsi">Stimulan mental. Kopi biji kering bisa disimpan 2 tahun. Pengganti uang kertas untuk beli tanah atau bahan bangunan antar desa.</td></tr>
+            <tr><td>39</td><td class="col-nama">Kakao (Biji Cokelat Fermentasi)</td><td class="col-gramasi">Per Kilo (Grade A Fermentasi)</td><td class="col-fungsi">Dulu di peradaban Maya/Aztec, biji coklat adalah uang resmi. Biji kakao fermentasi super adalah superfood tinggi kalori penangkal stres darurat.</td></tr>
+            <tr><td>40</td><td class="col-nama">Tembakau Kering Rajang</td><td class="col-gramasi">Per Lempeng / Per Kilo (Kualitas Super)</td><td class="col-fungsi">Daun emas. Alat penenang psikologis (Stress relief) di masa krisis. Mudah ditukar dengan beras atau amunisi milisi penjaga pos.</td></tr>
+
+            <tr><td colspan="4" class="section-header">V. PANGAN POKOK & MATERIAL INDUSTRI (THE FOUNDATION BARTER)</td></tr>
+            <tr><td>41</td><td class="col-nama">Gabah Kering Giling (GKG)</td><td class="col-gramasi">Per Karung (Standar Leuit)</td><td class="col-fungsi">Beras yang masih berkulit (gabah) tahan 5 tahun di lumbung. Ini adalah "Deposito Bank" dalam bentuk karbohidrat absolut!</td></tr>
+            <tr><td>42</td><td class="col-nama">Kacang Kedelai & Kacang Hijau</td><td class="col-gramasi">Per Karung Kering</td><td class="col-fungsi">Sumber protein nabati jangka panjang. Ditukar untuk membuat tempe/tahu di desa tetangga yang gagal panen padi.</td></tr>
+            <tr><td>43</td><td class="col-nama">Jagung Pipil Kering & Sorgum</td><td class="col-gramasi">Per Karung (Kelembaban &lt; 12%)</td><td class="col-fungsi">Pengganti beras yang kebal musim kemarau. Karbohidrat cadangan militer desa.</td></tr>
+            <tr><td>44</td><td class="col-nama">Kapas Mentah & Benang Sutra</td><td class="col-gramasi">Per Gulung / Pintalan</td><td class="col-fungsi">Bahan baku sandang. Di musim dingin, 1 gulung benang tebal lebih berguna daripada 1 lembar sertifikat saham perusahaan!</td></tr>
+            <tr><td>45</td><td class="col-nama">Kain Tenun / Batik Tulis</td><td class="col-gramasi">Per Helai Standar</td><td class="col-fungsi">Uang kain. Semakin rumit motifnya, semakin tinggi "Nominal" barternya. Kain songket bisa ditukar dengan sapi betina produktif.</td></tr>
+            <tr><td>46</td><td class="col-nama">Kulit Hewan Tersamak (Leather)</td><td class="col-gramasi">Per Lembar Sapi/Kambing Utuh</td><td class="col-fungsi">Bahan baku rompi, sepatu, dan sarung senjata. Sangat berharga bagi pandai besi dan pembuat zirah.</td></tr>
+            <tr><td>47</td><td class="col-nama">Bibit Padi/Sayur Pusaka (Heirloom)</td><td class="col-gramasi">Per Botol Kaca Kering</td><td class="col-fungsi">Investasi Milyaran! Benih yang bisa ditanam berulang kali (tidak mandul seperti benih pabrik). Dipertukarkan antar petani untuk keragaman genetika pangan.</td></tr>
+            <tr><td>48</td><td class="col-nama">Batangan Tembaga / Kuningan</td><td class="col-gramasi">Per Batang Padat</td><td class="col-fungsi">Bukan untuk perhiasan, tapi untuk bahan baku alat transmisi radio kristal, kawat dinamo turbin, dan antena skalar. Logam teknologi masa depan.</td></tr>
+            <tr><td>49</td><td class="col-nama">Besi Baja Tempa / Perkakas</td><td class="col-gramasi">Bentuk Parang / Cangkul (Fungsional)</td><td class="col-fungsi">Pabrik peleburan bayar pajak pakai cangkul. Cangkul ini adalah alat barter yang langsung bisa dipakai membelah tanah, memutar roda ekonomi!</td></tr>
+            <tr><td>50</td><td class="col-nama">TENAGA FISIK & SKILL (JASA)</td><td class="col-gramasi">1 Hari Kerja / 1 Kasus Masalah</td><td class="col-fungsi">Alat tukar tertinggi jika kamu tidak punya harta benda. "Tukarkan tenagamu memanen sawah orang, maka kamu dapat beras hari itu." Anti-Riba, Anti-Hutang!</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <h2>⚔️ TINGGALKAN KERTAS ILLUSI, KEMBALI PADA REALITAS FISIK ⚔️</h2>
+        <p>Sistem uang fiat (Kertas) didesain agar Elit bisa memalsukan kekayaan dengan sekadar memencet tombol <em>Print</em> di komputer Bank Sentral. Sementara kamu menukar keringat darahmu setiap hari hanya untuk mendapatkan kertas yang nilainya terus turun digerus inflasi.<br><br>
+        <strong>Sunda Nuswantara OS mendeklarasikan kemerdekaan ekonomi: BACK TO GOLD & SPICES!</strong><br>
+        Jika kamu punya <strong>Masa Emas</strong> atau <strong>Dirham</strong>, kekayaanmu abadi tidak bisa di-devaluasi pemerintah. Jika kamu miskin emas, simpan <strong>Garam, Lada, dan Madu</strong> di lumbungmu! Saat krisis hiper-inflasi melanda dan uang kertas hanya jadi sampah yang berserakan di jalanan kota, komunitas kita akan tetap makan enak dengan sistem barter rempah dan logam murni. Bral ah, putar rodanya! 👁️⚡🪙</p>
+    </div>
+</div>
+
+</body>
+</html>
