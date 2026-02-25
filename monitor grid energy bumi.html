@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Grid Energi Nusantara - Sunda Nuswantara OS</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050a0e;
+            color: #e0f7fa;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden; /* Prevent scroll to feel like an OS panel */
+        }
+
+        .header {
+            background-color: #0a1922;
+            padding: 15px 20px;
+            border-bottom: 2px solid #00e676;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #00e676;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #00e676;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+
+        /* Area Grid Visual */
+        .grid-container {
+            flex: 2;
+            position: relative;
+            background-image: 
+                linear-gradient(rgba(0, 230, 118, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 230, 118, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* SVG untuk garis koneksi (Ley Lines) */
+        svg.ley-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        line {
+            stroke: rgba(0, 230, 118, 0.4);
+            stroke-width: 2;
+            stroke-dasharray: 5, 5;
+            animation: dash 20s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 1000;
+            }
+        }
+
+        /* Titik Resonansi (Node) */
+        .node {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #00e676;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            cursor: pointer;
+            box-shadow: 0 0 15px #00e676, 0 0 30px #00e676;
+            transition: all 0.3s ease;
+        }
+
+        .node:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: #ffff00;
+            box-shadow: 0 0 20px #ffff00, 0 0 40px #ffff00;
+        }
+
+        .node-label {
+            position: absolute;
+            color: #a7ffeb;
+            font-size: 0.8rem;
+            text-shadow: 0 0 5px #00e676;
+            pointer-events: none;
+            z-index: 2;
+            white-space: nowrap;
+        }
+
+        /* Panel Informasi Kanan */
+        .info-panel {
+            flex: 1;
+            background-color: #0a1922;
+            border-left: 2px solid #00e676;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -5px 0 15px rgba(0, 230, 118, 0.2);
+        }
+
+        .info-panel h2 {
+            color: #ffff00;
+            border-bottom: 1px dashed #00e676;
+            padding-bottom: 10px;
+            margin-top: 0;
+            text-shadow: 0 0 5px #ffff00;
+        }
+
+        .data-box {
+            background-color: rgba(0, 230, 118, 0.1);
+            border: 1px solid #00e676;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .data-box strong {
+            color: #00e676;
+        }
+
+        .status-scan {
+            color: #ff3d00;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Sunda Nuswantara OS // Monitor Grid Energi Kosmik</h1>
+        <div style="color: #00e676;">Status: <span class="status-scan">SCANNING LEY LINES...</span></div>
+    </div>
+
+    <div class="container">
+        
+        <div class="grid-container" id="grid-map">
+            <svg class="ley-lines" id="lines-svg"></svg>
+            </div>
+
+        <div class="info-panel">
+            <h2 id="info-title">Pilih Titik Resonansi</h2>
+            
+            <div class="data-box">
+                <p><strong>Status Koordinat:</strong> <span id="info-coord">Standby</span></p>
+                <p><strong>Fungsi Grid:</strong> <span id="info-func">Menunggu input...</span></p>
+                <p><strong>Sandi Tritangtu:</strong> <span id="info-tri">Menunggu input...</span></p>
+            </div>
+            
+            <div class="data-box" style="border-color: #ffff00;">
+                <p><strong>Catatan Bujangga Manik:</strong></p>
+                <p id="info-desc" style="font-size: 0.9rem; line-height: 1.5; color: #a7ffeb;">
+                    Klik pada salah satu titik energi (node) pada grid di sebelah kiri untuk membaca data arsip resonansi geografi spiritual Nusantara.
+                </p>
+            </div>
+
+            <div class="data-box" style="border-color: #ff3d00;">
+                <p><strong>Peringatan Sistem:</strong> Grid energi ini adalah urat nadi peradaban. Jika satu titik ditutup beton atau dirusak keseimbangannya, resonansi ke titik lain akan terputus (Sindrom Bumi Mati).</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Data Titik Energi (Koordinat Relatif x, y dalam persentase)
+        const nodesData = [
+            { id: 'pakuan', name: 'Puseur Pakuan', x: 20, y: 45, func: 'Pusat Komando & Logistik', tri: 'Prabu (Eksekusi)', desc: 'Ibu kota Pajajaran. Titik kumpul material dan kebijakan. Didesain agar resonansi energi berputar di pusat dayeuh sebelum menyebar.' },
+            { id: 'salak', name: 'Gn. Salak', x: 25, y: 55, func: 'Tameng Energi Barat', tri: 'Rama / Resi', desc: 'Gunung suci pelindung pusat dayeuh. Tempat perenungan dan penyucian energi sebelum masuk ke ibukota.' },
+            { id: 'padang', name: 'Situs Gn. Padang', x: 30, y: 65, func: 'Akumulator Frekuensi Purba', tri: 'Resi (Sains Kosmik)', desc: 'Peninggalan Lemuria. Susunan batu balok (columnar joint) berfungsi sebagai resonator suara/akustik bumi, menghubungkan energi langit dan tanah.' },
+            { id: 'tampomas', name: 'Gn. Tampomas', x: 45, y: 40, func: 'Stabilisator Tengah', tri: 'Resi', desc: 'Titik keseimbangan tengah (Sunda Tengah). Menyambungkan arus energi dari barat (Sunda) menuju timur.' },
+            { id: 'galunggung', name: 'Gn. Galunggung', x: 50, y: 60, func: 'Pusat "Pulung" (Spiritual)', tri: 'Rama (Moral)', desc: 'Pusat legitimasi spiritual Tatar Sunda. Tempat turunnya "Pulung" (wahyu kepemimpinan). Jika Galunggung rusak, maka kepemimpinan akan hancur.' },
+            { id: 'ceremai', name: 'Gn. Ceremai', x: 55, y: 35, func: 'Gerbang Utara/Timur', tri: 'Prabu / Resi', desc: 'Tower energi raksasa pembatas dan penjaga wilayah utara. Tempat pertemuan arus angin lautan dan gunung.' },
+            { id: 'lawu', name: 'Gn. Lawu', x: 75, y: 55, func: 'Pusat Meditasi Tanah Jawa', tri: 'Rama / Resi', desc: 'Titik simpul energi mistis di tanah Jawa. Disinggahi Bujangga Manik sebagai pilar penting keseimbangan Dwitunggal Sunda-Jawa.' },
+            { id: 'mahameru', name: 'Gn. Mahameru', x: 90, y: 60, func: 'Paku Bumi Timur', tri: 'Prabu / Rama', desc: 'Ujung resonator di timur pulau Jawa. Menahan keseimbangan lempeng benua (Sundaland).' }
+        ];
+
+        // Jalur Koneksi (Ley Lines) - menghubungkan index node
+        const connections = [
+            [0, 1], [0, 3], [1, 2], [2, 4], [3, 4], [3, 5], [4, 5], [5, 6], [4, 6], [6, 7]
+        ];
+
+        const gridMap = document.getElementById('grid-map');
+        const svgLines = document.getElementById('lines-svg');
+
+        // Render Nodes
+        nodesData.forEach((node, index) => {
+            // Buat titik
+            const div = document.createElement('div');
+            div.className = 'node';
+            div.style.left = node.x + '%';
+            div.style.top = node.y + '%';
+            div.id = 'node-' + index;
+
+            // Interaksi Klik
+            div.addEventListener('click', () => {
+                document.getElementById('info-title').innerText = node.name;
+                document.getElementById('info-title').style.color = '#00e676';
+                document.getElementById('info-coord').innerText = `X: ${node.x} | Y: ${node.y} (Ley Line Terkunci)`;
+                document.getElementById('info-func').innerText = node.func;
+                document.getElementById('info-tri').innerText = node.tri;
+                document.getElementById('info-desc').innerText = node.desc;
+            });
+
+            // Buat Label
+            const label = document.createElement('div');
+            label.className = 'node-label';
+            label.style.left = node.x + '%';
+            label.style.top = (node.y + 3) + '%';
+            label.style.transform = 'translateX(-50%)';
+            label.innerText = node.name;
+
+            gridMap.appendChild(div);
+            gridMap.appendChild(label);
+        });
+
+        // Render Lines (menggunakan % untuk koordinat SVG)
+        const renderLines = () => {
+            svgLines.innerHTML = '';
+            const rect = gridMap.getBoundingClientRect();
+            
+            connections.forEach(pair => {
+                const node1 = nodesData[pair[0]];
+                const node2 = nodesData[pair[1]];
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                // Konversi persen ke persentase SVG
+                line.setAttribute('x1', node1.x + '%');
+                line.setAttribute('y1', node1.y + '%');
+                line.setAttribute('x2', node2.x + '%');
+                line.setAttribute('y2', node2.y + '%');
+                
+                svgLines.appendChild(line);
+            });
+        };
+
+        // Render garis saat load dan resize
+        window.addEventListener('load', renderLines);
+        window.addEventListener('resize', renderLines);
+
+    </script>
+</body>
+</html>
