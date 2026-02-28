@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Konversi Logam ke Dinar/Dirham & Nusantara</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: #e0e0e0; padding: 20px; }
+        .container { max-width: 480px; margin: 0 auto; background: #1e1e1e; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid #333; }
+        h2 { text-align: center; color: #d4af37; font-size: 1.5em; margin-bottom: 20px; line-height: 1.3; }
+        h2 span { display: block; font-size: 0.6em; color: #888; font-weight: normal; margin-top: 5px; }
+        label { display: block; margin-top: 15px; font-weight: bold; color: #bbb; }
+        input, select, button { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #444; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 1em; }
+        input:focus, select:focus { outline: none; border-color: #d4af37; }
+        button { background-color: #d4af37; color: #121212; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; border: none; }
+        button:hover { background-color: #f1c40f; }
+        .result-box { margin-top: 25px; padding: 15px; background: #2a2a2a; border-left: 4px solid #d4af37; border-radius: 4px; display: none; }
+        .result-item { margin-bottom: 10px; line-height: 1.5; font-size: 0.95em; }
+        .highlight { color: #d4af37; font-weight: bold; font-size: 1.05em; }
+        .sub-highlight { color: #aaa; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Konverter Logam & Koin Fisik <span>Dinar, Dirham, Masa, Atak & Kupang atau koin perak/emas standar eropa</span></h2>
+    
+    <label for="inputValue">Masukkan Angka/Jumlah:</label>
+    <input type="number" id="inputValue" placeholder="Contoh: 1, 10, 31.103" step="any">
+
+    <label for="inputType">Pilih Satuan Asal:</label>
+    <select id="inputType">
+        <option value="gram_emas">Gram Emas Murni Nuget/Batang</option>
+        <option value="gram_perak">Gram Perak Murni Nuget/Batang</option>
+        <option value="oz_emas">Troy Ounce Emas</option>
+        <option value="oz_perak">Troy Ounce Perak</option>
+        <option value="dinar">Dinar (4.25g Emas)</option>
+        <option value="dirham">Dirham (2.975g Perak)</option>
+        <option value="masa_emas">Masa Emas Era Mataram (2.4g)</option>
+        <option value="atak_emas">Atak Emas Era Mataram (1.2g)</option>
+        <option value="kupang_emas">Kupang Emas Era Mataram (0.6g)</option>
+    </select>
+
+    <button onclick="calculate()">Konversi Sekarang</button>
+
+    <div class="result-box" id="resultBox">
+        </div>
+</div>
+
+<script>
+    // Konstanta Absolut
+    const BERAT_DINAR = 4.25; // gram emas
+    const BERAT_DIRHAM = 2.975; // gram perak
+    const TROY_OUNCE = 31.103; // gram
+    const RASIO_DINAR_DIRHAM = 27; // 1 Dinar = 27 Dirham
+    
+    // Mataram Standards
+    const BERAT_MASA = 2.4; // gram emas
+    const BERAT_ATAK = 1.2; // gram emas
+    const BERAT_KUPANG = 0.6; // gram emas
+
+    function calculate() {
+        let input = parseFloat(document.getElementById('inputValue').value);
+        let type = document.getElementById('inputType').value;
+        let resultBox = document.getElementById('resultBox');
+        
+        if (isNaN(input) || input <= 0) {
+            alert("Masukin angka yang bener dulu, bro!");
+            return;
+        }
+
+        let htmlOutput = "";
+        
+        // Fungsi pembulatan rapi (maksimal 4 desimal)
+        const formatStr = (num) => num.toLocaleString('id-ID', { maximumFractionDigits: 4 });
+
+        switch(type) {
+            case 'gram_emas':
+                let d_from_g = input / BERAT_DINAR;
+                let dir_val_from_g = d_from_g * RASIO_DINAR_DIRHAM;
+                
+                // Fisik Mataram dari gram emas
+                let masa_from_g = input / BERAT_MASA;
+                let atak_from_g = input / BERAT_ATAK;
+                let kupang_from_g = input / BERAT_KUPANG;
+
+                htmlOutput = `
+                    <div class="result-item">Fisik Dinar: <span class="highlight">${formatStr(d_from_g)} Dinar</span></div>
+                    <div class="result-item">Fisik Mataram: <span class="highlight">${formatStr(masa_from_g)} Masa</span> <br>
+                    <span class="sub-highlight">atau ${formatStr(atak_from_g)} Atak | ${formatStr(kupang_from_g)} Kupang</span></div>
+                    <div class="result-item">Nilai Tukar (1:27): Setara <span class="highlight">${formatStr(dir_val_from_g)} Dirham</span></div>
+                `;
+                break;
+
+            case 'gram_perak':
+                let dir_from_g = input / BERAT_DIRHAM;
+                let din_val_from_g = dir_from_g / RASIO_DINAR_DIRHAM;
+                
+                // Nilai setara dalam gram emas dulu
+                let gram_emas_eq_dari_perak = din_val_from_g * BERAT_DINAR; 
+                
+                let masa_val_g = gram_emas_eq_dari_perak / BERAT_MASA;
+                let atak_val_g = gram_emas_eq_dari_perak / BERAT_ATAK;
+                let kupang_val_g = gram_emas_eq_dari_perak / BERAT_KUPANG;
+
+                htmlOutput = `
+                    <div class="result-item">Fisik Dirham: <span class="highlight">${formatStr(dir_from_g)} Dirham</span></div>
+                    <div class="result-item">Nilai Tukar Dinar (1:27): Setara <span class="highlight">${formatStr(din_val_from_g)} Dinar</span></div>
+                    <div class="result-item">Nilai Tukar Mataram: Setara <span class="highlight">${formatStr(masa_val_g)} Masa</span> <br>
+                    <span class="sub-highlight">atau ${formatStr(atak_val_g)} Atak | ${formatStr(kupang_val_g)} Kupang</span></div>
+                `;
+                break;
+
+            case 'oz_emas':
+                let gram_oz_e = input * TROY_OUNCE;
+                let dinar_from_oz = gram_oz_e / BERAT_DINAR;
+                
+                let masa_from_oz = gram_oz_e / BERAT_MASA;
+                let atak_from_oz = gram_oz_e / BERAT_ATAK;
+                let kupang_from_oz = gram_oz_e / BERAT_KUPANG;
+                
+                let dirham_val_from_oz = dinar_from_oz * RASIO_DINAR_DIRHAM;
+                
+                htmlOutput = `
+                    <div class="result-item">Berat Emas: ${formatStr(gram_oz_e)} Gram</div>
+                    <div class="result-item">Fisik Dinar: <span class="highlight">${formatStr(dinar_from_oz)} Dinar</span></div>
+                    <div class="result-item">Fisik Mataram: <span class="highlight">${formatStr(masa_from_oz)} Masa</span> <br>
+                    <span class="sub-highlight">atau ${formatStr(atak_from_oz)} Atak | ${formatStr(kupang_from_oz)} Kupang</span></div>
+                    <div class="result-item">Nilai Tukar: Setara <span class="highlight">${formatStr(dirham_val_from_oz)} Dirham</span></div>
+                `;
+                break;
+
+            case 'oz_perak':
+                let gram_oz_p = input * TROY_OUNCE;
+                let dirham_from_oz = gram_oz_p / BERAT_DIRHAM;
+                
+                let dinar_val_from_oz = dirham_from_oz / RASIO_DINAR_DIRHAM;
+                let gram_emas_eq = dinar_val_from_oz * BERAT_DINAR; 
+                
+                let masa_val = gram_emas_eq / BERAT_MASA;
+                let atak_val = gram_emas_eq / BERAT_ATAK;
+                let kupang_val = gram_emas_eq / BERAT_KUPANG;
+
+                htmlOutput = `
+                    <div class="result-item">Berat Perak: ${formatStr(gram_oz_p)} Gram</div>
+                    <div class="result-item">Fisik Dirham: <span class="highlight">${formatStr(dirham_from_oz)} Dirham</span></div>
+                    <div class="result-item">Nilai Tukar Dinar: Setara <span class="highlight">${formatStr(dinar_val_from_oz)} Dinar</span></div>
+                    <div class="result-item">Nilai Tukar Mataram: Setara <span class="highlight">${formatStr(masa_val)} Masa</span> <br>
+                    <span class="sub-highlight">atau ${formatStr(atak_val)} Atak | ${formatStr(kupang_val)} Kupang</span></div>
+                `;
+                break;
+
+            case 'dinar':
+                let gram_emas_d = input * BERAT_DINAR;
+                let troy_emas_d = gram_emas_d / TROY_OUNCE;
+                let dirham_eq = input * RASIO_DINAR_DIRHAM;
+                htmlOutput = `
+                    <div class="result-item">Berat Fisik: <span class="highlight">${formatStr(gram_emas_d)} Gram Emas</span></div>
+                    <div class="result-item">Troy Ounce: ${formatStr(troy_emas_d)} oz</div>
+                    <div class="result-item">Nilai Tukar: Setara <span class="highlight">${formatStr(dirham_eq)} Dirham</span></div>
+                `;
+                break;
+
+            case 'dirham':
+                let gram_perak_dir = input * BERAT_DIRHAM;
+                let troy_perak_dir = gram_perak_dir / TROY_OUNCE;
+                let dinar_eq = input / RASIO_DINAR_DIRHAM;
+                htmlOutput = `
+                    <div class="result-item">Berat Fisik: <span class="highlight">${formatStr(gram_perak_dir)} Gram Perak</span></div>
+                    <div class="result-item">Troy Ounce: ${formatStr(troy_perak_dir)} oz</div>
+                    <div class="result-item">Nilai Tukar: Setara <span class="highlight">${formatStr(dinar_eq)} Dinar</span></div>
+                `;
+                break;
+
+            case 'masa_emas':
+                let gram_masa = input * BERAT_MASA;
+                let dinar_from_masa = gram_masa / BERAT_DINAR;
+                let dirham_val_from_masa = dinar_from_masa * RASIO_DINAR_DIRHAM;
+                htmlOutput = `
+                    <div class="result-item">Berat Fisik: <span class="highlight">${formatStr(gram_masa)} Gram Emas</span></div>
+                    <div class="result-item">Ekuivalen Dinar: ${formatStr(dinar_from_masa)} Dinar</div>
+                    <div class="result-item">Nilai Tukar: Setara <span class="highlight">${formatStr(dirham_val_from_masa)} Dirham</span></div>
+                `;
+                break;
+
+            case 'atak_emas':
+                let gram_atak = input * BERAT_ATAK;
+                let dinar_from_atak = gram_atak / BERAT_DINAR;
+                let dirham_val_from_atak = dinar_from_atak * RASIO_DINAR_DIRHAM;
+                htmlOutput = `
+                    <div class="result-item">Berat Fisik: <span class="highlight">${formatStr(gram_atak)} Gram Emas</span></div>
+                    <div class="result-item">Ekuivalen Dinar: ${formatStr(dinar_from_atak)} Dinar</div>
+                    <div class="result-item">Nilai Tukar: Setara <span class="highlight">${formatStr(dirham_val_from_atak)} Dirham</span></div>
+                `;
+                break;
+
+            case 'kupang_emas':
+                let gram_kupang = input * BERAT_KUPANG;
+                let dinar_from_kupang = gram_kupang / BERAT_DINAR;
+                let dirham_val_from_kupang = dinar_from_kupang * RASIO_DINAR_DIRHAM;
+                htmlOutput = `
+                    <div class="result-item">Berat Fisik: <span class="highlight">${formatStr(gram_kupang)} Gram Emas</span></div>
+                    <div class="result-item">Ekuivalen Dinar: ${formatStr(dinar_from_kupang)} Dinar</div>
+                    <div class="result-item">Nilai Tukar: Setara <span class="highlight">${formatStr(dirham_val_from_kupang)} Dirham</span></div>
+                `;
+                break;
+        }
+
+        resultBox.innerHTML = htmlOutput;
+        resultBox.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
