@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deklasifikasi: Sistem Buku Besar Komunitas (Ledger) - Wiki Nuswantara</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f6f6f6; color: #202122; margin: 0; padding: 0; line-height: 1.6; }
+        .header { background-color: #ffffff; border-bottom: 1px solid #a2a9b1; padding: 10px 20px; display: flex; align-items: center; }
+        .header-logo { font-family: 'Georgia', serif; font-size: 1.5rem; font-weight: bold; color: #000; letter-spacing: 1px; }
+        .container { max-width: 1200px; margin: 0 auto; background-color: #ffffff; padding: 30px 40px; border-left: 1px solid #a2a9b1; border-right: 1px solid #a2a9b1; min-height: 100vh; }
+        h1 { font-family: 'Linux Libertine', Georgia, Times, serif; font-size: 2.2rem; border-bottom: 1px solid #a2a9b1; padding-bottom: 5px; margin-top: 0; font-weight: normal; }
+        h2 { font-family: 'Linux Libertine', Georgia, Times, serif; font-size: 1.5rem; border-bottom: 1px solid #a2a9b1; padding-bottom: 5px; margin-top: 30px; font-weight: normal; color: #e65100; }
+        p { font-size: 0.95rem; margin-bottom: 15px; text-align: justify; }
+        .infobox { float: right; clear: right; margin-left: 20px; margin-bottom: 15px; width: 380px; background-color: #f8f9fa; border: 1px solid #a2a9b1; padding: 5px; font-size: 0.85rem; }
+        .infobox-title { background-color: #ffe0b2; text-align: center; font-weight: bold; font-size: 1.1rem; padding: 7px; margin-bottom: 5px; border-bottom: 1px solid #a2a9b1; color: #e65100; }
+        .infobox table, .data-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .infobox th { text-align: left; padding: 8px; border-bottom: 1px solid #eaecf0; width: 40%; background-color: #fff3e0; }
+        .infobox td { padding: 8px; border-bottom: 1px solid #eaecf0; }
+        .ambox { margin-bottom: 20px; border: 1px solid #e65100; border-left: 10px solid #e65100; background-color: #fff3e0; padding: 10px 15px; font-size: 0.9rem; display: flex; align-items: center; }
+        .data-table { margin-bottom: 25px; border: 1px solid #a2a9b1; }
+        .data-table th { text-align: left; padding: 10px; border-bottom: 1px solid #eaecf0; background-color: #ffe0b2; color: #e65100; }
+        .data-table td { padding: 10px; border-bottom: 1px solid #eaecf0; vertical-align: top; }
+        .data-table tr:hover { background-color: #fcfcfc; }
+        .toc { background-color: #f8f9fa; border: 1px solid #a2a9b1; display: inline-block; padding: 15px 25px; margin-top: 10px; margin-bottom: 20px; font-size: 0.9rem; }
+        .toc-title { font-weight: bold; margin-bottom: 10px; text-align: center; }
+        .toc ul { list-style-type: none; padding-left: 0; margin: 0; }
+        .toc li { margin-bottom: 5px; }
+        .siloka-box { background-color: #fffde6; border-left: 5px solid #ffcc00; padding: 15px; font-style: italic; margin: 20px 0; font-size: 1.05rem; color: #333; text-align: center;}
+        .author-note { background-color: #f0f8ff; border-left: 4px solid #0066cc; padding: 10px; font-size: 0.85rem; font-style: italic; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-logo">WIKI NUSWANTARA OS</div>
+    </div>
+
+    <div class="container">
+        <h1>Deklasifikasi: Standar Buku Besar Komunitas (Public Ledger)</h1>
+
+        <div class="ambox">
+            <div>
+                <strong>PROTOKOL PENCATATAN 5D:</strong> Kelemahan sistem barter murni adalah sulitnya mempertemukan dua orang yang saling membutuhkan barang pada waktu yang bersamaan. Untuk mengatasinya tanpa menggunakan uang fiat, komunitas harus memiliki <strong>Buku Besar (Ledger)</strong> yang difungsikan sebagai pencatat "Hutang Keringat" atau Janji Kerja (Promissory Note). Buku ini mencatat surplus dan defisit setiap warga berdasarkan standar nilai mutlak (1 Dirham) secara transparan.
+            </div>
+        </div>
+
+        <div class="infobox">
+            <div class="infobox-title">Sistem Operasi Ledger</div>
+            <table>
+                <tr>
+                    <th>Satuan Hitung</th>
+                    <td>Dirham Virtual (Drm) / Koin Perak</td>
+                </tr>
+                <tr>
+                    <th>Sifat Pencatatan</th>
+                    <td>Terbuka (Public Ledger). Bisa diakses warga.</td>
+                </tr>
+                <tr>
+                    <th>Pihak Otoritas</th>
+                    <td>Pencatat Komunitas (Admin/Baitul Mal)</td>
+                </tr>
+                <tr>
+                    <th>Aturan Hukum</th>
+                    <td>Bebas Bunga (Riba) & Bebas Inflasi.</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="toc">
+            <div class="toc-title">Daftar Isi</div>
+            <ul>
+                <li><a href="#aturan-main">1. Aturan Main: Transaksi Waktu Tunggu</a></li>
+                <li><a href="#format-buku">2. Format Cetak Buku Besar Komunitas</a></li>
+                <li><a href="#penyelesaian">3. Penyelesaian & Sanksi Gagal Bayar</a></li>
+		<li><a href="Wiki Sundaland90.html">4. Deklasifikasi: "Hack" Sistem Keamanan & Kebangkitan Hukum Komunal</a></li>
+            </ul>
+        </div>
+
+        <h2 id="aturan-main">1. Aturan Main: Transaksi Waktu Tunggu</h2>
+        <div class="siloka-box">
+            "Jika saya butuh berasmu hari ini, tetapi telur ayamku baru menetas minggu depan, buku ini adalah saksi janji kerjaku kepadamu."
+        </div>
+        <p>Ledger ini sangat penting untuk transaksi yang tidak bisa dibarter langsung pada detik itu juga (Waktu Tunggu).<br>
+        <strong>Skenario:</strong> Mang Udin butuh 5 Kg Beras hari ini dari Mang Asep (Nilai = 1 Dirham). Tapi Mang Udin (seorang montir) belum punya barang untuk ditukar. Maka, Mang Udin "berhutang janji" senilai 1 Dirham kepada Mang Asep, yang dicatat di Buku Besar. Minggu depan, saat Mang Asep butuh perbaikan traktor, Mang Udin akan melunasinya dengan tenaganya senilai 1 Dirham. Lunas.</p>
+
+        <h2 id="format-buku">2. Format Cetak Buku Besar Komunitas</h2>
+        <p>Buku ini bisa berupa buku tulis folio besar tebal. Setiap transaksi wajib disaksikan oleh admin komunitas dan diparaf oleh kedua belah pihak.</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Tanggal</th>
+                    <th style="width: 15%;">Pihak 1 (Penyedia)</th>
+                    <th style="width: 15%;">Pihak 2 (Penerima)</th>
+                    <th style="width: 25%;">Barang/Jasa Diserahkan</th>
+                    <th style="width: 15%;">Nilai Arbitrase (Drm)</th>
+                    <th style="width: 20%;">Status / Paraf Bukti</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>10 Okt 26</td>
+                    <td>Keluarga Asep</td>
+                    <td>Keluarga Udin</td>
+                    <td>5 Kg Beras Premium</td>
+                    <td><strong>1 Drm</strong></td>
+                    <td>Hutang (Paraf Udin)</td>
+                </tr>
+                <tr>
+                    <td>12 Okt 26</td>
+                    <td>Keluarga Siti</td>
+                    <td>Keluarga Jajang</td>
+                    <td>3 Liter Minyak Kelapa</td>
+                    <td><strong>1 Drm</strong></td>
+                    <td>Hutang (Paraf Jajang)</td>
+                </tr>
+                <tr>
+                    <td>15 Okt 26</td>
+                    <td>Keluarga Udin</td>
+                    <td>Keluarga Asep</td>
+                    <td>Jasa Servis Traktor (Setara)</td>
+                    <td><strong>1 Drm</strong></td>
+                    <td>LUNAS (Paraf Asep)</td>
+                </tr>
+                <tr>
+                    <td>16 Okt 26</td>
+                    <td>Keluarga Jajang</td>
+                    <td>Keluarga Siti</td>
+                    <td>30 Butir Telur Ayam</td>
+                    <td><strong>1 Drm</strong></td>
+                    <td>LUNAS (Paraf Siti)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="penyelesaian">3. Penyelesaian & Sanksi Gagal Bayar</h2>
+        <p>Karena nilai tukarnya dipatok pada barang nyata (1 Dirham = 5 Kg Beras), maka <strong>inflasi tidak berlaku</strong>. Jika Mang Udin baru bisa melunasi utangnya 6 bulan kemudian, ia tetap hanya diwajibkan mengembalikan nilai setara 1 Dirham (misalnya dengan tenaga atau barang setara), tanpa ada tambahan bunga (Riba) sepeser pun.</p>
+        <p><strong>Batas Defisit:</strong> Komunitas harus menetapkan batas maksimal "Hutang Janji" untuk setiap keluarga (Misal: Maksimal defisit 5 Dirham). Jika seseorang terus menumpuk defisit tanpa pernah memproduksi barang/jasa untuk melunasinya, ia akan masuk ke tahap evaluasi dan terancam sanksi pengusiran (Ekskomunikasi) sesuai Piagam Sumpah Komunitas.</p>
+
+        <div class="author-note">
+            <strong>Catatan Arsip:</strong> DOKUMEN TATA KELOLA EKONOMI // SUNDA NUSWANTARA OS. Buku ini bukan untuk mencari keuntungan, melainkan untuk merekam jejak gotong royong. Catatan kertas bisa terbakar, server digital bisa mati, tetapi kejujuran yang tertulis di hadapan saksi komunitas akan mengikat jiwa manusia.
+        </div>
+
+    </div>
+
+</body>
+</html>
