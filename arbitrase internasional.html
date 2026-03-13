@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara - International Arbitrage Board</title>
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: #1a1f26;
+            --text-gold: #ffd700;
+            --text-silver: #c0c0c0;
+            --text-white: #f0f6fc;
+            --accent-blue: #00d2ff;
+            --border: #30363d;
+            --row-hover: #252d38;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1000px; margin: auto; }
+
+        .header {
+            border: 2px solid var(--text-gold);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(145deg, #1a1f26, #0b0e14);
+        }
+
+        .header h1 { margin: 0; color: var(--text-gold); font-size: 1.8rem; text-transform: uppercase; }
+        .header p { color: var(--accent-blue); margin: 5px 0 0; font-weight: bold; }
+
+        .anchor-info {
+            background: #232931;
+            padding: 10px;
+            border-left: 5px solid var(--text-gold);
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th { background: #21262d; color: var(--text-gold); border: 1px solid var(--border); padding: 12px; }
+        td { border: 1px solid var(--border); padding: 10px; text-align: center; }
+        tr:nth-child(even) { background: #161b22; }
+        tr:hover { background: var(--row-hover); }
+
+        .category-tag {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: #30363d;
+            color: var(--text-silver);
+        }
+
+        /* Calculator Section */
+        .calculator {
+            background: var(--card-bg);
+            padding: 25px;
+            border: 1px solid var(--text-gold);
+            border-radius: 8px;
+        }
+
+        .calculator h2 { color: var(--text-gold); margin-top: 0; font-size: 1.2rem; }
+        
+        .grid-calc {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group { display: flex; flex-direction: column; }
+        label { margin-bottom: 8px; color: var(--accent-blue); font-weight: bold; }
+
+        select, input {
+            padding: 12px;
+            background: #0b0e14;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2d333b;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px dashed var(--text-gold);
+        }
+
+        #barterResult { font-size: 1.4rem; color: var(--text-gold); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Papan Arbitrase Komoditas Internasional</h1>
+        <p>Sunda Nuswantara OS - Protocol Barter 2026</p>
+    </div>
+
+    <div class="anchor-info">
+        <strong>STATUS JANGKAR: LOCKED (1 Tahun Full)</strong><br>
+        Periode: Maret 2026 - Maret 2027. Harga jangkar ditentukan berdasarkan biaya produksi rata-rata global + margin stabilitas.
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Kategori</th>
+                <th>Komoditas</th>
+                <th>Unit</th>
+                <th>Harga Spot (USD)</th>
+                <th>Harga Jangkar (USD)</th>
+            </tr>
+        </thead>
+        <tbody id="commodityTable">
+            </tbody>
+    </table>
+
+    <div class="calculator">
+        <h2>Kalkulator Barter (Peer-to-Peer)</h2>
+        <div class="grid-calc">
+            <div class="input-group">
+                <label>Saya Memiliki:</label>
+                <input type="number" id="inputAmount" value="1" oninput="calculate()">
+                <select id="selectFrom" onchange="calculate()"></select>
+            </div>
+            <div class="input-group">
+                <label>Ditukar Menjadi:</label>
+                <div style="height: 45px; display: flex; align-items: center; justify-content: center; background: #0b0e14; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 4px;">
+                    <span id="outputUnit" style="color: var(--accent-blue);">---</span>
+                </div>
+                <select id="selectTo" onchange="calculate()"></select>
+            </div>
+        </div>
+        <div class="result-box">
+            <span>Nilai Barter Adil:</span><br>
+            <span id="barterResult">---</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const commodities = [
+        // ENERGY
+        { name: "Crude Oil (WTI)", cat: "Energy", unit: "Barrel", spot: 96.50, anchor: 90.00 },
+        { name: "Natural Gas", cat: "Energy", unit: "MMBtu", spot: 2.85, anchor: 3.00 },
+        { name: "Coal (Newcastle)", cat: "Energy", unit: "Ton", spot: 145.00, anchor: 140.00 },
+        // METALS
+        { name: "Gold", cat: "Metal", unit: "t.oz", spot: 5127.00, anchor: 5000.00 },
+        { name: "Silver", cat: "Metal", unit: "t.oz", spot: 84.50, anchor: 80.00 },
+        { name: "Copper", cat: "Metal", unit: "lb", spot: 5.75, anchor: 5.50 },
+        { name: "Nickel", cat: "Metal", unit: "Ton", spot: 18450.00, anchor: 18000.00 },
+        // SOFT/AGRI
+        { name: "Wheat", cat: "Agri", unit: "Bushel", spot: 5.95, anchor: 6.00 },
+        { name: "Corn", cat: "Agri", unit: "Bushel", spot: 4.50, anchor: 4.80 },
+        { name: "Coffee (Arabica)", cat: "Agri", unit: "lb", spot: 2.10, anchor: 2.00 },
+        { name: "Palm Oil (CPO)", cat: "Agri", unit: "Ton", spot: 980.00, anchor: 950.00 },
+        { name: "Rice (Thai 5%)", cat: "Agri", unit: "Ton", spot: 620.00, anchor: 600.00 }
+    ];
+
+    function init() {
+        const table = document.getElementById('commodityTable');
+        const fromSel = document.getElementById('selectFrom');
+        const toSel = document.getElementById('selectTo');
+
+        commodities.forEach((item, index) => {
+            // Fill Table
+            let row = `<tr>
+                <td><span class="category-tag">${item.cat}</span></td>
+                <td>${item.name}</td>
+                <td>${item.unit}</td>
+                <td>$${item.spot.toLocaleString()}</td>
+                <td class="anchor">$${item.anchor.toLocaleString()}</td>
+            </tr>`;
+            table.innerHTML += row;
+
+            // Fill Selects
+            let opt = `<option value="${index}">${item.name} (${item.unit})</option>`;
+            fromSel.innerHTML += opt;
+            toSel.innerHTML += opt;
+        });
+        
+        // Default selection
+        toSel.selectedIndex = 5; // Default ke Copper
+        calculate();
+    }
+
+    function calculate() {
+        const fromIdx = document.getElementById('selectFrom').value;
+        const toIdx = document.getElementById('selectTo').value;
+        const amount = document.getElementById('inputAmount').value;
+        
+        const fromItem = commodities[fromIdx];
+        const toItem = commodities[toIdx];
+
+        // Rumus: (Jumlah x Harga Jangkar A) / Harga Jangkar B
+        const result = (amount * fromItem.anchor) / toItem.anchor;
+        
+        document.getElementById('outputUnit').innerText = toItem.unit;
+        document.getElementById('barterResult').innerText = 
+            `${amount} ${fromItem.unit} = ${result.toLocaleString(undefined, {maximumFractionDigits: 4})} ${toItem.unit}`;
+    }
+
+    window.onload = init;
+</script>
+
+</body>
+</html>

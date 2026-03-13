@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara - POS Barter Pro (Auto-Save)</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark: #0a0a0a;
+            --panel: #1a1a1a;
+            --green: #00ff41;
+            --red: #ff3131;
+            --blue: #00d2ff;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1300px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .pos-panel {
+            background: var(--panel);
+            border: 2px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .pos-panel h2 {
+            text-align: center;
+            color: var(--gold);
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 60px;
+            gap: 8px;
+            margin-bottom: 15px;
+            background: #252525;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        input {
+            background: #000;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            width: 85%;
+        }
+
+        .btn-add {
+            background: var(--gold);
+            color: black;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th { font-size: 0.75rem; color: var(--gold); text-align: left; padding: 10px; border-bottom: 2px solid #444; }
+        td { font-size: 0.85rem; padding: 10px; border-bottom: 1px solid #222; }
+
+        .action-btns button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 5px;
+        }
+
+        .total-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #000;
+            border: 1px dashed var(--gold);
+            text-align: right;
+        }
+
+        .total-value { font-size: 1.5rem; color: var(--green); font-family: 'Courier New', monospace; }
+
+        .settlement {
+            grid-column: 1 / 3;
+            background: #111;
+            padding: 25px;
+            text-align: center;
+            border-radius: 8px;
+            border: 2px solid var(--gold);
+            margin-top: 10px;
+        }
+
+        #status-barter { font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+
+        .ctrl-btn {
+            background: transparent;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        @media print {
+            .input-group, .action-btns, .ctrl-btn { display: none; }
+            .pos-panel { border: 1px solid #000; color: #000; background: #fff; }
+            body { background: #fff; color: #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="color: var(--gold); letter-spacing: 4px;">POS BARTER ENGINE PRO</h1>
+    <p style="color: #888; margin-top: -15px;">Sunda Nuswantara OS | Anti-M2 Inflation Protocol</p>
+
+    <div class="container">
+        <div class="pos-panel">
+            <h2>PIHAK A</h2>
+            <div class="input-group">
+                <input type="text" id="nameA" placeholder="Item">
+                <input type="number" id="lowA" placeholder="Low">
+                <input type="number" id="highA" placeholder="High">
+                <button class="btn-add" onclick="addItem('A')">ADD</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Low</th>
+                        <th>High</th>
+                        <th>Mid</th>
+                        <th>Act</th>
+                    </tr>
+                </thead>
+                <tbody id="listA"></tbody>
+            </table>
+            <div class="total-box">
+                <div id="totalA" class="total-value">0</div>
+            </div>
+        </div>
+
+        <div class="pos-panel">
+            <h2>PIHAK B</h2>
+            <div class="input-group">
+                <input type="text" id="nameB" placeholder="Item">
+                <input type="number" id="lowB" placeholder="Low">
+                <input type="number" id="highB" placeholder="High">
+                <button class="btn-add" onclick="addItem('B')">ADD</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Low</th>
+                        <th>High</th>
+                        <th>Mid</th>
+                        <th>Act</th>
+                    </tr>
+                </thead>
+                <tbody id="listB"></tbody>
+            </table>
+            <div class="total-box">
+                <div id="totalB" class="total-value">0</div>
+            </div>
+        </div>
+
+        <div class="settlement">
+            <div id="status-barter">READY</div>
+            <div id="diff-value" style="color: #aaa;">Selisih (Gap): 0</div>
+            <div style="margin-top: 20px;">
+                <button class="ctrl-btn" style="color: #fff; border: 1px solid #fff;" onclick="window.print()">CETAK STRUK</button>
+                <button class="ctrl-btn" style="color: var(--red); border: 1px solid var(--red);" onclick="resetAll()">RESET SEMUA</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Load data dari Local Storage pas buka halaman
+    let datasets = JSON.parse(localStorage.getItem('barterData')) || { A: [], B: [] };
+
+    // Langsung render data yang ada
+    window.onload = () => {
+        render('A');
+        render('B');
+    };
+
+    function saveToLocal() {
+        localStorage.setItem('barterData', JSON.stringify(datasets));
+    }
+
+    function addItem(side) {
+        const nInput = document.getElementById(`name${side}`);
+        const lInput = document.getElementById(`low${side}`);
+        const hInput = document.getElementById(`high${side}`);
+
+        const name = nInput.value;
+        const low = parseFloat(lInput.value);
+        const high = parseFloat(hInput.value);
+
+        if(!name || isNaN(low) || isNaN(high)) {
+            alert("Isi datanya dulu bro!");
+            return;
+        }
+
+        datasets[side].push({ name, low, high, mid: (low + high) / 2 });
+        
+        nInput.value = ''; lInput.value = ''; hInput.value = '';
+        nInput.focus();
+        
+        saveToLocal();
+        render(side);
+    }
+
+    function deleteItem(side, index) {
+        datasets[side].splice(index, 1);
+        saveToLocal();
+        render(side);
+    }
+
+    function editItem(side, index) {
+        const item = datasets[side][index];
+        const n = prompt("Edit Nama:", item.name);
+        const l = prompt("Edit Low:", item.low);
+        const h = prompt("Edit High:", item.high);
+
+        if(n && !isNaN(l) && !isNaN(h)) {
+            datasets[side][index] = {
+                name: n,
+                low: parseFloat(l),
+                high: parseFloat(h),
+                mid: (parseFloat(l) + parseFloat(h)) / 2
+            };
+            saveToLocal();
+            render(side);
+        }
+    }
+
+    function render(side) {
+        const list = document.getElementById(`list${side}`);
+        list.innerHTML = '';
+        let total = 0;
+
+        datasets[side].forEach((item, index) => {
+            total += item.mid;
+            list.innerHTML += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.low.toLocaleString()}</td>
+                    <td>${item.high.toLocaleString()}</td>
+                    <td style="color: #d4af37; font-weight:bold;">${item.mid.toLocaleString()}</td>
+                    <td class="action-btns">
+                        <button style="color:#00d2ff" onclick="editItem('${side}', ${index})">✎</button>
+                        <button style="color:#ff3131" onclick="deleteItem('${side}', ${index})">✖</button>
+                    </td>
+                </tr>`;
+        });
+
+        document.getElementById(`total${side}`).innerText = total.toLocaleString();
+        calculateFinal();
+    }
+
+    function calculateFinal() {
+        const totalA = datasets.A.reduce((s, i) => s + i.mid, 0);
+        const totalB = datasets.B.reduce((s, i) => s + i.mid, 0);
+        const diff = Math.abs(totalA - totalB);
+        
+        document.getElementById('diff-value').innerText = `Selisih (Gap): ${diff.toLocaleString()}`;
+        const status = document.getElementById('status-barter');
+
+        if (totalA === 0 || totalB === 0) {
+            status.innerText = "DITUNGGU INPUTNYA";
+            status.style.color = "#444";
+        } else if (diff === 0) {
+            status.innerText = "MATCH! BARTER ADIL";
+            status.style.color = "#00ff41";
+        } else if (diff <= (Math.min(totalA, totalB) * 0.1)) {
+            status.innerText = "OPTIMAL: NILAI SETARA";
+            status.style.color = "#88ff00";
+        } else {
+            status.innerText = "UNBALANCED";
+            status.style.color = "#ff3131";
+        }
+    }
+
+    function resetAll() {
+        if(confirm("Hapus semua data secara permanen?")) {
+            datasets = { A: [], B: [] };
+            saveToLocal();
+            render('A'); render('B');
+        }
+    }
+</script>
+</body>
+</html>
