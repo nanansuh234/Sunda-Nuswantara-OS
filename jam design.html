@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Printable Face Jam Sunda Nuswantara v3</title>
+    <style>
+        body { 
+            display: flex; justify-content: center; align-items: center; 
+            background: #e0e0e0; margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif;
+        }
+        .print-container { 
+            width: 30cm; height: 30cm; 
+            position: relative; background: #050505; 
+            border-radius: 50%; overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        @media print {
+            body { padding: 0; background: none; }
+            .print-container { 
+                box-shadow: none; 
+                print-color-adjust: exact; 
+                -webkit-print-color-adjust: exact; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="print-container" id="clock-face"></div>
+
+    <script>
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("viewBox", "0 0 1000 1000");
+        svg.style.width = "100%";
+        svg.style.height = "100%";
+
+        // 1. Empat Zona Warna (Emas, Oranye, Hijau, Biru)
+        const zones = [
+            { color: "rgba(255, 215, 0, 0.25)", start: 0, end: 90 },     // Batas: Angka 8 ke 2
+            { color: "rgba(255, 69, 0, 0.25)", start: 90, end: 180 },    // Batas: Angka 2 ke 4
+            { color: "rgba(0, 255, 127, 0.25)", start: 180, end: 270 },  // Batas: Angka 4 ke 6
+            { color: "rgba(30, 144, 255, 0.25)", start: 270, end: 360 }  // Batas: Angka 6 ke 8
+        ];
+
+        function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+            const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+            return { 
+                x: centerX + (radius * Math.cos(angleInRadians)), 
+                y: centerY + (radius * Math.sin(angleInRadians)) 
+            };
+        }
+
+        // Render Zona Warna
+        zones.forEach(z => {
+            const start = polarToCartesian(500, 500, 500, z.start);
+            const end = polarToCartesian(500, 500, 500, z.end);
+            const largeArcFlag = z.end - z.start <= 180 ? "0" : "1";
+            const d = `M 500 500 L ${start.x} ${start.y} A 500 500 0 ${largeArcFlag} 1 ${end.x} ${end.y} Z`;
+            const path = document.createElementNS(svgNS, "path");
+            path.setAttribute("d", d);
+            path.setAttribute("fill", z.color);
+            svg.appendChild(path);
+        });
+
+        // 2. Garis Strip (Ticks) - 48 buah
+        for (let i = 0; i < 48; i++) {
+            const angle = i * 7.5;
+            const isMain = i % 6 === 0;
+            const r1 = isMain ? 440 : 465;
+            const r2 = 485;
+            const p1 = polarToCartesian(500, 500, r1, angle);
+            const p2 = polarToCartesian(500, 500, r2, angle);
+            const line = document.createElementNS(svgNS, "line");
+            line.setAttribute("x1", p1.x); line.setAttribute("y1", p1.y);
+            line.setAttribute("x2", p2.x); line.setAttribute("y2", p2.y);
+            line.setAttribute("stroke", isMain ? "#ffffff" : "#777777");
+            line.setAttribute("stroke-width", isMain ? "6" : "3");
+            svg.appendChild(line);
+        }
+
+        // 3. Angka 1-8
+        const nums = [8, 1, 2, 3, 4, 5, 6, 7];
+        nums.forEach((num, i) => {
+            const angle = i * 45;
+            const posNum = polarToCartesian(500, 500, 360, angle);
+            const textNum = document.createElementNS(svgNS, "text");
+            textNum.setAttribute("x", posNum.x);
+            textNum.setAttribute("y", posNum.y);
+            textNum.setAttribute("fill", "#ffffff");
+            textNum.setAttribute("font-size", "75");
+            textNum.setAttribute("font-weight", "bold");
+            textNum.setAttribute("text-anchor", "middle");
+            textNum.setAttribute("dominant-baseline", "central");
+            textNum.textContent = num;
+            svg.appendChild(textNum);
+        });
+
+        // 4. Nama Fase Dual (Siang & Malam) - Posisinya sejajar angka ganjil (tengah zona)
+        const phasesDual = [
+            { angle: 45, siang: "ISTIWA", malam: "HENING" },      // Sejajar Angka 1
+            { angle: 135, siang: "ASAR", malam: "FAJAR" },        // Sejajar Angka 3
+            { angle: 225, siang: "DUHA", malam: "SANDIKALA" },    // Sejajar Angka 5
+            { angle: 315, siang: "KARYA", malam: "SIREPAN" }      // Sejajar Angka 7
+        ];
+
+        phasesDual.forEach(phase => {
+            // Teks Fase Matahari/Siang (Warna Emas)
+            const posSiang = polarToCartesian(500, 500, 265, phase.angle);
+            const txtSiang = document.createElementNS(svgNS, "text");
+            txtSiang.setAttribute("x", posSiang.x);
+            txtSiang.setAttribute("y", posSiang.y);
+            txtSiang.setAttribute("fill", "#d4af37"); 
+            txtSiang.setAttribute("font-size", "24");
+            txtSiang.setAttribute("font-weight", "bold");
+            txtSiang.setAttribute("letter-spacing", "3");
+            txtSiang.setAttribute("text-anchor", "middle");
+            txtSiang.setAttribute("dominant-baseline", "central");
+            txtSiang.textContent = phase.siang + " ☼";
+            svg.appendChild(txtSiang);
+
+            // Teks Fase Bulan/Malam (Warna Silver/Abu Terang)
+            const posMalam = polarToCartesian(500, 500, 220, phase.angle);
+            const txtMalam = document.createElementNS(svgNS, "text");
+            txtMalam.setAttribute("x", posMalam.x);
+            txtMalam.setAttribute("y", posMalam.y);
+            txtMalam.setAttribute("fill", "#aaaaaa"); 
+            txtMalam.setAttribute("font-size", "18");
+            txtMalam.setAttribute("font-weight", "600");
+            txtMalam.setAttribute("letter-spacing", "2");
+            txtMalam.setAttribute("text-anchor", "middle");
+            txtMalam.setAttribute("dominant-baseline", "central");
+            txtMalam.textContent = phase.malam + " ☾";
+            svg.appendChild(txtMalam);
+        });
+
+        // 5. Lingkaran Border Luar (Panduan Potong)
+        const border = document.createElementNS(svgNS, "circle");
+        border.setAttribute("cx", "500"); border.setAttribute("cy", "500");
+        border.setAttribute("r", "496"); 
+        border.setAttribute("fill", "none");
+        border.setAttribute("stroke", "#d4af37");
+        border.setAttribute("stroke-width", "8");
+        svg.appendChild(border);
+
+        // 6. Titik tengah (Panduan Bor Mesin Jam)
+        const center = document.createElementNS(svgNS, "circle");
+        center.setAttribute("cx", "500"); center.setAttribute("cy", "500");
+        center.setAttribute("r", "8"); center.setAttribute("fill", "#d4af37");
+        svg.appendChild(center);
+
+        document.getElementById('clock-face').appendChild(svg);
+    </script>
+</body>
+</html>
