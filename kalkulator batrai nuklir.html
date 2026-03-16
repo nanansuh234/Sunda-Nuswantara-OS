@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiman Pro Energy Calculator - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark-blue: #1a2a3a;
+            --glow: #00f2ff;
+        }
+        body {
+            background-color: #0f171e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .panel {
+            width: 100%;
+            max-width: 500px;
+            background: linear-gradient(145deg, #16222d, #1a2a3a);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+        h2 {
+            color: var(--gold);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--glow);
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #0d1b26;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .btn-calc {
+            width: 100%;
+            padding: 15px;
+            background: var(--gold);
+            border: none;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .btn-calc:hover {
+            background: #fff;
+            box-shadow: 0 0 15px var(--glow);
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 242, 255, 0.05);
+            border-left: 4px solid var(--glow);
+        }
+        .status {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 10px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h2>Kiman Pro Calculator</h2>
+    <p style="font-size: 0.8rem; text-align: center; margin-top: -10px;">Resonance Grade - Nuclear Battery 10Y</p>
+    
+    <div class="input-group">
+        <label>Massa Logam Dasar (Magnesium) - Gram</label>
+        <input type="number" id="massMg" placeholder="Contoh: 100" value="100">
+    </div>
+
+    <div class="input-group">
+        <label>Persentase Torium (Akselerator)</label>
+        <input type="number" id="percTh" placeholder="Rekomendasi: 15%" value="15">
+    </div>
+
+    <div class="input-group">
+        <label>Katalis Utama (LTJ)</label>
+        <select id="katalis">
+            <option value="0.85">Neodymium (Efisiensi Tinggi - 85%)</option>
+            <option value="0.95">Dysprosium (Anti-Panas - 95%)</option>
+            <option value="0.75">Yttrium (Transmisi Tanpa Kabel - 75%)</option>
+        </select>
+    </div>
+
+    <button class="btn-calc" onclick="hitungEnergi()">AKTIFKAN RESONANSI</button>
+
+    <div id="result" class="result-box" style="display:none;">
+        <strong>ESTIMASI OUTPUT:</strong>
+        <p id="outputDaya">Daya: -- Watt</p>
+        <p id="outputWaktu">Masa Aktif: -- Tahun</p>
+        <p id="outputCatatan" style="font-size: 0.85rem; font-style: italic;"></p>
+    </div>
+
+    <div class="status">Sunda Nuswantara System v3.0 | Status: Stable</div>
+</div>
+
+<script>
+    function hitungEnergi() {
+        const mass = document.getElementById('massMg').value;
+        const th = document.getElementById('percTh').value;
+        const efisiensi = document.getElementById('katalis').value;
+        
+        // Logika sederhana: Semakin pas campuran (15% Th), semakin mendekati 10 tahun
+        // Jika Th terlalu banyak, alat panas. Terlalu sedikit, daya kecil.
+        let optimalTh = 15;
+        let diff = Math.abs(th - optimalTh);
+        
+        let daya = (mass * (th/100) * efisiensi).toFixed(2);
+        let tahun = (10 - (diff * 0.5)).toFixed(1);
+        
+        if (tahun < 0) tahun = 0.1;
+
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('outputDaya').innerHTML = `Estimasi Daya: ${daya} Watt/h`;
+        document.getElementById('outputWaktu').innerHTML = `Masa Aktif Efektif: ${tahun} Tahun`;
+        
+        let catatan = "";
+        if (diff == 0) {
+            catatan = "Konfigurasi Sempurna. Resonansi Kiman Pro stabil.";
+        } else if (th > 25) {
+            catatan = "Peringatan: Kandungan Torium terlalu tinggi, risiko overheat!";
+        } else {
+            catatan = "Konfigurasi Standar. Optimal untuk pemakaian jangka panjang.";
+        }
+        document.getElementById('outputCatatan').innerHTML = catatan;
+    }
+</script>
+
+</body>
+</html>
