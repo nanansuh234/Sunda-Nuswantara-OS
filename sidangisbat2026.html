@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuswantara Sky Simulator v5.0 - Ultimate Edition</title>
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --card: #111; --danger: #ff4444; --safe: #00ff41; --warning: #ffcc00; --conflict: #ff0055; }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', monospace; padding: 20px; }
+        .dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; max-width: 1100px; margin: auto; }
+        .panel { background: var(--card); border: 1px solid #333; border-radius: 10px; padding: 20px; }
+        
+        /* VISUAL LANGIT */
+        .sky-container { position: relative; width: 100%; height: 250px; background: linear-gradient(to bottom, #001830 0%, #000000 100%); overflow: hidden; border: 1px solid #555; border-radius: 5px; margin-bottom: 20px; }
+        .horizon { position: absolute; bottom: 50px; width: 100%; height: 2px; background: rgba(0, 255, 65, 0.5); z-index: 10; box-shadow: 0 0 10px var(--safe); }
+        .horizon-label { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; color: var(--safe); }
+        
+        /* BENDA LANGIT */
+        .celestial { position: absolute; border-radius: 50%; transform: translate(-50%, 50%); transition: all 0.2s; }
+        #sim-sun { width: 30px; height: 30px; background: radial-gradient(circle, #fff, #ffcc00, #ff4400); box-shadow: 0 0 20px #ffaa00; z-index: 5; }
+        #sim-moon { width: 20px; height: 20px; background: transparent; border-right: 4px solid #fff; border-bottom: 2px solid #fff; box-shadow: inset -2px -2px 5px rgba(255,255,255,0.5); border-radius: 50%; z-index: 6; }
+        
+        /* KONTROL INPUT */
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 0.8rem; }
+        label { color: #aaa; }
+        input[type="range"].sky-slider { width: 100%; accent-color: var(--neon); }
+        
+        /* BOX DATA & MABIMS */
+        .data-box { background: #000; padding: 10px; border-left: 3px solid var(--danger); font-family: monospace; font-size: 0.9rem; margin-top: 15px; }
+        .mabims-box { background: #1a1a1a; border: 1px solid #444; border-left: 4px solid var(--warning); padding: 12px; margin-top: 15px; border-radius: 5px; }
+        
+        /* KSN PANEL */
+        .ksn-panel { border: 2px solid var(--neon); text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        
+        /* TEORI WAKTU PANEL */
+        .theory-panel { max-width: 1100px; margin: 20px auto 0; background: #0a0a0a; border: 1px dashed #555; border-radius: 10px; padding: 20px; }
+        .theory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
+        .theory-card { padding: 15px; border-radius: 8px; font-size: 0.85rem; line-height: 1.5; }
+        .theory-card.masehi { background: rgba(255, 68, 68, 0.05); border: 1px solid var(--danger); }
+        .theory-card.ksn { background: rgba(212, 175, 55, 0.05); border: 1px solid var(--neon); }
+        .highlight-text { color: var(--neon); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align: center; color: var(--neon); letter-spacing: 2px;">🔭 OBSERVATORIUM NUSWANTARA OS</h2>
+
+<div class="dashboard">
+    <div class="panel">
+        <h4 style="margin-top:0; color:#888;">Mode Observasi Profesional (Ufuk Barat)</h4>
+        
+        <div class="sky-container">
+            <div class="horizon"></div>
+            <div class="horizon-label">0° (Garis Ufuk / Horizon) - Azimut 270° (Barat)</div>
+            <div id="sim-sun" class="celestial"></div>
+            <div id="sim-moon" class="celestial"></div>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label>☀️ Altitud Matahari (<span id="val-alS">-1.0</span>°)</label>
+                <input type="range" id="in-alS" class="sky-slider" min="-10" max="5" step="0.1" value="-1.0">
+                <label>☀️ Azimut Matahari (<span id="val-azS">269.0</span>°)</label>
+                <input type="range" id="in-azS" class="sky-slider" min="260" max="280" step="0.1" value="269.0">
+            </div>
+            <div>
+                <label>🌙 Altitud Bulan (<span id="val-alM">2.5</span>°)</label>
+                <input type="range" id="in-alM" class="sky-slider" min="-5" max="15" step="0.1" value="2.5">
+                <label>🌙 Azimut Bulan (<span id="val-azM">273.0</span>°)</label>
+                <input type="range" id="in-azM" class="sky-slider" min="260" max="280" step="0.1" value="273.0">
+            </div>
+        </div>
+
+        <div class="mabims-box">
+            <h4 style="margin: 0 0 8px 0; color: var(--warning); font-size: 0.9rem;">⚖️ Standar MABIMS (Syarat Sidang Isbat)</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 0.8rem; color: #ccc; line-height: 1.4;">
+                <li><b>Altitud:</b> Min <b>3°</b> | <b>Elongasi:</b> Min <b>6.4°</b></li>
+                <li><i style="color:#aaa;">*Jika gagal, kalender terpaksa digeser. Anggaran cair lagi.</i></li>
+            </ul>
+        </div>
+
+        <div class="data-box" id="calc-result">Menghitung Ephemeris...</div>
+    </div>
+
+    <div class="panel ksn-panel">
+        <div style="font-size: 0.8rem; color: #888; text-transform: uppercase;">Realitas Kalender</div>
+        <div style="font-size: 3.5rem; font-weight: bold; color: #fff; margin: 10px 0;">1<br><span style="font-size: 1.5rem;">WIWITAN</span></div>
+        <div style="color: var(--neon); font-style: italic;">Siklus 28 Hari (Pasti)</div>
+        <hr style="width: 80%; border-color: #333; margin: 20px auto;">
+        <div id="ksn-comment" style="font-size: 0.85rem; color: #ccc;">
+            "Orang sibuk geser teleskop cari hilal, kita udah siap-siap lebaran."
+        </div>
+    </div>
+</div>
+
+<div class="theory-panel">
+    <h3 style="margin-top: 0; text-align: center; color: #fff; letter-spacing: 1px;">🧠 KENAPA KSN BISA FIX & GAK BUTUH SIDANG ISBAT?</h3>
+    <div class="theory-grid">
+        <div class="theory-card masehi">
+            <h4 style="color: var(--danger); margin-top: 0;">❌ Sistem Konvensional (Ilusi Waktu)</h4>
+            <p>Kalender Masehi/Hijriah saat ini itu ibarat <b>"kocokan biji congklak"</b>. Wadah bulannya berantakan: ada yang 28, 29, 30, 31 hari.</p>
+            <p>Akibatnya? <b>Hari dan tanggal gak pernah sinkron.</b> Pergerakan benda langit jadi terlihat "liar" dan butuh alat canggih (dan anggaran proyek) buat nebak posisinya setiap pergantian bulan.</p>
+        </div>
+        <div class="theory-card ksn">
+            <h4 style="color: var(--neon); margin-top: 0;">✅ Kalender Sunda Nuswantara (Siklus Alam)</h4>
+            <p>KSN mengembalikan waktu ke <span class="highlight-text">Blue Print Alam Semesta</span>. <b>13 Bulan x 28 Hari Tetap.</b> Total 364 Hari.</p>
+            <p>Karena wadahnya fix (kelipatan 7), tanggal 1 PASTI jatuh di hari yang sama. Kita gak perlu lagi "nerawang" langit, karena rumusnya udah menyatu dengan pergerakan alam raya. <span class="highlight-text">Waktu itu konstan, bukan dikocok.</span></p>
+        </div>
+    </div>
+</div>
+
+<div class="theory-panel" style="margin-top: 20px; border-color: var(--conflict);">
+    <h3 style="margin-top: 0; text-align: center; color: var(--conflict); letter-spacing: 2px;">🔥 SIMULATOR KONFLIK LEBARAN 2026 (AKAR MASALAH)</h3>
+    <p style="text-align: center; color: #aaa; font-size: 0.85rem; margin-bottom: 20px;">
+        Kenapa selalu ada yang Lebaran duluan? Karena mereka <b>Puasa duluan</b>. <br>Limit wadah kalender Hijriah cuma 30 hari. Gak bisa lebih!
+    </p>
+
+    <div style="background: #111; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span style="color: #fff; font-weight: bold;">Simulasi Tanggal Masehi:</span>
+            <span id="simDate" style="color: var(--conflict); font-family: monospace; font-size: 1.1rem; font-weight: bold;">18 Maret 2026</span>
+        </div>
+        <input type="range" id="dateSlider" min="1" max="4" value="1" style="width: 100%; accent-color: var(--conflict);">
+        <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #666; margin-top: 5px;">
+            <span>18 Mar (H-3)</span>
+            <span>19 Mar (Isbat)</span>
+            <span>20 Mar (Beda)</span>
+            <span>21 Mar (Sama)</span>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+        
+        <div style="background: rgba(0, 191, 255, 0.1); border: 1px solid #00bfff; border-left: 5px solid #00bfff; padding: 15px; border-radius: 5px;">
+            <div style="display: flex; justify-content: space-between;">
+                <b style="color: #00bfff;">🔵 Versi Global (Saudi/Muhammadiyah)</b>
+                <span id="statMuh" style="font-size: 0.8rem; background: #000; padding: 2px 8px; border-radius: 3px; color: #fff;">Puasa Hari ke-29</span>
+            </div>
+            <div style="font-size: 0.8rem; color: #ccc; margin-top: 5px;" id="descMuh">
+                Mulai puasa sehari lebih awal. Ngikutin data bulan di belahan dunia lain.
+            </div>
+            <div style="width: 100%; background: #222; height: 10px; margin-top: 10px; border-radius: 5px; overflow: hidden;">
+                <div id="barMuh" style="width: 96%; background: #00bfff; height: 100%; transition: width 0.3s, background 0.3s;"></div>
+            </div>
+        </div>
+
+        <div style="background: rgba(0, 255, 65, 0.1); border: 1px solid #00ff41; border-left: 5px solid #00ff41; padding: 15px; border-radius: 5px;">
+            <div style="display: flex; justify-content: space-between;">
+                <b style="color: #00ff41;">🟢 Versi Lokal (Pemerintah/NU)</b>
+                <span id="statGov" style="font-size: 0.8rem; background: #000; padding: 2px 8px; border-radius: 3px; color: #fff;">Puasa Hari ke-28</span>
+            </div>
+            <div style="font-size: 0.8rem; color: #ccc; margin-top: 5px;" id="descGov">
+                Mulai puasa belakangan. Nunggu bulan beneran kelihatan di langit Nusantara.
+            </div>
+            <div style="width: 100%; background: #222; height: 10px; margin-top: 10px; border-radius: 5px; overflow: hidden;">
+                <div id="barGov" style="width: 93%; background: #00ff41; height: 100%; transition: width 0.3s, background 0.3s;"></div>
+            </div>
+        </div>
+
+        <div style="background: rgba(212, 175, 55, 0.1); border: 1px dashed var(--neon); border-left: 5px solid var(--neon); padding: 15px; border-radius: 5px;">
+            <div style="display: flex; justify-content: space-between;">
+                <b style="color: var(--neon);">⚡ Sunda Nuswantara (KSN)</b>
+                <span id="statKsn" style="font-size: 0.8rem; background: #000; padding: 2px 8px; border-radius: 3px; color: var(--neon);">Hari ke-26 Suwung</span>
+            </div>
+            <div style="font-size: 0.8rem; color: #ccc; margin-top: 5px;" id="descKsn">
+                Gak ikut campur urusan puasa. Fokus ke pergantian tahun (Siklus 28 Hari Tetap).
+            </div>
+            <div style="width: 100%; background: #222; height: 10px; margin-top: 10px; border-radius: 5px; overflow: hidden;">
+                <div id="barKsn" style="width: 92%; background: var(--neon); height: 100%; transition: width 0.3s, background 0.3s;"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // LOGIKA SIMULATOR LANGIT (MABIMS VS KSN)
+    // ==========================================
+    const elSun = document.getElementById('sim-sun');
+    const elMoon = document.getElementById('sim-moon');
+    const resultBox = document.getElementById('calc-result');
+
+    function updateSky() {
+        const alS = parseFloat(document.getElementById('in-alS').value);
+        const azS = parseFloat(document.getElementById('in-azS').value);
+        const alM = parseFloat(document.getElementById('in-alM').value);
+        const azM = parseFloat(document.getElementById('in-azM').value);
+
+        document.getElementById('val-alS').innerText = alS.toFixed(1);
+        document.getElementById('val-azS').innerText = azS.toFixed(1);
+        document.getElementById('val-alM').innerText = alM.toFixed(1);
+        document.getElementById('val-azM').innerText = azM.toFixed(1);
+
+        const horizonY = 50; const degToPxY = 10; const degToPxX = 15;
+        elSun.style.bottom = (horizonY + (alS * degToPxY)) + 'px';
+        elMoon.style.bottom = (horizonY + (alM * degToPxY)) + 'px';
+        elSun.style.left = `calc(50% + ${(azS - 270) * degToPxX}px)`;
+        elMoon.style.left = `calc(50% + ${(azM - 270) * degToPxX}px)`;
+
+        const dAz = azM - azS; const dAl = alM - alS;
+        const elongasi = Math.sqrt(Math.pow(dAz, 2) + Math.pow(dAl, 2)).toFixed(2);
+
+        const isAltOk = alM >= 3; const isElonOk = elongasi >= 6.4;
+        
+        let status = isAltOk && isElonOk ? "HILAL TERLIHAT (MABIMS OK)" : "HILAL GAGAL / NGAWANG";
+        let color = isAltOk && isElonOk ? "var(--safe)" : "var(--danger)";
+        document.getElementById('calc-result').style.borderLeftColor = color;
+
+        resultBox.innerHTML = `
+            <span style="color:#aaa;">Hasil Kalkulasi Spherical:</span><br>
+            <b style="color:#fff;">Altitud: <span style="color:${isAltOk?'#00ff41':'#ff4444'}">${alM.toFixed(1)}°</span></b> | 
+            <b style="color:#fff;">Elongasi: <span style="color:${isElonOk?'#00ff41':'#ff4444'}">${elongasi}°</span></b><br>
+            <div style="margin-top:10px; color:${color}; font-weight:bold;">[ ${status} ]</div>
+        `;
+    }
+
+    document.querySelectorAll('.sky-slider').forEach(input => input.addEventListener('input', updateSky));
+    updateSky(); // Init pertama kali
+
+    // ==========================================
+    // LOGIKA SIMULATOR KONFLIK LEBARAN (LIMIT PUASA)
+    // ==========================================
+    const conflictSlider = document.getElementById('dateSlider');
+    const simDate = document.getElementById('simDate');
+    
+    const statMuh = document.getElementById('statMuh'), descMuh = document.getElementById('descMuh'), barMuh = document.getElementById('barMuh');
+    const statGov = document.getElementById('statGov'), descGov = document.getElementById('descGov'), barGov = document.getElementById('barGov');
+    const statKsn = document.getElementById('statKsn'), descKsn = document.getElementById('descKsn'), barKsn = document.getElementById('barKsn');
+
+    conflictSlider.addEventListener('input', function() {
+        let val = parseInt(this.value);
+
+        if (val === 1) { // 18 Maret
+            simDate.innerText = "18 Maret 2026";
+            
+            statMuh.innerText = "Puasa Hari ke-29"; barMuh.style.width = "96%"; barMuh.style.background = "#00bfff";
+            descMuh.innerText = "Satu hari lagi mentok limit kalender.";
+
+            statGov.innerText = "Puasa Hari ke-28"; barGov.style.width = "93%"; barGov.style.background = "#00ff41";
+            descGov.innerText = "Masih nyantai, baru 28 hari.";
+
+            statKsn.innerText = "Hari ke-26 Suwung"; barKsn.style.width = "92%"; barKsn.style.background = "var(--neon)";
+            descKsn.innerText = "Siklus alam berjalan normal.";
+        } 
+        else if (val === 2) { // 19 Maret
+            simDate.innerText = "19 Maret 2026 (Malam Isbat)";
+            
+            statMuh.innerText = "Puasa Mentok! (Hari ke-30)"; barMuh.style.width = "100%"; barMuh.style.background = "#ff4444";
+            descMuh.innerHTML = "<b>LIMIT TERCAPAI!</b> Besok WAJIB Lebaran walau bulan gak kelihatan.";
+
+            statGov.innerText = "Puasa Hari ke-29"; barGov.style.width = "96%"; barGov.style.background = "#00ff41";
+            descGov.innerHTML = "Lagi ngeker langit (Isbat). Karena bulan di bawah 3°, gagal lihat. <b>Puasa ditambah 1 hari!</b>";
+
+            statKsn.innerText = "Hari ke-27 Suwung"; barKsn.style.width = "96%"; barKsn.style.background = "var(--neon)";
+            descKsn.innerText = "Menuju penutup tahun. Pasti.";
+        }
+        else if (val === 3) { // 20 Maret
+            simDate.innerText = "20 Maret 2026 (Konflik Terjadi)";
+            
+            statMuh.innerText = "🎉 IDUL FITRI (Lebaran)"; barMuh.style.width = "100%"; barMuh.style.background = "#00bfff";
+            descMuh.innerText = "Udah sholat Ied, karena puasa gak boleh 31 hari.";
+
+            statGov.innerText = "Puasa Mentok! (Hari ke-30)"; barGov.style.width = "100%"; barGov.style.background = "#ff4444";
+            descGov.innerText = "Menjalankan puasa hari ke-30 karena kemarin bulan gak kelihatan.";
+
+            statKsn.innerText = "Hari ke-28 Suwung (Tutup Tahun)"; barKsn.style.width = "100%"; barKsn.style.background = "var(--neon)";
+            descKsn.innerText = "Hari terakhir di tahun 001. Besok fix ganti kalender.";
+        }
+        else if (val === 4) { // 21 Maret
+            simDate.innerText = "21 Maret 2026 (Equinox / KSN Win)";
+            
+            statMuh.innerText = "Lebaran Hari ke-2"; barMuh.style.background = "#00bfff";
+            descMuh.innerText = "Lagi makan opor.";
+
+            statGov.innerText = "🎉 IDUL FITRI (Lebaran)"; barGov.style.background = "#00ff41";
+            descGov.innerText = "Akhirnya Lebaran juga setelah genap 30 hari.";
+
+            statKsn.innerHTML = "⭐ 1 WIWITAN (Tahun Baru) ⭐"; barKsn.style.width = "100%"; barKsn.style.background = "#fff";
+            descKsn.innerHTML = "<b style='color:#fff;'>Tahun Baru 002. Sinkron dengan Equinox. Presisi Tanpa Debat.</b>";
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>KSN Global Binary Time</title>
+    <style>
+        :root { --neon: #d4af37; --bg: #050505; --card: #111; --day: #e6c27a; --night: #1a2a3a; }
+        body { background: var(--bg); color: #eee; font-family: 'Courier New', monospace; padding: 20px; text-align: center; }
+        
+        .binary-container { display: flex; max-width: 900px; margin: 30px auto; border-radius: 15px; overflow: hidden; border: 2px solid var(--neon); box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
+        
+        /* ZONA SIANG (TIMUR/NUSWANTARA) */
+        .zone-wetan { flex: 1; background: linear-gradient(135deg, #2a2a15 0%, #000 100%); padding: 40px 20px; border-right: 2px solid var(--neon); position: relative; }
+        .zone-wetan::before { content: '☀️'; font-size: 5rem; position: absolute; top: 10px; right: 20px; opacity: 0.1; }
+        
+        /* ZONA MALAM (BARAT/AMERIKA) */
+        .zone-kulon { flex: 1; background: linear-gradient(135deg, #05101a 0%, #000 100%); padding: 40px 20px; position: relative; }
+        .zone-kulon::before { content: '🌙'; font-size: 5rem; position: absolute; top: 10px; left: 20px; opacity: 0.1; }
+        
+        .zone-title { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; margin-bottom: 5px; }
+        .zone-desc { font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 25px; }
+        
+        .date-display { font-size: 3rem; font-weight: bold; margin: 10px 0; }
+        .month-display { font-size: 1.2rem; letter-spacing: 3px; }
+        
+        /* KONTROL INPUT */
+        .control-panel { background: #111; border: 1px dashed #555; padding: 20px; max-width: 860px; margin: auto; border-radius: 10px; }
+        select, input { background: #000; color: var(--neon); border: 1px solid var(--neon); padding: 8px 15px; margin: 5px; font-family: monospace; }
+        button { background: var(--neon); color: #000; font-weight: bold; border: none; padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2 style="color: var(--neon); letter-spacing: 3px;">🌐 KSN BINARY GLOBAL SYNC</h2>
+    <p style="color: #888; font-size: 0.85rem;">Tidak butuh 24 Zona Waktu. Bumi cuma punya Siang (Muka) dan Malam (Belakang).</p>
+
+    <div class="control-panel">
+        <label>Set Tanggal Nuswantara (Pusat):</label>
+        <input type="number" id="inHari" min="1" max="28" value="1" style="width: 60px;">
+        <select id="inBulan">
+            <option value="0">Wiwitan (Bulan 1)</option>
+            <option value="1">Gangga (Bulan 2)</option>
+            <option value="2">Bija (Bulan 3)</option>
+            <option value="11">Purnaka (Bulan 12)</option>
+            <option value="12">Suwung (Bulan 13)</option>
+        </select>
+        <button onclick="syncGlobal()">SINKRONISASI BUMI</button>
+    </div>
+
+    <div class="binary-container">
+        
+        <div class="zone-wetan">
+            <div class="zone-title" style="color: var(--day);">ZONA WETAN (SIANG)</div>
+            <div class="zone-desc">Nuswantara, Asia, Australia</div>
+            <div style="color: #aaa; font-size: 0.85rem;">Status: Lebih Awal (Kena Matahari Duluan)</div>
+            
+            <div class="date-display" id="outHariWetan" style="color: #fff;">1</div>
+            <div class="month-display" id="outBulanWetan" style="color: var(--day);">WIWITAN</div>
+        </div>
+
+        <div class="zone-kulon">
+            <div class="zone-title" style="color: #4da6ff;">ZONA KULON (MALAM)</div>
+            <div class="zone-desc">Benua Amerika & Sekitarnya</div>
+            <div style="color: #aaa; font-size: 0.85rem;">Status: Tertinggal (Masih Sisaan Kemaren)</div>
+            
+            <div class="date-display" id="outHariKulon" style="color: #555;">28</div>
+            <div class="month-display" id="outBulanKulon" style="color: #4da6ff;">SUWUNG</div>
+        </div>
+
+    </div>
+
+    <div style="max-width: 900px; margin: 20px auto; text-align: left; font-size: 0.8rem; color: #777; line-height: 1.5;">
+        <b>Logika Kalender:</b> Karena KSN presisi menggunakan <span style="color:var(--neon)">13 Bulan x 28 Hari</span>, perhitungan beda belahan bumi sangat gampang. Kalau di Nuswantara tanggal 1, maka di Amerika pasti masih tanggal 28 bulan sebelumnya. Gak usah mikirin jam, menit, atau detik. Alam membagi harinya sesimpel terang dan gelap.
+    </div>
+
+<script>
+    const months = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+
+    function syncGlobal() {
+        let hWetan = parseInt(document.getElementById('inHari').value);
+        let bWetanIdx = parseInt(document.getElementById('inBulan').value);
+
+        // LOGIKA BINARY: Kulon selalu H-1 dari Wetan
+        let hKulon = hWetan - 1;
+        let bKulonIdx = bWetanIdx;
+
+        // Rollback bulan kalau tanggal di Kulon mundur jadi 0
+        if (hKulon === 0) {
+            hKulon = 28; // Karena kalender lu fix 28 hari per bulan! Gampang banget.
+            bKulonIdx = bWetanIdx - 1;
+            
+            // Rollback tahun kalau mundur dari bulan 1 (Wiwitan) ke bulan 13 (Suwung)
+            if (bKulonIdx < 0) {
+                bKulonIdx = 12; // Index 12 adalah Suwung
+            }
+        }
+
+        // Output ke UI
+        document.getElementById('outHariWetan').innerText = hWetan;
+        document.getElementById('outBulanWetan').innerText = months[bWetanIdx].toUpperCase();
+        
+        document.getElementById('outHariKulon').innerText = hKulon;
+        document.getElementById('outBulanKulon').innerText = months[bKulonIdx].toUpperCase();
+
+        // Kasih efek glow pas update
+        document.getElementById('outHariWetan').style.textShadow = "0 0 20px #e6c27a";
+        setTimeout(() => document.getElementById('outHariWetan').style.textShadow = "none", 500);
+    }
+</script>
+</body>
+</html>

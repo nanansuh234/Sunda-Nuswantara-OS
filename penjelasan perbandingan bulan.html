@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deklasifikasi Waktu - Sunda Nuswantara OS</title>
+    <style>
+        :root { 
+            --neon: #d4af37; 
+            --bg: #050505; 
+            --card: #111; 
+            --danger: #ff4444; 
+            --safe: #00ff41; 
+            --text: #eee;
+        }
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Courier New', monospace; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            border: 2px solid var(--neon);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+            background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+        }
+        h1 {
+            text-align: center;
+            color: var(--neon);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-bottom: 1px dashed var(--neon);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+        .alert-box {
+            background: rgba(255, 68, 68, 0.1);
+            border-left: 5px solid var(--danger);
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        /* GRID KOMPARASI */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .cal-card {
+            background: var(--card);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cal-card h3 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .cal-masehi { border-top: 4px solid var(--danger); }
+        .cal-masehi h3 { color: var(--danger); }
+        .cal-hijriah { border-top: 4px solid #00bfff; }
+        .cal-hijriah h3 { color: #00bfff; }
+        .cal-ksn { border-top: 4px solid var(--safe); box-shadow: 0 0 15px rgba(0,255,65,0.1); }
+        .cal-ksn h3 { color: var(--safe); }
+        
+        ul { padding-left: 20px; margin-bottom: 0; font-size: 0.9rem; color: #ccc; }
+        li { margin-bottom: 10px; }
+        
+        /* KODE BUKTI */
+        .code-proof {
+            background: #000;
+            border: 1px solid #444;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            color: #00ff41;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        .code-comment { color: #888; }
+        .highlight { color: var(--neon); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚠️ BONGKARAN MATRIKS WAKTU: ILUSI 30 HARI ⚠️</h1>
+
+    <div class="alert-box">
+        <h3 style="color: var(--danger); margin-top: 0;">Fakta Alam: 1 Bulan ITU BUKAN 30 HARI</h3>
+        <p style="margin-bottom: 0; font-size: 0.95rem;">
+            Angka 30 hari itu hanyalah pembulatan birokrasi paksaan. Di alam semesta, bulan memiliki dua siklus putaran:
+            <br><br>
+            <b>1. Siklus Sinodik (Pantulan Cahaya):</b> Waktu dari bulan mati ke bulan mati lagi adalah <span class="highlight">29,53 hari</span>. Karena kalender tidak bisa pakai angka koma, ini dipaksa dibulatkan jadi 29 atau 30 hari (sumber ketidakpastian sidang isbat).<br>
+            <b>2. Siklus Sidereal (Orbit Nyata):</b> Waktu fisik mutlak bulan memutari bumi kembali ke titik bintang yang sama adalah <span class="highlight">27,32 hari</span>. Secara harmoni alam dan kelipatan biologis, angka ini terwujud sempurna dalam siklus <span class="highlight">28 Hari</span>.
+        </p>
+    </div>
+
+    <h3 style="text-align: center; color: #aaa;">KOMPARASI 3 SISTEM KALENDER DUNIA</h3>
+    
+    <div class="grid-3">
+        <div class="cal-card cal-masehi">
+            <h3>MASEHI (GREGORIAN)</h3>
+            <div style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: #fff;">28, 29, 30, 31 Hari</div>
+            <div style="text-align: center; font-size: 0.8rem; color: #888; margin-bottom: 15px; text-transform: uppercase;">Sistem: Kocokan Congklak</div>
+            <ul>
+                <li><b>Wadah Berantakan:</b> Jumlah hari diacak sesuai ego Kaisar Romawi kuno agar pas 365 hari.</li>
+                <li><b>Putus dari Alam:</b> Tanggal 15 bisa bulan purnama, bisa bulan mati. Tidak ada sinkronisasi dengan langit.</li>
+                <li><b>Siklus Hari Rusak:</b> Tanggal 1 tahun ini hari Senin, tahun depan hari Rabu. Membuat manusia kehilangan ritme.</li>
+            </ul>
+        </div>
+
+        <div class="cal-card cal-hijriah">
+            <h3>HIJRIAH (LUNAR)</h3>
+            <div style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: #fff;">29 atau 30 Hari</div>
+            <div style="text-align: center; font-size: 0.8rem; color: #888; margin-bottom: 15px; text-transform: uppercase;">Sistem: Observasi Visual (Nerawang)</div>
+            <ul>
+                <li><b>Wadah Gak Pasti:</b> Karena berbasis cahaya (Sinodik 29,5 hari), akhir bulan harus selalu ditambal-sulam.</li>
+                <li><b>Tergantung Optik & Cuaca:</b> Jika mendung, umur bulan dipaksa jadi 30 hari meski secara orbit sudah pindah.</li>
+                <li><b>Sumber Konflik:</b> Karena limit puasa cuma 30 hari, perbedaan memulai awal bulan akan memaksa perbedaan hari Lebaran.</li>
+            </ul>
+        </div>
+
+        <div class="cal-card cal-ksn">
+            <h3>SUNDA NUSWANTARA</h3>
+            <div style="text-align: center; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: var(--neon);">MUTLAK 28 HARI</div>
+            <div style="text-align: center; font-size: 0.8rem; color: #888; margin-bottom: 15px; text-transform: uppercase;">Sistem: Matriks Alam (Presisi)</div>
+            <ul>
+                <li><b>Siklus Harmoni (13 Bulan):</b> 13 bulan x 28 hari = 364 hari sinkron dengan pergerakan alam raya.</li>
+                <li><b>Tanpa Sidang Isbat:</b> Tidak butuh teleskop. Tanggal 28 habis, besok mutlak tanggal 1. Bulan Fase Suwung (mati) dibiarkan berlalu di latar belakang.</li>
+                <li><b>Kalender Abadi:</b> Karena 28 adalah kelipatan 7, maka Tanggal 1 <b>PASTI</b> selalu jatuh di hari yang sama selamanya.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="border-top: 1px dashed #444; padding-top: 20px;">
+        <h3 style="color: var(--neon); margin-top: 0;">BUKTI KEJENIUSAN 28 HARI DALAM ILMU KOMPUTER (CODING)</h3>
+        <p style="font-size: 0.95rem; color: #ccc;">
+            Kalender yang menentang alam akan menghasilkan logika (algoritma) komputasi yang rumit. Di kalender Masehi, untuk menghitung hari mundur dari tanggal 1, komputer harus mengecek bulan sebelumnya (apakah 31, 30, atau 28/29 hari di tahun kabisat).
+            <br><br>
+            Sedangkan di dalam <b>Nuswantara OS</b>, algoritma waktu berjalan sangat elegan tanpa error karena matriks harinya tetap:
+        </p>
+        
+        <div class="code-proof">
+            <span class="code-comment">// LOGIKA MUNDUR HARI (ZONA BARAT / KULON)</span><br>
+            <span class="code-comment">// Jika di Nuswantara tanggal 1 mundur 1 hari:</span><br><br>
+            <span style="color: #ff4444;">if</span> (hari_kulon === 0) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Di kalender Masehi, bagian ini butuh array dan perhitungan kabisat yang panjang.</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment">// Di kalender KSN, alam menyederhanakannya:</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;hari_kulon = <span style="color: #fff; font-weight: bold;">28</span>; <span class="code-comment">// Murni mutlak balik ke hari ke-28 bulan sebelumnya.</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;bulan_kulon = bulan_wetan - 1;<br>
+            }
+        </div>
+        <p style="text-align: center; font-size: 0.8rem; color: #666; margin-top: 15px; text-transform: uppercase;">"Alam semesta tidak bekerja dengan algoritma yang berantakan."</p>
+    </div>
+
+</div>
+
+</body>
+</html>
