@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunda Nuswantara OS - Wood Gasification Blueprint</title>
+    <style>
+        :root {
+            --wood-brown: #5d4037;
+            --gas-blue: #00d4ff;
+            --danger-red: #ff3333;
+            --bg-dark: #0a0a0a;
+        }
+        body { 
+            background-color: var(--bg-dark); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+            line-height: 1.5;
+        }
+        .blueprint-container { 
+            max-width: 1000px; 
+            margin: auto; 
+            border: 2px solid var(--wood-brown); 
+            background: #121212; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(93, 64, 55, 0.3);
+        }
+        h1, h2, h3 { 
+            color: var(--wood-brown); 
+            text-align: center; 
+            text-transform: uppercase; 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 10px;
+        }
+        .grid-layout { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            margin-top: 20px;
+        }
+        .card { 
+            background: #000; 
+            padding: 15px; 
+            border-left: 5px solid var(--gas-blue); 
+        }
+        .filter-flow { 
+            margin-top: 30px; 
+            padding: 20px; 
+            background: #1a1a1a; 
+            border: 1px dashed var(--gas-blue);
+        }
+        .step-item { 
+            margin-bottom: 15px; 
+            padding-left: 30px; 
+            position: relative;
+        }
+        .step-item b { color: var(--gas-blue); }
+        .step-item::before { 
+            content: "➔"; 
+            position: absolute; 
+            left: 0; 
+            color: var(--wood-brown); 
+        }
+        .warning-footer { 
+            text-align: center; 
+            color: var(--danger-red); 
+            font-weight: bold; 
+            margin-top: 30px; 
+            font-size: 0.9rem;
+            border: 1px solid var(--danger-red);
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="blueprint-container">
+    <h1>MANUAL RAKIT GASIFIKASI KAYU (WOOD GAS)</h1>
+    <p style="text-align: center; color: #888;">Modul Pemberdayaan Energi Mandiri Rakyat - Sunda Nuswantara OS</p>
+
+    <div class="grid-layout">
+        <div class="card">
+            <h3>🪵 I. Kriteria Bahan Baku</h3>
+            <ul>
+                <li><b>Kadar Air:</b> Wajib kering (Kadar Air < 20%) untuk mencegah Tar berlebih.</li>
+                <li><b>Ukuran:</b> Cacah kayu menjadi potongan 3-5 cm agar aliran udara stabil.</li>
+                <li><b>Jenis Ideal:</b> Tempurung Kelapa (Batok) atau Kayu Keras (Jati/Akasia).</li>
+                <li><b>Alternatif:</b> Ranting kering atau briket serbuk gergaji padat.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>⚙️ II. Komponen Rakit Rakyat</h3>
+            <ul>
+                <li><b>Reaktor:</b> Tabung LPG bekas atau drum besi tebal (Model TLUD).</li>
+                <li><b>Cyclone:</b> Tabung kerucut besi pemisah debu/abu kasar.</li>
+                <li><b>Scrubber:</b> Ember cat / Galon bekas untuk filter basah & kering.</li>
+                <li><b>Penampung:</b> Ban dalam truk bekas (Tekanan Rendah).</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="filter-flow">
+        <h2>🚀 III. Protokol Filter (Scrubber System)</h2>
+        <p>Urutan aliran gas dari reaktor menuju mesin harus melalui tahap pembersihan berikut:</p>
+        
+        <div class="step-item">
+            <b>1. WET SCRUBBER:</b> Gas masuk ke tabung berisi <b>Air Kapur</b>. Berfungsi mendinginkan gas dan menetralkan zat asam hasil bakaran.
+        </div>
+        
+        <div class="step-item">
+            <b>2. DRY SCRUBBER:</b> Gas masuk ke tabung berisi <b>Arang Aktif</b> atau <b>Sabut Kelapa Kering</b>. Berfungsi menyerap sisa uap air dan Tar halus.
+        </div>
+
+        <div class="step-item">
+            <b>3. WATER TRAP (SAFETY):</b> Botol kecil berisi air sebagai pembatas api balik (Flashback Arrestor) agar api mesin tidak menyambar penampung gas.
+        </div>
+
+        <div class="step-item">
+            <b>4. STORAGE:</b> Gas yang sudah dingin dan bersih ditampung dalam ban dalam truk untuk didistribusikan ke kompor atau genset.
+        </div>
+    </div>
+
+    <div class="warning-footer">
+        ⚠️ PERINGATAN: GAS KAYU MENGANDUNG KARBON MONOKSIDA (CO) YANG BERACUN DAN TIDAK BERBAU. JANGAN GUNAKAN DI RUANG TERTUTUP TANPA VENTILASI TOTAL!
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; margin-top: 20px; color: #555;">
+        DOKUMEN SUNDA NUSWANTARA OS | ZERO WASTE - TOTAL ENERGY INDEPENDENCE
+    </p>
+</div>
+
+</body>
+</html>

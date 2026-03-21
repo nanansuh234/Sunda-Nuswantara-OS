@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protokol Pirolisis - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --oil-orange: #ff6600;
+            --metal-gray: #2c3e50;
+            --bg-black: #0a0a0a;
+            --text-glow: #00f3ff;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: #ccc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            border: 2px solid var(--oil-orange);
+            background: #111;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(255, 102, 0, 0.2);
+        }
+
+        h1, h2, h3 {
+            color: var(--oil-orange);
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .grid-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #1a1a1a;
+            padding: 15px;
+            border-left: 4px solid var(--text-glow);
+        }
+
+        .calc-section {
+            background: linear-gradient(145deg, #1e1e1e, #111);
+            border: 1px solid var(--text-glow);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #000;
+            border: 1px solid #444;
+            color: var(--text-glow);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--oil-orange);
+            color: black;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .result {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: var(--text-glow);
+            text-align: center;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            padding-left: 20px;
+            border-left: 2px solid var(--oil-orange);
+        }
+
+        .warning {
+            background: #4a0000;
+            color: #ff9999;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>REAKTOR PIROLISIS MANDIRI</h1>
+    <p style="text-align: center;">Mengubah Sampah Plastik Menjadi BBM Sintetis (Bensin/Solar)</p>
+
+    <div class="warning">
+        <strong>⚠️ PERINGATAN KESELAMATAN:</strong> Proses pirolisis melibatkan suhu tinggi (300°C - 500°C) dan gas yang mudah terbakar. Lakukan di ruang terbuka dan pastikan semua sambungan pipa kedap udara.
+    </div>
+
+    <h2>1. Bahan Pembuatan Alat (Hardware)</h2>
+    <div class="grid-info">
+        <div class="card">
+            <h3>Tabung Reaktor</h3>
+            <ul>
+                <li>Tabung Gas LPG bekas (12kg) atau drum besi tebal.</li>
+                <li>Tutup reaktor dengan baut (agar bisa dibersihkan).</li>
+                <li>Seal tahan panas (Asbes atau Gasket).</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Sistem Pendingin</h3>
+            <ul>
+                <li>Pipa Tembaga atau Stainless (Panjang 2-3 meter).</li>
+                <li>Ember/Drum penampung air pendingin.</li>
+                <li>Botol kaca/jerigen besi penampung minyak.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>2. Seleksi Bahan Plastik</h2>
+    <p>Gunakan jenis plastik berikut untuk hasil maksimal:</p>
+    <ul>
+        <li><strong>PP (Polypropylene)</strong>: Gelas air mineral, tutup botol (Rendemen Tinggi).</li>
+        <li><strong>PE (Polyethylene)</strong>: Kantong kresek, botol susu, botol sampo (Rendemen Sangat Tinggi).</li>
+        <li><strong>PS (Polystyrene)</strong>: Styrofoam (Hasilnya lebih ke arah minyak tanah/kerosene).</li>
+        <li><strong>⛔ HINDARI: PVC & PET</strong> (Botol minum bening sekali pakai) karena merusak alat dan beracun.</li>
+    </ul>
+
+    <div class="calc-section">
+        <h2>📊 Simulator Hasil BBM</h2>
+        <label>Masukkan Berat Sampah Plastik (KG):</label>
+        <input type="number" id="inputSampah" value="5" oninput="simulasi()">
+        
+        <div id="resSimulasi" class="result">
+            Estimasi Hasil: <strong>-- Liter</strong>
+        </div>
+        <p style="font-size: 0.8rem; color: #888; text-align: center;">
+            *Rasio rata-rata 0.8 - 1.2 Liter per KG tergantung jenis plastik.
+        </p>
+    </div>
+
+    <h2>3. Cara Rakit & Eksekusi (Foot Step)</h2>
+    <div class="step">
+        <strong>STEP 1: Modifikasi Tabung</strong><br>
+        Las pipa tembaga ke bagian atas tabung gas bekas. Pastikan lubang hanya ada satu (jalur keluar uap). Pasang pintu pengisian di bagian atas yang bisa dibaut kuat.
+    </div>
+    <div class="step">
+        <strong>STEP 2: Jalur Kondensasi</strong><br>
+        Bentuk pipa tembaga menjadi spiral (coil) dan masukkan ke dalam drum berisi air dingin. Uap panas dari reaktor harus melewati jalur dingin ini agar mencair menjadi minyak.
+    </div>
+    <div class="step">
+        <strong>STEP 3: Pengisian & Pemanasan</strong><br>
+        Masukkan plastik yang sudah dicacah kecil-kecil ke tabung. Tutup rapat (harus kedap udara!). Bakar bagian bawah tabung menggunakan kayu bakar atau kompor gas.
+    </div>
+    <div class="step">
+        <strong>STEP 4: Penampungan</strong><br>
+        Setelah suhu mencapai >300°C, cairan minyak akan mulai menetes keluar dari ujung pipa tembaga ke botol penampung.
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; font-size: 0.8rem; border-top: 1px solid #333;">
+        SUNDA NUSWANTARA OS - MODUL ENERGY REBELLION v1.0
+    </div>
+</div>
+
+<script>
+    function simulasi() {
+        let kg = document.getElementById('inputSampah').value;
+        // Rasio efisiensi 0.85 liter per kg (rata-rata)
+        let liter = (kg * 0.85).toFixed(2);
+        
+        if(kg > 0) {
+            document.getElementById('resSimulasi').innerHTML = `Estimasi Hasil BBM: <strong>${liter} Liter</strong>`;
+        } else {
+            document.getElementById('resSimulasi').innerHTML = `Estimasi Hasil: <strong>-- Liter</strong>`;
+        }
+    }
+    // Jalankan simulasi pertama kali
+    simulasi();
+</script>
+
+</body>
+</html>

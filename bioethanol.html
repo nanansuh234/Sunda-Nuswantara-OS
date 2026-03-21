@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Bioetanol Mandiri - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --bio-green: #2ecc71;
+            --eth-blue: #3498db;
+            --bg-dark: #0d0d0d;
+        }
+        body { background-color: var(--bg-dark); color: #ecf0f1; font-family: 'Share Tech Mono', monospace; padding: 20px; }
+        .module-box { border: 2px solid var(--bio-green); padding: 25px; background: #1a1a1a; box-shadow: 0 0 25px rgba(46, 204, 113, 0.2); }
+        h1, h2 { color: var(--bio-green); text-align: center; text-transform: uppercase; }
+        
+        .grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .card { background: #000; border-left: 5px solid var(--eth-blue); padding: 15px; }
+        
+        .calc-area { background: #222; padding: 20px; border-radius: 8px; border: 1px dashed var(--bio-green); text-align: center; }
+        input { width: 80%; padding: 10px; margin: 10px 0; background: #111; border: 1px solid #444; color: var(--bio-green); font-size: 1.2rem; }
+        
+        .process-flow { margin-top: 30px; padding: 15px; background: #111; border-radius: 5px; }
+        .step { margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .step-num { color: var(--bio-green); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="module-box">
+    <h1>PROTOKOL BIOETANOL NUSWANTARA</h1>
+    <p style="text-align: center;">Konversi Karbohidrat Jadi Bahan Bakar Oktan Tinggi</p>
+
+    <div class="grid-layout">
+        <div class="card">
+            <h3>🌾 Bahan Baku Utama</h3>
+            <ul>
+                <li><strong>Singkong (Cassava):</strong> Gunakan singkong afkir/busuk yang tidak layak makan.</li>
+                <li><strong>Tebu (Molasses):</strong> Tetes tebu sisa penggilingan.</li>
+                <li><strong>Ragi (Yeast):</strong> Ragi roti atau ragi tape untuk fermentasi.</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>⚗️ Perangkat Suling</h3>
+            <ul>
+                <li><strong>Tabung Fermentasi:</strong> Drum plastik kedap udara.</li>
+                <li><strong>Destilator:</strong> Boiler besi/stainless + Pipa tembaga.</li>
+                <li><strong>Penyaring (Sieve):</strong> Kapur sirih untuk membuang kadar air sisa.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="calc-area">
+        <h2>📊 Estimasi Hasil Produksi</h2>
+        <label>Input Massa Singkong (KG):</label><br>
+        <input type="number" id="massInput" value="10" oninput="calcEth()">
+        <div id="ethResult" style="font-size: 1.5rem; color: var(--bio-green); font-weight: bold; margin-top: 10px;">
+            Hasil: 1.60 Liter (Etanol 95%)
+        </div>
+        <p style="font-size: 0.8rem; color: #888;">*Rasio rata-rata: 1 kg singkong menghasilkan ~0.15 - 0.20 liter etanol murni.</p>
+    </div>
+
+    <div class="process-flow">
+        <h2>🚀 Langkah Eksekusi (Foot Step)</h2>
+        <div class="step"><span class="step-num">01. Hidrolisis:</span> Parut singkong, rebus dengan air sampai jadi bubur untuk memecah pati jadi gula.</div>
+        <div class="step"><span class="step-num">02. Fermentasi:</span> Dinginkan bubur, masukkan ragi. Tutup rapat (Anaerob) selama 3-7 hari sampai bau alkohol tajam.</div>
+        <div class="step"><span class="step-num">03. Destilasi:</span> Masak hasil fermentasi di suhu 78°C - 80°C. Uap etanol akan naik dan mencair di kondensor.</div>
+        <div class="step"><span class="step-num">04. Dehidrasi:</span> Hasil suling biasanya masih mengandung air. Saring pakai kapur sirih atau zeolit agar kadar etanol mencapai 95%+ (Fuel Grade).</div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #555; margin-top: 20px;">
+        SUNDA NUSWANTARA OS | KEMANDIRIAN PANGAN - KEMANDIRIAN ENERGI
+    </p>
+</div>
+
+<script>
+    function calcEth() {
+        let kg = document.getElementById('massInput').value;
+        // Rasio rata-rata 0.16 liter per kg singkong
+        let res = (kg * 0.16).toFixed(2);
+        document.getElementById('ethResult').innerHTML = `Hasil: ${res} Liter (Etanol 95%)`;
+    }
+</script>
+
+</body>
+</html>

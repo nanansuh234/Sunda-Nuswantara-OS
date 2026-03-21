@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sunda Nuswantara OS - Integrated Energy Rebellion v5.0</title>
+    <style>
+        :root {
+            --fire: #ff4500;
+            --bio: #2ecc71;
+            --wood: #8b4513;
+            --cyber: #00f3ff;
+            --bg: #0d1117;
+        }
+        body { background-color: var(--bg); color: #e6edf3; font-family: 'Share Tech Mono', monospace; padding: 20px; }
+        .main-panel { border: 3px solid var(--cyber); padding: 30px; background: #161b22; box-shadow: 0 0 30px rgba(0, 243, 255, 0.1); }
+        h1 { text-align: center; color: var(--cyber); text-transform: uppercase; border-bottom: 2px solid var(--cyber); padding-bottom: 10px; }
+        
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .calc-card { background: #010409; padding: 15px; border-top: 4px solid var(--fire); border-radius: 5px; }
+        .calc-card.bio { border-top-color: var(--bio); }
+        .calc-card.wood { border-top-color: var(--wood); }
+
+        input { width: 90%; padding: 8px; background: #0d1117; border: 1px solid #333; color: #fff; margin: 10px 0; text-align: center; }
+        .res-val { font-weight: bold; color: var(--cyber); display: block; margin-top: 5px; }
+
+        .filter-section { background: #000; border: 1px dashed var(--cyber); padding: 20px; margin-top: 20px; }
+        .component-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.9rem; }
+        
+        .footer { text-align: center; margin-top: 30px; font-size: 0.7rem; color: #555; }
+        .btn-print { width: 100%; padding: 15px; background: var(--cyber); color: #000; font-weight: bold; border: none; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="main-panel">
+    <h1>ENERGY REBELLION CENTRAL CONTROL</h1>
+    
+    <div class="grid-3">
+        <div class="calc-card">
+            <h3>🔥 PIROLISIS (PLASTIK)</h3>
+            <label>Massa Sampah (KG):</label>
+            <input type="number" id="inpPlastik" value="10" oninput="updateAll()">
+            <span class="res-val" id="resPlastik">Hasil: 8.5 Liter BBM</span>
+            <small>Rasio: ~0.85L / KG</small>
+        </div>
+
+        <div class="calc-card bio">
+            <h3>🌾 BIOETANOL (SINGKONG)</h3>
+            <label>Massa Singkong (KG):</label>
+            <input type="number" id="inpSingkong" value="10" oninput="updateAll()">
+            <span class="res-val" id="resSingkong">Hasil: 1.6 Liter Alkohol</span>
+            <small>Oktan: 100+ (Fuel Grade)</small>
+        </div>
+
+        <div class="calc-card wood">
+            <h3>🪵 GASIFIKASI (KAYU)</h3>
+            <label>Massa Kayu (KG):</label>
+            <input type="number" id="inpWood" value="10" oninput="updateAll()">
+            <span class="res-val" id="resWood">Hasil: 5.0 KG Syngas</span>
+            <small>Setara: ~3.5L Bensin</small>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <h2>🛡️ DAFTAR KOMPONEN FILTER (SCRUBBER SYSTEM)</h2>
+        <p>Gunakan komponen ini untuk membersihkan zat Tar dan Asam agar mesin awet:</p>
+        <div class="component-list">
+            <div>
+                <strong>1. Filter Cair (Wet Scrubber):</strong>
+                <ul>
+                    <li>Tabung berisi air kapur (menetralkan asam).</li>
+                    <li>Fungsi: Menangkap jelaga dan mendinginkan uap gas.</li>
+                </ul>
+            </div>
+            <div>
+                <strong>2. Filter Kering (Dry Scrubber):</strong>
+                <ul>
+                    <li>Tabung berisi arang aktif / sabut kelapa kering.</li>
+                    <li>Fungsi: Menyerap sisa kelembapan dan Tar halus.</li>
+                </ul>
+            </div>
+            <div>
+                <strong>3. Cyclone Separator (Opsional):</strong>
+                <ul>
+                    <li>Pipa berbentuk pusaran untuk memisahkan debu berat.</li>
+                </ul>
+            </div>
+            <div>
+                <strong>4. Water Trap (Safety):</strong>
+                <ul>
+                    <li>Tabung pengaman api balik (Flashback Arrestor).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-print" onclick="window.print()">CETAK MANIFESTO ENERGI</button>
+    
+    <div class="footer">
+        SUNDA NUSWANTARA OS | DOKUMEN ENERGI MANDIRI | DE-SENTRALISASI ADALAH KUNCI
+    </div>
+</div>
+
+<script>
+    function updateAll() {
+        // Pirolisis
+        let p = document.getElementById('inpPlastik').value;
+        document.getElementById('resPlastik').innerHTML = `Hasil: ${(p * 0.85).toFixed(1)} Liter BBM`;
+        
+        // Bioetanol
+        let s = document.getElementById('inpSingkong').value;
+        document.getElementById('resSingkong').innerHTML = `Hasil: ${(s * 0.16).toFixed(1)} Liter Alkohol`;
+        
+        // Wood Gas
+        let w = document.getElementById('inpWood').value;
+        document.getElementById('resWood').innerHTML = `Hasil: ${(w * 0.5).toFixed(1)} KG Syngas`;
+    }
+</script>
+
+</body>
+</html>

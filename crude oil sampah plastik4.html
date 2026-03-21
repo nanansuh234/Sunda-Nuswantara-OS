@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Blueprint Energi Mandiri - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --safety-orange: #ff6600;
+            --tech-blue: #00f3ff;
+            --metal: #bdc3c7;
+            --bg-deep: #0a0a0a;
+        }
+        body { background-color: var(--bg-deep); color: #e0e0e0; font-family: 'Share Tech Mono', monospace; padding: 20px; }
+        .blueprint-container { border: 2px solid var(--safety-orange); padding: 20px; background: #111; box-shadow: 0 0 30px rgba(255, 102, 0, 0.2); }
+        h1, h2 { color: var(--safety-orange); text-align: center; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        
+        .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        .model-card { border: 1px solid #444; padding: 15px; background: #000; position: relative; }
+        .model-card::before { content: "MODEL SPEC"; position: absolute; top: -10px; left: 10px; background: var(--safety-orange); color: black; font-size: 10px; padding: 0 5px; }
+        
+        .tech-spec { font-size: 0.85rem; color: #8b949e; line-height: 1.5; }
+        .feedback-loop { border: 1px dashed var(--tech-blue); padding: 10px; margin-top: 10px; color: var(--tech-blue); font-size: 0.8rem; }
+        
+        .step-label { color: var(--safety-orange); font-weight: bold; }
+        .danger { color: #ff3333; font-weight: bold; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<div class="blueprint-container">
+    <h1>Blueprint Reaktor Pirolisis & Feedback Loop</h1>
+    <p style="text-align: center;">Visi Kemandirian Energi: Dari Sampah Jadi Daya Guna</p>
+
+    <div class="model-grid">
+        <div class="model-card">
+            <h2>MODEL A: VERTICAL TOWER (KOMUNAL)</h2>
+            <div class="tech-spec">
+                <p><span class="step-label">Wadah:</span> Drum Besi 200L / Tangki Kilang Rakyat.</p>
+                <p><span class="step-label">Kapasitas:</span> 20 - 50 KG Plastik.</p>
+                <p><span class="step-label">Suhu Kerja:</span> 350°C - 500°C.</p>
+                <p><span class="step-label">Sistem Pendingin:</span> Kondensor Kolam (Pipa Tembaga Spiral 5 meter).</p>
+                
+                <div class="feedback-loop">
+                    <strong>🔄 INTEGRATED FEEDBACK:</strong><br>
+                    Menggunakan pipa baja 1/2 inch dari ujung kondensor kembali ke dasar tungku. Dilengkapi dengan <em>Water Flashback Arrestor</em> (Tabung air pengaman) untuk mencegah api balik masuk ke reaktor.
+                </div>
+            </div>
+        </div>
+
+        <div class="model-card">
+            <h2>MODEL B: MINI PORTABLE (RUMAHAN)</h2>
+            <div class="tech-spec">
+                <p><span class="step-label">Wadah:</span> Tabung Gas LPG 3KG / 12KG Bekas.</p>
+                <p><span class="step-label">Kapasitas:</span> 2 - 5 KG Plastik.</p>
+                <p><span class="step-label">Suhu Kerja:</span> 300°C - 400°C.</p>
+                <p><span class="step-label">Sistem Pendingin:</span> Ember Kondensasi (Pipa Tembaga 2 meter).</p>
+                
+                <div class="feedback-loop">
+                    <strong>🔄 MINI LOOP:</strong><br>
+                    Menggunakan selang fleksibel tahan panas menuju kompor sumbu di bawah tabung. Menghemat gas pemantik hingga 75% setelah 30 menit pembakaran.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <h2>🛠️ Teknis Pembalikan Gas (Syngas Loop)</h2>
+        <ol class="tech-spec">
+            <li><span class="step-label">Separasi:</span> Gas non-kondensabel (uap putih) dipisahkan dari minyak di botol separator.</li>
+            <li><span class="step-label">Purifikasi (Opsional):</span> Gas dilewatkan ke tabung berisi air kapur untuk menyaring residu asam.</li>
+            <li><span class="step-label">Looping:</span> Gas dialirkan ke <em>Burner</em> tambahan di bawah boiler utama.</li>
+            <li><span class="step-label">Output:</span> Mengurangi ketergantungan pada bahan bakar fosil eksternal; 1 kg plastik menghasilkan energi bakar selama ~18 menit.</li>
+        </ol>
+    </div>
+
+    <div class="danger" style="text-align: center; margin-top: 20px;">
+        ⚠️ PERINGATAN: PASTIKAN WATER TRAP TERPASANG. JANGAN MENGALIRKAN GAS LANGSUNG TANPA KATUP PENGAMAN!
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #555; margin-top: 20px; border-top: 1px solid #333;">
+        DOKUMEN SUNDA NUSWANTARA OS - HAK RAKYAT ATAS ENERGI MANDIRI
+    </p>
+</div>
+
+</body>
+</html>

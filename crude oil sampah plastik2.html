@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kilang Fraksi Rakyat - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --industry-orange: #ff8800;
+            --diesel-blue: #00d4ff;
+            --petrol-green: #39ff14;
+            --dark-steel: #121212;
+        }
+        body {
+            background-color: #050505;
+            color: #e0e0e0;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            border: 2px solid var(--industry-orange);
+            background: var(--dark-steel);
+            padding: 25px;
+            box-shadow: 0 0 40px rgba(255, 136, 0, 0.1);
+        }
+        h1 { color: var(--industry-orange); text-align: center; text-transform: uppercase; letter-spacing: 3px; }
+        
+        .blueprint {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .component-list {
+            flex: 1;
+            background: #1a1a1a;
+            padding: 15px;
+            border-left: 5px solid var(--diesel-blue);
+        }
+        .temp-guide {
+            flex: 1;
+            background: #1a1a1a;
+            padding: 15px;
+            border-left: 5px solid var(--petrol-green);
+        }
+
+        /* Interactive Simulator */
+        .simulator {
+            background: #000;
+            border: 1px dashed var(--industry-orange);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        #tempRange { width: 80%; accent-color: var(--industry-orange); }
+        .gauge-val { font-size: 2.5rem; color: var(--industry-orange); font-weight: bold; }
+        .fuel-indicator { font-size: 1.5rem; margin: 15px 0; padding: 10px; border-radius: 5px; }
+
+        .steps {
+            background: #111;
+            padding: 20px;
+            border: 1px solid #333;
+        }
+        .step-item { margin-bottom: 15px; padding-left: 30px; position: relative; }
+        .step-item::before {
+            content: "⚙️";
+            position: absolute;
+            left: 0;
+            color: var(--industry-orange);
+        }
+        
+        .status-active { background: rgba(57, 255, 20, 0.1); border: 1px solid var(--petrol-green); color: var(--petrol-green); }
+        .status-idle { background: rgba(255, 255, 255, 0.05); border: 1px solid #444; color: #888; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>KILANG FRAKSI RAKYAT v1.0</h1>
+    <p style="text-align: center; color: #888;">Protokol Pemisahan Crude Plastik Menjadi Bahan Bakar Siap Guna</p>
+
+    <div class="blueprint">
+        <div class="component-list">
+            <h3>🛠️ Perangkat Mandiri</h3>
+            <ul>
+                <li><strong>Boiler Utama:</strong> Tabung tebal tahan api.</li>
+                <li><strong>Kolom Fraksi:</strong> Pipa besi tegak 1.5m (isi dengan kerikil/besi rongsok).</li>
+                <li><strong>Termometer Analog:</strong> Pasang di puncak pipa kolom.</li>
+                <li><strong>Kondensor Spiral:</strong> Pipa tembaga masuk ke bak air.</li>
+            </ul>
+        </div>
+        <div class="temp-guide">
+            <h3>🌡️ Target Fraksi</h3>
+            <ul>
+                <li><strong>Bensin (Gasoline):</strong> 70°C - 150°C</li>
+                <li><strong>Minyak Tanah:</strong> 150°C - 250°C</li>
+                <li><strong>Solar (Diesel):</strong> 250°C - 350°C</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="simulator">
+        <h3>SIMULATOR PENYULINGAN</h3>
+        <p>Geser suhu untuk melihat apa yang harus Anda tampung:</p>
+        <input type="range" id="tempRange" min="25" max="400" value="25" oninput="updateSim()">
+        <div class="gauge-val" id="tempDisp">25°C</div>
+        <div id="fuelResult" class="fuel-indicator status-idle">STANDBY - PEMANASAN AWAL</div>
+        <p id="actionNote" style="font-style: italic; color: #aaa;">Nyalakan api, tunggu uap naik ke kolom...</p>
+    </div>
+
+    <div class="steps">
+        <h3>🚀 Foot Step: Operasi Kilang</h3>
+        <div class="step-item"><strong>Instalasi Kolom:</strong> Pasang pipa tegak 1.5 meter di atas boiler. Isi dalam pipa dengan potongan besi atau pecahan keramik. Ini berfungsi agar uap yang "berat" (solar) jatuh kembali ke bawah, dan uap "ringan" (bensin) saja yang lolos ke atas.</div>
+        <div class="step-item"><strong>Pemanasan Terkontrol:</strong> Jangan langsung pakai api besar. Naikkan suhu pelan-pelan. Perhatikan termometer di <strong>puncak kolom</strong>, bukan di boiler.</div>
+        <div class="step-item"><strong>Kran Pemisah:</strong> Siapkan 3 wadah berbeda. Jangan dicampur! Gunakan wadah kaca atau jerigen besi (jangan plastik karena bensin panas bisa melelehkan wadah).</div>
+        <div class="step-item"><strong>Gas Buang (Syngas):</strong> Uap yang tidak mencair di ujung pipa adalah gas murni. Salurkan kembali ke tungku sebagai bahan bakar tambahan.</div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; margin-top: 20px; color: #555;">
+        SUNDA NUSWANTARA OS | ZERO WASTE - TOTAL ENERGY INDEPENDENCE
+    </p>
+</div>
+
+<script>
+    function updateSim() {
+        const temp = document.getElementById('tempRange').value;
+        const disp = document.getElementById('tempDisp');
+        const res = document.getElementById('fuelResult');
+        const note = document.getElementById('actionNote');
+        
+        disp.innerText = temp + "°C";
+
+        if (temp < 70) {
+            res.innerText = "STANDBY / GAS ALAM";
+            res.className = "fuel-indicator status-idle";
+            note.innerText = "Hanya gas ringan yang keluar. Bisa dibakar langsung.";
+        } else if (temp >= 70 && temp < 150) {
+            res.innerText = "FRAKSI: BENSIN (NAPHTHA)";
+            res.className = "fuel-indicator status-active";
+            res.style.borderColor = "var(--petrol-green)";
+            res.style.color = "var(--petrol-green)";
+            note.innerText = "Buka keran wadah A. Kualitas jernih untuk motor.";
+        } else if (temp >= 150 && temp < 250) {
+            res.innerText = "FRAKSI: MINYAK TANAH / KEROSENE";
+            res.className = "fuel-indicator status-active";
+            res.style.borderColor = "var(--industry-orange)";
+            res.style.color = "var(--industry-orange)";
+            note.innerText = "Ganti ke wadah B. Cocok untuk lampu atau kompor.";
+        } else if (temp >= 250 && temp < 350) {
+            res.innerText = "FRAKSI: SOLAR (DIESEL)";
+            res.className = "fuel-indicator status-active";
+            res.style.borderColor = "var(--diesel-blue)";
+            res.style.color = "var(--diesel-blue)";
+            note.innerText = "Ganti ke wadah C. Untuk mesin diesel/traktor.";
+        } else {
+            res.innerText = "RESIDU / ASPAL";
+            res.className = "fuel-indicator status-idle";
+            note.innerText = "Proses selesai. Sisa di boiler adalah aspal kental.";
+        }
+    }
+</script>
+
+</body>
+</html>

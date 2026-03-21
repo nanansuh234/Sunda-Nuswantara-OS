@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Integrated Energy Rebellion</title>
+    <style>
+        :root {
+            --fire: #ff4500;
+            --oil: #ffcc00;
+            --cyber: #00f3ff;
+            --bg: #0d1117;
+        }
+        body { background-color: var(--bg); color: #e6edf3; font-family: 'Courier New', monospace; padding: 20px; }
+        .panel { border: 2px solid var(--fire); padding: 25px; border-radius: 10px; background: #161b22; box-shadow: 0 0 20px rgba(255, 69, 0, 0.2); }
+        h1, h2 { text-align: center; color: var(--fire); text-transform: uppercase; margin-top: 0; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .calc-box { background: #010409; padding: 20px; border-radius: 8px; border-left: 5px solid var(--cyber); }
+        
+        input, select { width: 100%; padding: 10px; background: #0d1117; border: 1px solid #30363d; color: var(--cyber); margin: 10px 0; }
+        .btn { width: 100%; padding: 12px; background: var(--fire); color: white; border: none; font-weight: bold; cursor: pointer; }
+        
+        .monitor { margin-top: 20px; padding: 15px; background: #21262d; border-radius: 5px; border: 1px solid #30363d; }
+        .gauge { font-size: 1.5rem; font-weight: bold; color: var(--oil); text-align: center; }
+        .step-pro { font-size: 0.9rem; margin-top: 15px; color: #8b949e; border-top: 1px solid #30363d; padding-top: 10px; line-height: 1.4; }
+        .highlight { color: var(--cyber); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h1>Energy Rebellion - Integrated System</h1>
+    <p style="text-align: center; font-size: 0.8rem;">Sunda Nuswantara OS v4.1 | Module: Pirolisis & Self-Heating Logic</p>
+
+    <div class="grid">
+        <div class="calc-box">
+            <h2>📦 Bahan Baku</h2>
+            <label>Massa Sampah Plastik (KG):</label>
+            <input type="number" id="kgPlastik" value="5" oninput="runSim()">
+            <label>Jenis Plastik Utama:</label>
+            <select id="tipePlastik" onchange="runSim()">
+                <option value="1.0">PE (Kresek/Botol Sampo) - 100% Hasil</option>
+                <option value="0.8">PP (Gelas Aqua/Tutup) - 80% Hasil</option>
+                <option value="0.7">PS (Styrofoam) - 70% Hasil</option>
+            </select>
+        </div>
+
+        <div class="calc-box">
+            <h2>🔥 Energi Pemantik</h2>
+            <label>Bahan Bakar Start-Up:</label>
+            <select id="fuelSource" onchange="runSim()">
+                <option value="kayu">Kayu Bakar (Kering)</option>
+                <option value="lpg">Gas LPG (Tabung 3kg)</option>
+                <option value="arang">Briket Arang Batok</option>
+            </select>
+            <div class="gauge" id="tempStatus">Suhu: 25°C</div>
+        </div>
+    </div>
+
+    <div class="monitor">
+        <h2>📊 Simulasi Output & Feedback</h2>
+        <div class="grid">
+            <div id="outBBM">Estimasi BBM: -- Liter</div>
+            <div id="outSyngas">Volume Syngas: -- m³</div>
+            <div id="outTime">Durasi Self-Heating: -- Menit</div>
+            <div id="outFuelSave">Hemat BBM Utama: -- %</div>
+        </div>
+        <div id="feedbackAlert" style="color: var(--fire); text-align: center; font-weight: bold; margin-top: 10px; border: 1px dashed var(--fire); padding: 5px; display: none;"></div>
+    </div>
+
+    <div class="step-pro">
+        <strong>⚙️ Protokol Penghematan Daya Guna:</strong><br>
+        1. <span class="highlight">Syngas Loop</span>: Dari 1 kg plastik dihasilkan ~0.2 m³ gas non-kondensabel.<br>
+        2. <span class="highlight">Otomasi Bakar</span>: Pada suhu >300°C, salurkan gas balik ke tungku. Gas ini mampu menyuplai panas selama ~15-20 menit per kg bahan.<br>
+        3. <span class="highlight">Substitusi</span>: Penggunaan Syngas menghemat bahan bakar awal hingga 70-80% setelah proses stabil.
+    </div>
+
+    <button class="btn" style="margin-top:20px;" onclick="window.print()">SIMPAN PROTOKOL ENERGI</button>
+</div>
+
+<script>
+    function runSim() {
+        let kg = parseFloat(document.getElementById('kgPlastik').value) || 0;
+        let tipe = parseFloat(document.getElementById('tipePlastik').value);
+        
+        // Liter (Rasio dasar 0.85 per KG)
+        let liter = (kg * 0.85 * tipe).toFixed(2);
+        
+        // Syngas (0.2 m3 per kg)
+        let syngas = (kg * 0.2).toFixed(2);
+        
+        // Durasi Nyala (Asumsi 18 menit per kg)
+        let durasi = (kg * 18).toFixed(0);
+        
+        document.getElementById('outBBM').innerHTML = `Estimasi BBM Cair: <span class='highlight'>${liter} Liter</span>`;
+        document.getElementById('outSyngas').innerHTML = `Potensi Syngas: <span class='highlight'>${syngas} m³</span>`;
+        document.getElementById('outTime').innerHTML = `Durasi Bakar Gas: <span class='highlight'>${durasi} Menit</span>`;
+        document.getElementById('outFuelSave').innerHTML = `Efisiensi Panas: <span class='highlight'>75%</span>`;
+
+        let tempDisp = document.getElementById('tempStatus');
+        let alertBox = document.getElementById('feedbackAlert');
+
+        if (kg > 0) {
+            tempDisp.innerHTML = "Suhu Target: 350°C";
+            alertBox.style.display = "block";
+            alertBox.innerHTML = "MODE SELF-HEATING TERSEDIA: HUBUNGKAN SELANG FEEDBACK!";
+        } else {
+            tempDisp.innerHTML = "Suhu: 25°C";
+            alertBox.style.display = "none";
+        }
+    }
+    runSim();
+</script>
+
+</body>
+</html>

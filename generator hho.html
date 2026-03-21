@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>HHO Dry Cell - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --hho-cyan: #00f3ff;
+            --steel: #bdc3c7;
+            --bg-panel: #0d1117;
+        }
+        body { 
+            background-color: var(--bg-panel); 
+            color: #e6edf3; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .hho-container { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--hho-cyan); 
+            background: #161b22; 
+            padding: 30px; 
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.2);
+        }
+        h1, h2 { color: var(--hho-cyan); text-align: center; text-transform: uppercase; }
+        
+        .grid-tech { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .tech-card { background: #010409; padding: 15px; border-left: 4px solid var(--hho-cyan); }
+        
+        .calc-hho { 
+            background: #000; 
+            padding: 20px; 
+            border: 1px dashed var(--hho-cyan); 
+            text-align: center; 
+            margin: 25px 0;
+        }
+        input { 
+            width: 70%; 
+            padding: 12px; 
+            background: #0d1117; 
+            border: 1px solid #30363d; 
+            color: var(--hho-cyan); 
+            font-size: 1.5rem; 
+            text-align: center; 
+        }
+
+        .step-list { background: #1a1a1a; padding: 20px; border-radius: 5px; }
+        .step-item { margin-bottom: 12px; padding-left: 25px; position: relative; font-size: 0.9rem; }
+        .step-item::before { content: "⚡"; position: absolute; left: 0; color: var(--hho-cyan); }
+        
+        .danger-zone { 
+            border: 2px solid #ff3333; 
+            padding: 15px; 
+            color: #ff3333; 
+            text-align: center; 
+            font-weight: bold; 
+            margin-top: 25px; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="hho-container">
+    <h1>PROTOKOL GENERATOR HHO (GAS BROWN)</h1>
+    <p style="text-align: center;">Ekstraksi Hidrogen dari Air untuk Efisiensi Bakar Maksimal</p>
+
+    <div class="grid-tech">
+        <div class="tech-card">
+            <h3>🧪 Bahan Elektrolit</h3>
+            <ul>
+                <li><b>Air Bersih (H2O):</b> Air AC atau air hujan lebih bagus.</li>
+                <li><b>Katalis:</b> Baking Soda atau KOH (Kalium Hidroksida).</li>
+                <li><b>Rasio:</b> 1 sendok teh per 1 liter air (jangan terlalu pekat).</li>
+            </ul>
+        </div>
+        <div class="tech-card">
+            <h3>⚙️ Perangkat Keras</h3>
+            <ul>
+                <li><b>Elektroda:</b> Plat Stainless Steel 316L (Tahan Karat).</li>
+                <li><b>Wadah:</b> Mason Jar atau tabung akrilik kedap udara.</li>
+                <li><b>Power:</b> Aki 12V atau Panel Surya DC.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="calc-hho">
+        <h2>📊 Estimasi Penghematan BBM</h2>
+        <label>Input Ampere Aki (A):</label><br>
+        <input type="number" id="ampereInp" value="5" oninput="calcHHO()">
+        <div id="hhoRes" style="font-size: 1.6rem; margin-top: 15px; color: var(--hho-cyan);">
+            Estimasi Hemat BBM: 25% - 40%
+        </div>
+        <p style="font-size: 0.8rem; color: #888;">*Tergantung setelan debit gas ke intake mesin.</p>
+    </div>
+
+    <div class="step-list">
+        <h2>🚀 Langkah Rakit & Eksekusi</h2>
+        <div class="step-item"><b>Konfigurasi Plat:</b> Susun plat stainless selang-seling (+ N N N -). "N" adalah plat netral untuk membagi voltase agar tidak panas.</div>
+        <div class="step-item"><b>Instalasi Bubbler:</b> Gas HHO WAJIB melewati botol air (bubbler) sebelum ke mesin untuk mencegah <i>backfire</i>.</div>
+        <div class="step-item"><b>Koneksi Intake:</b> Hubungkan selang gas ke filter udara mesin. Gas HHO akan membantu pembakaran bensin jadi sempurna.</div>
+        <div class="step-item"><b>Efek:</b> Mesin jadi lebih dingin, bertenaga, dan emisi karbon berkurang drastis.</div>
+    </div>
+
+    <div class="danger-zone">
+        ⚠️ PERINGATAN: GAS HHO SANGAT MUDAH MELEDAK. JANGAN PERNAH MENYIMPAN GAS INI DALAM TABUNG BERTEKANAN. PRODUKSI LANGSUNG PAKAI!
+    </div>
+</div>
+
+<script>
+    function calcHHO() {
+        let amp = document.getElementById('ampereInp').value;
+        let hemat = (amp * 6).toFixed(0); 
+        if(hemat > 60) hemat = 60; // Limit efisiensi masuk akal
+        document.getElementById('hhoRes').innerHTML = `Estimasi Hemat BBM: ${hemat-10}% - ${hemat}%`;
+    }
+</script>
+
+</body>
+</html>
