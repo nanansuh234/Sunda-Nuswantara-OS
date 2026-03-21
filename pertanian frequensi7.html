@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Frequency Generator - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --nature-green: #2ecc71;
+            --danger-red: #ff3e3e;
+            --bg-obsidian: #050505;
+        }
+        body { 
+            background-color: var(--bg-obsidian); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .audio-panel { 
+            width: 100%; max-width: 600px; 
+            border: 2px solid var(--neon-blue); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            border-radius: 10px;
+        }
+        h1 { color: var(--neon-blue); text-align: center; text-transform: uppercase; margin-bottom: 5px; }
+        .sub-text { text-align: center; font-size: 0.8rem; color: #888; margin-bottom: 20px; }
+
+        .control-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .btn-freq { 
+            padding: 15px; border: 1px solid #444; background: #111; 
+            color: #fff; cursor: pointer; font-size: 1rem; text-align: left;
+            transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .btn-freq:hover { border-color: var(--neon-blue); background: #1a1a1a; }
+        .btn-freq.active { border-color: var(--nature-green); background: rgba(46, 204, 113, 0.1); }
+        .btn-freq span { display: block; font-size: 0.7rem; color: #888; }
+
+        .stop-btn { 
+            width: 100%; padding: 15px; margin-top: 20px; 
+            background: var(--danger-red); border: none; color: white; 
+            font-weight: bold; cursor: pointer; text-transform: uppercase;
+        }
+
+        .visualizer { 
+            width: 100%; height: 60px; background: #000; 
+            margin-top: 15px; border: 1px solid #222; 
+        }
+
+        .note { 
+            font-size: 0.8rem; margin-top: 20px; line-height: 1.5; 
+            padding: 10px; border-left: 3px solid var(--neon-blue); background: #111;
+        }
+    </style>
+</head>
+<body>
+
+<div class="audio-panel">
+    <h1>SONIC RESONATOR v1.0</h1>
+    <p class="sub-text">Sunda Nuswantara OS | Agricultural Frequency</p>
+
+    <div class="control-grid">
+        <button class="btn-freq" onclick="toggleFreq(3500, 'bloom')">
+            <b>MODUL 1: SONIC BLOOM (3.5 kHz)</b>
+            <span>Target: Stomata Daun | Putar Jam 05:00 - 06:00</span>
+        </button>
+
+        <button class="btn-freq" onclick="toggleFreq(432, 'growth')">
+            <b>MODUL 2: CELL REGENERATION (432 Hz)</b>
+            <span>Target: Batang & Akar | Resonansi Harmoni Alam</span>
+        </button>
+
+        <button class="btn-freq" onclick="toggleFreq(15, 'pest')">
+            <b>MODUL 3: INFRASONIC PEST (15 Hz)</b>
+            <span>Target: Hama (Tikus/Uret) | Getaran Tanah (Malam)</span>
+        </button>
+    </div>
+
+    <canvas id="visualizer" class="visualizer"></canvas>
+
+    <button class="stop-btn" onclick="stopAll()">EMERGENCY STOP</button>
+
+    <div class="note">
+        <b>💡 BRAHMAN GUIDE:</b><br>
+        - Sambungkan Output Audio HP/Laptop ke Amplifier TOA.<br>
+        - Untuk <b>Infrasonik (15 Hz)</b>, pastikan menggunakan Speaker Bass/Subwoofer yang menyentuh tanah agar getaran merambat efektif.
+    </div>
+</div>
+
+<script>
+    let audioCtx = null;
+    let oscillator = null;
+    let gainNode = null;
+    let canvas = document.getElementById('visualizer');
+    let canvasCtx = canvas.getContext('2d');
+
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            gainNode = audioCtx.createGain();
+            gainNode.connect(audioCtx.destination);
+        }
+    }
+
+    function toggleFreq(freq, type) {
+        initAudio();
+        stopAll();
+
+        oscillator = audioCtx.createOscillator();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        
+        // Volume ramping biar gak kaget
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.5);
+        
+        oscillator.connect(gainNode);
+        oscillator.start();
+
+        drawVisualizer();
+    }
+
+    function stopAll() {
+        if (oscillator) {
+            oscillator.stop();
+            oscillator = null;
+        }
+        // Bersihkan visualizer
+        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawVisualizer() {
+        if (!oscillator) return;
+        requestAnimationFrame(drawVisualizer);
+        canvasCtx.fillStyle = '#000';
+        canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = '#00f3ff';
+        canvasCtx.beginPath();
+        let x = 0;
+        for (let i = 0; i < canvas.width; i++) {
+            let y = canvas.height / 2 + Math.sin(i * 0.1) * 20;
+            if (i === 0) canvasCtx.moveTo(x, y);
+            else canvasCtx.lineTo(x, y);
+            x++;
+        }
+        canvasCtx.stroke();
+    }
+</script>
+
+</body>
+</html>

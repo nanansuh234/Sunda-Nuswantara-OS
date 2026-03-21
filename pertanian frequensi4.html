@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Active Grid Integration - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --wiring-blue: #00d1ff;
+            --copper-gold: #b87333;
+            --soil-brown: #3e2723;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .integration-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--wiring-blue); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(0, 209, 255, 0.2);
+        }
+        h1, h2 { color: var(--wiring-blue); text-align: center; text-transform: uppercase; }
+        
+        .diagram-box { 
+            background: #000; 
+            border: 1px dashed var(--wiring-blue); 
+            padding: 20px; 
+            margin: 20px 0;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .step-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .step-card { background: #111; padding: 15px; border-left: 4px solid var(--copper-gold); }
+        
+        .alert-note { 
+            background: rgba(184, 115, 51, 0.1); 
+            border: 1px solid var(--copper-gold); 
+            padding: 15px; 
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+        .highlight { color: var(--wiring-blue); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="integration-panel">
+    <h1>ACTIVE GROUND RESONANCE SYSTEM</h1>
+    <p style="text-align: center;">Injeksi Frekuensi Eter ke Akar Tanaman</p>
+
+    <div class="diagram-box">
+        [ ANTENA POHON ] ➔ JOULE THIEF (+) ➔ <span class="highlight">KABEL TEMBAGA UTAMA (DITANAM)</span> ➔ [ ROD TEMBAGA ]<br>
+        [ PAKU TANAH ] ➔ JOULE THIEF (-) ➔ <span class="highlight">KABEL GROUND REFERENSI</span> ➔ [ ROD SENG/GALVANIS ]
+    </div>
+
+    <div class="step-grid">
+        <div class="step-card">
+            <h3>📡 Jalur Utama (Busbar)</h3>
+            <p>Tanam kabel tembaga tunggal 2.5mm mengelilingi lahan sedalam 20cm. Sambungkan semua <span class="highlight">Rod Tembaga</span> ke kabel ini sebagai jalur distribusi denyut energi.</p>
+        </div>
+        <div class="step-card">
+            <h3>⚡ Output Sirkuit</h3>
+            <p>Lepas LED dari sirkuit Joule Thief lo. Sambungkan output (+) ke jalur tembaga tanah, dan (-) ke <span class="highlight">Ground Referensi</span> (Paku Tanah pusat).</p>
+        </div>
+    </div>
+
+    <div class="alert-note">
+        <b>💡 TRIK ANTI-HAMA:</b><br>
+        Dengan sistem aktif ini, tanah lo akan memiliki muatan statis yang membuat <span class="highlight">Uret, Tikus, dan Wereng</span> merasa tidak nyaman. Mereka akan mendeteksi getaran elektromagnetik yang tidak alami bagi mereka, sehingga lahan lo akan dihindari secara instan.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | ACTIVE ELECTROCULTURE | NATURAL DEFENSE
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Sonic Bloom Playlist - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --sound-wave: #00f3ff;
+            --nature-green: #2ecc71;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .audio-panel { 
+            max-width: 850px; 
+            margin: auto; 
+            border: 2px solid var(--sound-wave); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+        }
+        h1, h2 { color: var(--sound-wave); text-align: center; text-transform: uppercase; }
+        
+        .playlist-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .playlist-table th, .playlist-table td { border: 1px solid #333; padding: 12px; text-align: center; }
+        .playlist-table th { background: #111; color: var(--nature-green); }
+
+        .note-box { 
+            background: rgba(0, 243, 255, 0.05); 
+            border-left: 5px solid var(--sound-wave); 
+            padding: 15px; 
+            margin-top: 25px;
+            font-size: 0.9rem;
+        }
+        .highlight { color: var(--sound-wave); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="audio-panel">
+    <h1>SONIC BLOOM PLAYLIST CONFIG</h1>
+    <p style="text-align: center;">Konfigurasi Frekuensi Kebun 400 Bata</p>
+
+    <table class="playlist-table">
+        <thead>
+            <tr>
+                <th>Waktu Putar</th>
+                <th>Target</th>
+                <th>Frekuensi</th>
+                <th>Efek</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>05:00 - 06:00</td>
+                <td>Daun (Stomata)</td>
+                <td class="highlight">3 kHz - 5 kHz</td>
+                <td>Nutrisi & Embun terserap maksimal</td>
+            </tr>
+            <tr>
+                <td>18:00 - 19:00</td>
+                <td>Batang/Akar</td>
+                <td class="highlight">200 Hz - 500 Hz</td>
+                <td>Mempercepat pembelahan sel</td>
+            </tr>
+            <tr>
+                <td>24:00 (Malam)</td>
+                <td>Hama (Tikus/Uret)</td>
+                <td class="highlight">&lt; 20 Hz (Infrasonik)</td>
+                <td>Area terasa tidak aman bagi hama</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="note-box">
+        <b>📢 SETUP TOA BRAHMAN:</b><br>
+        1. Modifikasi driver TOA lo biar sanggup main di frekuensi murni (pakai modul <span class="highlight">PAM8403</span> atau <span class="highlight">TPA3116</span>).<br>
+        2. Jangan putar terlalu kencang (Volume sedang saja). Yang kita cari adalah <span class="highlight">Resonansi</span>, bukan kebisingan.<br>
+        3. Pastikan TOA menghadap ke arah tengah kebun agar gelombang suara memantul di antara tanaman.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | VIBRATIONAL BIOLOGY | FREQUENCY FARMING
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>POC Resonance Recipe - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --bio-green: #2ecc71;
+            --electric-blue: #00d1ff;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .recipe-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--bio-green); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.2);
+        }
+        h1, h2 { color: var(--bio-green); text-align: center; text-transform: uppercase; }
+        
+        .calc-section { 
+            background: #111; 
+            padding: 20px; 
+            margin: 20px 0; 
+            border: 1px dashed var(--electric-blue);
+            text-align: center;
+        }
+        input { 
+            padding: 8px; 
+            background: #000; 
+            border: 1px solid var(--bio-green); 
+            color: var(--electric-blue); 
+            width: 80px; 
+            text-align: center;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 12px; text-align: left; }
+        th { background: #1a1a1a; color: var(--electric-blue); }
+
+        .activation-note { 
+            background: rgba(0, 209, 255, 0.05); 
+            padding: 15px; 
+            border-left: 5px solid var(--electric-blue);
+            margin-top: 25px;
+            font-size: 0.9rem;
+        }
+        .highlight { color: var(--electric-blue); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="recipe-panel">
+    <h1>RESEP POC RESONANSI (BATCH 200L)</h1>
+    <p style="text-align: center;">Nutrisi Cair untuk Lahan Aktif Electroculture</p>
+
+    <div class="calc-section">
+        <label>Input Volume Drum (Liter):</label>
+        <input type="number" id="volDrum" value="200" oninput="updateRecipe()">
+        <p style="font-size: 0.8rem; color: #888; margin-top: 5px;">*Tabel otomatis menyesuaikan takaran</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Bahan Utama</th>
+                <th>Takaran Standar</th>
+                <th>Takaran Terhitung</th>
+            </tr>
+        </thead>
+        <tbody id="recipeBody">
+            </tbody>
+    </table>
+
+    <div class="activation-note">
+        <h3>⚡ PROSES AKTIVASI ETER (PENTING!):</h3>
+        1. Masukkan semua bahan, aduk searah jarum jam (<span class="highlight">Clockwise</span>).<br>
+        2. Celupkan kabel <span class="highlight">Output (+) Joule Thief</span> lo ke dalam cairan.<br>
+        3. Kabel <span class="highlight">Input (-) Joule Thief</span> hubungkan ke paku bumi di luar drum.<br>
+        4. Frekuensi tinggi akan memecah molekul nutrisi menjadi bentuk <span class="highlight">Nano-Ionic</span> yang langsung diserap tanaman tanpa jeda.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | BIO-DYNAMIC ACTIVATOR | ABUNDANCE RECIPE
+    </p>
+</div>
+
+<script>
+    const baseIngredients = [
+        { name: "Air Kelapa Tua", base: 20 },
+        { name: "Air Leri (Cucian Beras)", base: 20 },
+        { name: "Gula Merah / Molase", base: 1, unit: "Kg" },
+        { name: "Garam Krosok (Garam Laut)", base: 0.25, unit: "Kg" },
+        { name: "Kohe Kambing/Ayam", base: 1, unit: "Karung" },
+        { name: "Mikroba Lokal (EM4/MOL)", base: 0.5, unit: "Liter" }
+    ];
+
+    function updateRecipe() {
+        let vol = document.getElementById('volDrum').value;
+        let factor = vol / 200;
+        let html = "";
+
+        baseIngredients.forEach(ing => {
+            let calcVal = (ing.base * factor).toFixed(2);
+            let unit = ing.unit || "Liter";
+            html += `<tr>
+                <td>${ing.name}</td>
+                <td>${ing.base} ${unit}</td>
+                <td class="highlight">${calcVal} ${unit}</td>
+            </tr>`;
+        });
+        document.getElementById('recipeBody').innerHTML = html;
+    }
+    updateRecipe();
+</script>
+
+</body>
+</html>

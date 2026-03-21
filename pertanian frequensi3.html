@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Ground Grid Layout - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --copper: #b87333;
+            --zinc: #a1a1a1;
+            --soil: #3e2723;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .grid-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--copper); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(184, 115, 51, 0.2);
+        }
+        h1, h2 { color: var(--copper); text-align: center; text-transform: uppercase; }
+        
+        .map-box { 
+            background: var(--soil); 
+            border: 1px dashed var(--copper); 
+            padding: 30px; 
+            text-align: center; 
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .rod { width: 20px; height: 20px; border-radius: 50%; margin: auto; }
+        .cu { background: var(--copper); border: 2px solid #fff; }
+        .zn { background: var(--zinc); border: 2px solid #000; }
+
+        .spec-list { line-height: 1.6; font-size: 0.9rem; }
+        .highlight { color: var(--copper); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="grid-panel">
+    <h1>ELECTROCULTURE GROUND GRID (400 BATA)</h1>
+    <p style="text-align: center;">Mapping Jaringan Energi Tanah - Sunda Nuswantara OS</p>
+
+    <div class="map-box">
+        <div class="rod cu"></div><div style="color:#fff">- - -</div><div class="rod zn"></div><div style="color:#fff">- - -</div>
+        <div style="color:#fff">|</div><div></div><div style="color:#fff">|</div><div></div>
+        <div class="rod zn"></div><div style="color:#fff">- - -</div><div class="rod cu"></div><div style="color:#fff">- - -</div>
+    </div>
+
+    <div class="spec-list">
+        <h3>🛠️ INSTRUKSI PEMASANGAN:</h3>
+        <ul>
+            <li><b>Jarak Antar Rod:</b> Pasang setiap <span class="highlight">10 - 15 Meter</span> (sekitar 28-30 titik untuk 400 bata).</li>
+            <li><b>Kedalaman:</b> Tancep minimal <span class="highlight">50cm - 1 Meter</span> ke dalam tanah.</li>
+            <li><b>Hubungan Antena:</b> Kabel yang menghubungkan Rod ini bisa lo sambungin ke <span class="highlight">Antena Alpukat Cahaya</span> di pohon dahan tadi.</li>
+            <li><b>Polaritas:</b> Pasang selang-seling (Tembaga - Seng - Tembaga) agar terjadi aliran listrik statis di bawah akar tanaman.</li>
+        </ul>
+    </div>
+
+    <div style="background: #1a1a1a; padding: 15px; border-left: 5px solid var(--copper); margin-top: 20px; font-size: 0.85rem;">
+        <b>📜 Rahasia Leluhur:</b><br>
+        Ini teknik <span class="highlight">"Nandur Listrik"</span>. Dengan menyeimbangkan ion di tanah, logam berat dari pesawat (Barium/Alumunium) akan terdorong ke lapisan tanah paling bawah (Leaching), sehingga tidak diserap oleh tanaman Kentang atau Padi lo.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | SOIL GEOMETRY | RECLAIMING THE EARTH
+    </p>
+</div>
+
+</body>
+</html>

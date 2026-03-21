@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Ether Charger - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --volt-gold: #ffd700;
+            --acid-green: #00ff00;
+            --bg-obsidian: #050505;
+        }
+        body { 
+            background-color: var(--bg-obsidian); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .charger-panel { 
+            max-width: 850px; 
+            margin: auto; 
+            border: 2px solid var(--volt-gold); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+        h1, h2 { color: var(--volt-gold); text-align: center; text-transform: uppercase; }
+        
+        .wiring-diagram { 
+            background: #000; 
+            border: 1px dashed var(--volt-gold); 
+            padding: 20px; 
+            text-align: center;
+            font-size: 0.9rem;
+            margin: 20px 0;
+            color: var(--acid-green);
+        }
+
+        .step-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .step-card { background: #111; padding: 15px; border-left: 4px solid var(--volt-gold); }
+        
+        .warning-box { 
+            background: rgba(255, 215, 0, 0.1); 
+            border: 1px solid var(--volt-gold); 
+            padding: 15px; 
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+        .highlight { color: var(--volt-gold); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="charger-panel">
+    <h1>ETHERIC BATTERY CHARGER (ACTIVE)</h1>
+    <p style="text-align: center;">Sistem Pengisian Aki Mandiri Tenaga Pohon & Atmosfer</p>
+
+    <div class="wiring-diagram">
+        [ ANTENA POHON ] ➔ AVRAMENKO PLUG ➔ <span class="highlight">INDUTOR (CHOKE)</span> ➔ AKI (+) <br>
+        [ GROUND ROD ] ➔ JOULE THIEF (-) ➔ AKI (-)
+    </div>
+
+    <div class="step-grid">
+        <div class="step-card">
+            <h3>📡 Energy Pickup</h3>
+            <p>Antena di dahan menyerap tegangan statis. Masuk ke <span class="highlight">Dioda UF4007</span> yang dirakit bridge. Ini mengubah "pukulan" eter jadi aliran muatan DC.</p>
+        </div>
+        <div class="step-card">
+            <h3>⚡ Battery Safety</h3>
+            <p>Pasang <span class="highlight">Induktor</span> di jalur (+) sebelum masuk aki. Ini penting untuk meredam lonjakan tegangan statis yang bisa bikin sel aki rontok.</p>
+        </div>
+    </div>
+
+    <div class="warning-box">
+        <b>⚙️ OPTIMASI BRAHMAN:</b><br>
+        Karena sistem ini <span class="highlight">Trickle Charge</span>, biarkan sirkuit terhubung 24 jam. Aki 10Ah lo bakal selalu penuh karena "dipompa" pelan tapi pasti oleh perbedaan potensial langit-bumi.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | RADIANT CHARGER | PERPETUAL POWER
+    </p>
+</div>
+
+</body>
+</html>
