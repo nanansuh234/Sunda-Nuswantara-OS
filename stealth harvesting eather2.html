@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Batik Coil Prototype - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --copper: #b87333;
+            --batik-brown: #4b3621;
+            --bg-obsidian: #050505;
+        }
+        body { 
+            background-color: var(--bg-obsidian); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .batik-panel { 
+            max-width: 850px; 
+            margin: auto; 
+            border: 2px solid var(--copper); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(184, 115, 51, 0.3);
+        }
+        h1, h2 { color: var(--copper); text-align: center; text-transform: uppercase; }
+        
+        .pattern-vis { 
+            background: #000; 
+            border: 1px dashed var(--copper); 
+            padding: 20px; 
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .out-card { background: #111; padding: 15px; border-top: 3px solid #00f3ff; }
+        
+        .logic-note { 
+            background: #1a1a1a; 
+            padding: 15px; 
+            font-size: 0.85rem;
+            margin-top: 20px;
+            border-left: 5px solid var(--copper);
+        }
+        .highlight { color: #00f3ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="batik-panel">
+    <h1>BATIK GEOMETRY ANTENNA (PROTOTYPE)</h1>
+    <p style="text-align: center;">Konversi Seni Budaya ke Teknologi Pemanen Energi</p>
+
+    <div class="pattern-vis">
+        <svg viewBox="0 0 100 100" width="150" height="150">
+            <circle cx="50" cy="30" r="20" fill="none" stroke="var(--copper)" stroke-width="2" />
+            <circle cx="50" cy="70" r="20" fill="none" stroke="var(--copper)" stroke-width="2" />
+            <circle cx="30" cy="50" r="20" fill="none" stroke="var(--copper)" stroke-width="2" />
+            <circle cx="70" cy="50" r="20" fill="none" stroke="var(--copper)" stroke-width="2" />
+            <circle cx="50" cy="50" r="5" fill="#00f3ff" /> </svg>
+        <p style="font-size: 0.7rem; color: #888;">*Visualisasi Lilitan Pola Kawung (Vortex Inductor)</p>
+    </div>
+
+    <div class="output-grid">
+        <div class="out-card">
+            <h3>⚡ Output Listrik</h3>
+            <p>Dihubungkan ke <span class="highlight">Avramenko Plug</span> untuk menyalakan lampu LED atau mengisi baterai.</p>
+        </div>
+        <div class="out-card" style="border-top-color: #ffd700;">
+            <h3>🌀 Output Meditasi</h3>
+            <p>Menciptakan <span class="highlight">Scalar Field</span> yang menetralkan radiasi EMF jahat di dalam ruangan.</p>
+        </div>
+    </div>
+
+    <div class="logic-note">
+        <b>📜 PESAN LELUHUR:</b><br>
+        "Batik bukan cuma gambar, tapi <span class="highlight">Frequency Map</span>. Pola yang berulang (iterasi) adalah cara alam mengumpulkan energi efer (radiant) tanpa kabel."
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | ANCIENT TECH RECOVERY | NO CABLES NEEDED
+    </p>
+</div>
+
+</body>
+</html>

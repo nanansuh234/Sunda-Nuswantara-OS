@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Water Tower Scaler - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --water-cyan: #00f3ff;
+            --stone-gray: #333;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .scaler-panel { 
+            max-width: 850px; 
+            margin: auto; 
+            border: 2px solid var(--water-cyan); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+        }
+        h1, h2 { color: var(--water-cyan); text-align: center; text-transform: uppercase; }
+        
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .input-card { background: #111; padding: 15px; border-bottom: 3px solid var(--water-cyan); text-align: center; }
+        
+        input, select { 
+            width: 80%; 
+            padding: 10px; 
+            background: #000; 
+            border: 1px solid #444; 
+            color: var(--water-cyan); 
+            font-size: 1.2rem; 
+            text-align: center; 
+        }
+
+        .res-box { 
+            background: #1a1a1a; 
+            border: 1px dashed var(--water-cyan); 
+            padding: 20px; 
+            text-align: center; 
+            margin-top: 25px;
+        }
+        .res-val { font-size: 2rem; color: var(--water-cyan); font-weight: bold; }
+        
+        .logic-info { font-size: 0.85rem; color: #888; margin-top: 20px; line-height: 1.6; }
+        .highlight { color: var(--water-cyan); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="scaler-panel">
+    <h1>ATMOSPHERIC WATER TOWER SCALER</h1>
+    <p style="text-align: center;">Estimasi Dimensi Menara Batu Mega Mendung</p>
+
+    <div class="input-grid">
+        <div class="input-card">
+            <label>Target Air (Liter/Malam):</label><br>
+            <input type="number" id="targetLiter" value="1" oninput="calcTower()">
+        </div>
+        <div class="input-card">
+            <label>Kondisi Kelembapan:</label><br>
+            <select id="humidity" onchange="calcTower()">
+                <option value="5">Rendah (Kemarau)</option>
+                <option value="15" selected>Sedang (La Niña Normal)</option>
+                <option value="25">Tinggi (Hujan Terus)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="res-box">
+        <div>DIMENSI MENARA MINIMAL:</div>
+        <div class="res-val" id="towerDim">Tinggi 1.5m | Diameter 0.8m</div>
+        <p style="font-size: 0.8rem; margin-top: 10px;">Volume Batu: ~0.75 Meter Kubik</p>
+    </div>
+
+    <div class="logic-info">
+        <b>📐 ANALISIS STRUKTUR:</b><br>
+        1. <span class="highlight">Luas Permukaan (Surface Area):</span> Kunci dapet air banyak bukan cuma di tinggi menara, tapi di tekstur batu. Gunakan <span class="highlight">Batu Kali yang Berpori</span> (Andesit/Gamping) agar embun lebih gampang nempel.<br>
+        2. <span class="highlight">Aliran Angin:</span> Jangan tumpuk batu terlalu rapat. Beri rongga agar udara bisa lewat ke tengah menara (Vortex Effect Mega Mendung). <br>
+        3. <span class="highlight">Thermal Mass:</span> Batu harus kena panas siang hari agar di malam hari dia bisa melepaskan panas lebih cepat dan menjadi dingin (Kondensasi).
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | WATER ARCHITECTURE | ANCIENT HARVESTER
+    </p>
+</div>
+
+<script>
+    function calcTower() {
+        let liter = document.getElementById('targetLiter').value;
+        let hum = document.getElementById('humidity').value;
+        
+        // Estimasi kasar: 1 m3 batu dapet 1.5 - 2 liter di kelembapan sedang
+        let volumeReq = liter / (hum / 10);
+        let height = (volumeReq * 2).toFixed(1);
+        let diameter = (Math.sqrt(volumeReq / (Math.PI * height)) * 2).toFixed(1);
+
+        document.getElementById('towerDim').innerHTML = "Tinggi " + (height > 0.5 ? height : 0.5) + "m | Diameter " + (diameter > 0.3 ? diameter : 0.3) + "m";
+    }
+    calcTower();
+</script>
+
+</body>
+</html>

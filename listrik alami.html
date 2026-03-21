@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Carbon Diode - Nuswantara OS</title>
+    <style>
+        :root { --carbon: #2c3e50; --copper: #b87333; --glow: #00f3ff; }
+        body { background: #050505; color: var(--copper); font-family: 'Share Tech Mono', monospace; padding: 20px; }
+        .diode-panel { 
+            max-width: 800px; margin: auto; border: 2px solid var(--carbon); 
+            background: #0a0a0a; padding: 25px; 
+        }
+        h1 { text-align: center; color: var(--copper); }
+        .schematic { 
+            background: #000; border: 1px dashed #444; padding: 20px; 
+            text-align: center; color: var(--glow); font-size: 0.9rem;
+        }
+        .voltage-note { background: #111; padding: 15px; border-left: 5px solid var(--glow); margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="diode-panel">
+    <h1>DIODA ARANG (CARBON DETECTOR)</h1>
+    <p style="text-align: center;">Penyearah Arus Tanpa Komponen Pabrikan</p>
+
+    <div class="schematic">
+        [ ANTENA JEMURAN ] ----> [ SILET/PAKU KARAT ]<br>
+                                     |<br>
+                                (Titik Kontak)<br>
+                                     |<br>
+        [ OUTPUT DC (+) ] <---- [ BATANG ARANG ]<br>
+                                     |<br>
+        [ GROUND ] ------------ [ OUTPUT DC (-) ]
+    </div>
+
+    <div class="voltage-note">
+        <h3>⚡ ANALISIS TEGANGAN (VOLT):</h3>
+        - <b>Output:</b> Tergantung ketinggian jemuran & cuaca. Biasanya menghasilkan <span style="color:white">0.2V hingga 1.5V DC</span> per titik kontak.<br>
+        - <b>Arus (mA):</b> Sangat kecil (Mikro Ampere). <br>
+        - <b>Trik Seri:</b> Kalau mau voltase gede, lo buat 10 unit Dioda Arang ini terus disusun secara <span style="color:white">SERI</span>. Bisa tembus <span style="color:white">5V - 12V DC</span> murni dari udara!
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px;">
+        SUNDA NUSWANTARA OS | ANCIENT SEMICONDUCTOR | POST-WAR READY
+    </p>
+</div>
+
+</body>
+</html>

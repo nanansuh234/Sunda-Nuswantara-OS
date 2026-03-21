@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Joule Thief Schematic - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --wiring-green: #39ff14;
+            --copper: #b87333;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .schematic-panel { 
+            max-width: 800px; 
+            margin: auto; 
+            border: 2px solid var(--wiring-green); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.2);
+        }
+        h1, h2 { color: var(--wiring-green); text-align: center; text-transform: uppercase; }
+        
+        .diagram-ascii { 
+            background: #000; 
+            border: 1px dashed var(--wiring-green); 
+            padding: 20px; 
+            color: var(--wiring-green);
+            font-size: 0.85rem;
+            line-height: 1.2;
+            overflow-x: auto;
+        }
+
+        .part-details { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .part-card { background: #111; padding: 12px; border-left: 3px solid var(--copper); }
+        .highlight { color: #ffd700; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="schematic-panel">
+    <h1>JOULE THIEF: THE RADIANT PUMP</h1>
+    <p style="text-align: center;">Skema Sirkuit Penguat Tegangan Eter - Sunda Nuswantara OS</p>
+
+    <div class="diagram-ascii">
+<pre>
+      (Titik A) +-------+ (Titik B)
+                |  TOROID |
+        +-------( LILITAN )-------+
+        |       |         |       |
+        |       +---------+       |
+        |                         |
+    [RESISTOR]                [LED (+)]
+      1k Ohm                      |
+        |      (Kolektor)     [LED (-)]
+        +------| C |              |
+               |   |              |
+ (Base) B -----| Q |              |
+               |   |              |
+               | E | (Emitter)    |
+               +---|--------------+
+                   |
+             [GROUND / (-) ETER]
+</pre>
+    </div>
+
+    <div class="part-details">
+        <div class="part-card">
+            <span class="highlight">Q (Transistor):</span><br>
+            Gunakan <b>2N2222</b> atau <b>BC547</b>. Ini saklar cepatnya.
+        </div>
+        <div class="part-card">
+            <span class="highlight">Toroid (Koil):</span><br>
+            Lilitkan 2 kawat (bifilar) 20x putaran. <span style="color:red">PENTING:</span> Sambung ujung kawat 1 ke pangkal kawat 2 (Center Tap).
+        </div>
+        <div class="part-card">
+            <span class="highlight">Resistor:</span><br>
+            <b>1k Ohm</b> (Cokelat-Hitam-Merah). Pembatas arus ke kaki Base.
+        </div>
+        <div class="part-card">
+            <span class="highlight">Antena:</span><br>
+            Sambungkan Antena Batik lo ke jalur input positif sirkuit ini.
+        </div>
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | OPEN SOURCE ENERGY | NO MATRIX NEEDED
+    </p>
+</div>
+
+</body>
+</html>

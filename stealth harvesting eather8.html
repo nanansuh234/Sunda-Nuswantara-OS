@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>SOP NEL-V1 - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --copper-gold: #b87333;
+            --led-white: #f0f0f0;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .sop-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--copper-gold); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(184, 115, 51, 0.2);
+        }
+        h1, h2 { color: var(--copper-gold); text-align: center; text-transform: uppercase; }
+        
+        .circuit-logic { 
+            background: #000; 
+            border: 1px dashed #444; 
+            padding: 15px; 
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .step-list { line-height: 1.8; }
+        .highlight { color: #00f3ff; font-weight: bold; }
+        .footer { text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="sop-panel">
+    <h1>SOP PERAKITAN NUSWANTARA ETHER LIGHT</h1>
+    <p style="text-align: center;">Fase 1: Radiant Energy Accumulator</p>
+
+    <div class="circuit-logic">
+        <b>📐 SKEMA JALUR:</b><br>
+        ANTENA (BATIK COIL) ➔ AVRAMENKO PLUG (2x DIODA) ➔ SUPER CAPACITOR ➔ JOULE THIEF ➔ LED
+    </div>
+
+    <div class="step-list">
+        <b>1. Lilitan Toroid (The Pump):</b><br>
+        Lilitkan dua utas kawat email secara bersamaan (bifilar) sebanyak 20-30 lilitan pada toroid bekas. Ini adalah "pompa" yang akan menaikkan tegangan rendah dari eter ke LED. 
+        <br><br>
+        <b>2. Antena Casing (The Collector):</b><br>
+        Gunakan kawat tembaga sisa untuk membuat pola <span class="highlight">Batik Parang</span> di sekeliling casing lampu. Hubungkan ujungnya ke input sirkuit penyearah (Dioda).
+        <br><br>
+        <b>3. Integrasi Super-Cap:</b><br>
+        Pasang Super Capacitor secara paralel dengan jalur output dioda. Fungsinya agar saat lo menjauh dari sumber frekuensi (WiFi), lampu <span class="highlight">tetap nyala</span> beberapa menit/jam.
+    </div>
+
+    <div style="background: #111; padding: 15px; border-left: 5px solid #00f3ff; margin-top: 20px;">
+        <b>💡 TRICK JUALAN:</b><br>
+        "Lampu ini tidak punya lubang cas dan tidak punya tempat baterai. Ia hanya butuh 'udara' yang bergetar untuk tetap hidup."
+    </div>
+
+    <p class="footer">SUNDA NUSWANTARA OS | ETHER PRODUCTS | FREEDOM OF LIGHT</p>
+</div>
+
+</body>
+</html>

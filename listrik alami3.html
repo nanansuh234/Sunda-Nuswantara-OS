@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>10V Carbon Array - Nuswantara OS</title>
+    <style>
+        :root { --carbon: #2c3e50; --copper: #b87333; --volt: #00f3ff; }
+        body { background: #050505; color: var(--copper); font-family: 'Share Tech Mono', monospace; padding: 20px; }
+        .array-panel { 
+            max-width: 900px; margin: auto; border: 2px solid var(--copper); 
+            background: #0a0a0a; padding: 25px; border-radius: 10px;
+        }
+        h1 { text-align: center; color: var(--volt); text-transform: uppercase; }
+        .diagram { 
+            background: #000; border: 1px dashed var(--volt); padding: 20px; 
+            text-align: center; font-size: 0.8rem; line-height: 1.5; color: #fff;
+        }
+        .step-card { background: #111; padding: 15px; border-left: 5px solid var(--volt); margin-top: 15px; }
+        .highlight { color: var(--volt); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="array-panel">
+    <h1>10-CELL CARBON RECTIFIER ARRAY</h1>
+    <p style="text-align: center;">Target: 10V DC dari Eter Atmosfer</p>
+
+    <div class="diagram">
+        [ ANTENA JEMURAN ]<br>
+        ↓<br>
+        (Silet 1 + Arang 1) ➔ (Silet 2 + Arang 2) ➔ (Silet 3 + Arang 3) ... sampai 10<br>
+        ↓<br>
+        [ OUTPUT (+) 10V DC ] ➔ KE PAKU TENAH LEYDEN JAR<br>
+        <br>
+        [ GROUND / BUMI ] ➔ KE FOIL LUAR LEYDEN JAR
+    </div>
+
+    <div class="step-card">
+        <h3>⚡ TEKNIK KALIBRASI:</h3>
+        1. Gunakan <span class="highlight">Karet Gelang</span> untuk menahan silet agar menempel "pas" (tidak terlalu keras, tidak terlalu longgar) ke arang kelapa.<br>
+        2. Cari "Titik Manis" (Sweet Spot) di tiap unit dengan multimeter sampai masing-masing keluar <span class="highlight">~1 Volt</span>.<br>
+        3. Jika sudah 10 unit, total tegangan akan terakumulasi di ujung rangkaian.
+    </div>
+
+    <div style="background: rgba(0, 243, 255, 0.05); padding: 15px; border: 1px solid #333; margin-top: 20px; font-size: 0.85rem;">
+        <b>📦 PENYIMPANAN:</b><br>
+        Hubungkan output 10V ini ke <span class="highlight">Leyden Jar</span> (Kapasitor Air Garam) yang kita bahas tadi. Biarkan jemuran lo "panen" seharian. Pas malem, lo bakal punya simpanan listrik 10V murni buat nyalain LED atau ngecas HP pelan-pelan.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px;">
+        SUNDA NUSWANTARA OS | RADIANT HARVESTER | RECEPTOR V1.0
+    </p>
+</div>
+
+</body>
+</html>
