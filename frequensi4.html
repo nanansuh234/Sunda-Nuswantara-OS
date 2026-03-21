@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>High-Power PWM Driver - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --power-red: #ff3131;
+            --logic-blue: #00d4ff;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .power-panel { 
+            max-width: 950px; 
+            margin: auto; 
+            border: 2px solid var(--power-red); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 40px rgba(255, 49, 49, 0.2);
+        }
+        h1, h2 { color: var(--power-red); text-align: center; text-transform: uppercase; }
+        
+        .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .comp-card { background: #111; padding: 15px; border-left: 4px solid var(--logic-blue); }
+        
+        .wiring-logic { 
+            background: #000; 
+            border: 1px dashed var(--power-red); 
+            padding: 20px; 
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        .highlight { color: var(--logic-blue); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="power-panel">
+    <h1>HIGH-POWER PWM MODULE (3D PRINT INTEGRATION)</h1>
+    <p style="text-align: center;">Driver Resonansi Skala Besar untuk Manipulasi Logam</p>
+
+    <div class="comp-grid">
+        <div class="comp-card">
+            <h3>⚡ Komponen Daya (The Muscle)</h3>
+            <ul>
+                <li><b>IGBT Module:</b> Tipe FGA25N120 (Tahan 1200V / 25A) atau MOSFET IRFP460.</li>
+                <li><b>Gate Driver:</b> IC TLP250 atau IR2110 (Wajib pakai Optocoupler agar Arduino tidak meledak).</li>
+                <li><b>Heatsink + Fan:</b> Gunakan pendingin aktif (kipas server) karena switching frekuensi tinggi bikin panas luar biasa.</li>
+            </ul>
+        </div>
+        <div class="comp-card">
+            <h3>🤖 Integrasi 3D Printer</h3>
+            <ul>
+                <li><b>Control:</b> Hubungkan Pin <span class="highlight">Heater Out</span> atau <span class="highlight">Fan PWM</span> dari Board 3D Printer (RAMPS/SKR) ke input Driver ini.</li>
+                <li><b>Signal:</b> Gunakan isolator optik untuk memisahkan tegangan 12V/24V printer dengan tegangan tinggi reaktor.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="wiring-logic">
+        <h2>🔌 Alur Wiring (High-End Logic)</h2>
+        1. <b>Logic Input:</b> Signal PWM dari Board Printer ➔ Optocoupler (TLP250).<br>
+        2. <b>Gate Drive:</b> Optocoupler ➔ Menggerakkan Gate IGBT dengan tegangan 15V stabil.<br>
+        3. <b>Power Loop:</b> Sumber daya DC (Aki/PSU Besar) ➔ Melalui IGBT ➔ Menuju Transduser/Koil Resonansi di Nozzle Printer.<br>
+        4. <b>Feedback:</b> Sensor Arus ACS712 lapor balik ke Arduino untuk <span class="highlight">Auto-Tuning</span> frekuensi saat logam mulai "lumer".
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | INDUSTRIAL PWM | METAL 3D PRINTING
+    </p>
+</div>
+
+</body>
+</html>

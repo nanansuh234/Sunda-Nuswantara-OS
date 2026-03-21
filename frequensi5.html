@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Resonance Mass Calculator - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --heavy-metal: #555555;
+            --power-volt: #ffea00;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .calc-panel { 
+            max-width: 850px; 
+            margin: auto; 
+            border: 2px solid var(--power-volt); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(255, 234, 0, 0.2);
+        }
+        h1, h2 { color: var(--power-volt); text-align: center; text-transform: uppercase; }
+        
+        .input-section { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            background: #111; 
+            padding: 20px;
+            margin: 20px 0;
+        }
+        input { 
+            width: 80%; 
+            padding: 10px; 
+            background: #000; 
+            border: 1px solid #444; 
+            color: var(--power-volt); 
+            font-size: 1.5rem; 
+            text-align: center; 
+        }
+
+        .result-display { 
+            background: #1a1a1a; 
+            border: 1px dashed var(--power-volt); 
+            padding: 20px; 
+            text-align: center;
+        }
+        .res-item { margin-bottom: 10px; font-size: 1.1rem; }
+        .highlight { color: var(--power-volt); font-weight: bold; font-size: 1.8rem; }
+    </style>
+</head>
+<body>
+
+<div class="calc-panel">
+    <h1>MASS-ENERGY RESONANCE CALC</h1>
+    <p style="text-align: center;">Kapasitas PWM untuk Manipulasi Logam (Cold Melting)</p>
+
+    <div class="input-section">
+        <div>
+            <label>Massa Besi (Kg):</label><br>
+            <input type="number" id="massKg" value="1" oninput="hitungPower()">
+        </div>
+        <div>
+            <label>Voltase Input (V):</label><br>
+            <input type="number" id="voltIn" value="48" oninput="hitungPower()">
+        </div>
+    </div>
+
+    <div class="result-display">
+        <div class="res-item">Total Daya yang Dibutuhkan:</div>
+        <div id="totalWatt" class="highlight">500 Watt</div>
+        <hr style="border: 0.5px solid #333; margin: 15px 0;">
+        <div class="res-item">Kebutuhan Arus (Ampere):</div>
+        <div id="totalAmp" class="highlight">10.42 A</div>
+        <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">
+            *Rekomendasi IGBT: Minimal <span style="color:var(--power-volt)">FGA25N120</span> (25A 1200V)
+        </p>
+    </div>
+
+    <div style="margin-top: 20px; font-size: 0.85rem; line-height: 1.6;">
+        <b>🛠️ ANALISIS RAKITAN:</b><br>
+        1. Untuk 1kg besi, PWM lo harus sanggup handle <span class="highlight">500W</span> secara kontinyu.<br>
+        2. Gunakan lilitan primer <span class="highlight">Kabel Tembaga Murni 2.5mm</span> agar tidak panas saat mentransfer getaran.<br>
+        3. Pastikan <span class="highlight">Heatsink</span> di IGBT lo punya luas permukaan besar karena <i>switching</i> di beban 1kg sangat berat.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | POWER PHYSICS | BRAHMAN VERSION TECH
+    </p>
+</div>
+
+<script>
+    function hitungPower() {
+        let kg = document.getElementById('massKg').value;
+        let volt = document.getElementById('voltIn').value;
+        
+        // Estimasi 500W per 1kg besi untuk resonansi penuh
+        let watt = kg * 500;
+        let amp = watt / volt;
+
+        document.getElementById('totalWatt').innerHTML = watt + " Watt";
+        document.getElementById('totalAmp').innerHTML = amp.toFixed(2) + " Ampere";
+    }
+    hitungPower();
+</script>
+
+</body>
+</html>
