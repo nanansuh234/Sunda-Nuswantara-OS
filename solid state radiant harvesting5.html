@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>PCB Order Manifest - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --pcb-green: #2d5a27;
+            --gold-pad: #d4af37;
+            --bg-black: #050505;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .order-panel { 
+            max-width: 850px; 
+            margin: auto; 
+            border: 2px solid var(--pcb-green); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(45, 90, 39, 0.3);
+        }
+        h1, h2 { color: var(--gold-pad); text-align: center; text-transform: uppercase; }
+        
+        .spec-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .spec-table td, .spec-table th { border: 1px solid #333; padding: 12px; text-align: left; }
+        .spec-table th { background: #111; color: var(--gold-pad); }
+
+        .note-box { 
+            background: #1a1a1a; 
+            border-left: 5px solid var(--gold-pad); 
+            padding: 15px; 
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        .highlight { color: var(--gold-pad); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="order-panel">
+    <h1>MANIFESTO CETAK PCB ANTENA</h1>
+    <p style="text-align: center; font-size: 0.8rem;">Spesifikasi untuk Jasa Cetak (JLC/PCBWay/Lokal)</p>
+
+    <table class="spec-table">
+        <tr>
+            <th>Parameter</th>
+            <th>Spesifikasi Rekomendasi</th>
+        </tr>
+        <tr>
+            <td>Material</td>
+            <td>FR-4 (Standard) atau Rogers (High Freq)</td>
+        </tr>
+        <tr>
+            <td>Layer</td>
+            <td>Single Layer (Top Side Copper)</td>
+        </tr>
+        <tr>
+            <td>Copper Weight</td>
+            <td>1 oz atau 2 oz (Makin tebal makin baik)</td>
+        </tr>
+        <tr>
+            <td>Surface Finish</td>
+            <td>HASL (Lead Free) atau ENIG (Gold Plated)</td>
+        </tr>
+        <tr>
+            <td>Solder Mask</td>
+            <td>Green (Standar) atau Tanpa Mask (Tembaga Terbuka)</td>
+        </tr>
+    </table>
+
+    <div class="note-box">
+        <b>💡 CATATAN UNTUK JASA CETAK:</b><br>
+        "Mohon cetak sesuai file gambar/Gerber Koch Snowflake. Pastikan jalur tembaga <span class="highlight">tidak terputus</span> pada setiap sudut fraktal. Titik tengah (pusat) adalah jalur Feedline utama."
+    </div>
+
+    <p style="font-size: 0.8rem; margin-top: 20px; color: #888;">
+        *Saran: Kalau lo mau energi lebih "bersih", minta yang <span class="highlight">ENIG (Gold Finish)</span> karena emas adalah konduktor terbaik untuk frekuensi radiant/ether.
+    </p>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | ANTENNA FABRICATION | NO BAAL, JUST SCIENCE
+    </p>
+</div>
+
+</body>
+</html>

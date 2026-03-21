@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Step-Down Power Converter - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --power-orange: #ff6600;
+            --spark-white: #ffffff;
+            --bg-obsidian: #050505;
+        }
+        body { 
+            background-color: var(--bg-obsidian); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .power-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--power-orange); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(255, 102, 0, 0.2);
+        }
+        h1, h2 { color: var(--power-orange); text-align: center; text-transform: uppercase; }
+        
+        .flow-diag { 
+            background: #000; 
+            border: 1px dashed #444; 
+            padding: 20px; 
+            text-align: center; 
+            color: var(--spark-white);
+            font-size: 1rem;
+            margin: 20px 0;
+        }
+
+        .component-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .comp-card { background: #111; padding: 15px; border-left: 4px solid var(--power-orange); }
+        
+        .logic-list { font-size: 0.9rem; margin-top: 20px; line-height: 1.6; }
+        .highlight { color: var(--power-orange); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="power-panel">
+    <h1>POWER CONVERTER: KV TO WORKABLE VOLTAGE</h1>
+    <p style="text-align: center;">Transformasi Energi Radiant menjadi Daya Kerja (220V AC/DC)</p>
+
+    <div class="flow-diag">
+        ANTENA + PLUG ➔ <span class="highlight">HV CAPACITOR</span> ➔ <span class="highlight">SPARK GAP</span> ➔ <span class="highlight">PRIMARY COIL (STEP-DOWN)</span> ➔ BEBAN
+    </div>
+
+    <div class="component-grid">
+        <div class="comp-card">
+            <h3>⚡ Penampung & Saklar</h3>
+            <ul>
+                <li><b>HV Capacitor:</b> Kapasitor Keramik (40KV) atau Botol Leyden DIY.</li>
+                <li><b>Spark Gap:</b> Celah udara (2 baut yang didekatkan) sebagai pemicu pelepasan muatan.</li>
+            </ul>
+        </div>
+        <div class="comp-card">
+            <h3>🌀 Transformator</h3>
+            <ul>
+                <li><b>Primary:</b> Lilitan kawat tebal (sedikit lilitan).</li>
+                <li><b>Secondary:</b> Lilitan kawat halus (banyak lilitan) untuk output ke beban.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="logic-list">
+        <b>⚙️ LOGIKA EKSEKUSI:</b><br>
+        1. Listrik dari antena ngumpul di <span class="highlight">HV Capacitor</span> sampai tegangan cukup tinggi buat "loncat" di <span class="highlight">Spark Gap</span>.<br>
+        2. Saat loncatan api (Spark) terjadi, arus yang sangat besar mengalir sepersekian detik melalui koil primer.<br>
+        3. Induksi elektromagnetik terjadi, dan <span class="highlight">Trafo Step-Down</span> mengubah lonjakan KV tadi menjadi tegangan rendah dengan Amper tinggi.<br>
+        4. Inilah yang bisa menyalakan lampu atau peralatan elektronik rumah tangga.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | POWER TRANSFORMATION | FREE ENERGY SYSTEM
+    </p>
+</div>
+
+</body>
+</html>

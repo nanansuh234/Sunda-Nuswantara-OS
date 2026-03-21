@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Array Wiring - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --copper: #b87333;
+            --array-cyan: #00f3ff;
+            --bg-obsidian: #050505;
+        }
+        body { 
+            background-color: var(--bg-obsidian); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .wiring-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--copper); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(184, 115, 51, 0.2);
+        }
+        h1, h2 { color: var(--copper); text-align: center; text-transform: uppercase; }
+        
+        .diagram-box { 
+            background: #000; 
+            border: 1px dashed var(--array-cyan); 
+            padding: 20px; 
+            margin: 20px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .rule-card { background: #111; padding: 15px; border-left: 4px solid var(--array-cyan); }
+        
+        .footer-note { text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px; }
+        .highlight { color: var(--array-cyan); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="wiring-panel">
+    <h1>PARALEL BUSBAR: ANTENNA ARRAY SYSTEM</h1>
+    <p style="text-align: center;">Metode Pengumpulan Arus Skala Masif - Sunda Nuswantara OS</p>
+
+    <div class="diagram-box">
+        <span style="color:var(--copper)">[ BUSBAR POSITIF (+) ]</span><br>
+        &nbsp;&nbsp;&nbsp;↑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑<br>
+        [A1]--[A2]--[A3]--[A4]  ➔ (Antena dengan Avramenko Plug)<br>
+        &nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+        <span style="color:var(--copper)">[ BUSBAR NEGATIF (-) ]</span>
+    </div>
+
+    <div class="rules-grid">
+        <div class="rule-card">
+            <h3>📌 Aturan Jalur</h3>
+            <ul>
+                <li><b>Short Path:</b> Kabel dari Antena ke Busbar harus <span class="highlight">sependek mungkin</span> (maks 5cm).</li>
+                <li><b>Busbar Tebal:</b> Gunakan plat tembaga atau kabel engkel besar (1.5mm - 2.5mm) sebagai jalur utama.</li>
+            </ul>
+        </div>
+        <div class="rule-card">
+            <h3>🛡️ Isolasi Sinyal</h3>
+            <ul>
+                <li><b>Diode Separation:</b> Setiap antena <span class="highlight">WAJIB</span> punya Avramenko Plug sendiri sebelum masuk ke Busbar.</li>
+                <li><b>Tumpukan (Stack):</b> Jarak antar lempeng PCB minimal 1cm - 2cm agar tidak saling mengganggu (Interferensi).</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="background: #1a1a1a; padding: 15px; margin-top: 20px; border-radius: 5px; font-size: 0.9rem;">
+        <b>🚀 IMPLEMENTASI TERPADU:</b><br>
+        Susun 10 keping PCB dalam satu rak kayu/plastik. Hubungkan semua output (+) ke satu jalur tembaga tebal, dan semua (-) ke jalur lainnya. Ujung jalur ini langsung masuk ke <span class="highlight">Super Capacitor</span> atau <span class="highlight">Spark Gap Unit</span>.
+    </div>
+
+    <p class="footer-note">SUNDA NUSWANTARA OS | SCALABLE FREE ENERGY | POWER TO THE PEOPLE</p>
+</div>
+
+</body>
+</html>

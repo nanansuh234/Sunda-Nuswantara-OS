@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Avramenko Plug - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --high-volt: #ff00ff;
+            --copper: #b87333;
+            --bg-obsidian: #050505;
+        }
+        body { 
+            background-color: var(--bg-obsidian); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .plug-panel { 
+            max-width: 850px; 
+            margin: auto; 
+            border: 2px solid var(--high-volt); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.2);
+        }
+        h1, h2 { color: var(--high-volt); text-align: center; text-transform: uppercase; }
+        
+        .circuit-diag { 
+            background: #000; 
+            border: 1px dashed var(--high-volt); 
+            padding: 20px; 
+            text-align: center; 
+            color: #55ff55;
+            font-size: 1.1rem;
+            margin: 20px 0;
+        }
+        .comp-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .comp-card { background: #111; padding: 12px; border-left: 3px solid var(--copper); }
+        
+        .warning-tag { color: #ff3333; font-weight: bold; text-align: center; border: 1px solid #ff3333; padding: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="plug-panel">
+    <h1>AVRAMENKO PLUG (ONE-WIRE CONVERTER)</h1>
+    <p style="text-align: center;">Konversi Frekuensi Antena Fraktal ke Listrik Searah (DC)</p>
+
+    <div class="circuit-diag">
+        ANTENA ➔ [ DIODA 1 ➔ (+) KAPASITOR ]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↘ [ DIODA 2 ➔ (-) KAPASITOR ]
+    </div>
+
+    <div class="comp-list">
+        <div class="comp-card">
+            <b>1. Dioda Ultra Fast (2 Pcs):</b><br>
+            Gunakan tipe <span style="color:var(--high-volt)">UF4007</span> atau <span style="color:var(--high-volt)">1N4148</span>. Harus sanggup merespon frekuensi tinggi.
+        </div>
+        <div class="comp-card">
+            <b>2. Kapasitor High Volt:</b><br>
+            Minimal <span style="color:var(--high-volt)">2KV - 4.7nF</span> (Kapasitor Keramik/Mylar).
+        </div>
+    </div>
+
+    <div style="background: #1a1a1a; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        <h3>🛠️ Cara Kerja (Logic):</h3>
+        <ul>
+            <li>Gas (energi RF) ditangkap antena, masuk ke titik temu dua dioda.</li>
+            <li>Dioda memisahkan fase positif dan negatif ke kaki kapasitor.</li>
+            <li>Energi terakumulasi di kapasitor sampai mencapai tegangan tembus (Spark).</li>
+        </ul>
+    </div>
+
+    <div class="warning-tag">
+        ⚠️ BAHAYA: WALAU AMPERE KECIL, TEGANGAN KV BISA MERUSAK PERANGKAT DIGITAL (HP/LAPTOP). JAUHKAN DARI SIRKUIT ARDUINO TANPA PROTEKSI!
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | RADIANT CONVERSION | ENERGY REBELLION
+    </p>
+</div>
+
+</body>
+</html>
