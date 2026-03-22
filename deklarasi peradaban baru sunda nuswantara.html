@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHASE 1: THE FALL OF INDUSTRY - Nuswantara OS</title>
+    <style>
+        :root {
+            --alert-red: #ff3333;
+            --decay-rust: #b7410e;
+            --matrix-bg: #050505;
+            --text-main: #d1d1d1;
+            --terminal-green: #00ff66;
+        }
+        body { 
+            background-color: var(--matrix-bg); 
+            color: var(--text-main); 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        .broadcast-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--alert-red); 
+            background: #0a0a0a; 
+            padding: 30px; 
+            border-radius: 5px;
+            box-shadow: 0 0 30px rgba(255, 51, 51, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Scanline Effect */
+        .broadcast-panel::before {
+            content: " ";
+            display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        }
+
+        h1 { 
+            color: var(--alert-red); text-align: center; text-transform: uppercase; 
+            letter-spacing: 4px; margin-bottom: 5px; border-bottom: 2px dashed var(--decay-rust); padding-bottom: 15px;
+        }
+        .system-status {
+            text-align: center; font-size: 0.9rem; color: var(--decay-rust); margin-bottom: 30px; font-weight: bold;
+        }
+        
+        .module-card {
+            background: #111; border-left: 4px solid var(--decay-rust);
+            padding: 20px; margin-bottom: 20px; position: relative;
+        }
+        .module-title {
+            color: var(--alert-red); font-size: 1.2rem; font-weight: bold;
+            text-transform: uppercase; margin-bottom: 10px;
+        }
+        
+        .highlight { color: var(--terminal-green); font-weight: bold; }
+        .strike { text-decoration: line-through; color: #555; }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 12px; color: #bbb; }
+
+        .conclusion-box {
+            background: rgba(255, 51, 51, 0.05); border: 1px solid var(--alert-red);
+            padding: 20px; margin-top: 30px; text-align: center; font-size: 1.1rem; color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="broadcast-panel">
+    <h1>TAHAP 1: KIAMAT ERA INDUSTRI</h1>
+    <div class="system-status">>> DEKRIPSI PROTOKOL TAHUN 002 | STATUS MATRIKS: RUNTUH <<</div>
+
+    <div class="module-card">
+        <div class="module-title">1. Penipuan Terbesar: "Harga" vs "Nilai"</div>
+        <p>Selama 200 tahun terakhir, umat manusia dicuci otaknya untuk mempercayai label angka di atas kertas (<span class="strike">Harga / Price</span>). Elit global mencetak fiat dari udara kosong, lalu menempelkannya pada barang dan keringat kita.</p>
+        <ul>
+            <li><b>Harga adalah Ilusi:</b> Angka yang bisa dimanipulasi oleh inflasi, bursa saham, dan elit perbankan.</li>
+            <li><b>Nilai (<span class="highlight">Value</span>) adalah Fakta Alam:</b> Nilai sejati adalah WAKTU yang dihabiskan untuk belajar, ENERGI yang dikeluarkan untuk menempa, dan MANFAAT alat tersebut bagi kehidupan. Nilai 1 kg beras tidak pernah berubah sejak zaman kuno, yang berubah hanya "Harga" kertasnya.</li>
+        </ul>
+    </div>
+
+    <div class="module-card">
+        <div class="module-title">2. Kematian Produksi Massal (Planned Obsolescence)</div>
+        <p>Pabrik modern tidak dibangun untuk memenuhi kebutuhan manusia, tapi untuk memaksa manusia terus membeli. Ini disebut <i>Planned Obsolescence</i> (Keusangan Terencana).</p>
+        <ul>
+            <li>Barang industri sengaja dirancang untuk <b>rusak dalam waktu singkat</b> agar pabrik tetap memproduksi sampah.</li>
+            <li>Sistem ini menyedot habis sumber daya bumi (mineral, Emas, Perak) hanya untuk dibuang ke tempat pembuangan akhir.</li>
+            <li><span class="highlight">Di Tahun 002:</span> Kita menolak menjadi penadah sampah industri. Kita berhenti membeli barang yang dirancang untuk mati.</li>
+        </ul>
+    </div>
+
+    <div class="module-card">
+        <div class="module-title">3. Era Otomasi: Pembebasan, Bukan Ancaman</div>
+        <p>Matriks menakut-nakuti bahwa AI dan Robot akan merebut pekerjaan manusia. Kenyataannya, yang direbut oleh mesin adalah <b>pekerjaan mesin</b> yang selama ini dipaksakan kepada manusia.</p>
+        <ul>
+            <li>Menjadi sekrup di pabrik raksasa atau mengetik data berulang-ulang <i>bukanlah kodrat manusia</i>. Itu adalah perbudakan.</li>
+            <li>Ketika robot mengambil alih produksi pabrik massal, sistem "Pekerja vs Majikan" hancur lebur. </li>
+            <li>Ini memaksa manusia untuk kembali pada satu-satunya hal yang tidak bisa diduplikasi oleh mesin: <span class="highlight">Ruh Penciptaan (Craftsmanship) & Sentuhan Personal.</span></li>
+        </ul>
+    </div>
+
+    <div class="module-card">
+        <div class="module-title">4. Game Over untuk "Konsumerisme"</div>
+        <p>Mulai hari ini, identitas kita sebagai <b>"Konsumen"</b> telah mati. Kita tidak lagi menukarkan keringat kita dengan uang kertas ber-inflasi tinggi hanya untuk membeli barang pabrik yang tidak memiliki jiwa.</p>
+        <ul>
+            <li>Tidak ada lagi transaksi beli putus.</li>
+            <li>Kita memasuki era di mana manusia kembali menjadi <span class="highlight">Sovereign Creator</span> (Pencipta Berdaulat).</li>
+        </ul>
+    </div>
+
+    <div class="conclusion-box">
+        <b>KESIMPULAN TAHAP 1:</b><br>
+        Berhentilah melihat dunia melalui kacamata "Berapa Harganya?". Mulailah bertanya: <br>
+        <span class="highlight">"Berapa banyak Waktu, Keterampilan, dan Energi Alam yang dikandungnya?"</span><br>
+        Persiapkan dirimu. Transisi menuju Sistem Serikat (Guild) dimulai.
+    </div>
+</div>
+
+</body>
+</html>

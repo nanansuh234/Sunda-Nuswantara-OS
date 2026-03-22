@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHASE 2: THE GUILD AWAKENING - Nuswantara OS</title>
+    <style>
+        :root {
+            --tartaria-gold: #d4af37;
+            --copper-rust: #b87333;
+            --matrix-bg: #050505;
+            --text-main: #d1d1d1;
+            --cyan-glow: #00e5ff;
+        }
+        body { 
+            background-color: var(--matrix-bg); 
+            color: var(--text-main); 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        .broadcast-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--tartaria-gold); 
+            background: #0a0a0a; 
+            padding: 30px; 
+            border-radius: 5px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            position: relative;
+        }
+        
+        h1 { 
+            color: var(--tartaria-gold); text-align: center; text-transform: uppercase; 
+            letter-spacing: 3px; margin-bottom: 5px; border-bottom: 2px dashed var(--copper-rust); padding-bottom: 15px;
+        }
+        .system-status {
+            text-align: center; font-size: 0.9rem; color: var(--copper-rust); margin-bottom: 30px; font-weight: bold;
+        }
+        
+        .module-card {
+            background: #111; border-left: 4px solid var(--tartaria-gold);
+            padding: 20px; margin-bottom: 20px; position: relative;
+        }
+        .module-title {
+            color: var(--tartaria-gold); font-size: 1.2rem; font-weight: bold;
+            text-transform: uppercase; margin-bottom: 15px;
+            display: flex; align-items: center;
+        }
+        .module-title::before { content: ">> "; color: var(--cyan-glow); margin-right: 10px; }
+        
+        .highlight { color: var(--cyan-glow); font-weight: bold; }
+        .gold-txt { color: var(--tartaria-gold); font-weight: bold; }
+
+        .diagram-box {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px dashed var(--copper-rust);
+            padding: 15px; margin: 15px 0;
+            font-family: monospace; color: #fff;
+            text-align: center;
+        }
+
+        ul { padding-left: 20px; margin-top: 5px; }
+        li { margin-bottom: 10px; color: #bbb; }
+
+        .law-box {
+            background: rgba(0, 229, 255, 0.05); border: 1px solid var(--cyan-glow);
+            padding: 20px; margin-top: 30px; text-align: center; font-size: 1.05rem; color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="broadcast-panel">
+    <h1>TAHAP 2: KEBANGKITAN SERIKAT KARYA</h1>
+    <div class="system-status">>> INISIASI TAHUN 002 | MODE: BARTER NILAI (TRIPLE ANCHOR) AKTIF <<</div>
+
+    <div class="module-card">
+        <div class="module-title">1. Kematian Identitas "Konsumen"</div>
+        <p>Di era matriks, Anda adalah <b>Konsumen</b>—makhluk pasif yang datang ke toko, melihat barang jadi, dan menukarnya dengan kertas fiat. Di Tahun 002, toko barang jadi itu tidak ada. Anda bertransformasi menjadi <span class="highlight">Pemrakarsa (Initiator)</span>.</p>
+        <ul>
+            <li>Anda tidak "membeli" cincin emas. Anda <i>memprakarsai</i> pembuatan cincin emas.</li>
+            <li>Anda tidak "membeli" antena eter. Anda <i>memprakarsai</i> perakitan antena eter.</li>
+            <li><b>Hukum Dasar:</b> Pemrakarsa wajib membawa "Mahar" berupa <i>Bahan Baku Mentah</i>.</li>
+        </ul>
+    </div>
+
+    <div class="module-card">
+        <div class="module-title">2. Alchemy of Skill (Pajak Keringat)</div>
+        <p>Karena tidak ada uang fiat, bagaimana Pengrajin (Master Crafter) dibayar? Mereka dibayar dengan <span class="gold-txt">Pajak Keringat (Craftsmanship Fee)</span>. Ini adalah pertukaran absolut antara Energi Material dengan Energi Manusia (Waktu & Keahlian).</p>
+        
+        <div class="diagram-box">
+            [BAHAN BAKU MENTAH] + [WAKTU & SKILL PENGRAJIN] = [KARYA JADI] + [PAJAK KERINGAT]
+        </div>
+
+        <p><b>Contoh Arbitrase Nilai Nyata:</b></p>
+        <ul>
+            <li><span class="highlight">Kasus Pangan:</span> Anda membawa <b>2 Butir Telur Mentah</b> kepada Koki. Sang Koki memasaknya menggunakan kayu bakarnya, waktunya, dan bumbunya. Anda pulang membawa <b>1 Porsi Semur Telur</b>. Sisa 1 butir telur mentah adalah milik Sang Koki sebagai "Pajak Keringat".</li>
+            <li><span class="highlight">Kasus Teknologi:</span> Anda membawa <b>200 gram Perak Murni</b> ke Pandai Besi Serikat untuk dibuatkan komponen *Joule Thief*. Anda pulang membawa komponen seberat <b>150 gram</b>. Sisa 50 gram perak adalah bayaran murni atas ilmu teknis dan waktu si Pandai Besi.</li>
+        </ul>
+    </div>
+
+    <div class="module-card">
+        <div class="module-title">3. Serikat Karya (The Guild System)</div>
+        <p>Kita kembali pada sistem peradaban agung masa lalu (Nusantara Kuno / Tartaria). Produksi dikembalikan kepada <b>Serikat (Guild)</b> di tingkat lokal, bukan pabrik monopoli di benua lain.</p>
+        <ul>
+            <li><b>Tidak Ada Spekulasi:</b> Pengrajin tidak menimbun barang jadi untuk memanipulasi harga pasar. Mereka hanya bekerja ketika ada <i>Pemrakarsa</i> yang datang membawa bahan baku.</li>
+            <li><b>Jejak Keabadian (Maker's Mark):</b> Setiap karya di Tahun 002 diberi segel pembuatnya. Jika barang tersebut rusak dalam waktu singkat, reputasi Pengrajin hancur. Barang dibuat untuk diwariskan, bukan untuk dibuang.</li>
+            <li><b>Kedaulatan Mutlak:</b> Inflasi fiat di luar sana tidak akan bisa menyentuh ekosistem ini. 1 Gram Emas akan selalu setara dengan jumlah keringat yang sama, hari ini maupun 100 tahun lagi.</li>
+        </ul>
+    </div>
+
+    <div class="law-box">
+        <b>HUKUM TERMODINAMIKA EKONOMI TAHUN 002:</b><br>
+        <span class="gold-txt">"Nilai tidak dapat diciptakan dari mesin cetak uang, dan nilai tidak dapat dimusnahkan oleh inflasi."</span><br>
+        Nilai hanya bisa diubah bentuknya dari Potensi Alam menjadi Karya Manusia. Selamat datang di era Keadilan Murni.
+    </div>
+</div>
+
+</body>
+</html>
