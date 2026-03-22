@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>H2 Distribution System - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --hho-cyan: #00f3ff;
+            --danger-red: #ff3333;
+            --bg-obsidian: #050505;
+        }
+        body { 
+            background-color: var(--bg-obsidian); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .dist-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--hho-cyan); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.1);
+        }
+        h1, h2 { color: var(--hho-cyan); text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .component-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .comp-card { background: #111; padding: 15px; border-left: 3px solid #555; }
+        
+        .safety-box { 
+            background: rgba(255, 51, 51, 0.05); 
+            border: 1px dashed var(--danger-red); 
+            padding: 20px; 
+            margin: 20px 0;
+        }
+
+        .step-path { margin-bottom: 12px; padding-left: 25px; position: relative; }
+        .step-path::before { content: "➔"; position: absolute; left: 0; color: var(--hho-cyan); }
+        .highlight { color: var(--hho-cyan); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="dist-panel">
+    <h1>SKEMA TRANSMISI GAS HIDROGEN (H2)</h1>
+    <p style="text-align: center;">Jalur Aman dari Reaktor Resonansi ke Titik Bakar</p>
+
+    <div class="component-grid">
+        <div class="comp-card">
+            <h3>🚰 Perangkat Jalur</h3>
+            <ul>
+                <li><b>Selang:</b> Polyurethane (PU) atau selang bening tebal anti-kempis.</li>
+                <li><b>One-Way Valve:</b> Katup searah agar gas tidak balik.</li>
+                <li><b>Flashback Arrestor:</b> Wajib ada untuk mematikan api balik.</li>
+            </ul>
+        </div>
+        <div class="comp-card">
+            <h3>🔥 Titik Guna</h3>
+            <ul>
+                <li><b>Kompor:</b> Modifikasi spuyer gas menjadi lebih kecil.</li>
+                <li><b>Intake Mesin:</b> Masukkan selang sebelum filter udara.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="safety-box">
+        <h2>🛡️ Protokol Keamanan (Flashback Guard)</h2>
+        <div class="step-path"><b>1. PRIMARY BUBBLER:</b> Gas dari reaktor masuk ke botol berisi air. Gas keluar lewat gelembung. Ini sekat pertama jika api menyambar balik.</div>
+        <div class="step-path"><b>2. SECONDARY BUBBLER:</b> Gunakan botol kedua sebagai cadangan keamanan ekstra (Double Guard).</div>
+        <div class="step-path"><b>3. DRY FILTER:</b> Gunakan tabung berisi sabut baja halus (Steel Wool) sebagai penahan api terakhir sebelum ke selang utama.</div>
+    </div>
+
+    <h2>🚀 Alur Instalasi (Foot Step)</h2>
+    <div class="step-path">Hubungkan reaktor ke <span class="highlight">Bubbler 1</span> ➔ <span class="highlight">Bubbler 2</span> ➔ <span class="highlight">One-Way Valve</span> ➔ <span class="highlight">Titik Bakar</span>.</div>
+    <div class="step-path">Nyalakan alat resonansi, tunggu gelembung stabil, baru nyalakan api di ujung nozzle/kompor.</div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | SAFETY FIRST | ENERGY FREEDOM
+    </p>
+</div>
+
+</body>
+</html>

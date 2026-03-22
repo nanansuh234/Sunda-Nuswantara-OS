@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>H2 Volume Calculator - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --h2-cyan: #00f3ff;
+            --h2o-blue: #3498db;
+            --bg-black: #080808;
+        }
+        body { 
+            background-color: var(--bg-black); 
+            color: #e0e0e0; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .calc-panel { 
+            max-width: 800px; 
+            margin: auto; 
+            border: 2px solid var(--h2o-blue); 
+            background: #111; 
+            padding: 25px; 
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.2);
+        }
+        h1, h2 { text-align: center; text-transform: uppercase; color: var(--h2o-blue); }
+        
+        .input-box { 
+            text-align: center; 
+            background: #000; 
+            padding: 20px; 
+            border: 1px dashed var(--h2-cyan);
+            margin: 20px 0;
+        }
+        input { 
+            width: 60%; 
+            padding: 12px; 
+            background: #111; 
+            border: 1px solid #333; 
+            color: var(--h2-cyan); 
+            font-size: 1.8rem; 
+            text-align: center;
+        }
+
+        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .res-card { background: #1a1a1a; padding: 15px; border-top: 3px solid var(--h2-cyan); text-align: center; }
+        
+        .ratio-info { 
+            font-size: 0.85rem; 
+            color: #888; 
+            line-height: 1.6; 
+            margin-top: 25px; 
+            padding: 15px; 
+            background: #050505;
+        }
+        .highlight { color: var(--h2-cyan); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="calc-panel">
+    <h1>KONVERSI AIR KE GAS HIDROGEN (H2)</h1>
+    <p style="text-align: center; font-size: 0.8rem;">Modul Fisika Reaktor - Sunda Nuswantara OS</p>
+
+    <div class="input-box">
+        <label>Input Volume Air (Liter):</label><br>
+        <input type="number" id="airInp" value="1" oninput="hitungGas()">
+    </div>
+
+    <div class="result-grid">
+        <div class="res-card">
+            <h3>⚖️ Massa Gas H2</h3>
+            <div id="massH2" style="font-size: 1.5rem; color: var(--h2-cyan);">0.11 KG</div>
+            <p>(Gas Sangat Ringan)</p>
+        </div>
+        <div class="res-card">
+            <h3>🎈 Volume Gas H2</h3>
+            <div id="volH2" style="font-size: 1.5rem; color: var(--h2-cyan);">1.244 Liter</div>
+            <p>(Volume Raksasa)</p>
+        </div>
+    </div>
+
+    <div class="ratio-info">
+        <b>🧬 ANALISIS TEKNIS:</b><br>
+        1. <span class="highlight">Ekspansi Volume:</span> Air cair sangat padat. Saat molekulnya pecah jadi gas, volumenya mengembang sekitar 1.800 kali lipat secara total (H2 + O2).<br>
+        2. <span class="highlight">Massa vs Guna:</span> Walau berat 1 liter air hanya jadi 0.11 kg Hidrogen, daya ledak/bakarnya setara dengan energi yang sangat besar karena Hidrogen adalah unsur paling padat energi per kg.<br>
+        3. <span class="highlight">Kapasitas Reaktor:</span> Untuk skala motor/kompor, tabung <span class="highlight">1.5 Liter</span> adalah ukuran ideal (1L air + 0.5L ruang gas).
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        SUNDA NUSWANTARA OS | PHYSICS MODULE | ENERGY REBELLION
+    </p>
+</div>
+
+<script>
+    function hitungGas() {
+        let air = document.getElementById('airInp').value;
+        if(air < 0) air = 0;
+        
+        // 1 liter air (1kg) menghasilkan ~111g Hidrogen
+        let massa = (air * 0.111).toFixed(2);
+        
+        // 1kg Hidrogen volumenya ~11.000 liter pada tekanan normal (STP)
+        // Maka 111g Hidrogen volumenya ~1244 liter
+        let volume = (air * 1244).toLocaleString('id-ID');
+
+        document.getElementById('massH2').innerHTML = massa + " KG";
+        document.getElementById('volH2').innerHTML = volume + " LITER";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Adaptive Resonance Module - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --adaptive-gold: #ffcc00;
+            --hho-cyan: #00f3ff;
+            --bg-deep: #050505;
+        }
+        body { 
+            background-color: var(--bg-deep); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .adaptive-panel { 
+            max-width: 950px; 
+            margin: auto; 
+            border: 2px solid var(--adaptive-gold); 
+            background: #0f0f0f; 
+            padding: 30px; 
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+        }
+        h1, h2 { color: var(--adaptive-gold); text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .grid-tech { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .tech-card { background: #000; padding: 15px; border-left: 4px solid var(--hho-cyan); }
+        
+        .auto-logic { 
+            background: #1a1a1a; 
+            padding: 20px; 
+            border: 1px dashed var(--adaptive-gold); 
+            margin: 25px 0;
+        }
+
+        .step-item { margin-bottom: 12px; padding-left: 25px; position: relative; font-size: 0.9rem; }
+        .step-item::before { content: "⚡"; position: absolute; left: 0; color: var(--adaptive-gold); }
+        
+        .status-box { 
+            background: #222; 
+            padding: 10px; 
+            color: var(--hho-cyan); 
+            text-align: center; 
+            font-weight: bold;
+            border: 1px solid var(--hho-cyan);
+        }
+        .highlight { color: var(--adaptive-gold); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="adaptive-panel">
+    <h1>ADAPTIVE RESONANCE GENERATOR (AUTO-SCAN)</h1>
+    <p style="text-align: center;">Sistem Pemecah Molekul Air dengan Pengunci Frekuensi Otomatis</p>
+
+    <div class="grid-tech">
+        <div class="tech-card">
+            <h3>🧠 Logika Adaptive</h3>
+            <ul>
+                <li><b>Auto-Scanning:</b> Mencari frekuensi dari 100Hz ke 50kHz secara otomatis.</li>
+                <li><b>Current Feedback:</b> Sensor ACS712 membaca lonjakan arus saat resonansi terjadi.</li>
+                <li><b>Frequency Lock:</b> Mengunci PWM pada titik efisiensi tertinggi tanpa campur tangan manusia.</li>
+            </ul>
+        </div>
+        <div class="tech-card">
+            <h3>📟 Komponen Cerdas</h3>
+            <ul>
+                <li><b>Controller:</b> Arduino Nano / ESP32 sebagai otak sistem.</li>
+                <li><b>Driver:</b> Mosfet IRFP260N (Tahan tegangan tinggi).</li>
+                <li><b>Sensor:</b> Current Sensor (Feedback) & Volt Divider.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="auto-logic">
+        <h2>🛠️ Resep Perakitan Adaptive (Logic Flow)</h2>
+        <div class="step-item"><b>1. PEMASANGAN SENSOR:</b> Pasang sensor arus di jalur utama menuju elektroda pipa stainless. Ini adalah "indra penglihatan" bagi mikrokontroler.</div>
+        <div class="step-item"><b>2. PEMROGRAMAN (SOFTWARE):</b> Tulis kode untuk menaikkan frekuensi PWM secara bertahap (Looping).</div>
+        <div class="step-item"><b>3. ALGORITMA PENGUNCI:</b> Saat sensor membaca kenaikan arus mendadak (indikasinya air mulai bergetar), mikrokontroler akan berhenti melakukan scanning dan menjaga frekuensi tersebut.</div>
+        <div class="step-item"><b>4. STABILISASI TEGANGAN:</b> Gunakan induktor (Coil) untuk menjaga agar lonjakan tegangan (Spike) tidak merusak sirkuit.</div>
+    </div>
+
+    <div class="status-box">
+        STATUS: SCANNING RESONANCE... [AUTO-LOCK ACTIVE]
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #555; margin-top: 20px;">
+        SUNDA NUSWANTARA OS | AI-POWERED ENERGY | TOTAL FREEDOM
+    </p>
+</div>
+
+</body>
+</html>

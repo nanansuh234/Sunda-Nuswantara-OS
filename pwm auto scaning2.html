@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Auto-Resonance Logic - Sunda Nuswantara OS</title>
+    <style>
+        :root {
+            --logic-green: #00ff41;
+            --data-blue: #00d4ff;
+            --bg-obsidian: #050505;
+        }
+        body { 
+            background-color: var(--bg-obsidian); 
+            color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+        }
+        .logic-panel { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid var(--logic-green); 
+            background: #0a0a0a; 
+            padding: 25px; 
+            box-shadow: 0 0 40px rgba(0, 255, 65, 0.15);
+        }
+        h1, h2 { color: var(--logic-green); text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .code-block { 
+            background: #000; 
+            padding: 20px; 
+            border: 1px solid #333; 
+            color: #55ff55; 
+            font-size: 0.85rem; 
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .shopping-list { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 25px;
+        }
+        .part-card { 
+            background: #111; 
+            padding: 12px; 
+            border-left: 3px solid var(--data-blue); 
+        }
+
+        .flow-step { margin-bottom: 10px; padding-left: 20px; position: relative; }
+        .flow-step::before { content: "»"; position: absolute; left: 0; color: var(--logic-green); }
+        .highlight { color: var(--data-blue); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="logic-panel">
+    <h1>ADAPTIVE RESONANCE: LOGIC & PARTS</h1>
+    <p style="text-align: center;">Sistem Otomasi Pemecah Molekul Air - Tanpa Tuning Manual</p>
+
+    <h2>🛒 Daftar Komponen (Shopping List)</h2>
+    <div class="shopping-list">
+        <div class="part-card">
+            <b>1. Brain Module:</b><br>
+            Arduino Nano V3 (Atmega328P).
+        </div>
+        <div class="part-card">
+            <b>2. Power Switch:</b><br>
+            MOSFET IRFP260N / IRFP460.
+        </div>
+        <div class="part-card">
+            <b>3. Feedback Sensor:</b><br>
+            Sensor Arus ACS712 (5A/20A).
+        </div>
+        <div class="part-card">
+            <b>4. High Volt Inductor:</b><br>
+            Flyback Transformer / Coil DIY.
+        </div>
+    </div>
+
+    <h2>🧠 Algoritma Auto-Lock Frequency</h2>
+    <div class="code-block">
+        // PSEUDO-CODE LOGIC FOR SUNDA NUSWANTARA OS<br><br>
+        void loop() {<br>
+        &nbsp;&nbsp;for (freq = 100; freq < 50000; freq += 10) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;setPWM(freq); // Kirim pulsa ke MOSFET<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;delay(50); // Tunggu air bereaksi<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;current = readACS712(); // Baca arus balik<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;if (current > target_threshold) {<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockFrequency(freq); // KUNCI TITIK RESONANSI!<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break; // Berhenti scanning<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+        &nbsp;&nbsp;}<br>
+        }
+    </div>
+
+    <div class="flow-step">
+        <span class="highlight">Efisiensi Total:</span> Sistem ini hanya memakan arus kecil namun menghasilkan gas hidrogen deras karena bekerja pada "vibrasi alami" air.
+    </div>
+    <div class="flow-step">
+        <span class="highlight">Tanpa Elektrolit:</span> Air tetap jernih, elektroda tetap bersih, daya guna abadi.
+    </div>
+
+    <p style="text-align: center; font-size: 0.7rem; color: #444; margin-top: 30px; border-top: 1px solid #222; padding-top: 10px;">
+        DOKUMEN TEKNIS SUNDA NUSWANTARA OS | PEMBERDAYAAN RAKYAT BERBASIS TEKNOLOGI
+    </p>
+</div>
+
+</body>
+</html>
