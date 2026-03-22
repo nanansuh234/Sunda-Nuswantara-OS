@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHASE 5: THE GUILD REGISTRY - Nuswantara OS</title>
+    <style>
+        :root {
+            --guild-iron: #a19d94;
+            --forge-fire: #ff4500;
+            --matrix-bg: #050505;
+            --text-main: #d1d1d1;
+        }
+        body { 
+            background-color: var(--matrix-bg); 
+            color: var(--text-main); 
+            font-family: 'Share Tech Mono', monospace; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        .broadcast-panel { 
+            max-width: 950px; 
+            margin: auto; 
+            border: 2px solid var(--guild-iron); 
+            background: #0a0a0a; 
+            padding: 30px; 
+            border-radius: 5px;
+            box-shadow: 0 0 30px rgba(161, 157, 148, 0.1);
+        }
+        
+        h1 { 
+            color: var(--guild-iron); text-align: center; text-transform: uppercase; 
+            letter-spacing: 3px; margin-bottom: 5px; border-bottom: 2px dashed var(--forge-fire); padding-bottom: 15px;
+        }
+        .system-status {
+            text-align: center; font-size: 0.9rem; color: var(--forge-fire); margin-bottom: 30px; font-weight: bold;
+        }
+        
+        .definition-box {
+            background: #111; border-left: 4px solid var(--forge-fire);
+            padding: 20px; margin-bottom: 30px;
+        }
+        .highlight { color: var(--forge-fire); font-weight: bold; }
+
+        /* Grid for Professions */
+        .guild-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .guild-category {
+            background: rgba(161, 157, 148, 0.05);
+            border: 1px solid #333;
+            padding: 15px;
+        }
+        .cat-title {
+            color: var(--guild-iron); font-size: 1.1rem; font-weight: bold;
+            text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 8px; margin-bottom: 10px;
+        }
+        .guild-category ul { padding-left: 15px; margin: 0; }
+        .guild-category li { margin-bottom: 8px; font-size: 0.85rem; color: #bbb; }
+        .guild-category li span { color: #fff; font-weight: bold; }
+
+        .law-box {
+            background: rgba(255, 69, 0, 0.05); border: 1px solid var(--forge-fire);
+            padding: 20px; margin-top: 30px; text-align: center; font-size: 1.05rem; color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="broadcast-panel">
+    <h1>TAHAP 5: RESTORASI 50 PROFESI PERADABAN</h1>
+    <div class="system-status">>> DATABASE SERIKAT KARYA | SKILL PRODUKSI MENTAH & CRAFTSMANSHIP <<</div>
+
+    <div class="definition-box">
+        <p><b>HAPUS DOGMA SEKOLAH INDUSTRI:</b> Profesi bukanlah kegiatan memutar angka fiat untuk mencari "Cuan" (Menghasilkan Ekonomi). Profesi sejati adalah <span class="highlight">Skill Produksi</span>: Kemampuan tangan manusia mengambil material mentah dari bumi, dan mengekstraknya menjadi pondasi peradaban (Besi, Papan, Pangan, Eter).</p>
+        <p>Berikut adalah 50 Profesi Fundamental yang menjamin kemandirian sebuah wilayah, kebal terhadap reset server, pemadaman listrik, maupun kejatuhan ekonomi global.</p>
+    </div>
+
+    <div class="guild-grid">
+        <div class="guild-category">
+            <div class="cat-title">⚒️ Metalurgi & Pandai Besi</div>
+            <ul>
+                <li><span>Pelebur Bijih Bumi:</span> Mengekstrak besi/LTJ dari tanah mentah.</li>
+                <li><span>Empu / Pandai Besi:</span> Menempa ingot menjadi alat kerja (cangkul, golok).</li>
+                <li><span>Pengecor Kuningan/Perunggu:</span> Mencetak katup air dan lonceng resonansi.</li>
+                <li><span>Pengrajin Perak & Emas:</span> Memurnikan XAU/XAG untuk medis dan elektronik murni.</li>
+                <li><span>Pembuat Kawat (Wire Drawer):</span> Menarik tembaga menjadi kabel kumparan.</li>
+                <li><span>Pembuat Dioda Alami:</span> Meracik kristal/arang untuk semikonduktor tanpa pabrik.</li>
+                <li><span>Ahli Sepuh (Quenching):</span> Mengunci kekerasan baja dengan air/minyak khusus.</li>
+            </ul>
+        </div>
+
+        <div class="guild-category">
+            <div class="cat-title">🌾 Agraria & Ekologi Pangan</div>
+            <ul>
+                <li><span>Petani Resonansi:</span> Mengolah tanah dengan frekuensi paramagnetik (Bukan kimia pabrik).</li>
+                <li><span>Penangkar Benih Pusaka:</span> Membiakkan bibit lokal yang bisa ditanam ulang selamanya.</li>
+                <li><span>Pembuat Bio-Char:</span> Membakar biomassa tanpa oksigen untuk rumah mikroba tanah.</li>
+                <li><span>Penyuling Air Murni:</span> Mengubah air kotor/laut menjadi air tawar steril.</li>
+                <li><span>Petani Garam Gunung/Laut:</span> Mengekstrak mineral esensial dari alam.</li>
+                <li><span>Pemeras Minyak Nabati:</span> Mengekstrak minyak kelapa/jarak untuk pelumas & pangan.</li>
+                <li><span>Koki Pengawet (Fermenter):</span> Mengawetkan panen berlebih tanpa kulkas.</li>
+                <li><span>Peternak Mandiri:</span> Mengelola siklus protein hewani dan pupuk kandang.</li>
+            </ul>
+        </div>
+
+        <div class="guild-category">
+            <div class="cat-title">🧱 Arsitektur & Material Alam</div>
+            <ul>
+                <li><span>Tukang Kayu Presisi:</span> Membangun rangka tanpa paku besi (sistem pasak).</li>
+                <li><span>Pemotong Batu (Stonemason):</span> Memahat batu gunung untuk pondasi abadi.</li>
+                <li><span>Pembuat Bata Terakota:</span> Mencetak lempung menjadi material dinding & penahan panas.</li>
+                <li><span>Ahli Mortar Kuno:</span> Meracik semen merah dan kapur (pengganti semen pabrik).</li>
+                <li><span>Pembangun Menara Eter:</span> Mengkalkulasi geometri bangunan penangkap energi.</li>
+                <li><span>Penganyam Rotan/Bambu:</span> Merakit serat lentur menjadi wadah dan dinding sirkulasi.</li>
+                <li><span>Penyamak Kulit:</span> Mengolah kulit mentah dengan getah pohon menjadi pelindung.</li>
+                <li><span>Pembuat Kaca (Glassblower):</span> Melebur pasir kuarsa menjadi wadah dan lensa.</li>
+            </ul>
+        </div>
+
+        <div class="guild-category">
+            <div class="cat-title">⚡ Energi Eter & Mekanika</div>
+            <ul>
+                <li><span>Perakit Baterai Gravitasi:</span> Membangun sistem PLTA pompa mini.</li>
+                <li><span>Ahli Lilitan Tembaga:</span> Menggulung koil Joule Thief & dinamo.</li>
+                <li><span>Pembangun Termal Pasir:</span> Menyusun isolator untuk penyimpan panas bumi.</li>
+                <li><span>Pembuat Kapasitor (Leyden):</span> Merakit penyimpan tegangan statis dari kaca dan garam.</li>
+                <li><span>Pemanen Radiant (Antena):</span> Menginstalasi penangkap listrik statis atmosferik.</li>
+                <li><span>Pembuat Kincir Angin/Air:</span> Memahat sudu-sudu mekanis pemutar poros.</li>
+                <li><span>Pembuat Lensa Fresnel:</span> Memfokuskan cahaya matahari untuk peleburan/memasak.</li>
+                <li><span>Teknisi Peltier Geotermal:</span> Merakit modul penangkap beda suhu tanah dan udara.</li>
+            </ul>
+        </div>
+
+        <div class="guild-category">
+            <div class="cat-title">🧪 Kimia Kehidupan & Medis</div>
+            <ul>
+                <li><span>Peracik Ekstrak Herbal:</span> Menyuling obat dari getah dan daun.</li>
+                <li><span>Pembuat Sabun Lindi:</span> Menggabungkan abu kayu dan lemak menjadi pembersih steril.</li>
+                <li><span>Penyuling Alkohol Murni:</span> Membuat cairan sterilisasi bedah dari fermentasi.</li>
+                <li><span>Alkemis Asam/Basa:</span> Membuat pelarut logam (seperti ZA/Oksalat alami).</li>
+                <li><span>Tabib Tulang & Meridian:</span> Memperbaiki struktur fisik tanpa mesin rontgen.</li>
+                <li><span>Akupunkturis Perak/Emas:</span> Menyetel ulang arus listrik saraf tubuh.</li>
+                <li><span>Pembuat Salep Bio-Silver:</span> Meracik pelindung luka anti-bakteri tingkat nano.</li>
+                <li><span>Pengekstrak Kolagen/Gelatin:</span> Mengolah tulang rawan untuk lem perekat super kuat.</li>
+            </ul>
+        </div>
+
+        <div class="guild-category">
+            <div class="cat-title">🧭 Logistik & Keterampilan Bertahan</div>
+            <ul>
+                <li><span>Pembuat Gerobak (Wheelwright):</span> Merakit roda mekanis untuk transportasi berat.</li>
+                <li><span>Ahli Tali-Temali (Ropemaker):</span> Memintal serat ijuk/rami menjadi tali penahan beban tonase.</li>
+                <li><span>Penenun Kain:</span> Mengubah kapas/sutra menjadi pakaian perlindungan cuaca.</li>
+                <li><span>Pembuat Perahu (Boatwright):</span> Merakit kano pelayaran sungai/danau.</li>
+                <li><span>Navigator Peta Bintang:</span> Penunjuk arah tanpa GPS.</li>
+                <li><span>Penjaga Kalender Alam:</span> Sinkronisasi waktu tanam dan panen eter.</li>
+                <li><span>Kurir Fisik (Messenger):</span> Pengirim pesan rahasia yang tidak bisa disadap elektronik.</li>
+                <li><span>Pembuat Kertas/Perkamen:</span> Menumbuk serat kayu untuk media pencatatan ilmu abadi.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="law-box">
+        <b>DEKLARASI PROFESI TAHUN 002:</b><br>
+        <span class="highlight">"Tinggalkan ilusi ruang kantor dan layar saham."</span><br>
+        Pilih satu dari 50 keahlian ini. Kuasai hingga Anda menyatu dengan materialnya. Inilah tiket Anda untuk masuk ke dalam Serikat, di mana kedaulatan Anda tidak bisa dipecat oleh siapapun.
+    </div>
+</div>
+
+</body>
+</html>

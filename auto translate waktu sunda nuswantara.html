@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrono-Converter V2.5 - Nuswantara OS</title>
+    <style>
+        :root {
+            --neon-gold: #d4af37;
+            --matrix-bg: #050505;
+            --panel-bg: #0a0a0a;
+            --text-glow: #00ffff;
+            --time-glow: #ff4500;
+        }
+        body { 
+            background-color: var(--matrix-bg); color: #d1d1d1; 
+            font-family: 'Share Tech Mono', monospace; padding: 20px; 
+            line-height: 1.6;
+        }
+        .converter-panel { 
+            max-width: 900px; margin: auto; border: 2px solid var(--neon-gold); 
+            background: var(--panel-bg); padding: 30px; border-radius: 8px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+        h1 { color: var(--neon-gold); text-align: center; letter-spacing: 3px; margin-bottom: 5px;}
+        .subtitle { text-align: center; font-size: 0.9rem; color: #888; margin-bottom: 25px; }
+        
+        textarea {
+            width: 100%; height: 180px; background: #111; color: #fff;
+            border: 1px solid #333; padding: 15px; font-family: 'Share Tech Mono', monospace;
+            border-radius: 5px; margin-bottom: 15px; resize: vertical; box-sizing: border-box;
+        }
+        textarea:focus { outline: none; border-color: var(--text-glow); }
+        
+        button {
+            width: 100%; background: #111; color: var(--neon-gold);
+            border: 2px solid var(--neon-gold); padding: 15px; font-size: 1.2rem;
+            cursor: pointer; font-family: 'Share Tech Mono', monospace; text-transform: uppercase;
+            font-weight: bold; transition: all 0.3s ease;
+        }
+        button:hover { background: var(--neon-gold); color: #000; }
+        
+        .output-box {
+            margin-top: 20px; border: 1px dashed var(--text-glow);
+            padding: 20px; background: rgba(0, 255, 255, 0.05);
+            white-space: pre-wrap; color: #fff; font-size: 1.1rem; line-height: 1.6;
+        }
+        
+        /* Tag Styling untuk Output */
+        .highlight-date { color: #000; font-weight: bold; background: var(--text-glow); padding: 2px 6px; border-radius: 3px; }
+        .highlight-time { color: #fff; font-weight: bold; background: var(--time-glow); padding: 2px 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+<div class="converter-panel">
+    <h1>NUSWANTARA CHRONO-CONVERTER</h1>
+    <div class="subtitle">V2.5: Deteksi "Tgl", Tahun Opsional, Singkatan, & Pemusnahan Teks Masehi</div>
+
+    <textarea id="inputText" placeholder="Paste teks di sini...
+Contoh: 'minggu 31 januari 2026, sen, sel, rab, kam, jum, sab, ming
+tgl 31 jan'"></textarea>
+    
+    <button onclick="translateText()">KONVERSI TEKS TERPISAH</button>
+
+    <div id="outputText" class="output-box">Output terjemahan akan muncul di sini...</div>
+</div>
+
+<script>
+    // --- DATABASE NUSWANTARA OS ---
+    const monthsNus = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const saptawaras = ["Radite", "Soma", "Anggara", "Budha", "Respati", "Sukra", "Tumpak"];
+    
+    const monthMap = { 
+        "januari": 0, "jan": 0, "februari": 1, "feb": 1, "maret": 2, "mar": 2, "april": 3, "apr": 3, 
+        "mei": 4, "juni": 5, "jun": 5, "juli": 6, "jul": 6, "agustus": 7, "agu": 7, "agus": 7,
+        "september": 8, "sep": 8, "sept": 8, "oktober": 9, "okt": 9, "november": 10, "nov": 10, "desember": 11, "des": 11 
+    };
+
+    const standaloneDayMap = {
+        "senin":"Soma", "sen":"Soma", "selasa":"Anggara", "sel":"Anggara",
+        "rabu":"Budha", "rab":"Budha", "kamis":"Respati", "kam":"Respati",
+        "jumat":"Sukra", "jum'at":"Sukra", "jum":"Sukra", "sabtu":"Tumpak",
+        "sab":"Tumpak", "minggu":"Radite", "ming":"Radite", "min":"Radite"
+    };
+    
+    const standaloneMonthMap = {
+        "januari":"Wiwitan", "jan":"Wiwitan", "februari":"Gangga", "feb":"Gangga",
+        "maret":"Bija", "mar":"Bija", "april":"Trubus", "apr":"Trubus",
+        "mei":"Teja", "juni":"Baskara", "jun":"Baskara", "juli":"Kartika", "jul":"Kartika",
+        "agustus":"Huma", "agu":"Huma", "agus":"Huma", "september":"Phala", "sep":"Phala", "sept":"Phala",
+        "oktober":"Lumbung", "okt":"Lumbung", "november":"Reswara", "nov":"Reswara",
+        "desember":"Purnaka", "des":"Purnaka"
+    };
+
+    // --- FUNGSI KONVERSI TANGGAL ---
+    function convertDateToNuswantara(dayStr, d, mStr, y) {
+        let m = monthMap[mStr.toLowerCase()];
+        if (m === undefined) return null;
+
+        // Cek apakah user input tahun komplit atau nggak
+        let hasYear = (y !== undefined && y !== "");
+        let calcYear = hasYear ? parseInt(y) : new Date().getFullYear(); // Pinjem tahun buat ngitung doang
+
+        let targetDate = new Date(calcYear, m, d);
+        let anchor = new Date(calcYear, 2, 21);  
+        let activeYear = calcYear;
+        
+        // Perbaikan Bug Tahun: Jika tgl Masehi sebelum 21 Maret, dia masuk ke tahun Nuswantara sebelumnya
+        if (targetDate < anchor) {
+            anchor = new Date(calcYear - 1, 2, 21);
+            activeYear = calcYear - 1;
+        }
+        
+        let diff = Math.floor((targetDate - anchor) / 86400000);
+        let realM = Math.floor(diff / 28);
+        let realD = (diff % 28) + 1;
+        
+        let nusYearNum = activeYear - 2024; 
+        let yrLabel = nusYearNum > 0 ? String(nusYearNum).padStart(3, '0') : "000 (Pra-Era)";
+        
+        let totalDaysForPasaran = ((activeYear - 2025) * 365) + Math.floor((activeYear - 2025)/4) + (realM * 28) + (realD - 1);
+        if (totalDaysForPasaran < 0) totalDaysForPasaran = 5 - (Math.abs(totalDaysForPasaran) % 5);
+        let pIdx = (2 + (totalDaysForPasaran % 5)) % 5;
+        
+        let jsDayIndex = targetDate.getDay(); 
+        let namaSaptawara = saptawaras[jsDayIndex];
+
+        if (hasYear) {
+            // JIKA KOMPLIT: Pakai Template Box Kaku
+            return `<span class="highlight-date">[Tgl Nuswantara: ${namaSaptawara} (${pasarans[pIdx]}), ${realD} ${monthsNus[realM]} Thn ${yrLabel}]</span>`;
+        } else {
+            // JIKA ECERAN: Pakai format Single (garis bawah cyan), no tahun nyatut!
+            let singleText = `${realD} ${monthsNus[realM]}`;
+            if (dayStr) { // Kalau user sempet nulis "senin 31 jan"
+                singleText = `${namaSaptawara}, ` + singleText;
+            }
+            return `<span style="color:var(--text-glow); border-bottom: 1px dashed var(--text-glow);">${singleText}</span>`;
+        }
+    }
+
+    // --- FUNGSI KONVERSI JAM ---
+    function convertTimeToNuswantara(h, min) {
+        let mTotalMin = ((h % 12) * 60) + min;
+        let nTotalHours = mTotalMin / 90; 
+        
+        let dHour = Math.floor(nTotalHours) || 8;
+        let dMin = Math.floor((nTotalHours % 1) * 90);
+        
+        let fase = "";
+        let seqIdx = Math.floor(h / 3);
+        const phases = ["Hening", "Fajar", "Duha", "Karya", "Istiwa", "Asar", "Sandikala", "Sirepan"];
+        if(seqIdx >= 0 && seqIdx < 8) fase = phases[seqIdx];
+
+        return `<span class="highlight-time">[Jam Nus: ${String(dHour).padStart(2, '0')}:${String(dMin).padStart(2, '0')} ${fase}]</span>`;
+    }
+
+    // --- EKSEKUTOR TRANSLATE ---
+    function translateText() {
+        let text = document.getElementById('inputText').value;
+        
+        // 1. SCAN TANGGAL LENGKAP & PARSIAL (Group 1: Nama Hari, Group 2: Tgl, Group 3: Bln, Group 4: Thn)
+        let dateRegex = /(?:(senin|sen|selasa|sel|rabu|rab|kamis|kam|jumat|jum\'?at|jum|sabtu|sab|minggu|ming|min)[,\.\s]+)?(?:tgl\.?\s+|tanggal\s+)?(\d{1,2})[\s\-]+(januari|jan|februari|feb|maret|mar|april|apr|mei|juni|jun|juli|jul|agustus|agu|agus|september|sep|sept|oktober|okt|november|nov|desember|des)(?:\s+(\d{4}))?/gi;
+        
+        text = text.replace(dateRegex, function(match, dayStr, d, m, y) {
+            let nusDate = convertDateToNuswantara(dayStr, parseInt(d), m, y);
+            return nusDate ? nusDate : match; 
+        });
+
+        // 2. SCAN JAM LENGKAP
+        let timeRegex = /(\d{1,2})[:\.](\d{2})\s*(?:WIB|WITA|WIT|AM|PM|pagi|siang|sore|malam)?/gi;
+        text = text.replace(timeRegex, function(match, h, min) {
+            let nusTime = convertTimeToNuswantara(parseInt(h), parseInt(min));
+            return nusTime ? nusTime : match;
+        });
+
+        // 3. SCAN KATA ECERAN (Omni-Scanner)
+        let parts = text.split(/(<[^>]*>)/);
+        for (let i = 0; i < parts.length; i++) {
+            if (!parts[i].startsWith('<')) { 
+                
+                parts[i] = parts[i].replace(/\b(senin|sen|selasa|sel|rabu|rab|kamis|kam|jumat|jum\'?at|jum|sabtu|sab|minggu|ming|min)\b/gi, function(match, p1) {
+                    let nusDay = standaloneDayMap[p1.toLowerCase()];
+                    return `<span style="color:var(--text-glow); border-bottom: 1px dashed var(--text-glow);">${nusDay}</span>`;
+                });
+
+                parts[i] = parts[i].replace(/\b(januari|jan|februari|feb|maret|mar|april|apr|mei|juni|jun|juli|jul|agustus|agu|agus|september|sep|sept|oktober|okt|november|nov|desember|des)\b/gi, function(match, p1) {
+                    let nusMonth = standaloneMonthMap[p1.toLowerCase()];
+                    return `<span style="color:var(--text-glow); border-bottom: 1px dashed var(--text-glow);">${nusMonth}</span>`;
+                });
+            }
+        }
+        text = parts.join('');
+
+        // Tampilkan Output
+        document.getElementById('outputText').innerHTML = text || "Masukkan teks...";
+    }
+</script>
+</body>
+</html>

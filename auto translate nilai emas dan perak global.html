@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara Value Converter</title>
+    <style>
+        :root {
+            --neon-gold: #ffcc00;
+            --silver-pulse: #e0e0e0;
+            --matrix-bg: #05070a;
+            --panel-bg: #0d1117;
+            --fiat-red: #ff4d4d;
+            --cyan-glow: #00ffcc;
+        }
+        body { 
+            background-color: var(--matrix-bg); color: #d1d1d1; 
+            font-family: 'Courier New', monospace; padding: 20px; 
+            line-height: 1.6;
+        }
+        .converter-panel { 
+            max-width: 950px; margin: auto; border: 3px solid var(--neon-gold); 
+            background: var(--panel-bg); padding: 30px; border-radius: 8px;
+            box-shadow: 0 0 40px rgba(255, 204, 0, 0.2);
+        }
+        h1 { color: var(--neon-gold); text-align: center; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px;}
+        .subtitle { text-align: center; font-size: 1.1em; color: var(--cyan-glow); font-weight: bold; margin-bottom: 25px; border-bottom: 1px dashed #333; padding-bottom: 15px; }
+        
+        textarea {
+            width: 100%; height: 180px; background: #000; color: #fff;
+            border: 2px solid #30363d; padding: 15px; font-family: 'Courier New', monospace; font-size: 1.1em;
+            border-radius: 5px; margin-bottom: 15px; resize: vertical; box-sizing: border-box;
+        }
+        textarea:focus { outline: none; border-color: var(--neon-gold); }
+        
+        button {
+            width: 100%; background: #1a1f26; color: var(--neon-gold);
+            border: 2px solid var(--neon-gold); padding: 15px; font-size: 1.2rem;
+            cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold; text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+        button:hover { background: var(--neon-gold); color: #000; }
+        button:disabled { background: #333; color: #666; border-color: #555; cursor: not-allowed; }
+        
+        .output-box {
+            margin-top: 20px; border: 2px dashed var(--cyan-glow);
+            padding: 20px; background: rgba(0, 255, 204, 0.05);
+            white-space: pre-wrap; color: #fff; font-size: 1.15rem; line-height: 1.8;
+        }
+        
+        /* Tag Styling untuk Output */
+        .fiat-hl { color: var(--fiat-red); font-weight: bold; }
+        .gold-txt { color: var(--neon-gold); font-weight: bold; }
+        .silver-txt { color: var(--silver-pulse); font-weight: bold; }
+
+        .footer-note {
+            margin-top: 30px; padding: 25px; border: 2px solid var(--cyan-glow); 
+            background: rgba(0, 255, 204, 0.05); color: #fff; font-size: 1em; 
+            line-height: 1.6; text-align: center; border-radius: 5px;
+        }
+        .highlight-cyan { color: var(--cyan-glow); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="converter-panel">
+    <h1>KONVERTER NILAI BARTER</h1>
+    <div class="subtitle">DEKRIPSI HARGA FIAT KE STANDAR MURNI (EMAS/PERAK 1:27)</div>
+
+    <textarea id="inputText" placeholder="Masukkan daftar belanja / harga di sini...
+Contoh:
+kangkung 3.000
+sawi 3.000
+daging ayam 30.000
+telur 29.000"></textarea>
+    
+    <button id="btnConvert" onclick="translateValue()">SINKRONISASI PASAR GLOBAL & KONVERSI</button>
+
+    <div id="outputText" class="output-box">Hasil konversi nilai murni akan muncul di sini...</div>
+
+    <div class="footer-note">
+        <span class="highlight-cyan">HUKUM KESETARAAN BARTER:</span><br>
+        Kesetaraan nilai dalam emas dan perak di atas <span style="color:var(--fiat-red)">bukan berarti Anda diwajibkan membayar menggunakan koin emas dan perak langsung</span>. Anda bebas membayarnya dengan substitusi barter lain (hasil bumi, jasa, dll) selama kedua belah pihak sepakat secara nilai.<br><br>
+        Wajib bayar fisik menggunakan Emas dan Perak hanya berlaku bagi transaksi yang sangat bernilai tinggi (seperti tanah, rumah, atau kendaraan). Hukum ini diterapkan untuk mencegah kepemilikan emas dan perak dimonopoli / dikepul oleh para elit ekonomi.
+    </div>
+</div>
+
+<script>
+    async function translateValue() {
+        const btn = document.getElementById('btnConvert');
+        btn.innerText = "MENGAMBIL DATA PASAR GLOBAL...";
+        btn.disabled = true;
+
+        let r, goldSpotUSD;
+        try {
+            const res = await fetch('https://open.er-api.com/v6/latest/USD');
+            const data = await res.json();
+            r = data.rates;
+            goldSpotUSD = r.XAU ? (1 / r.XAU) : 4845.88; 
+        } catch (e) {
+            alert("Gagal sinkronisasi data pasar. Periksa koneksi internet Anda.");
+            btn.innerText = "SINKRONISASI PASAR GLOBAL & KONVERSI";
+            btn.disabled = false;
+            return;
+        }
+
+        const idrRate = r.IDR;
+        const gramPerOz = 31.1035;
+        const goldGramLiveUSD = goldSpotUSD / gramPerOz;
+
+        let text = document.getElementById('inputText').value;
+        let parts = text.split('\n');
+        let outputHtml = "";
+
+        for (let i = 0; i < parts.length; i++) {
+            let line = parts[i];
+            if (line.trim() === "") {
+                outputHtml += "\n";
+                continue;
+            }
+
+            // Regex mencari harga
+            let replacedLine = line.replace(/(Rp\.?\s*)?(\b\d{1,3}(?:\.\d{3})+\b|\b\d+\b)/gi, function(match, rp, p2) {
+                let priceStr = p2;
+                let priceNum = parseInt(priceStr.replace(/\./g, ''));
+                
+                if (!rp && priceNum < 1000) return match; 
+                if (!rp && priceNum >= 1900 && priceNum <= 2100) return match; 
+
+                let usdValue = priceNum / idrRate;
+                let goldGrams = usdValue / goldGramLiveUSD;
+                let silverGrams = goldGrams * 27;
+
+                // FORMAT BARU: Teks Rupiah dibumihanguskan total!
+                // Hasil: "daging ayam [0.02100 gr Emas | 0.5670 gr Perak]"
+                return `<span style="color:#555;">[</span><span class="gold-txt">${goldGrams.toFixed(5)} gr Emas</span> <span style="color:#555;">|</span> <span class="silver-txt">${silverGrams.toFixed(4)} gr Perak</span><span style="color:#555;">]</span>`;
+            });
+
+            outputHtml += replacedLine + "\n";
+        }
+
+        document.getElementById('outputText').innerHTML = outputHtml;
+        btn.innerText = "SINKRONISASI PASAR GLOBAL & KONVERSI";
+        btn.disabled = false;
+    }
+</script>
+</body>
+</html>
