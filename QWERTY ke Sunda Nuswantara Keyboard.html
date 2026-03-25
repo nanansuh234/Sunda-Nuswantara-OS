@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="su">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuswantara OS - Hardware Interceptor</title>
+    <style>
+        body { background: #0a0a0a; color: #00ff41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { width: 80%; max-width: 900px; text-align: center; }
+        h1 { color: #ffcc80; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 10px; }
+        #monitor { width: 100%; height: 300px; background: #000; border: 1px solid #00ff41; border-radius: 5px; padding: 20px; font-size: 1.4rem; outline: none; box-shadow: 0 0 20px rgba(0,255,65,0.2); overflow-y: auto; text-align: left; white-space: pre-wrap; word-wrap: break-word; }
+        .info-panel { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; color: #888; font-size: 0.8rem; border-top: 1px dashed #444; padding-top: 15px; }
+        .highlight { color: #ffcc80; font-weight: bold; }
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Hardware Interceptor v1.0</h1>
+    <p style="color: #666;">Status: <span style="color: #00ff41;">READY</span> | Input: <span style="color: #ffcc80;">PHYSICAL QWERTY</span></p>
+    
+    <div id="monitor" contenteditable="true" spellcheck="false">Mulai mengetik di keyboard fisik lo... <span class="blink">|</span></div>
+
+    <div class="info-panel">
+        <div>[F, V] &rarr; <span class="highlight">P</span></div>
+        <div>[Z] &rarr; <span class="highlight">J</span></div>
+        <div>[Q, X] &rarr; <span class="highlight">K, KS</span></div>
+        <div>[EU] &rarr; <span class="highlight">Alt + E</span></div>
+        <div>[NG] &rarr; <span class="highlight">Alt + N</span></div>
+        <div>[NY] &rarr; <span class="highlight">Alt + Y</span></div>
+    </div>
+</div>
+
+<script>
+    const monitor = document.getElementById('monitor');
+    
+    // Mapping Database untuk Substitusi Otomatis
+    const nuswantaraMap = {
+        'f': 'p', 'F': 'P',
+        'v': 'p', 'V': 'P',
+        'z': 'j', 'Z': 'J',
+        'q': 'k', 'Q': 'K',
+        'x': 'ks', 'X': 'KS'
+    };
+
+    // Fungsi Interceptor
+    monitor.addEventListener('keydown', function(e) {
+        // 1. Bersihkan placeholder pada ketikan pertama
+        if (monitor.innerText.includes("Mulai mengetik")) {
+            monitor.innerText = "";
+        }
+
+        // 2. Logika Shortcut untuk Bunyi Khas (EU, NG, NY)
+        // Pakai tombol ALT + Huruf untuk efisiensi
+        if (e.altKey) {
+            e.preventDefault();
+            if (e.key === 'e' || e.key === 'E') insertText('eu');
+            if (e.key === 'n' || e.key === 'N') insertText('ng');
+            if (e.key === 'y' || e.key === 'Y') insertText('ny');
+            return;
+        }
+
+        // 3. Logika Substitusi Langsung (F -> P, etc)
+        if (nuswantaraMap[e.key]) {
+            e.preventDefault();
+            insertText(nuswantaraMap[e.key]);
+        }
+    });
+
+    function insertText(text) {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        const node = document.createTextNode(text);
+        range.insertNode(node);
+        
+        // Pindahkan kursor ke setelah teks yang dimasukkan
+        range.setStartAfter(node);
+        range.setEndAfter(node);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+</script>
+
+</body>
+</html>

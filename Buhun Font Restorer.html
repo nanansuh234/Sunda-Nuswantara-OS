@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="su">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara - Karat Engine v7.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sundanese&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #d4af37;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 900px;
+            background: #161b22;
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .badge {
+            display: block;
+            text-align: center;
+            color: #d4af37;
+            font-size: 0.8rem;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .status-text {
+            color: #8b949e;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        .btn-print {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-print:hover { background: #2ea043; }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: #000;
+            border: 1px solid #30363d;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            padding: 15px;
+            outline: none;
+            resize: none;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+        }
+
+        textarea:focus { border-color: #d4af37; }
+
+        /* =========================================
+           ENGINE MATRIX TUMPUK
+           ========================================= */
+        #aksaraResult {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px 40px; 
+            padding: 40px;
+            background: #0a0c10;
+            border-radius: 10px;
+            border: 1px solid #30363d;
+            min-height: 250px;
+            align-items: flex-end; 
+        }
+
+        .word-totem {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .syllable-block {
+            font-family: 'Noto Sans Sundanese', sans-serif;
+            font-size: 3.5rem;
+            line-height: 1.2; 
+            margin-bottom: -2px; 
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: crosshair; 
+        }
+
+        .syllable-block:last-child { margin-bottom: 0; }
+
+        .syllable-block:nth-child(odd) {
+            color: #d4af37; 
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+            z-index: 2;
+            transform: translateX(-2px);
+        }
+
+        .syllable-block:nth-child(even) {
+            color: #ffffff; 
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+            z-index: 1;
+            transform: translateX(2px);
+        }
+
+        /* FITUR WURUKAN (HOVER) */
+        .syllable-block::after {
+            content: "[" attr(data-latin) "]"; 
+            position: absolute;
+            top: 50%; 
+            left: 110%; 
+            transform: translateY(-50%);
+            background: rgba(10, 12, 16, 0.95);
+            color: #2ecc71; 
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #3fb950;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none; 
+            white-space: nowrap;
+            text-shadow: none;
+            z-index: 999;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(63, 185, 80, 0.2);
+        }
+
+        .syllable-block:hover {
+            color: #2ecc71;
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.8);
+            z-index: 100;
+        }
+
+        .syllable-block:hover::after {
+            opacity: 1;
+            visibility: visible;
+            left: 125%; 
+        }
+
+        /* =========================================
+           MODE CETAK (PRINT)
+           ========================================= */
+        @media print {
+            body { 
+                background-color: #0d1117 !important; 
+                padding: 0; 
+            }
+            .card-container { 
+                border: none; 
+                box-shadow: none; 
+                max-width: 100%; 
+                padding: 0;
+            }
+            /* Sembunyikan elemen UI yang nggak perlu pas dicetak */
+            textarea, .badge, .action-bar { 
+                display: none !important; 
+            }
+            #aksaraResult { 
+                border: none; 
+                padding: 0;
+                background: transparent;
+            }
+            /* Paksa browser untuk nge-print warna background dan shadow */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <span class="badge">Scanner Karat v7.0 : Autosave & Print</span>
+        
+        <div class="action-bar">
+            <span class="status-text" id="saveStatus">Menunggu input...</span>
+            <button class="btn-print" onclick="window.print()">🖨️ Cetak Aksara</button>
+        </div>
+
+        <textarea id="latinInput" oninput="processStacking()" placeholder="Ketik kalimat di sini...&#10;Contoh: kalimah quran"></textarea>
+        <div id="aksaraResult"></div>
+    </div>
+
+    <script>
+        const n_map = {
+            'ng':'ᮍ','ny':'ᮑ',
+            'ka':'ᮊ','ga':'ᮌ','ca':'ᮎ','ja':'ᮏ','ta':'ᮒ','da':'ᮓ','na':'ᮔ','pa':'ᮕ','ba':'ᮘ','ma':'ᮙ','ya':'ᮚ','ra':'ᮛ','la':'ᮜ','wa':'ᮝ','sa':'ᮞ','ha':'ᮠ',
+            'fa':'ᮖ','va':'ᮗ','qa':'ᮋ','xa':'ᮐ','za':'ᮑ',
+            'k':'ᮊ','g':'ᮌ','c':'ᮎ','j':'ᮏ','t':'ᮒ','d':'ᮓ','n':'ᮔ','p':'ᮕ','b':'ᮘ','m':'ᮙ','y':'ᮚ','r':'ᮛ','l':'ᮜ','w':'ᮝ','s':'ᮞ','h':'ᮠ',
+            'f':'ᮖ','v':'ᮗ','q':'ᮋ','x':'ᮐ','z':'ᮑ'
+        };
+        const v_map = {'a':'', 'i':'ᮤ','u':'ᮥ','e':'ᮨ','o':'ᮧ','eu':'ᮩ','+':'᮪'};
+
+        // 1. Fitur Autosave: Pas halaman baru dibuka, cek localStorage
+        window.onload = function() {
+            let savedText = localStorage.getItem('karatEngineSave');
+            if (savedText) {
+                document.getElementById('latinInput').value = savedText;
+                processStacking(); // Render otomatis
+                document.getElementById('saveStatus').innerText = "✅ Draft terakhir dimuat.";
+            }
+        };
+
+        function convertToSunda(text) {
+            let res = "";
+            let i = 0;
+            while (i < text.length) {
+                let chunk3 = text.substr(i, 3); 
+                let chunk2 = text.substr(i, 2); 
+                let char1 = text[i];
+                
+                if (n_map[chunk2] && ['a','i','u','e','o'].includes(text[i+2]) == false && ['a','i','u','e','o'].includes(text[i+1])) {
+                    res += n_map[chunk2[0] + 'a'] + (v_map[chunk2[1]] || '');
+                    i += 2;
+                } else if (n_map[chunk3]) {
+                    res += n_map[chunk3]; i += 3;
+                } else if (n_map[chunk2]) {
+                    res += n_map[chunk2]; i += 2;
+                } else if (n_map[char1]) {
+                    res += n_map[char1] + v_map['+']; i += 1;
+                } else if (v_map[char1]) {
+                    const vowels = {'a':'ᮃ','i':'ᮄ','u':'ᮅ','e':'ᮈ','o':'ᮇ'};
+                    res += (vowels[char1] || ''); i += 1;
+                } else {
+                    res += char1; i += 1;
+                }
+            }
+            return res.replace(/᮪+/g, '᮪');
+        }
+
+        function splitSyllables(word) {
+            let syllables = word.match(/[^aiueo]*[aiueo]+(?:ng|ny|[bcdfghjklmnpqrstvwxyz](?![aiueo]))?/gi);
+            return syllables ? syllables : [word];
+        }
+
+        function processStacking() {
+            let inputText = document.getElementById('latinInput').value.toLowerCase();
+            
+            // 2. Fitur Autosave: Simpan otomatis tiap kali ngetik
+            localStorage.setItem('karatEngineSave', inputText);
+            document.getElementById('saveStatus').innerText = "Tersimpan otomatis...";
+
+            let resultContainer = document.getElementById('aksaraResult');
+            resultContainer.innerHTML = '';
+
+            let words = inputText.split(/([\s\n]+)/);
+
+            words.forEach(word => {
+                if (word.trim() === "") {
+                    if (word.includes('\n')) {
+                        let breakDiv = document.createElement('div');
+                        breakDiv.style.flexBasis = "100%";
+                        breakDiv.style.height = "0";
+                        resultContainer.appendChild(breakDiv);
+                    }
+                    return;
+                }
+
+                let totemContainer = document.createElement('div');
+                totemContainer.className = 'word-totem';
+
+                let syllables = splitSyllables(word);
+
+                syllables.forEach(syllable => {
+                    let aksaraSyllable = convertToSunda(syllable);
+                    
+                    let block = document.createElement('div');
+                    block.className = 'syllable-block';
+                    block.innerText = aksaraSyllable;
+                    block.setAttribute('data-latin', syllable);
+                    
+                    totemContainer.appendChild(block);
+                });
+
+                resultContainer.appendChild(totemContainer);
+            });
+            
+            // Hapus teks status simpan setelah 2 detik
+            setTimeout(() => {
+                document.getElementById('saveStatus').innerText = "";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="su">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesin Ketik Sunda Nuswantara</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4e8d1; /* Warna kertas kuno */
+            color: #4a3721;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        #display-container {
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        #display {
+            width: 100%;
+            height: 150px;
+            border: 2px solid #a88a64;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1.5rem;
+            background-color: #fff9f0;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+            resize: none; /* Matikan resize manual */
+            outline: none;
+        }
+
+        #keyboard {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            width: 90%;
+            max-width: 800px;
+            background-color: #d2b48c; /* Warna kayu mesin tik */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .key {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            user-select: none; /* Mencegah teks terpilih saat diklik cepat */
+        }
+
+        .key:hover {
+            background-color: #e6e6e6;
+            transform: translateY(-2px);
+        }
+
+        .key:active {
+            background-color: #d9d9d9;
+            transform: translateY(1px);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* Spesial: Tombol Vokal (Warna Berbeda) */
+        .key.vowel {
+            background-color: #ffedcc;
+            border-color: #ffcc80;
+        }
+
+        .key.vowel:hover {
+            background-color: #ffe0b3;
+        }
+
+        /* Spesial: Tombol Fungsi (Lebih Besar) */
+        .key.wide {
+            grid-column: span 2;
+            background-color: #4a3721;
+            color: #fff;
+        }
+
+        .key.wide:hover {
+            background-color: #5f4a31;
+        }
+
+        /* Spesial: Tombol Space (Paling Besar) */
+        .key.space {
+            grid-column: span 6;
+            background-color: #f4e8d1;
+            color: #4a3721;
+        }
+
+        .key.space:hover {
+            background-color: #e6d8c0;
+        }
+
+        /* Responsivitas untuk layar kecil */
+        @media (max-width: 600px) {
+            #keyboard {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 5px;
+                padding: 10px;
+            }
+            .key {
+                font-size: 1rem;
+                padding: 10px;
+            }
+            .key.wide { grid-column: span 1; }
+            .key.space { grid-column: span 3; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mesin Ketik Sunda Nuswantara</h1>
+
+    <div id="display-container">
+        <textarea id="display" placeholder="Seratkeun manuskrip di dieu..."></textarea>
+    </div>
+
+    <div id="keyboard">
+        <div class="key vowel" onclick="pressKey('a')">A</div>
+        <div class="key vowel" onclick="pressKey('i')">I</div>
+        <div class="key vowel" onclick="pressKey('u')">U</div>
+        <div class="key vowel" onclick="pressKey('é')">É</div>
+        <div class="key vowel" onclick="pressKey('o')">O</div>
+        <div class="key vowel" onclick="pressKey('e')">E</div>
+        <div class="key vowel" onclick="pressKey('eu')">EU</div>
+        <div class="key" onclick="pressKey('n')">N</div>
+        <div class="key" onclick="pressKey('k')">K</div>
+        <div class="key" onclick="pressKey('m')">M</div>
+
+        <div class="key" onclick="pressKey('s')">S</div>
+        <div class="key" onclick="pressKey('t')">T</div>
+        <div class="key" onclick="pressKey('d')">D</div>
+        <div class="key" onclick="pressKey('l')">L</div>
+        <div class="key" onclick="pressKey('p')">P</div>
+        <div class="key" onclick="pressKey('j')">J</div>
+        <div class="key" onclick="pressKey('h')">H</div>
+        <div class="key" onclick="pressKey('w')">W</div>
+        <div class="key" onclick="pressKey('r')">R</div>
+        <div class="key" onclick="pressKey('ng')">NG</div>
+
+        <div class="key" onclick="pressKey('c')">C</div>
+        <div class="key" onclick="pressKey('g')">G</div>
+        <div class="key" onclick="pressKey('b')">B</div>
+        <div class="key" onclick="pressKey('y')">Y</div>
+        <div class="key" onclick="pressKey('ny')">NY</div>
+        <div class="key" onclick="pressKey(',')">,</div>
+        <div class="key" onclick="pressKey('.')">.</div>
+        <div class="key wide" onclick="pressKey('Backspace')">Hapus</div>
+
+        <div class="key space" onclick="pressKey(' ')">Spasi (Aksara)</div>
+        <div class="key wide" onclick="pressKey('Enter')">Baris Anyar</div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        function pressKey(key) {
+            // Logika untuk tombol fungsi
+            if (key === 'Backspace') {
+                display.value = display.value.slice(0, -1);
+            } else if (key === 'Enter') {
+                display.value += '\n';
+            } else {
+                // Tambahkan karakter biasa
+                display.value += key;
+            }
+            
+            // Fokuskan kembali ke textarea agar user bisa langsung lanjut mengetik (jika pakai keyboard fisik)
+            display.focus();
+            
+            // Secara otomatis scroll ke bawah jika teks melebihi area
+            display.scrollTop = display.scrollHeight;
+        }
+
+        // Opsional: Hubungkan keyboard fisik (A-Z) ke fungsi virtual (jika perlu untuk testing cepat)
+        /*
+        document.addEventListener('keydown', (event) => {
+            const allowedKeys = 'abcdefghijklmnopqrstuvwxyzéëöû,. ';
+            if (allowedKeys.includes(event.key.toLowerCase())) {
+                pressKey(event.key);
+                event.preventDefault(); // Mencegah input ganda dari keyboard fisik
+            } else if (event.key === 'Backspace' || event.key === 'Enter') {
+                pressKey(event.key);
+                event.preventDefault();
+            }
+        });
+        */
+    </script>
+</body>
+</html>

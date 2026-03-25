@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="su">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara - Auto Restorer</title>
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', Tahoma, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 50px 20px; margin: 0; }
+        h2 { color: #58a6ff; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px;}
+        p { color: #8b949e; font-size: 0.9rem; margin-bottom: 30px; text-align: center; max-width: 600px; }
+        
+        .container { width: 100%; max-width: 900px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .box { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
+        .box-title { color: #8b949e; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #30363d; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        textarea { width: 100%; height: 250px; background: transparent; border: none; color: #c9d1d9; font-size: 1.1rem; resize: none; outline: none; line-height: 1.6; font-family: inherit; }
+        
+        #output { height: 250px; overflow-y: auto; font-size: 1.1rem; line-height: 1.6; color: #8b949e; white-space: pre-wrap; padding-bottom: 40px; }
+        
+        .copy-btn { background: #238636; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: bold; transition: 0.2s; }
+        .copy-btn:hover { background: #2ea043; }
+
+        /* LAYER 1: SUNDA BUHUN (HIJAU + TOOLTIP) */
+        .buhun-word { 
+            color: #3fb950; 
+            font-weight: bold; 
+            cursor: help; 
+            position: relative; 
+            border-bottom: 1px dashed #3fb950; 
+        }
+        .buhun-word:hover::after {
+            content: attr(data-meaning);
+            position: absolute; 
+            top: 130%; 
+            left: 0; 
+            background: #3fb950; 
+            color: #0d1117; 
+            padding: 6px 12px; 
+            border-radius: 5px; 
+            font-size: 0.8rem; 
+            white-space: nowrap; 
+            font-weight: bold; 
+            z-index: 100;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* LAYER 2: SUNDA MODERN (BIRU CYAN) */
+        .modern-sunda { 
+            color: #58a6ff; 
+            font-weight: 500; 
+        } 
+
+        /* LAYER 3: ORISINAL INDONESIA akan otomatis pakai warna default #8b949e (Abu-abu) */
+
+        .legend { margin-top: 20px; font-size: 0.85rem; color: #8b949e; display: flex; gap: 15px; justify-content: center; width: 100%; }
+        .legend span { display: flex; align-items: center; gap: 5px; }
+        .dot-hijau { width: 10px; height: 10px; background: #3fb950; border-radius: 50%; }
+        .dot-biru { width: 10px; height: 10px; background: #58a6ff; border-radius: 50%; }
+        .dot-abu { width: 10px; height: 10px; background: #8b949e; border-radius: 50%; }
+
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <h2>Kamus Buhun dan Sunda Modern (Auto-Restorer)</h2>
+    <p>Sistem Akan Mendeteksi 3 Lapis: Memisahkan Bahasa Buhun Asli, Sunda Modern, dan Kalimat dalam Bahasa Asli.</p>
+
+    <div class="container">
+        <div class="box">
+            <div class="box-title">
+                <span>Input Pola Pikir Modern</span>
+            </div>
+            <textarea id="inputTeks" placeholder="Ketik di sini... (misal: pagi ini saya sudah melakukan pekerjaan di kantor)"></textarea>
+        </div>
+
+        <div class="box">
+            <div class="box-title">
+                <span>Restorasi Frekuensi (Sunda Nuswantara)</span>
+                <button class="copy-btn" onclick="copyResult()">Copy Hasil</button>
+            </div>
+            <div id="output">Teks restorasi akan muncul di sini...</div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <span><div class="dot-hijau"></div> Sunda Buhun (Core)</span>
+        <span><div class="dot-biru"></div> Sunda Modern (Daily)</span>
+        <span><div class="dot-abu"></div> Kata Orisinal (Unregistered)</span>
+    </div>
+
+    <script>
+        const input = document.getElementById('inputTeks');
+        const output = document.getElementById('output');
+
+    // ==========================================
+    // LAPIS 1: KAMUS BUHUN (KONSEP & SISTEM UTAMA) -> WARNA HIJAU
+    // ==========================================
+        const buhunDict = {
+    // ==========================================
+    // KATEGORI: INFRASTRUKTUR & JARINGAN (NETWORK)
+    // ==========================================
+    "global": { term: "Kesetaraan Antarbangsa", meaning: "[Network] Era Inter-National Equality" },
+    "internasional": { term: "Kesetaraan Antarbangsa", meaning: "[Network] Era Inter-National Equality" },
+    "jaringan": { term: "Siliwangi", meaning: "[P2P Network] Koneksi Resonansi" },
+    "koneksi": { term: "Siliwangi", meaning: "[P2P Network] Koneksi Resonansi" },
+    "blockchain": { term: "Runtuyan", meaning: "[Immutable Ledger] Silsilah Data Terikat" },
+    "rantai": { term: "Runtuyan", meaning: "[Immutable Ledger] Silsilah Data Terikat" },
+    "komunitas": { term: "Balad", meaning: "[Node Cluster] Kumpulan Entitas Setara" },
+    "server": { term: "Dayeuh", meaning: "[Main Node] Titik Tumpu Komunal" },
+
+    // ==========================================
+    // KATEGORI: SISTEM, PROTOKOL & KEAMANAN (CORE OS)
+    // ==========================================
+    "sistem": { term: "Siksa", meaning: "[Algoritma] Parameter Keseimbangan Ekosistem" },
+    "aturan": { term: "Siksa", meaning: "[Algoritma] Parameter Keseimbangan Ekosistem" },
+    "protokol": { term: "Tali Paranti", meaning: "[SOP] Standar Operasional Baku" },
+    "standar": { term: "Tali Paranti", meaning: "[SOP] Standar Operasional Baku" },
+    "keamanan": { term: "Pamali", meaning: "[Firewall] Protokol Pencegahan Crash" },
+    "enkripsi": { term: "Buni", meaning: "[Encrypted] Tersembunyi & Terlindungi" },
+    "aman": { term: "Pageuh", meaning: "[Secured] Terkunci Kuat" },
+    "bug": { term: "Mala", meaning: "[Glitch/Malware] Distorsi/Kotoran Sistem" },
+    "error": { term: "Mala", meaning: "[Glitch/Malware] Distorsi/Kotoran Sistem" },
+    "virus": { term: "Mala", meaning: "[Glitch/Malware] Distorsi/Kotoran Sistem" },
+    "update": { term: "Sampurna", meaning: "[Patch/Update] Proses Pemurnian Kode" },
+    "upgrade": { term: "Sampurna", meaning: "[Patch/Update] Proses Pemurnian Kode" },
+    "format": { term: "Pralaya", meaning: "[Wipe Data] Daur Ulang Sistem Total" },
+    "hapus": { term: "Lebur", meaning: "[Delete] Mengembalikan ke Ketiadaan" },
+
+    // ==========================================
+    // KATEGORI: DATA, STORAGE & TRANSAKSI (WALLET)
+    // ==========================================
+    "database": { term: "Kabuyutan", meaning: "[Data Center] Arsip Pengetahuan Murni" },
+    "arsip": { term: "Kabuyutan", meaning: "[Data Center] Arsip Pengetahuan Murni" },
+    "memori": { term: "Kropak", meaning: "[Storage] Media Penyimpanan Data" },
+    "storage": { term: "Kropak", meaning: "[Storage] Media Penyimpanan Data" },
+    "transaksi": { term: "Silih", meaning: "[P2P Transfer] Pertukaran Energi/Aset" },
+    "transfer": { term: "Silih", meaning: "[P2P Transfer] Pertukaran Energi/Aset" },
+    "asli": { term: "Buhun", meaning: "[Source Code] Belum Terkontaminasi" },
+    "original": { term: "Buhun", meaning: "[Source Code] Belum Terkontaminasi" },
+    "pedoman": { term: "Darma", meaning: "[Documentation] Panduan Tugas & Fungsi" },
+    "pesan": { term: "Carita", meaning: "[Log/Message] Rekam Jejak Data" },
+
+    // ==========================================
+    // KATEGORI: USER, UI/UX & KESADARAN (FRONT-END)
+    // ==========================================
+    "saya": { term: "Aing", meaning: "[Root User] Kesadaran Utama" },
+    "kamu": { term: "Sia", meaning: "[Client Node] Entitas Setara" },
+    "user": { term: "Rupa", meaning: "[Identity] Wujud Digital Pengguna" },
+    "profil": { term: "Rupa", meaning: "[Identity] Wujud Digital Pengguna" },
+    "akun": { term: "Rupa", meaning: "[Identity] Wujud Digital Pengguna" },
+    "developer": { term: "Bujangga", meaning: "[Engineer] Perangkai Sandi/Kode" },
+    "programmer": { term: "Bujangga", meaning: "[Engineer] Perangkai Sandi/Kode" },
+    "dashboard": { term: "Tepas", meaning: "[Home/Dashboard] Gerbang Akses Utama" },
+    "beranda": { term: "Tepas", meaning: "[Home/Dashboard] Gerbang Akses Utama" },
+    "layar": { term: "Eunteung", meaning: "[Display/UI] Refleksi Visual Sistem" },
+    "monitor": { term: "Eunteung", meaning: "[Display/UI] Refleksi Visual Sistem" },
+    "proses": { term: "Lampah", meaning: "[Executing] Pergerakan Algoritma" },
+    "loading": { term: "Lampah", meaning: "[Executing] Pergerakan Algoritma" },
+    "waktu": { term: "Wanci", meaning: "[Timestamp] Momentum Siklus" },
+    "jam": { term: "Wanci", meaning: "[Timestamp] Momentum Siklus" },
+    "energi": { term: "Premana", meaning: "[Power] Energi Kesadaran Penggerak" },
+    "power": { term: "Premana", meaning: "[Power] Energi Kesadaran Penggerak" },
+    "sinkron": { term: "Rampak", meaning: "[Sync] Keselarasan Momentum" },
+    "selaras": { term: "Rampak", meaning: "[Sync] Keselarasan Momentum" },
+    "harmoni": { term: "Rahayu", meaning: "[Resonance] Frekuensi Selaras" },
+    "stabil": { term: "Rahayu", meaning: "[Resonance] Frekuensi Selaras" },
+    "pusat": { term: "Galuh", meaning: "[Core Server] Inti Gravitasi" },
+    "inti": { term: "Galuh", meaning: "[Core Server] Inti Gravitasi" },
+    
+    // ==========================================
+    // KATEGORI: AKTIVITAS HARIAN & RUTINITAS
+    // ==========================================
+    "makan": { term: "Mangan", meaning: "[Recharge] Mengisi Ulang Energi Fisik" },
+    "sarapan": { term: "Mangan", meaning: "[Recharge] Mengisi Ulang Energi Fisik" },
+    "minum": { term: "Nginum", meaning: "[Hydrate] Mengalirkan Cairan Hidup" },
+    "tidur": { term: "Turu", meaning: "[Sleep/Hibernate] Menjeda Kesadaran Fisik" },
+    "istirahat": { term: "Ngaso", meaning: "[Idle] Menurunkan Frekuensi Kerja" },
+    "bangun": { term: "Nyaring", meaning: "[Wake] Mengaktifkan Kembali Kesadaran" },
+    "pergi": { term: "Lumampah", meaning: "[Execute] Bergerak Sesuai Tujuan" },
+    "jalan": { term: "Lumampah", meaning: "[Execute] Bergerak Sesuai Tujuan" },
+    "berangkat": { term: "Lumampah", meaning: "[Execute] Bergerak Sesuai Tujuan" },
+    "pulang": { term: "Mulang", meaning: "[Return] Kembali ke Titik Keseimbangan" },
+    "kembali": { term: "Mantuk", meaning: "[Return] Kembali ke Titik Awal" },
+    "kerja": { term: "Darma", meaning: "[Task] Melaksanakan Fungsi/Kewajiban" },
+    "tugas": { term: "Darma", meaning: "[Task] Melaksanakan Fungsi/Kewajiban" },
+    "gawe": { term: "Darma", meaning: "[Task] Melaksanakan Fungsi/Kewajiban" },
+    "cari": { term: "Néang", meaning: "[Search/Query] Melacak Keberadaan" },
+
+    // ==========================================
+    // KATEGORI: INTERAKSI SOSIAL & BENDA
+    // ==========================================
+    "bicara": { term: "Saur", meaning: "[Broadcast] Memancarkan Getaran Suara" },
+    "ngobrol": { term: "Carita", meaning: "[Communicate] Sinkronisasi Informasi" },
+    "ngomong": { term: "Ucap", meaning: "[Output] Deklarasi Perintah/Pesan" },
+    "teman": { term: "Kanca", meaning: "[Peer] Entitas Penyambung Resonansi" },
+    "sahabat": { term: "Mitra", meaning: "[Trusted Peer] Node Tervalidasi" },
+    "kawan": { term: "Balad", meaning: "[Group] Kesatuan Entitas" },
+    "keluarga": { term: "Baraya", meaning: "[Local Host] Ikatan Tanggung Jawab Sama" },
+    "uang": { term: "Pirak", meaning: "[Token/Value] Alat Tukar Energi" },
+    "bayar": { term: "Silih", meaning: "[Transaction] Pertukaran Nilai" },
+    "baju": { term: "Kampuh", meaning: "[Shield/Skin] Pelindung Wujud Fisik" },
+    "pakaian": { term: "Sinjang", meaning: "[Shield/Skin] Pelindung Wujud Fisik" },
+    "rumah": { term: "Mandala", meaning: "[Home Base] Ruang Lingkup Pribadi" },
+    "tempat": { term: "Pataruman", meaning: "[Location/Directory] Titik Kumpul" },
+
+    // ==========================================
+    // KATEGORI: KONDISI, RASA & VALIDASI
+    // ==========================================
+    "benar": { term: "Estu", meaning: "[Valid/True] Akurat Sesuai Ukuran" },
+    "betul": { term: "Estu", meaning: "[Valid/True] Akurat Sesuai Ukuran" },
+    "pas": { term: "Estu", meaning: "[Valid/True] Akurat Sesuai Ukuran" },
+    "salah": { term: "Sasar", meaning: "[Invalid/False] Keluar dari Parameter" },
+    "keliru": { term: "Gingsir", meaning: "[Error] Bergeser dari Ukuran" },
+    "baik": { term: "Utama", meaning: "[High Quality] Kualitas Getaran Tinggi" },
+    "bagus": { term: "Hadé", meaning: "[Good] Selaras dengan Kebutuhan" },
+    "mantap": { term: "Hadé", meaning: "[Good] Selaras dengan Kebutuhan" },
+    "jelek": { term: "Papa", meaning: "[Low Quality] Getaran Kotor/Rendah" },
+    "buruk": { term: "Mala", meaning: "[Corrupted] Mengandung Distorsi" },
+    "suka": { term: "Asih", meaning: "[Like/Accept] Tarikan Gravitasi Positif" },
+    "cinta": { term: "Tresna", meaning: "[Bind] Ikatan Resonansi Kuat" },
+    "sayang": { term: "Deudeuh", meaning: "[Care] Pemeliharaan Energi" },
+    "marah": { term: "Bendu", meaning: "[Overheat] Gejolak Energi Panas" },
+    "emosi": { term: "Bendu", meaning: "[Overheat] Gejolak Energi Panas" },
+    "senang": { term: "Bungah", meaning: "[Optimal] Ekspansi Frekuensi Positif" },
+    "sedih": { term: "Sungkawa", meaning: "[Low Power] Penurunan Frekuensi" },
+    "bingung": { term: "Hémeng", meaning: "[Unresolved] Kegagalan Kompilasi Data" },
+
+    // ==========================================
+    // KATEGORI: WAKTU & SIKLUS ALAM
+    // ==========================================
+    "pagi": { term: "Isuk", meaning: "[Init] Fase Awal Siklus Putaran" },
+    "siang": { term: "Maha", meaning: "[Peak] Titik Puncak Energi Matahari" },
+    "sore": { term: "Lingsir", meaning: "[Cooldown] Penurunan Intensitas Energi" },
+    "malam": { term: "Peuting", meaning: "[Sleep Mode] Fase Penyerapan Gelap" },
+    "hari": { term: "Poé", meaning: "[Cycle] Satu Putaran Penuh" },
+    "besok": { term: "Isukan", meaning: "[Next Cycle] Putaran Berikutnya" },
+    "kemarin": { term: "Mangkukna", meaning: "[Prev Cycle] Putaran Sebelumnya" },
+    "sekarang": { term: "Kiwari", meaning: "[Current] Momentum Saat Ini" },
+
+    // ==========================================
+    // 1. SANGHYANG SASANA MAHA GURU
+    // KATEGORI: HAK AKSES, AUTENTIKASI & USER ROLES
+    // ==========================================
+    "admin": { term: "Guru", meaning: "[Admin/Superuser] Pemegang Otoritas & Aturan" },
+    "superuser": { term: "Guru", meaning: "[Admin/Superuser] Pemegang Otoritas & Aturan" },
+    "pengguna": { term: "Siswa", meaning: "[Standard User] Node dengan Akses Terbatas" },
+    "guest": { term: "Siswa", meaning: "[Standard User] Node dengan Akses Terbatas" },
+    "root": { term: "Maha", meaning: "[Root Access] Tingkat Hak Akses Tak Terbatas (Absolute)" },
+    "mutlak": { term: "Maha", meaning: "[Root Access] Tingkat Hak Akses Tak Terbatas (Absolute)" },
+    "domain": { term: "Sasana", meaning: "[Workspace/Environment] Ruang Lingkup Aturan Baku" },
+    "workspace": { term: "Sasana", meaning: "[Workspace/Environment] Ruang Lingkup Aturan Baku" },
+    "peran": { term: "Pancén", meaning: "[Role] Alokasi Fungsi dan Hak Akses" },
+    "role": { term: "Pancén", meaning: "[Role] Alokasi Fungsi dan Hak Akses" },
+    "batas": { term: "Wates", meaning: "[Quota/Limit] Batasan Parameter Akses" },
+    "limit": { term: "Wates", meaning: "[Quota/Limit] Batasan Parameter Akses" },
+    "peringatan": { term: "Pacuan", meaning: "[Alert/Warning] Notifikasi Pembatasan/Larangan" },
+    "warning": { term: "Pacuan", meaning: "[Alert/Warning] Notifikasi Pembatasan/Larangan" },
+    "perintah": { term: "Pituduh", meaning: "[Command/Prompt] Instruksi Eksekusi dari Admin" },
+    "instruksi": { term: "Pituduh", meaning: "[Command/Prompt] Instruksi Eksekusi dari Admin" },
+    "izin": { term: "Widi", meaning: "[Permission/Grant] Persetujuan Akses Masuk" },
+    "akses": { term: "Widi", meaning: "[Permission/Grant] Persetujuan Akses Masuk" },
+    "tolak": { term: "Cacad", meaning: "[Access Denied] Validasi Gagal/Ditolak" },
+    "banned": { term: "Cacad", meaning: "[Access Denied] Validasi Gagal/Ditolak" },
+    
+    // ==========================================
+    // 2. SANGHYANG HAYU
+    // KATEGORI: BOOTING, KERNEL, VIRTUAL MACHINE & LIFECYCLE
+    // ==========================================
+    "boot": { term: "Gelar", meaning: "[Boot/Initialize] Proses Awal Bermanifestasi" },
+    "startup": { term: "Gelar", meaning: "[Boot/Initialize] Proses Awal Bermanifestasi" },
+    "kernel": { term: "Pancer", meaning: "[Kernel] Poros Tengah Penggerak Sistem" },
+    "core": { term: "Pancer", meaning: "[Kernel] Poros Tengah Penggerak Sistem" },
+    "online": { term: "Hurip", meaning: "[Online/Active] Sistem Dialiri Energi Hidup" },
+    "aktif": { term: "Hurip", meaning: "[Online/Active] Sistem Dialiri Energi Hidup" },
+    "on": { term: "Hurip", meaning: "[Online/Active] Sistem Dialiri Energi Hidup" },
+    "offline": { term: "Tilem", meaning: "[Offline/Shutdown] Menarik Kembali Energi ke Asal" },
+    "mati": { term: "Tilem", meaning: "[Offline/Shutdown] Menarik Kembali Energi ke Asal" },
+    "shutdown": { term: "Tilem", meaning: "[Offline/Shutdown] Menarik Kembali Energi ke Asal" },
+    "compile": { term: "Ngajadi", meaning: "[Compiling/Build] Menyatukan Kode Menjadi Wujud" },
+    "render": { term: "Ngajadi", meaning: "[Compiling/Build] Menyatukan Kode Menjadi Wujud" },
+    "build": { term: "Ngajadi", meaning: "[Compiling/Build] Menyatukan Kode Menjadi Wujud" },
+    "null": { term: "Suwung", meaning: "[Null/Void] Dimensi Kosong Tanpa Data" },
+    "kosong": { term: "Suwung", meaning: "[Null/Void] Dimensi Kosong Tanpa Data" },
+    "virtual": { term: "Maya", meaning: "[Virtual] Proyeksi Bayangan / Non-Fisik" },
+    "vm": { term: "Buana Maya", meaning: "[Virtual Machine] Ruang Lingkungan Simulasi" },
+    "environment": { term: "Buana", meaning: "[Environment/Realm] Ruang Dimensi Eksekusi" },
+    "layer": { term: "Pancadan", meaning: "[Layer/Tier] Tingkatan Dimensi Arsitektur" },
+    "tingkat": { term: "Pancadan", meaning: "[Layer/Tier] Tingkatan Dimensi Arsitektur" },
+    "creator": { term: "Nu Ngersakeun", meaning: "[Creator] Sang Pemrakarsa Sistem Absolut" },   
+        
+    // ==========================================
+    // 3. CARITA RATU PAKUAN
+    // KATEGORI: UI/UX, LAYOUT, DIREKTORI & VISUAL
+    // ==========================================
+    "desktop": { term: "Kadaton", meaning: "[Desktop/GUI] Ruang Utama Antarmuka" },
+    "beranda": { term: "Kadaton", meaning: "[Desktop/GUI] Ruang Utama Antarmuka" },
+    "folder": { term: "Pangkeng", meaning: "[Directory/Folder] Ruang Penyimpanan Spesifik" },
+    "direktori": { term: "Pangkeng", meaning: "[Directory/Folder] Ruang Penyimpanan Spesifik" },
+    "login": { term: "Lawang", meaning: "[Login/Gateway] Gerbang Autentikasi Masuk" },
+    "lockscreen": { term: "Sri Manganti", meaning: "[Lock Screen] Ruang Tunggu Sebelum Akses" },
+    "tema": { term: "Pulas", meaning: "[Theme/CSS] Atribut Warna dan Gaya Visual" },
+    "warna": { term: "Pulas", meaning: "[Theme/CSS] Atribut Warna dan Gaya Visual" },
+    "layout": { term: "Rarancang", meaning: "[Layout/Grid] Tata Letak Struktur Visual" },
+    "desain": { term: "Rarancang", meaning: "[Layout/Grid] Tata Letak Struktur Visual" },
+    "interface": { term: "Rupa", meaning: "[User Interface] Wujud Luar yang Tampak" },
+    "tampilan": { term: "Rupa", meaning: "[User Interface] Wujud Luar yang Tampak" },
+    "animasi": { term: "Rengkak", meaning: "[Animation/Motion] Pergerakan Elemen Visual" },
+    "transisi": { term: "Rengkak", meaning: "[Animation/Motion] Pergerakan Elemen Visual" },
+    "path": { term: "Lurung", meaning: "[Path/Breadcrumb] Jalur Penunjuk Lokasi File" },
+    "jalur": { term: "Lurung", meaning: "[Path/Breadcrumb] Jalur Penunjuk Lokasi File" },
+    "highlight": { term: "Téja", meaning: "[Highlight/Glow] Sorotan Cahaya Fokus" },
+    "fokus": { term: "Sawang", meaning: "[Focus/Select] Titik Perhatian Kursor" },
+    "klik": { term: "Sawang", meaning: "[Focus/Select] Titik Perhatian Kursor" },
+        
+    // ==========================================
+    // 4. SANGHYANG RAGA DEWATA
+    // KATEGORI: HARDWARE, SENSOR, POWER & SYSTEM MONITORING
+    // ==========================================
+    "hardware": { term: "Raga", meaning: "[Hardware] Wujud Fisik Perangkat" },
+    "perangkat": { term: "Raga", meaning: "[Hardware] Wujud Fisik Perangkat" },
+    "device": { term: "Raga", meaning: "[Hardware] Wujud Fisik Perangkat" },
+    "motherboard": { term: "Rangka", meaning: "[Mainboard] Papan Tulang Punggung Sistem" },
+    "mesin": { term: "Rangka", meaning: "[Mainboard] Papan Tulang Punggung Sistem" },
+    "kabel": { term: "Urat", meaning: "[Circuits/Bus] Jalur Transmisi Fisik" },
+    "sirkuit": { term: "Urat", meaning: "[Circuits/Bus] Jalur Transmisi Fisik" },
+    "ram": { term: "Budi", meaning: "[Volatile Memory] Ruang Proses Kesadaran Aktif" },
+    "memori_aktif": { term: "Budi", meaning: "[Volatile Memory] Ruang Proses Kesadaran Aktif" },
+    "baterai": { term: "Getih", meaning: "[Battery/Power] Cadangan Arus Daya Penggerak" },
+    "daya": { term: "Getih", meaning: "[Battery/Power] Cadangan Arus Daya Penggerak" },
+    "power": { term: "Getih", meaning: "[Battery/Power] Cadangan Arus Daya Penggerak" },
+    "kamera": { term: "Tingal", meaning: "[Camera/Vision] Sensor Penangkap Cahaya/Visual" },
+    "lensa": { term: "Tingal", meaning: "[Camera/Vision] Sensor Penangkap Cahaya/Visual" },
+    "mic": { term: "Dangu", meaning: "[Microphone] Sensor Penangkap Gelombang Suara" },
+    "audio": { term: "Dangu", meaning: "[Microphone] Sensor Penangkap Gelombang Suara" },
+    "suara": { term: "Sora", meaning: "[Speaker/Output] Pancaran Getaran Audio" },
+    "speaker": { term: "Sora", meaning: "[Speaker/Output] Pancaran Getaran Audio" },
+    "suhu": { term: "Hawa", meaning: "[Temperature] Tingkat Kerapatan Termal Perangkat" },
+    "panas": { term: "Hareudang", meaning: "[Overheat Alert] Suhu Melewati Batas Normal" },
+    "overheat": { term: "Hareudang", meaning: "[Overheat Alert] Suhu Melewati Batas Normal" },
+    "dingin": { term: "Tiis", meaning: "[Cool/Stable] Kondisi Suhu Mesin Stabil" },
+    "cooling": { term: "Ngaso", meaning: "[Cooling Fan] Proses Penurunan Suhu Fisik" },
+    "kipas": { term: "Ngaso", meaning: "[Cooling Fan] Proses Penurunan Suhu Fisik" },
+    "sensor": { term: "Indriya", meaning: "[Sensors] Reseptor Input dari Luar Sistem" },
+    "detak": { term: "Napas", meaning: "[Clock Speed] Denyut Irama Eksekusi Prosesor" },
+    "kecepatan": { term: "Napas", meaning: "[Clock Speed] Denyut Irama Eksekusi Prosesor" },
+         
+    // ==========================================
+    // 5. KAWIH PANGEUYEUKAN (ILMU MENENUN)
+    // KATEGORI: CODING, SCRIPTING, COMPILING & DEBUGGING
+    // ==========================================
+    "coding": { term: "Ngeuyeuk", meaning: "[Coding/Programming] Merangkai Baris Perintah" },
+    "programming": { term: "Ngeuyeuk", meaning: "[Coding/Programming] Merangkai Baris Perintah" },
+    "kode": { term: "Kantéh", meaning: "[String/Thread] Untaian Karakter Dasar" },
+    "script": { term: "Kantéh", meaning: "[String/Thread] Untaian Karakter Dasar" },
+    "string": { term: "Kantéh", meaning: "[String/Thread] Untaian Karakter Dasar" },
+    "algoritma": { term: "Suri", meaning: "[Algorithm/Logic] Sisir Pengatur Alur Logika" },
+    "logika": { term: "Suri", meaning: "[Algorithm/Logic] Sisir Pengatur Alur Logika" },
+    "framework": { term: "Jantra", meaning: "[Framework/IDE] Alat Pemintal Mesin Utama" },
+    "compiler": { term: "Jantra", meaning: "[Framework/IDE] Alat Pemintal Mesin Utama" },
+    "compile": { term: "Bungkeuleuk", meaning: "[Build/Bundle] Mengikat Kode Menjadi Wujud Fisik" },
+    "build": { term: "Bungkeuleuk", meaning: "[Build/Bundle] Mengikat Kode Menjadi Wujud Fisik" },
+    "variabel": { term: "Warna", meaning: "[Variable/Data] Entitas dengan Nilai Berbeda" },
+    "data": { term: "Warna", meaning: "[Variable/Data] Entitas dengan Nilai Berbeda" },
+    "bug": { term: "Buhud", meaning: "[Syntax Error/Bug] Untaian Kode Kusut/Tersendat" },
+    "error": { term: "Buhud", meaning: "[Syntax Error/Bug] Untaian Kode Kusut/Tersendat" },
+    "debug": { term: "Ngarucat", meaning: "[Debugging] Mengurai Kembali Alur Kode yang Kusut" },
+    "debugging": { term: "Ngarucat", meaning: "[Debugging] Mengurai Kembali Alur Kode yang Kusut" },
+    "loop": { term: "Ngagulung", meaning: "[Loop/Iteration] Perulangan Alur Eksekusi Tali" },
+    "looping": { term: "Ngagulung", meaning: "[Loop/Iteration] Perulangan Alur Eksekusi Tali" },
+    "function": { term: "Pola", meaning: "[Function/Method] Cetakan Instruksi Berulang" },
+    "fungsi": { term: "Pola", meaning: "[Function/Method] Cetakan Instruksi Berulang" }, 
+
+    // ==========================================
+    // KATEGORI: KATA TUNJUK, PREPOSISI & OPERATOR
+    // ==========================================
+    "ini": { term: "Ieu", meaning: "[Pointer] Entitas pada Titik Dekat" },
+    "itu": { term: "Éta", meaning: "[Pointer] Entitas pada Titik Jauh" },
+    "di": { term: "Di", meaning: "[Location] Titik Keberadaan Saat Ini" },
+    "ke": { term: "Ka", meaning: "[Direction] Vektor Tujuan" },
+    "dari": { term: "Ti", meaning: "[Origin] Titik Keberangkatan Data" },
+    "yang": { term: "Nu", meaning: "[Selector] Penunjuk Spesifik" },
+    "dan": { term: "Jeung", meaning: "[And/Operator] Penggabung Entitas" },
+    "atau": { term: "Atawa", meaning: "[Or/Operator] Pilihan Percabangan" },
+    "untuk": { term: "Pakeun", meaning: "[For/Purpose] Alokasi Tujuan" },
+    "dengan": { term: "Kalawan", meaning: "[With/Method] Parameter Penyerta" },
+            
+    // ==========================================
+    // KATEGORI: STATUS, NIAT & KONDISI (AUXILIARY VERBS)
+    // ==========================================
+    "ada": { term: "Aya", meaning: "[Exist/True] Terdeteksi dalam Sistem" },
+    "tidak": { term: "Taya", meaning: "[Null/False] Tidak Terdeteksi/Kosong" },
+    "gak": { term: "Taya", meaning: "[Null/False] Tidak Terdeteksi/Kosong" },
+    "bukan": { term: "Lain", meaning: "[Not/Negation] Negasi Identitas" },
+    "belum": { term: "Tacan", meaning: "[Pending] Status Menunggu Eksekusi" },
+    "sudah": { term: "Geus", meaning: "[Done] Status Telah Dieksekusi" },
+    "akan": { term: "Arék", meaning: "[Will/Future] Rencana Eksekusi" },
+    "mau": { term: "Karep", meaning: "[Intent] Kehendak/Niat Eksekusi" },
+    "bisa": { term: "Wasa", meaning: "[Able] Memiliki Kapasitas/Akses" },
+    "harus": { term: "Kudu", meaning: "[Required] Parameter Wajib Terpenuhi" },
+    "boleh": { term: "Meunang", meaning: "[Allowed] Parameter Bebas/Tembus" },
+    "buat": { term: "Pikeun", meaning: "[To/Make] Alokasi / Menciptakan" },
+    "bikin": { term: "Prak", meaning: "[Execute] Memulai Penciptaan" },
+    "tulisan": { term: "Aksara", meaning: "[Data/Script] Wujud Karakter atau Huruf" }, // [cite: 19, 108]
+    "huruf": { term: "Aksara", meaning: "[Data/Script] Wujud Karakter atau Huruf" }, // [cite: 19, 108]
+    "tabiat": { term: "Adat", meaning: "[Default/Behavior] Karakter Bawaan Sistem" }, // [cite: 10]
+    "emosi": { term: "Amarah", meaning: "[Overheat/Input] Kondisi Energi Meluap" }, // [cite: 26]
+    "nafsu": { term: "Ambekan", meaning: "[Drive] Hawa Penggerak atau Keinginan" }, // [cite: 28, 29]
+    "saudara": { term: "Baraya", meaning: "[Local Host] Ikatan Node/Entitas yang Terhubung" }, // [cite: 41, 157, 245]
+    "bahasa": { term: "Basa", meaning: "[Protocol] Media Komunikasi Data" }, // [cite: 43]
+    "saat": { term: "Basa", meaning: "[Momentum/Timestamp] Titik Waktu Tertentu" }, // [cite: 43, 75, 178]
+    "ketika": { term: "Basa", meaning: "[Condition] Logika Waktu yang Sedang Berjalan" }, // [cite: 43, 164]
+    "laba": { term: "Bati", meaning: "[Yield/Output] Hasil Keuntungan dari Proses" }, // [cite: 44]
+    "gerah": { term: "Bayeungyang", meaning: "[Overheat Sensor] Deteksi Kenaikan Suhu Ruang" }, // [cite: 42, 103, 300]
+    "habis": { term: "Beak", meaning: "[Empty/End] Kapasitas Data Nol" }, // [cite: 46, 103, 249]
+    "kabar": { term: "Beja", meaning: "[Log/Notification] Rekam Jejak Informasi" }, // [cite: 50, 273]
+    "berita": { term: "Beja", meaning: "[Log/Notification] Rekam Jejak Informasi" }, // [cite: 44, 50, 295]
+    "perasaan": { term: "Duriat", meaning: "[Core Intuition] Kedalaman Sensor Niat" }, // [cite: 92, 233]
+    "kota": { term: "Dayeuh", meaning: "[Main Node] Pusat Klaster Informasi" }, // [cite: 77, 149]
+    "sakti": { term: "Digjaya", meaning: "[Super Admin] Otoritas Tanpa Batas" }, // [cite: 82]
+    "ganti": { term: "Gentos", meaning: "[Switch/Replace] Perubahan Parameter atau Node" }, // [cite: 95]
+    "darah": { term: "Getih", meaning: "[Power/Current] Arus Daya Penggerak Perangkat" }, // [cite: 45, 96, 224]
+    "gerimis": { term: "Girimis", meaning: "[Latency Drop] Gangguan Sinyal Halus" }, // [cite: 100]
+    "bukit": { term: "Gugunungan", meaning: "[Sub-Node] Titik Transmisi Menengah" }, // [cite: 65, 102]
+    "guntur": { term: "Guludug", meaning: "[System Shock] Lonjakan Energi Mendadak" }, // [cite: 104]
+    "kabar": { term: "Iber", meaning: "[Data Packet] Informasi yang Terkirim" }, // [cite: 112]
+    "pagi": { term: "Isuk", meaning: "[Start Cycle] Awal Putaran Sistem" }, // [cite: 128, 222, 256, 302]
+    "halaman": { term: "Kaca", meaning: "[Page/Interface] Bagian dari Dokumentasi" }, // [cite: 133]
+    "pengetahuan": { term: "Kanyaho", meaning: "[Information Base] Kapasitas Data Tersimpan" }, // [cite: 142]
+    "istana": { term: "Karaton", meaning: "[Mainframe] Pusat Komando Tertinggi" }, // [cite: 144]
+    "kuasa": { term: "Kawasa", meaning: "[Privilege] Otoritas Eksekusi Perintah" }, // [cite: 148]
+    "gempa": { term: "Lini", meaning: "[System Vibration] Ketidakstabilan Struktur Data" }, // [cite: 168]
+    "terjadi": { term: "Lumangsung", meaning: "[Executing] Proses yang Sedang Berjalan" }, // [cite: 117, 174]
+    "masalah": { term: "Perkawis", meaning: "[Issue/Bug] Kendala yang Terdeteksi dalam Sistem" }, // [cite: 181, 277]
+    "rahasia": { term: "Rusiah", meaning: "[Encrypted/Private] Data yang Terkunci/Tersembunyi" }, // [cite: 191, 227]
+    "menang": { term: "Kenging", meaning: "[Success/Validated] Eksekusi Berhasil" }, // [cite: 192]
+    "pusat": { term: "Puseur", meaning: "[Main Hub] Titik Tengah Sirkuit" }, // [cite: 221]
+    "pemerintah": { term: "Pamarentah", meaning: "[Root Authority] Otoritas Pengatur Sistem" }, // [cite: 217, 228]
+    "tengah": { term: "Puseur", meaning: "[Core/Axis] Poros Utama Jalur Data" }, // [cite: 221]
+    "pemimpin": { term: "Pupuhu", meaning: "[Super Admin] Pengendali Hirarki Tertinggi" }, // [cite: 219]
+    "bayang": { term: "Sawang", meaning: "[Virtual/Projection] Refleksi Non-Fisik Data" }, // [cite: 248]
+    "sanggup": { term: "Sanggem", meaning: "[Capable/Ready] Kesiapan Resource Sistem" }, // [cite: 241, 293]
+    "sebagian": { term: "Sapalih", meaning: "[Partition] Pembagian Ruang Data" }, // [cite: 241, 248]
+    "sebelah": { term: "Gigir", meaning: "[Side/Peer] Node yang Berdampingan" }, // [cite: 241, 248, 260]
+    "setuju": { term: "Sapagodos", meaning: "[Commit/Agree] Validasi Perubahan Data" }, // [cite: 241]
+    "bintang": { term: "Bentang", meaning: "[Sub-Node] Titik Cahaya dalam Jaringan" }, // [cite: 38]
+    "berita": { term: "Bewara", meaning: "[Log/Notification] Rekam Jejak Informasi" }, // [cite: 44]
+    "surat keputusan": { term: "Bisluit", meaning: "[System Policy] Protokol Ketetapan Akses" }, // [cite: 51]
+    "sk": { term: "Bisluit", meaning: "[System Policy] Protokol Ketetapan Akses" }, // [cite: 51]
+    "banjir": { term: "Caah", meaning: "[Data Overflow] Lonjakan Trafik Melebihi Kapasitas" }, // [cite: 56]
+    "terang": { term: "Caang", meaning: "[Visible] Status Objek yang Terdeteksi" }, // [cite: 56]
+    "sehat": { term: "Cageur", meaning: "[System Optimal] Kondisi Perangkat Tanpa Bug" }, // [cite: 56]
+    "air": { term: "Cai", meaning: "[Fluid/Cooling] Aliran Penyeimbang Sistem" }, // [cite: 56]
+    "dekat": { term: "Caket", meaning: "[Low Latency] Jarak Resonansi Merapat" }, // [cite: 56, 75]
+    "pinggang": { term: "Cangkeng", meaning: "[Mid-Frame] Struktur Penyangga Tengah" }, // [cite: 58]
+    "cukup": { term: "Cekap", meaning: "[Requirement Met] Parameter Terpenuhi" }, // [cite: 67]
+    "cerita": { term: "Carita", meaning: "[Log/History] Dokumentasi Kronologi Data" }, // [cite: 62]
+    "dunia": { term: "Dunya", meaning: "[Environment] Ruang Lingkup Ekosistem" }, // [cite: 92]
+    "jelas": { term: "Eces", meaning: "[Verified] Status Data yang Terdekripsi Sempurna" }, // [cite: 83]
+    "ilmu": { term: "Elmu", meaning: "[Library] Kumpulan Algoritma dan Pengetahuan" }, // [cite: 86]
+    "cepat": { term: "Enggal", meaning: "[High Speed] Akselerasi Eksekusi Prosesor" }, // [cite: 90]
+    "sudah": { term: "Enggeus", meaning: "[Done] Status Tugas yang Selesai" }, // [cite: 91]
+    "arti": { term: "Hartos", meaning: "[Semantic] Nilai atau Terjemahan dari Data" }, // [cite: 105, 106]
+    "pagi buta": { term: "Janari", meaning: "[Early Boot] Fase Awal Sebelum Startup" }, // [cite: 123]
+    "nama": { term: "Jenengan", meaning: "[Identity/String] Label Identitas Objek" }, // [cite: 130]
+    "kiri": { term: "Kenca", meaning: "[L-Sector] Alokasi Sektor Bagian Kiri" }, // [cite: 136, 147]
+    "dapat": { term: "Kenging", meaning: "[Output] Hasil yang Diperoleh dari Query" }, // [cite: 136]
+    "harus": { term: "Kudu", meaning: "[Required] Parameter Wajib dalam Syntax" }, // [cite: 139]
+    "kuat": { term: "Kiat", meaning: "[Robust] Ketahanan Sistem terhadap Error" }, // [cite: 143]
+    "sekarang": { term: "Kiwari", meaning: "[Real-time] Momentum Eksekusi Saat Ini" }, // [cite: 147]
+    "masuk": { term: "Lebet", meaning: "[Input/Access] Izin Masuk ke Dalam Folder" }, // [cite: 154]
+    "obat": { term: "Landong", meaning: "[Patch/Fix] Perbaikan untuk Bug Sistem" }, // [cite: 163]
+    "pusing": { term: "Lieur", meaning: "[System Lag] Kondisi Overload pada Memori" }, // [cite: 165]
+    "maksud": { term: "Maksad", meaning: "[Intent/Objective] Niat atau Tujuan Eksekusi" }, // [cite: 171]
+    "berupa": { term: "Mangrupa", meaning: "[Type/Format] Wujud atau Format Objek" }, // [cite: 178, 197]
+    "saat": { term: "Mangsa", meaning: "[Timing] Periode atau Momentum Proses" }, // [cite: 178]
+    "kepala": { term: "Mastaka", meaning: "[Header/CPU] Bagian Inti Pemrosesan" }, // [cite: 182]
+    "raja": { term: "Narpati", meaning: "[Root/Admin] Pemegang Otoritas Tertinggi" }, // [cite: 193]
+    "teguh": { term: "Panceg", meaning: "[Stable/Static] Kondisi Sistem yang Konsisten" }, // [cite: 200]
+    "tugas": { term: "Pancen", meaning: "[Process/Job] Alokasi Fungsi yang Dijalankan" }, // [cite: 200]
+    "harga": { term: "Pangaos", meaning: "[Value/Weight] Nilai atau Bobot Resource" }, // [cite: 202]
+    "sudah": { term: "Parantos", meaning: "[Executed/Finished] Status Tugas Selesai" }, // [cite: 206]
+    "janji": { term: "Pasini", meaning: "[Protocol/Contract] Kesepakatan Antar Node" }, // [cite: 212]
+    "depan": { term: "Payun", meaning: "[Front-End] Bagian Antarmuka Depan" }, // [cite: 213]
+    "pusat": { term: "Puseur", meaning: "[Core/Hub] Titik Tengah Jaringan" }, // [cite: 221]
+    "gabung": { term: "Rampak", meaning: "[Merge/Join] Penggabungan antar Node atau Data" }, // [cite: 228]
+    "beres": { term: "Rampung", meaning: "[Success/Commit] Status Proses yang Selesai" }, // [cite: 231]
+    "perasaan": { term: "Raraosan", meaning: "[Core Intuition] Kedalaman Sensor Niat" }, // [cite: 232]
+    "tajam": { term: "Seukeut", meaning: "[Precision] Akurasi Tinggi dalam Eksekusi" }, // [cite: 237]
+    "simpan": { term: "Simpen", meaning: "[Save/Store] Mengamankan Data ke Memori" }, // [cite: 244]
+    "suara": { term: "Sora", meaning: "[Audio Output] Pancaran Getaran Informasi" }, // [cite: 248]
+    "semangat": { term: "Sumanget", meaning: "[Clock Speed] Energi Penggerak Eksekusi" }, // [cite: 250]
+    "sumpah": { term: "Supata", meaning: "[Verification] Validasi Mutlak pada Sistem" }, // [cite: 251]
+    "usaha": { term: "Tarekah", meaning: "[Attempt] Upaya Eksekusi Instruksi" }, // [cite: 255]
+    "tanda": { term: "Tawis", meaning: "[Signature] Verifikasi atau Penanda Sah" }, // [cite: 258]
+    "tahu": { term: "Terang", meaning: "[Awareness] Status Pengetahuan Sistem" }, // [cite: 262]
+    "sehat": { term: "Walagri", meaning: "[System Optimal] Kondisi Perangkat Stabil" }, // [cite: 287]
+    "waktu": { term: "Wanci", meaning: "[Timestamp] Momentum Siklus Perputaran" }, // [cite: 290]
+    "biaya": { term: "Waragad", meaning: "[Resource Cost] Konsumsi Energi Proses" }, // [cite: 294]
+    "nama": { term: "Wasta", meaning: "[Identity] Label Identitas Objek atau User" }, // [cite: 296]
+    "susah": { term: "Ese", meaning: "[Complex] Tingkat Kesulitan Algoritma Tinggi" }, // [cite: 93]
+    "satu": { term: "Iji", meaning: "[Single/Bit] Satuan Data Terkecil" }, // [cite: 97]
+    "hidup": { term: "Irup", meaning: "[Active/Running] Status Sistem yang Berjalan" }, // [cite: 98]
+    "bangun": { term: "Udang", meaning: "[Wake/Resume] Mengaktifkan Kembali dari Mode Idle" }, // [cite: 99]
+    "kepala": { term: "Ulu", meaning: "[Header/CPU] Pusat Instruksi Utama" }, // [cite: 100]
+    "nyala": { term: "Urung", meaning: "[On/Light] Status Indikator Aktif" }, // [cite: 101]
+    "dewa": { term: "Hyang", meaning: "[Core Entity] Entitas Pengatur Dimensi" }, // [cite: 102]
+    "gelar": { term: "Jujuluk", meaning: "[Title/Attribute] Atribut Identitas Entitas" }, // [cite: 111]
+    "tuan": { term: "Juragan", meaning: "[Superuser/Owner] Pemilik Otoritas Tertinggi" }, // [cite: 113]
+    "hantu": { term: "Jurig", meaning: "[Ghost Process] Proses yang Berjalan Tanpa UI" }, // [cite: 114]
+    "tanda": { term: "Tawis", meaning: "[Signature/Token] Verifikasi Otentikasi" }, // [cite: 259]
+    "teguh": { term: "Panceg", meaning: "[Static/Locked] Parameter yang Tidak Berubah" }, // [cite: 273]
+    "izin": { term: "Widi", meaning: "[Access Granted] Persetujuan Hak Akses" }, // [cite: 281]
+    "nama": { term: "Wasta", meaning: "[ID/String] Label Identitas Objek" }, // [cite: 296]
+
+        };
+
+        // ==========================================
+        // LAPIS 2: KAMUS SUNDA MODERN (KATA KERJA/SAMBUNG UMUM) -> TEKS BIASA
+        // ==========================================
+        const modernDict = {
+            // Kata Kerja (Verbs)
+            "melakukan": "ngalakukeun",
+            "pekerjaan": "pagawéan",
+            "mengerjakan": "migawé",
+            "berjalan": "leumpang",
+            "melihat": "ningali",
+            "mendengar": "ngadéngé",
+            "membawa": "mawa",
+            "mengambil": "nyokot",
+            "memberi": "méré",
+            "mencari": "néangan",
+            "membuka": "muka",
+            "menutup": "nutup",
+            "masuk": "asup",
+            "keluar": "kaluar",
+            "tahu": "nyaho",
+            "mengerti": "ngarti",
+            "paham": "ngarti",
+            "bilang": "ngomong",
+            "bicara": "ngomong",
+
+            // Keterangan / Sifat
+            "sangat": "pisan",
+            "lebih": "leuwih",
+            "paling": "paling",
+            "banyak": "loba",
+            "sedikit": "saeutik",
+            "besar": "badag",
+            "kecil": "leutik",
+            "cepat": "gancang",
+            "lambat": "lila",
+            "baru": "anyar",
+            "lama": "lila",
+            "bagus": "alus",
+            "jelek": "goréng",
+
+            // Kata Tanya & Sambung
+            "apa": "naon",
+            "siapa": "saha",
+            "kapan": "iraha",
+            "kenapa": "naha",
+            "kita": "urang",
+            "bagaimana": "kumaha",
+            "karena": "sabab",
+            "tapi": "tapi",
+            "kalau": "lamun",
+            "jika": "lamun",
+            "dan": "jeung",
+            "atau": "atawa",
+            "untuk": "keur",
+            "dari": "ti",
+            "ke": "ka",
+            "di": "di",
+            "sedang": "keur",
+            "lagi": "deui",
+            "juga": "ogé",
+            "hanya": "ngan",
+            "cuma": "ngan",
+            "semua": "kabéh",
+            "selalu": "salawasna",
+            
+            // ==========================================
+            // KOSA KATA MODERN (A - D)
+            // ==========================================
+            "abu": "kekebul", // [cite: 3]
+            "ada": "aya", // [cite: 4]
+            "adalah": "nyaeta", // [cite: 4]
+            "adik": "adi", // [cite: 4]
+            "air": "cai", // [cite: 5]
+            "akan": "bakal", // [cite: 9]
+            "anak": "budak", // [cite: 11]
+            "antara": "antawis", // [cite: 10]
+            "antar": "anteur", // [cite: 11]
+            "aneh": "aheng", // [cite: 14]
+            "apa": "naon", // [cite: 16]
+            "api": "seuneu", // [cite: 17]
+            "asam": "haseum", // [cite: 17]
+            "asin": "asin", // [cite: 18]
+            "atas": "luhur", // [cite: 19]
+            "ayam": "hayam", // [cite: 20]
+            "badan": "awak", // [cite: 43]
+            "bagian": "bagean", // [cite: 44]
+            "bagus": "alus", // [cite: 44]
+            "bahagia": "bagja", // [cite: 44]
+            "bahu": "taktak", // [cite: 45]
+            "baju": "baju", // [cite: 45]
+            "bambu": "awi", // [cite: 46]
+            "bangun": "hudang", // [cite: 46]
+            "bantu": "bantos", // [cite: 47]
+            "bapak": "bapa", // [cite: 50]
+            "baru": "anyar", // [cite: 50]
+            "barusan": "bieu", // [cite: 50]
+            "batas": "wates", // [cite: 51]
+            "batu": "batu", // [cite: 51]
+            "bawah": "handap", // [cite: 52]
+            "bayangan": "kalangkang", // [cite: 52]
+            "bayi": "orok", // [cite: 53]
+            "bebek": "entog", // [cite: 53]
+            "bekas": "urut", // [cite: 54]
+            "belakang": "tukang", // [cite: 54]
+            "benar": "bener", // [cite: 55]
+            "berangkat": "indit", // [cite: 56]
+            "berapa": "sabaraha", // [cite: 56]
+            "besar": "gede", // [cite: 60]
+            "besi": "beusi", // [cite: 60]
+            "bibir": "biwir", // [cite: 61]
+            "bintang": "bentang", // [cite: 62]
+            "bodoh": "bodo", // [cite: 63]
+            "buka": "muka", // [cite: 64]
+            "bukan": "lain", // [cite: 65]
+            "bulan": "bulan", // [cite: 65]
+            "bumi": "dunya", // [cite: 66]
+            "burung": "manuk", // [cite: 66]
+            "cabang": "cagak", // [cite: 61]
+            "celana": "calana", // [cite: 62]
+            "coba": "cobi", // [cite: 64]
+            "cuci": "ngumbah", // [cite: 66]
+            "cukup": "cekap", // [cite: 67]
+            "cuma": "ngan", // [cite: 67]
+            "dada": "dada", // [cite: 69]
+            "dagu": "gado", // [cite: 69]
+            "dari": "ti", // [cite: 71]
+            "datang": "datang", // [cite: 72]
+            "dekat": "deukeut", // [cite: 74]
+            "dengan": "jeung", // [cite: 75]
+            "depan": "hareup", // [cite: 75]
+            "desa": "lembur", // [cite: 76]
+            "dia": "manehna", // [cite: 76]
+            "dingin": "tiis", // [cite: 78]
+            "dua": "dua", // [cite: 79]
+            "dulu": "baheula", // [cite: 80]
+            "dunia": "dunya", // [cite: 81]
+            
+            // ==========================================
+            // KOSA KATA MODERN (E - M)
+            // ==========================================
+            "elang": "heulang", // [cite: 106]
+            "empat": "opat", // [cite: 106]
+            "enam": "genep", // [cite: 106]
+            "enak": "ngeunah", // [cite: 301]
+            "gabung": "rampak", // [cite: 107]
+            "garam": "uyah", // [cite: 107]
+            "garuk": "garo", // [cite: 107]
+            "gatal": "ateul", // [cite: 107]
+            "geli": "getek", // [cite: 108]
+            "gembira": "gumbira", // [cite: 108]
+            "gemuk": "bayuhyuh", // [cite: 108]
+            "gerah": "hareudang", // [cite: 108]
+            "gergaji": "ragaji", // [cite: 93]
+            "gerobak": "gorobak", // [cite: 93]
+            "gigi": "huntu", // [cite: 93]
+            "gila": "gelo", // [cite: 93]
+            "gelap": "poek", // [cite: 297]
+            "habis": "beak", // [cite: 103]
+            "hangat": "haneut", // [cite: 104]
+            "hari": "poe", // [cite: 104]
+            "harimau": "maung", // [cite: 105]
+            "hebat": "edun", // [cite: 105]
+            "hewan": "sasatoan", // [cite: 106]
+            "hidung": "irung", // [cite: 106]
+            "hijau": "hejo", // [cite: 107]
+            "hitam": "hideung", // [cite: 108]
+            "hutan": "leuweung", // [cite: 109]
+            "hati": "manah", // [cite: 173]
+            "ibu": "indung", // [cite: 110]
+            "ikan": "lauk", // [cite: 111]
+            "ilmu": "elmu", // [cite: 111]
+            "ingat": "inget", // [cite: 112]
+            "ingin": "hayang", // [cite: 112]
+            "istri": "pamajikan", // [cite: 114]
+            "itu": "eta", // [cite: 114]
+            "iya": "muhun", // [cite: 116]
+            "jadi": "jadi", // [cite: 115]
+            "jangan": "ulah", // [cite: 295]
+            "janda": "randa", // [cite: 121]
+            "janji": "jangji", // [cite: 122]
+            "jari": "ramo", // [cite: 122]
+            "jauh": "jauh", // [cite: 124]
+            "jelek": "goreng", // [cite: 101]
+            "jendela": "jandela", // [cite: 126]
+            "jijik": "geuleuh", // [cite: 127]
+            "jurang": "gawir", // [cite: 128]
+            "kaget": "reuwas", // [cite: 148]
+            "kain": "kaen", // [cite: 148]
+            "kakak": "lanceuk", // [cite: 149]
+            "kakek": "aki", // [cite: 149]
+            "kaki": "suku", // [cite: 150]
+            "kalah": "eleh", // [cite: 150]
+            "kalian": "maraneh", // [cite: 150]
+            "kamu": "maneh", // [cite: 151]
+            "kanan": "katuhu", // [cite: 152]
+            "kapan": "iraha", // [cite: 153]
+            "kasian": "karunya", // [cite: 154]
+            "kayak": "siga", // [cite: 155]
+            "kayu": "kai", // [cite: 155]
+            "kecil": "leutik", // [cite: 156]
+            "keluarga": "kulawarga", // [cite: 157]
+            "kemarin": "kamari", // [cite: 157]
+            "kepala": "sirah", // [cite: 159]
+            "keras": "teuas", // [cite: 160]
+            "keringat": "kesang", // [cite: 161]
+            "kertas": "keretas", // [cite: 162]
+            "kiri": "kenca", // [cite: 165]
+            "kucing": "ucing", // [cite: 150]
+            "kuku": "kuku", // [cite: 150]
+            "kumis": "kumis", // [cite: 151]
+            "kuning": "koneng", // [cite: 151]
+            "kurang": "kirang", // [cite: 153]
+            "kurus": "peot", // [cite: 154]
+            "lagu": "kawih", // [cite: 176]
+            "lain": "sejen", // [cite: 177]
+            "lalat": "laleur", // [cite: 178]
+            "lama": "lila", // [cite: 178]
+            "lapar": "lapar", // [cite: 180]
+            "lari": "lumpat", // [cite: 180]
+            "lebih": "leuwih", // [cite: 181]
+            "leher": "beuheung", // [cite: 182]
+            "lemah": "leuleus", // [cite: 182]
+            "lemari": "lomari", // [cite: 183]
+            "lidah": "letah", // [cite: 184]
+            "lihat": "tempo", // [cite: 184]
+            "lupa": "poho", // [cite: 215]
+            "lutut": "tuur", // [cite: 168]
+            "maaf": "hampura", // [cite: 182]
+            "main": "ulin", // [cite: 183]
+            "makan": "dahar", // [cite: 183]
+            "malam": "peuting", // [cite: 184]
+            "malas": "hoream", // [cite: 184]
+            "mandi": "mandi", // [cite: 184]
+            "manis": "amis", // [cite: 184]
+            "masa": "maenya", // [cite: 185]
+            "masalah": "perkawis", // [cite: 186]
+            "mata": "panon", // [cite: 187]
+            "matahari": "panonpoe", // [cite: 187]
+            "muka": "beungeut", // [cite: 297]
+            "melamun": "ngalamun", // [cite: 190]
+            "membangun": "ngawangun", // [cite: 190]
+            "menang": "meunang", // [cite: 192]
+            "menunggu": "ngadagoan", // [cite: 196]
+            "merah": "beureum", // [cite: 198]
+            "merasa": "ngarasa", // [cite: 199]
+            "minum": "nginum", // [cite: 187]
+            "muda": "ngora", // [cite: 188]
+            "mudah": "gampang", // [cite: 188]
+            "mungkin": "meureun", // [cite: 189]
+            
+            // ==========================================
+            // KOSA KATA MODERN (N - Z)
+            // ==========================================
+            "naik": "naek", // [cite: 197]
+            "nama": "ngaran", // [cite: 198]
+            "nangis": "ceurik", // [cite: 199]
+            "narik": "metot", // [cite: 200]
+            "nenek": "nini", // [cite: 200]
+            "ngantuk": "tunduh", // [cite: 200]
+            "ngilu": "linu", // [cite: 201]
+            "ngomong": "nyarios", // [cite: 201]
+            "nyala": "hurung", // [cite: 201]
+            "nyamuk": "reungit", // [cite: 201]
+            "nyanyi": "ngawih", // [cite: 201]
+            "nyapu": "sasapu", // [cite: 202]
+            "pagi": "isuk-isuk", // [cite: 222]
+            "paha": "pingping", // [cite: 223]
+            "panas": "panas", // [cite: 224]
+            "panjang": "panjang", // [cite: 224]
+            "pantat": "bujur", // [cite: 224]
+            "parit": "solokan", // [cite: 225]
+            "pasir": "keusik", // [cite: 225]
+            "payudara": "susu", // [cite: 225]
+            "pelangi": "layung", // [cite: 226]
+            "peluk": "keukeup", // [cite: 226]
+            "pemerintah": "pamarentah", // [cite: 228]
+            "pemukul": "paneunggeul", // [cite: 229]
+            "pendek": "pondok", // [cite: 230]
+            "pengantin": "panganten", // [cite: 231]
+            "penitih": "panitik", // [cite: 231]
+            "pensil": "patlot", // [cite: 231]
+            "perasaan": "raraosan", // [cite: 233]
+            "pergi": "indit", // [cite: 233]
+            "perjaka": "bujangan", // [cite: 234]
+            "permisi": "punten", // [cite: 234]
+            "perut": "beuteung", // [cite: 234]
+            "pesek": "pegek", // [cite: 235]
+            "piknik": "pelesir", // [cite: 235]
+            "pinggang": "cangkeng", // [cite: 236]
+            "pintar": "pinter", // [cite: 218]
+            "pintu": "panto", // [cite: 219]
+            "pipi": "pipi", // [cite: 219]
+            "pisau": "peso", // [cite: 219]
+            "pohon": "tangkal", // [cite: 220]
+            "polisi": "pulisi", // [cite: 220]
+            "pria": "lalaki", // [cite: 220]
+            "pukul": "teunggeul", // [cite: 221]
+            "pulang": "balik", // [cite: 221]
+            "punggung": "tonggong", // [cite: 222]
+            "pusat": "puseur", // [cite: 222]
+            "putih": "bodas", // [cite: 222]
+            "rambut": "buuk", // [cite: 228]
+            "rawa": "ranca", // [cite: 229]
+            "remaja": "rumaja", // [cite: 230]
+            "rias": "dandan", // [cite: 230]
+            "ribut": "pasea", // [cite: 230]
+            "rindang": "hieum", // [cite: 231]
+            "ruangan": "rohangan", // [cite: 231]
+            "rumah": "imah", // [cite: 231]
+            "ruwet": "rungsing", // [cite: 232]
+            "sabar": "sabar", // [cite: 233]
+            "sadar": "eling", // [cite: 195]
+            "sahabat": "sobat", // [cite: 246]
+            "sakit": "nyeri", // [cite: 238]
+            "salah": "lepat", // [cite: 238]
+            "sama": "sarua", // [cite: 239]
+            "sambal": "sambel", // [cite: 240]
+            "sampah": "runtah", // [cite: 241]
+            "sana": "ditu", // [cite: 241]
+            "sandal": "sendal", // [cite: 242]
+            "saring": "ayak", // [cite: 244]
+            "satu": "hiji", // [cite: 244]
+            "saudara": "dulur", // [cite: 245]
+            "sayang": "nyaah", // [cite: 246]
+            "sayap": "jangjang", // [cite: 246]
+            "sebagian": "sapalih", // [cite: 246]
+            "sebaliknya": "sabalikna", // [cite: 247]
+            "sebelas": "sabelas", // [cite: 248]
+            "sedang": "nuju", // [cite: 250]
+            "sedih": "tunggara", // [cite: 250]
+            "sehat": "walagri", // [cite: 250]
+            "sekarang": "ayeuna", // [cite: 251]
+            "selokan": "solokan", // [cite: 251]
+            "semangat": "sumanget", // [cite: 252]
+            "sembilan": "salapan", // [cite: 253]
+            "sempit": "heureut", // [cite: 253]
+            "semua": "kabeh", // [cite: 253]
+            "semut": "sireum", // [cite: 254]
+            "senang": "bungah", // [cite: 254]
+            "sepatu": "sapatu", // [cite: 254]
+            "sepuluh": "sepuluh", // [cite: 255]
+            "seratus": "saratu", // [cite: 255]
+            "seribu": "sarebu", // [cite: 256]
+            "siang": "beurang", // [cite: 256]
+            "siapa": "saha", // [cite: 257]
+            "silakan": "mangga", // [cite: 257]
+            "sobek": "soweh", // [cite: 259]
+            "sore": "sonten", // [cite: 260]
+            "suami": "salaki", // [cite: 261]
+            "sudah": "atos", // [cite: 262]
+            "sungai": "susukan", // [cite: 264]
+            "susah": "hese", // [cite: 264]
+            "tadi": "tadi", // [cite: 264]
+            "takut": "sieun", // [cite: 265]
+            "tampar": "cabok", // [cite: 265]
+            "tanah": "taneuh", // [cite: 266]
+            "tangan": "leungeun", // [cite: 268]
+            "tau": "nyaho", // [cite: 271]
+            "tegel": "tehel", // [cite: 272]
+            "telinga": "ceuli", // [cite: 274]
+            "teman": "babaturan", // [cite: 275]
+            "temu": "manggih", // [cite: 276]
+            "tentang": "perkawis", // [cite: 277]
+            "teras": "tepas", // [cite: 277]
+            "terbaik": "nyongcolang", // [cite: 278]
+            "tergoda": "kagoda", // [cite: 279]
+            "terkam": "gabrug", // [cite: 280]
+            "termasuk": "kaasup", // [cite: 281]
+            "tersenyum": "imut", // [cite: 282]
+            "tersesat": "kasasab", // [cite: 282]
+            "tertawa": "seuri", // [cite: 282]
+            "tiang": "tihang", // [cite: 282]
+            "tidak": "henteu", // [cite: 283]
+            "tiga": "tilu", // [cite: 285]
+            "tikus": "beurit", // [cite: 285]
+            "tiri": "tere", // [cite: 289]
+            "tinggi": "jangkung",
+            "tolong": "tulung", // [cite: 290]
+            "topi": "topi", // [cite: 292]
+            "tua": "kolot", // [cite: 292]
+            "tujuh": "tujuh", // [cite: 292]
+            "uang": "duit", // [cite: 280]
+            "uban": "huis", // [cite: 280]
+            "ular": "oray", // [cite: 281]
+            "ulat": "hileud", // [cite: 281]
+            "usia": "umur", // [cite: 283]
+            "wajah": "beungeut", // [cite: 287]
+            "wanita": "awewe", // [cite: 288]
+            "waria": "bencong", // [cite: 289]
+            "warna": "kelir", // [cite: 289]
+            "ya": "heueuh", // [cite: 294]
+            "yang": "anu", // [cite: 295]
+            "kakak": "akang", // [cite: 18, 149]
+    "bapak": "abah", // [cite: 7, 15]
+    "saya": "abdi", // [cite: 8, 298]
+    "berat": "abot", // [cite: 8, 43]
+    "belum": "acan", // [cite: 8, 88]
+    "pakaian": "acuk", // [cite: 9, 45]
+    "baju": "acuk", // [cite: 45]
+    "akan": "adeuk", // [cite: 11, 17]
+    "adik": "adi", // [cite: 11, 4]
+    "angkuh": "adigung", // [cite: 12]
+    "adil": "adil", // [cite: 12]
+    "tuan": "agan", // [cite: 13, 113]
+    "besar": "ageung", // [cite: 13, 60]
+    "sombong": "agul", // [cite: 14]
+    "bangga": "agul", // [cite: 14]
+    "aneh": "aheng", // [cite: 14, 15]
+    "ganjil": "aheng", // [cite: 15]
+    "srigala": "ajag", // [cite: 15]
+    "mengajukan": "ajeng", // [cite: 16]
+    "lompat": "ngajleng", // [cite: 17]
+    "melompat": "ngajleng", // [cite: 17]
+    "akar": "akar", // [cite: 18]
+    "kakek": "aki", // [cite: 19, 149]
+    "cincin": "ali", // [cite: 19, 54]
+    "tidak mau": "alim", // [cite: 20, 87]
+    "kecil": "alit", // [cite: 20, 157]
+    "almanak": "almenak", // [cite: 22]
+    "keponakan": "alo", // [cite: 23, 154]
+    "lempar": "alung", // [cite: 23, 35]
+    "bagus": "alus", // [cite: 24, 44]
+    "paman": "amang", // [cite: 25, 171]
+    "agar": "ambeh", // [cite: 27]
+    "marah": "ambek", // [cite: 28, 36]
+    "mencium": "ambeu", // [cite: 30]
+    "bau": "ambeu", // [cite: 31, 45]
+    "ibu": "ambu", // [cite: 32, 41]
+    "bermain": "ameng", // 
+    "manis": "amis", // [cite: 33, 184]
+    "tilam": "ampar", // [cite: 34]
+    "belanak": "balanak", // [cite: 35]
+    "lempar": "balang", // [cite: 35, 36, 171, 183, 240]
+    "melarat": "balangsak", // [cite: 35]
+    "miskin": "balangsak", // [cite: 35]
+    "dewasa": "baleg", // [cite: 36]
+    "pulang": "balik", // [cite: 36, 128, 221, 291]
+    "kolam": "balong", // [cite: 37, 88, 149, 163]
+    "tulang": "balung", // [cite: 37]
+    "katak": "bangkong", // [cite: 40, 155]
+    "ribet": "bangga", // [cite: 38]
+    "mancung": "bangir", // [cite: 38, 184]
+    "kurang ajar": "bangkawarah", // [cite: 39]
+    "bangkai": "bangke", // [cite: 39]
+    "bengkuang": "bangkuang", // [cite: 40]
+    "bangau": "bango", // [cite: 40]
+    "bantu": "bantos", // [cite: 40, 47, 289]
+    "bawa": "bantun", // [cite: 41, 45, 57, 222]
+    "tergores": "bared", // [cite: 41]
+    "bengkak": "bareuh", // [cite: 41]
+    "basi": "bari", // [cite: 42]
+    "begitukah": "baruk", // [cite: 42, 54]
+    "sariawan": "barusuh", // [cite: 43]
+    "basah": "baseuh", // [cite: 43]
+    "pesisir": "basisir", // [cite: 44]
+    "orang lain": "batur", // [cite: 44]
+    "bau": "bau", // [cite: 44, 45]
+    "paru-paru": "bayah", // [cite: 45]
+    "biawak": "bayawak", // [cite: 45]
+    "gemuk": "bayuhyuh", // [cite: 46, 109, 168]
+    "beras": "beas", // [cite: 46]
+    "kekasih": "bebene", // [cite: 46, 132]
+    "bandel": "bedegong", // [cite: 46]
+    "golok": "bedog", // [cite: 49, 94]
+    "perampok": "begal", // [cite: 49]
+    "kurus": "begang", // [cite: 49, 125, 201]
+    "bra": "beha", // [cite: 50, 64, 147]
+    "pendek": "beke", // [cite: 50, 230]
+    "bodoh": "belegug", // [cite: 51, 63, 94]
+    "tipu": "belejog", // [cite: 51]
+    "bayangan": "sawangan", // [cite: 53]
+    "bayi": "orok", // [cite: 53, 205]
+    "bebek": "entog", // [cite: 54, 112, 167]
+    "bekas": "tilas", // [cite: 54, 114, 274, 278]
+    "belakang": "pengker", // [cite: 55, 211, 260]
+    "belalang": "simeut", // [cite: 55, 243]
+    "belalang sembah": "congcorang", // [cite: 55, 59]
+    "benar": "leres", // [cite: 56, 159, 239]
+    "beol": "miceun", // [cite: 56, 84, 114, 172]
+    "berangkat": "mios", // [cite: 57, 112, 122, 171, 233]
+    "berapa": "sabaraha", // [cite: 57, 120, 234]
+    "berapi-api": "nyeuneu", // [cite: 57, 194]
+    "berdasarkan": "dumasar", // [cite: 58, 90]
+    "bergembira": "galumbira", // [cite: 59]
+    "bergoyang": "ngageol", // [cite: 59, 100, 196]
+    "berkaitan": "patali", // [cite: 60, 211]
+    "berkelahi": "gelut", // [cite: 60, 93]
+    "berkilau": "mencrang", // [cite: 61, 184]
+    "besar": "ageung", // [cite: 61, 155]
+    "besi": "beusi", // [cite: 61]
+    "besok": "enjing", // [cite: 61, 92, 128, 302]
+    "besok lusa": "pageto", // [cite: 61, 209]
+    "betet": "ekek", // [cite: 62, 85]
+    "betis": "bitis", // [cite: 62, 280]
+    "bibir": "lambey", // [cite: 62, 159, 204, 302]
+    "bidang": "widang", // [cite: 62, 281]
+    "bilangan": "wilangan", // [cite: 63, 282]
+    "bintang": "bentang", // [cite: 63]
+    "biru": "bulao", // [cite: 63]
+    "bisa": "tiasa", // [cite: 63, 270, 302]
+    "buka": "muka", // [cite: 64, 175, 213, 299]
+    "bukan": "sanes", // [cite: 65, 177, 241, 300]
+    "bukit": "gugunungan", // [cite: 65, 102, 210]
+    "bulan": "sasih", // [cite: 65, 247]
+    "bumi": "dunya", // [cite: 66, 81, 90, 232]
+    "burung": "manuk", // [cite: 66, 69, 112, 179]
+    "burung hantu": "bueuk", // [cite: 66]
+    "cuma": "mung", // [cite: 68, 176, 248]
+    "garuda": "dadali", // [cite: 69, 107]
+    "mau": "daek", // [cite: 70, 87, 91, 112, 188]
+    "tunggu": "dago", // [cite: 70, 114, 196, 263]
+    "makan": "dahar", // [cite: 71, 183, 221, 258]
+    "kakak ipar": "dahuan", // [cite: 72, 150]
+    "delapan": "dalapan", // [cite: 72, 75]
+    "sehat": "damang", // [cite: 73, 148, 288, 301]
+    "lampu": "damar", // [cite: 73, 74]
+    "kerja": "damel", // [cite: 74, 162]
+    "pipi": "damis", // [cite: 74, 219]
+    "telapak": "dampal", // [cite: 75, 273]
+    "rias": "dangdan", // [cite: 75, 229]
+    "ramah": "darehdeh", // [cite: 76, 247]
+    "tiba": "dongkap", // [cite: 77, 85, 88, 250]
+    "kota": "dayeuh", // [cite: 77, 149]
+    "dangkal": "de-et", // [cite: 78]
+    "dengar": "dangu", // [cite: 76, 79, 139]
+    "sayang": "deudeuh", // [cite: 79, 97, 154, 249]
+    "lagi": "deui", // [cite: 80, 243]
+    "dekat": "caket", // [cite: 56, 74, 80, 124, 260]
+    "lihat": "deuleu", // [cite: 80, 125, 128, 182, 189, 193]
+    "teman": "deungeun", // [cite: 81, 156, 236, 275]
+    "belajar": "diajar", // [cite: 7, 82]
+    "dinas": "dines", // [cite: 83]
+    "hari": "dinten", // [cite: 83, 105, 214]
+    "duduk": "diuk", // [cite: 57, 84, 301]
+    "topi": "dudukuy", // [cite: 88, 292]
+    "uang": "duit", // [cite: 88, 147, 180, 280]
+    "latah": "gehgeran", // [cite: 93]
+    "gilas": "geleng", // [cite: 93]
+    "lindas": "geleng", // [cite: 93]
+    "gila": "gelo", // [cite: 84, 93, 94]
+    "berkelahi": "gelut", // [cite: 60, 93]
+    "lahap": "rewog", // [cite: 94, 221]
+    "enam": "genep", // [cite: 76, 94, 108]
+    "tumpuk": "gepok", // [cite: 95]
+    "sakit": "gering", // [cite: 95, 231, 302]
+    "panggil": "nyalukan", // [cite: 95, 196]
+    "geli": "getek", // [cite: 86, 95, 108, 154]
+    "getar": "geter", // [cite: 96]
+    "jitak": "teke", // [cite: 96, 128, 262]
+    "rajin": "getol", // [cite: 96, 97]
+    "sayang": "deudeuh", // [cite: 79, 97, 154, 246, 280]
+    "gelang": "geulang", // [cite: 97]
+    "jijik": "geuleuh", // [cite: 97, 117, 128]
+    "jelita": "geulis", // [cite: 98, 301]
+    "gugup": "geumpeur", // [cite: 98]
+    "lebam": "geuneuk", // [cite: 98]
+    "tersiar": "geunjleung", // [cite: 98]
+    "getah": "geutah", // [cite: 98]
+    "sebelah": "gigir", // [cite: 99, 242, 248]
+    "samping": "gigir", // [cite: 99, 212, 237, 260]
+    "jerih": "gimir", // [cite: 99]
+    "goyang": "gitek", // [cite: 59, 100]
+    "anting": "giwang", // [cite: 100]
+    "rebus": "godog", // [cite: 100, 141]
+    "anjing": "gogog", // [cite: 15, 100]
+    "batuk": "gohgoy", // [cite: 101, 103]
+    "jelek": "butut", // [cite: 42, 101, 126]
+    "gerobak": "gorobag", // [cite: 93, 101]
+    "bangun tidur": "hudang", // [cite: 47, 102, 166]
+    "gusi": "gugusi", // [cite: 102]
+    "humor": "guguyon", // [cite: 102]
+    "goa": "guha", // [cite: 102]
+    "gula": "gula", // [cite: 94, 102, 145]
+    "gembira": "bungah", // [cite: 40, 46, 104, 254]
+    "gemilang": "gumilang", // [cite: 105]
+    "ketawa": "gumujeng", // [cite: 105, 241]
+    "gigau": "gundam", // [cite: 105]
+    "gemerlap": "gurilap", // [cite: 106]
+    "gadis": "parawan", // [cite: 107, 206, 293]
+    "garam": "uyah", // [cite: 107, 279]
+    "garuk": "garo", // [cite: 88, 107]
+    "gatal": "ateul", // [cite: 26, 108]
+    "gelitik": "eleketek", // [cite: 86, 108, 154]
+    "gemuk": "lintuh", // [cite: 46, 109, 168, 289]
+    "hutan rimba": "leuweung geledegan", // [cite: 110, 163]
+    "mandi": "ibak", // [cite: 111, 184, 245]
+    "menari": "ngageol", // [cite: 59, 112, 116, 196]
+    "embun": "ibun", // [cite: 112]
+    "jual": "ical", // [cite: 112]
+    "hilang": "leungit", // [cite: 112, 161]
+    "cicip": "icip", // [cite: 112]
+    "didekatkan": "idek", // [cite: 113]
+    "ini": "ieu", // [cite: 113, 300]
+    "rusuk": "iga", // [cite: 116]
+    "normal": "ilahar", // [cite: 117]
+    "rumah": "bumi", // [cite: 39, 67, 118, 223, 231]
+    "pantat": "bujur", // [cite: 37, 118, 224, 302]
+    "membayangkan": "ngimpleng", // [cite: 119, 190]
+    "senyum": "imut", // [cite: 119, 241, 282]
+    "incar": "incer", // [cite: 120]
+    "encok": "incok", // [cite: 120]
+    "cucu": "incu", // [cite: 120]
+    "pergi": "mios", // [cite: 56, 121, 122, 171, 233]
+    "ingat": "emut", // [cite: 88, 112, 121, 196]
+    "gelisah": "inggis", // [cite: 121, 125]
+    "ketek": "kelek", // [cite: 122, 134, 163]
+    "ternak": "ingon", // [cite: 123]
+    "pinjam": "injeum", // [cite: 124]
+    "ijuk": "injuk", // [cite: 124, 243]
+    "tokoh": "inohong", // [cite: 124]
+    "intan": "inteun", // [cite: 125]
+    "tipis": "ipis", // [cite: 125]
+    "kapan": "iraha", // [cite: 62, 125, 153]
+    "lihat": "ningal", // [cite: 44, 63, 125, 184, 189, 262, 263, 276]
+    "hidung": "pangambung", // [cite: 107, 125, 201, 300]
+    "geser": "ised", // [cite: 127]
+    "malu": "era", // [cite: 70, 127]
+    "memperhatikan": "istenan", // [cite: 127]
+    "wanita": "istri", // [cite: 33, 113, 127, 288]
+    "besok": "enjing", // [cite: 61, 92, 128, 129, 302]
+    "besok lusa": "pageto", // [cite: 61, 210]
+    "pagi-pagi": "enjing-enjing", // [cite: 68, 129, 222]
+    "itu": "eta", // [cite: 115, 129, 300]
+    "hitung": "etang", // [cite: 70, 130]
+    "teduh": "iuh", // [cite: 130]
+    "kecuali": "iwal", // [cite: 130]
+    "tersambar": "kabentar", // [cite: 132, 280]
+    "kebiri": "kabiri", // [cite: 132]
+    "kekasih": "kabogoh", // [cite: 42, 132]
+    "amat sangat": "kacida", // [cite: 133]
+    "awas": "hilik", // [cite: 98, 133]
+    "sambit": "kadek", // [cite: 134, 241]
+    "kedatangan": "kadongkapan", // [cite: 135]
+    "menyesal": "kaduhung", // [cite: 135, 198]
+    "kain": "layon", // [cite: 148, 150, 157]
+    "tergoda": "kagoda", // [cite: 136, 279]
+    "punya": "gaduh", // [cite: 52, 79, 136]
+    "kepada": "kahatur", // [cite: 136]
+    "kayu": "kai", // [cite: 136, 156]
+    "jejadian": "kajajaden", // [cite: 137]
+    "hamil": "reuneuh", // [cite: 137, 220]
+    "kelapa": "kalapa", // [cite: 138]
+    "utara": "kaler", // [cite: 139]
+    "kelelawar": "kalong", // [cite: 139]
+    "kamar": "sepen", // [cite: 140, 252]
+    "kemarin": "kamari", // [cite: 140, 158]
+    "kapak": "kampak", // [cite: 140]
+    "norak": "kampungan", // [cite: 140, 283]
+    "tebal": "kandel", // [cite: 141]
+    "untuk": "paranti", // [cite: 208, 214, 282]
+    "kalung": "kongkorong", // [cite: 135, 141]
+    "singlet": "kaos sangsang", // [cite: 142, 258]
+    "tanggal": "kaping", // [cite: 143]
+    "dahulu": "baheula", // [cite: 32, 81, 143]
+    "jahit": "kaput", // [cite: 118, 143]
+    "tahi lalat": "karang", // [cite: 144, 264]
+    "manis sekali": "kareueut", // [cite: 144, 185]
+    "gerah": "hareudang", // [cite: 46, 102, 109, 145, 300]
+    "kasian": "karunya", // [cite: 145, 154]
+    "tersengat listrik": "kasetrum", // [cite: 145, 281]
+    "teringat-ingat": "kasuat-suat", // [cite: 146, 279]
+    "wajan": "katel", // [cite: 147, 163]
+    "kanan": "katuhu", // [cite: 147, 153, 218, 263]
+    "seperti": "siga", // [cite: 114, 128, 147, 155, 242, 298]
+    "mashur": "kawentar", // [cite: 148]
+    "lagu": "tembang", // [cite: 148, 163, 176, 262]
+    "terbilang": "kawilang", // [cite: 148]
+    "kakak": "raka", // [cite: 5, 18, 149, 162, 228, 266]
+    "kakak ipar": "dahuan", // [cite: 72, 149]
+    "kakek": "aki", // [cite: 19, 149]
+    "kaki": "sampean", // [cite: 57, 62, 130, 150, 218, 240, 250, 299, 302]
+    "kalah": "kawon", // [cite: 85, 133, 137, 150]
+    "kalian": "aranjeun", // [cite: 151]
+    "kambing": "embe", // [cite: 87, 151]
+    "kami": "urang", // [cite: 82, 152, 246, 278, 298]
+    "kita": "urang", // [cite: 82, 152, 246, 278, 298]
+    "kamu": "anjeun", // [cite: 8, 114, 152, 175, 239, 298]
+    "kandang": "kurung", // [cite: 153, 221]
+    "karet penghapus": "panghapus", // [cite: 153]
+    "kodok": "bangkong", // [cite: 40, 155]
+    "kawin": "nikah", // [cite: 155, 188]
+    "kayaknya": "sigana", // [cite: 155]
+    "kebahagiaan": "kabagjaan", // [cite: 156]
+    "kecil": "alit", // [cite: 21, 61, 157, 300]
+    "kecoa": "cucunguk", // [cite: 60, 157]
+    "kelakar": "ngabodor", // [cite: 52, 157]
+    "kelingking": "cingir", // [cite: 54, 157]
+    "keluarga": "kulawarga", // [cite: 140, 157]
+    "kemarin lusa": "mangkukna", // [cite: 158, 177]
+    "kemauan": "kahoyong", // [cite: 158]
+    "kenyang": "wareg", // [cite: 159, 254, 295]
+    "kepala": "mastaka", // [cite: 101, 159, 182, 245, 299, 302]
+    "keras": "teuas", // [cite: 160, 255, 267]
+    "mengeras": "ngabagel", // [cite: 27, 160]
+    "kerbau": "munding", // [cite: 161, 176]
+    "keringat": "kesang", // [cite: 139, 161]
+    "kerja": "damel", // [cite: 74, 89, 162]
+    "pekerjaan": "padamelan", // [cite: 162, 208]
+    "kertas": "keretas", // [cite: 139, 162]
+    "kesana": "kaditu", // [cite: 131, 163, 300]
+    "kesini": "kadieu", // [cite: 131, 163, 299]
+    "ketiak": "kelek", // [cite: 122, 134, 163]
+    "ketel": "katel", // [cite: 147, 163]
+    "saat": "waktos", // [cite: 75, 164, 288, 291]
+    "kira-kira": "kinten-kinten", // [cite: 146, 164]
+    "kiri": "kenca", // [cite: 136, 147, 165]
+    "pusing": "lieur", // [cite: 125, 166]
+    "lama": "heubeul", // [cite: 32, 81, 143, 166, 178]
+    "bangun tidur": "lilir", // [cite: 166]
+    "lima": "lima", // [cite: 167]
+    "pelupa": "limpeuran", // [cite: 167]
+    "jinak": "lindeuk", // [cite: 167]
+    "tinggal": "linggih", // [cite: 168, 263, 286, 287]
+    "duduk": "calik", // [cite: 57, 84, 168, 301]
+    "gempa": "lini", // [cite: 168]
+    "telur kutu": "lisa", // [cite: 169]
+    "alu": "lisung", // [cite: 97, 169]
+    "banyak": "loba", // [cite: 107, 170, 254]
+    "bel": "lonceng", // [cite: 170]
+    "harimau": "lodaya", // [cite: 170, 183]
+    "dompet": "loket", // [cite: 79, 170]
+    "buta": "lolong", // [cite: 171]
+    "lemari": "lomari", // [cite: 171, 182]
+    "bunglon": "londok", // [cite: 171]
+    "kunjung": "longok", // [cite: 171]
+    "lusin": "losin", // [cite: 172]
+    "habis tak tersisa": "ludes", // [cite: 172]
+    "berani": "ludeung", // [cite: 173, 269]
+    "tinggi (derajat)": "luhung", // [cite: 173]
+    "tinggi (atas)": "luhur", // [cite: 20, 173, 174, 288, 301]
+    "lumut": "lukut", // [cite: 174]
+    "lari": "lumpat", // [cite: 174, 180, 302]
+    "loncat": "luncat", // [cite: 175]
+    "pendiam": "lungguh", // [cite: 175]
+    "turun": "lungsur", // [cite: 71, 175]
+    "bukan": "sanes", // [cite: 65, 177, 300]
+    "lain": "sejen", // [cite: 177, 250]
+    "lainnya": "sejena", // [cite: 177]
+    "lalat": "laleur", // [cite: 157, 178]
+    "lapang": "tegal", // [cite: 179, 260]
+    "lapangan": "tegalan", // [cite: 179, 261, 267]
+    "lapar": "lapar", // [cite: 180]
+    "layang-layang": "langlayangan", // [cite: 164, 181]
+    "lebih": "langkung", // [cite: 164, 181, 182]
+    "melebihi": "alabatan", // [cite: 182]
+    "leher": "tengek", // [cite: 41, 182, 263, 302]
+    "lempar": "baledog", // [cite: 36, 163, 166, 171, 183, 241]
+    "lidah": "letah", // [cite: 159, 184]
+    "mancung": "bangir", // [cite: 38, 184]
+    "manis": "amis", // [cite: 33, 101, 185]
+    "manis sekali": "kareueut", // [cite: 144, 185]
+    "masa": "maenya", // [cite: 170, 185]
+    "mata": "soca", // [cite: 187, 247]
+    "matahari": "panonpoe", // [cite: 187, 202]
+    "mata kaki": "mumuncangan", // [cite: 176, 188]
+    "mau": "hoyong", // [cite: 98, 112, 188]
+    "melamun": "ngalamun", // [cite: 190]
+    "melarang": "nyaram", // [cite: 190, 193]
+    "membangun": "ngawangun", // [cite: 191]
+    "memutuskan": "mutuskeun", // [cite: 181, 192]
+    "menakut-nakuti": "nyingsieunan", // [cite: 192]
+    "menantu": "minantu", // [cite: 170, 193]
+    "mencair": "le eh", // [cite: 159, 193]
+    "mengenai": "ngenaan", // [cite: 189, 194]
+    "mengenang": "mieling", // [cite: 169, 194]
+    "menggaruk": "ngagaro", // [cite: 194]
+    "menggigil": "ngadegdeg", // [cite: 195]
+    "menginap": "mondok", // [cite: 171, 195]
+    "mengingat": "ngemut", // [cite: 195]
+    "menjawab": "ngawaler", // [cite: 196]
+    "menunggu": "ngantosan", // [cite: 196]
+    "menyaksikan": "nyiksenan", // [cite: 192, 197]
+    "menyerupai": "mangrupakeun", // [cite: 197]
+    "menyesal": "kaduhung", // [cite: 135, 198]
+    "merah": "beureum", // [cite: 42, 198]
+    "merasa": "rumaos", // [cite: 199, 225]
+    "menangis": "ceurik", // [cite: 67, 200]
+    "menarik": "metot", // [cite: 168, 200]
+    "nenek": "nini", // [cite: 189, 200]
+    "mengantuk": "tunduh", // [cite: 200, 262]
+    "ngilu": "linu", // [cite: 201]
+    "nyala": "hurung", // [cite: 103, 201]
+    "nyamuk": "reungit", // [cite: 200, 219]
+    "bernyanyi": "ngawih", // [cite: 201]
+    "menyapu": "sasapu", // [cite: 202, 246]
+    "juga": "oge", // [cite: 203, 250]
+    "manja": "ogo", // [cite: 203]
+    "kebanyakan": "olok", // [cite: 107, 203]
+    "gelombang": "ombak", // [cite: 203]
+    "undang": "ondang", // [cite: 203, 295]
+    "undangan": "ondangan", // [cite: 203]
+    "katanya": "ongkoh", // [cite: 205]
+    "tarif": "ongkos", // [cite: 205]
+    "empat": "opat", // [cite: 75, 205]
+    "ular": "oray", // [cite: 205, 281]
+    "bayi": "orok", // [cite: 53, 205]
+    "cangkul": "pacul", // [cite: 209]
+    "perut": "beuteung", // [cite: 43, 212]
+    "meninggal": "pupus", // [cite: 209, 219]
+    "mati": "paeh", // [cite: 209]
+    "besok lusa": "pageto", // [cite: 61, 210]
+    "piatu": "pahatu", // [cite: 210]
+    "yatim piatu": "pahatu lalis", // [cite: 211]
+    "pahit": "pait", // [cite: 211]
+    "kuburan": "astana", // [cite: 21, 211]
+    "halaman rumah": "pakarangan", // [cite: 41, 212]
+    "pakai": "anggo", // [cite: 4, 213]
+    "selangkangan": "palangkakan", // [cite: 214, 251]
+    "plastik": "palastik", // [cite: 214, 220]
+    "hanyut": "palid", // [cite: 214]
+    "curi": "paok", // [cite: 203, 214]
+    "palu": "martil", // [cite: 215]
+    "isteri": "pamajikan", // [cite: 51, 216]
+    "laki-laki": "pameget", // [cite: 217, 220]
+    "wajah": "beungeut", // [cite: 41, 218]
+    "tangan": "leungeun", // [cite: 161, 218, 299]
+    "pemukul": "paneunggeul", // [cite: 200, 228]
+    "beke": "pendek", // [cite: 50, 230]
+    "pendek": "pondok", // [cite: 215, 231]
+    "pengantin": "panganten", // [cite: 201, 231]
+    "penitih": "panitik", // [cite: 201, 231]
+    "pensil": "patlot", // [cite: 211, 231]
+    "pepohonan": "tatangkalan", // [cite: 232]
+    "peralatan": "parabot", // [cite: 205, 232]
+    "pergi": "indit", // [cite: 56, 121, 233]
+    "perjaka": "bujangan", // [cite: 37, 234]
+    "perkenalkan": "nepangkeun", // [cite: 234]
+    "permisi": "punten", // [cite: 218, 234, 300]
+    "pesek": "pegek", // [cite: 213, 235]
+    "piknik": "pelesir", // [cite: 216, 235]
+    "pinggang": "cangkeng", // [cite: 5, 59, 236]
+    "uban": "salatu", // [cite: 237, 281]
+    "dua puluh lima": "salawe", // [cite: 80, 237]
+    "khawatir": "salempang", // [cite: 238]
+    "badan": "awak", // [cite: 30, 44, 238]
+    "tikar": "samak", // [cite: 238]
+    "sambal": "sambel", // [cite: 239, 241]
+    "sama": "sami", // [cite: 239, 240, 245]
+    "kaki": "suku", // [cite: 150, 250, 302]
+    "ajak": "sampeur", // [cite: 241]
+    "bukan": "sanes", // [cite: 65, 177, 241]
+    "duga": "sangka", // [cite: 241]
+    "sebagian": "sawareh", // [cite: 246, 248]
+    "sepatu": "sapatu", // [cite: 242, 254]
+    "seperti": "siga", // [cite: 129, 155, 242]
+    "semenjak": "saprak", // [cite: 243]
+    "sepuluh": "sapuluh", // [cite: 243, 254]
+    "seribu": "sarebu", // [cite: 244, 245, 282]
+    "dan": "jeung", // [cite: 75, 130, 244]
+    "dengan": "sareng", // [cite: 75, 244]
+    "sekeluarga": "sarimbit", // [cite: 245]
+    "semacam": "sarupaning", // [cite: 245, 252]
+    "tersesat": "sasab", // [cite: 246, 282]
+    "jembatan": "cukang", // [cite: 60, 246]
+    "bulan": "sasih", // [cite: 66, 247]
+    "setia": "satia", // [cite: 247]
+    "binatang": "sato", // [cite: 247]
+    "gubuk": "saung", // [cite: 248]
+    "kata": "saur", // [cite: 66, 248]
+    "sedia": "sayogi", // [cite: 249]
+    "sebut": "sebat", // [cite: 249]
+    "semangat": "sumanget", // [cite: 249, 252]
+    "lainnya": "sejena", // [cite: 177, 250]
+    "sisip": "selap", // [cite: 250]
+    "tamu": "semah", // [cite: 250, 272]
+    "sendal": "tarumpah", // [cite: 251, 269]
+    "hardik": "sentak", // [cite: 251]
+    "tua": "sepuh", // [cite: 251, 292]
+    "silau": "serab", // [cite: 252, 257]
+    "surat": "serat", // [cite: 252]
+    "serah": "seren", // [cite: 252]
+    "sering": "mindeng", // [cite: 170, 253]
+    "sisa": "sesa", // [cite: 253, 259]
+    "susah": "hese", // [cite: 93, 253, 264]
+    "kenyang": "wareg", // [cite: 159, 253, 295]
+    "banyak": "seueur", // [cite: 254]
+    "sepuluh ribu": "sapuluh rebu", // [cite: 255]
+    "seratus": "saratu", // [cite: 255]
+    "seratus ribu": "saratus rebu", // [cite: 256]
+    "siang": "beurang", // [cite: 42, 256]
+    "siapa": "saha", // [cite: 121, 199, 257]
+    "silakan": "mangga", // [cite: 175, 214, 257, 301]
+    "kaos": "singlet", // [cite: 258]
+    "sini": "dieu", // [cite: 130, 258]
+    "sebelah sini": "palih dieu", // [cite: 242, 259]
+    "menyisakan": "nyesakeun", // [cite: 260]
+    "sisi": "gigir", // [cite: 96, 260]
+    "sobek": "sowek", // [cite: 249, 261]
+    "sore": "sonten", // [cite: 247, 261, 283]
+    "suami": "caroge", // [cite: 61, 261]
+    "sudah": "parantos", // [cite: 206, 262]
+    "sudah lama": "tos lami", // [cite: 263]
+    "sungai": "susukan", // [cite: 253, 264]
+    "tertawa": "belenyeh", // [cite: 35]
+    "amblas": "belesek", // [cite: 35]
+    "bodoh": "belet", // [cite: 35, 51, 64]
+    "waria": "bencong", // [cite: 36]
+    "marah": "bendu", // [cite: 36]
+    "benar": "bener", // [cite: 36, 56]
+    "melengkung": "bengkok", // [cite: 37]
+    "beda": "benten", // [cite: 38]
+    "memberi": "mere", // [cite: 39]
+    "sopan": "berehan", // [cite: 39]
+    "bersih": "beresih", // [cite: 39]
+    "bersin": "beresin", // [cite: 39]
+    "bingkisan": "berkat", // [cite: 40]
+    "leher": "beuheung", // [cite: 40]
+    "belah": "beulah", // [cite: 40]
+    "bakar": "beuleum", // [cite: 41, 68]
+    "beli": "beuli", // [cite: 41]
+    "lilit": "beulit", // [cite: 41]
+    "wajah": "beungeut", // [cite: 41]
+    "kaya": "beunghar", // [cite: 42]
+    "ikat": "beungkeut", // [cite: 42]
+    "siang": "beurang", // [cite: 42]
+    "berat": "beurat", // [cite: 43]
+    "merah": "beureum", // [cite: 43]
+    "tikus": "beurit", // [cite: 43]
+    "besi": "beusi", // [cite: 44]
+    "perut": "beuteung", // [cite: 44]
+    "betina": "bikang", // [cite: 46]
+    "belatung": "bilatung", // [cite: 46]
+    "kreatif": "binangkit", // [cite: 46]
+    "gembira": "bingah", // [cite: 46, 59]
+    "geraham": "careham", // [cite: 46, 60]
+    "kalut": "bingung", // [cite: 47]
+    "tidak kenal": "bireuk", // [cite: 47]
+    "betis": "bitis", // [cite: 48]
+    "meledak": "bitu", // [cite: 48]
+    "bibir": "biwir", // [cite: 49]
+    "tidur": "bobo", // [cite: 50, 85]
+    "lapuk": "bobo", // [cite: 50]
+    "bakul": "boboko", // [cite: 50]
+    "kentut": "bobos", // [cite: 51]
+    "pendukung": "bobotoh", // [cite: 51]
+    "putih": "bodas", // [cite: 51]
+    "lawak": "bodor", // [cite: 52]
+    "punya": "boga", // [cite: 52]
+    "isteri": "bojo", // [cite: 52]
+    "raba": "cabak", // [cite: 56]
+    "tampar": "cabok", // [cite: 57, 85]
+    "cincang": "cacag", // [cite: 57]
+    "tak pernah": "cadu", // [cite: 57]
+    "cecak": "cakcak", // [cite: 57]
+    "abu rokok": "calacah", // [cite: 57]
+    "rajin": "calakan", // [cite: 57]
+    "celana": "calana", // [cite: 58]
+    "keceplosan": "kacaletot", // [cite: 58]
+    "duduk": "calik", // [cite: 58, 84]
+    "ambil": "candak", // [cite: 58]
+    "tambat": "cangcang", // [cite: 58]
+    "lelah": "cape", // [cite: 59]
+    "jepit": "capit", // [cite: 59]
+    "larang": "carek", // [cite: 60]
+    "jarang": "carang", // [cite: 60]
+    "musang": "careuh", // [cite: 61]
+    "beringin": "caringin", // [cite: 61]
+    "suami": "caroge", // [cite: 61]
+    "cerpen": "carpon", // [cite: 62]
+    "celana dalam": "cawet", // [cite: 63]
+    "kaki": "ceker", // [cite: 63]
+    "lampu minyak": "cempor", // [cite: 64]
+    "bisul": "cenang", // [cite: 64]
+    "cabai rawit": "cengek", // [cite: 64]
+    "bangun": "cengkat", // [cite: 65]
+    "sentil": "centang", // [cite: 65]
+    "telinga": "cepil", // [cite: 65, 66]
+    "cerewet": "cerewed", // [cite: 66]
+    "mendung": "ceudeum", // [cite: 66]
+    "kata": "ceuk", // [cite: 66]
+    "lap": "ceumpal", // [cite: 67]
+    "tangis": "ceurik", // [cite: 67]
+    "dada": "dada", // [cite: 69]
+    "dagu": "gado", // [cite: 70]
+    "dahaga": "hanaang", // [cite: 70]
+    "dahi": "tarang", // [cite: 70]
+    "danau": "situ", // [cite: 71]
+    "dari": "ti", // [cite: 71]
+    "dari tadi": "titadi", // [cite: 72]
+    "darimana": "timanten", // [cite: 72]
+    "datang": "dongkap", // [cite: 72, 85]
+    "delapan": "dalapan", // [cite: 75]
+    "dengan": "sareng", // [cite: 75]
+    "depan": "payun", // [cite: 76]
+    "desa": "lembur", // [cite: 76]
+    "dia": "manehna", // [cite: 77]
+    "dikesampingkan": "disingkahkeun", // [cite: 77]
+    "dingin": "tiris", // [cite: 78, 79]
+    "dompet": "loket", // [cite: 79]
+    "dua": "dua", // [cite: 79]
+    "dua belas": "dua belas", // [cite: 80]
+    "salawe": "salawe", // [cite: 80]
+    "duda": "duda", // [cite: 80]
+    "dahulu": "baheula", // [cite: 81]
+    "stres": "edeg", // [cite: 84]
+    "beol": "e'e", // [cite: 85]
+    "betet": "ekek", // [cite: 85]
+    "kalah": "eleh", // [cite: 85]
+    "gelitik": "eleketek", // [cite: 86]
+    "kambing": "embe", // [cite: 87]
+    "tidak mau": "embung", // [cite: 87, 88]
+    "kolam": "empang", // [cite: 88]
+    "ingat": "emut", // [cite: 88, 112]
+    "indah": "endah", // [cite: 89]
+    "bergetar": "endeur", // [cite: 89]
+    "telur": "endog", // [cite: 90]
+    "nanti": "engke", // [cite: 91]
+    "besok": "enjing", // [cite: 92, 128]
+    "pagi": "enjing", // [cite: 92, 129]
+    "gergaji": "ragaji", // [cite: 93]
+    "gerobak": "gorobak", // [cite: 93, 101]
+    "gigi": "huntu", // [cite: 93, 107]
+    "gila": "gelo", // [cite: 93, 94]
+    "golok": "bedog", // [cite: 94]
+    "gula": "gula", // [cite: 94, 102]
+    "dahaga": "hanaang", // [cite: 96, 99]
+    "merdu": "halimpu", // [cite: 96]
+    "kabut": "halimun", // [cite: 96]
+    "alis": "halis", // [cite: 97]
+    "musim kering": "halodo", // [cite: 97]
+    "alu": "halu", // [cite: 97, 169]
+    "tawar": "hambar", // [cite: 98]
+    "ringan": "hampang", // [cite: 98]
+    "ampas": "hampas", // [cite: 98, 239]
+    "empedu": "hamperu", // [cite: 98]
+    "maaf": "hampura", // [cite: 98, 101]
+    "bawah": "handap", // [cite: 99]
+    "hangat": "haneut", // [cite: 100]
+    "sesal": "hanjelu", // [cite: 101]
+    "amis": "hanyir", // [cite: 101]
+    "hampa": "hapa", // [cite: 101]
+    "jelaga": "harangasu", // [cite: 102]
+    "gratis": "haratis", // [cite: 102]
+    "harap": "harep", // [cite: 102]
+    "depan": "hareup", // [cite: 104]
+    "bisik": "harewos", // [cite: 104]
+    "cemas": "hariwang", // [cite: 105]
+    "asam": "haseum", // [cite: 106]
+    "asap": "haseup", // [cite: 106]
+    "bambu": "awi", // [cite: 107]
+    "ayam": "hayam", // [cite: 107]
+    "mau": "hayang", // [cite: 107, 112]
+    "mari": "hayu", // [cite: 108]
+    "hijau": "hejo", // [cite: 108]
+    "heran": "hemeng", // [cite: 109]
+    "bening": "herang", // [cite: 109]
+    "ibu": "indung", // [cite: 110, 113]
+    "jempol": "jempol", // [cite: 110, 129]
+    "izin": "widi", // [cite: 111, 281]
+    "ikan": "lauk", // [cite: 111, 131]
+    "menari": "ngageol", // [cite: 116]
+    "wanita": "istri", // [cite: 127]
+    "itik": "meri", // [cite: 113, 167]
+    "sehat": "jagjag", // [cite: 119]
+    "jagung": "jagong", // [cite: 119]
+    "jahil": "jail", // [cite: 120]
+    "pemuda": "jajaka", // [cite: 120]
+    "manusia": "jalma", // [cite: 121, 122]
+    "jantan": "jalu", // [cite: 122]
+    "mantera": "jampe", // [cite: 123]
+    "jendela": "jandela", // [cite: 123, 126]
+    "janggut": "janggot", // [cite: 124]
+    "sayap": "jangjang", // [cite: 124, 246]
+    "jangkrik": "jangkrik", // [cite: 126]
+    "merpati": "japati", // [cite: 127, 186]
+    "kuman": "jaram", // [cite: 127]
+    "jari manis": "jarhiji", // [cite: 128]
+    "jarum": "jarum", // [cite: 128]
+    "jauh": "jauh", // [cite: 128, 131]
+    "sepi": "jempling", // [cite: 129]
+    "dalam": "jero", // [cite: 130]
+    "basah kuyup": "rancucut", // [cite: 131, 232]
+    "berasal": "kawit", // [cite: 132]
+    "kebun": "kebon", // [cite: 133]
+    "kalimat": "kecap", // [cite: 133]
+    "pemalas": "kedul", // [cite: 134]
+    "kelinci": "kelenci", // [cite: 134]
+    "warna": "kelir", // [cite: 135, 289]
+    "bunga": "kembang", // [cite: 135]
+    "kumpul": "kempel", // [cite: 136]
+    "kental": "kentel", // [cite: 136]
+    "genteng": "kenteng", // [cite: 137]
+    "isap": "kenyot", // [cite: 137]
+    "mendengkur": "kerek", // [cite: 138]
+    "terkam": "gabrug", // [cite: 138, 280]
+    "topi": "dudukuy", // [cite: 138, 267]
+    "kertas": "keretas", // [cite: 138, 162]
+    "keringat": "kesang", // [cite: 140, 161]
+    "jengkel": "keuheul", // [cite: 140, 127]
+    "memaksa": "keukeuh", // [cite: 141]
+    "peluk": "keukeup", // [cite: 141, 226]
+    "tumit": "keuneung", // [cite: 141]
+    "genggam": "keupeul", // [cite: 141]
+    "iris": "keureut", // [cite: 141]
+    "pasir": "keusik", // [cite: 141, 224]
+    "kedip": "kiceup", // [cite: 143]
+    "selatan": "Kidul", // [cite: 143]
+    "kencing": "kiih", // [cite: 144]
+    "kirim": "kintun", // [cite: 146]
+    "kurang": "kirang", // [cite: 146, 153]
+    "kredit": "kiridit", // [cite: 146]
+    "keripik": "kiripik", // [cite: 147]
+    "keruh": "kiruh", // [cite: 147]
+    "begitu": "kitu", // [cite: 147, 301]
+    "pedas": "lada", // [cite: 155]
+    "tanah": "taneuh", // [cite: 155, 273]
+    "lalap": "lalab", // [cite: 156]
+    "lelaki": "lalaki", // [cite: 157, 219]
+    "lalat": "laleur", // [cite: 157, 178]
+    "leluasa": "laluasa", // [cite: 157]
+    "lembar": "lambar", // [cite: 157]
+    "bibir": "biwir", // [cite: 158, 302]
+    "lama": "lila", // [cite: 158, 178]
+    "belepotan": "lamokot", // [cite: 159]
+    "jilat": "letok", // [cite: 159, 168]
+    "abadi": "lana", // [cite: 160]
+    "kakak": "raka", // [cite: 160, 149]
+    "celana": "calana", // [cite: 161, 63]
+    "lagu": "kawih", // [cite: 161, 176]
+    "langit": "langit", // [cite: 162]
+    "langka": "langki", // [cite: 162]
+    "lebih": "leuwih", // [cite: 163, 181]
+    "layang-layang": "langlayangan", // [cite: 164, 181]
+    "lima": "lima", // [cite: 166]
+    "lebar": "lega", // [cite: 167, 154]
+    "lucu": "pikaseuriuen", // [cite: 167]
+    "lumpur": "leutak", // [cite: 167]
+    "madu": "madu", // [cite: 170]
+    "membunuh": "maehan", // [cite: 170, 183, 200]
+    "masa": "maenya", // [cite: 170, 212]
+    "janggal": "mahiwal", // [cite: 170]
+    "maju": "majeng", // [cite: 171]
+    "mahkota": "makuta", // [cite: 172]
+    "malas": "males", // [cite: 173]
+    "pencuri": "maling", // [cite: 173]
+    "paman": "mamang", // [cite: 173]
+    "mana": "mana", // [cite: 173]
+    "hati": "manah", // [cite: 174]
+    "jika": "manawi", // [cite: 174]
+    "mandi": "mandi", // [cite: 174, 201]
+    "kamu": "maneh", // [cite: 175]
+    "engkau": "maneh", // [cite: 175]
+    "dia": "manehna", // [cite: 175]
+    "silakan": "mangga", // [cite: 175, 214]
+    "manggis": "manggu", // [cite: 176]
+    "pikul": "manggul", // [cite: 176]
+    "kemarin lusa": "mangkukna", // [cite: 177]
+    "tinta": "mangsi", // [cite: 179]
+    "mantap": "mantep", // [cite: 179]
+    "burung": "manuk", // [cite: 179]
+    "meninggal": "maot", // [cite: 180, 209, 219]
+    "karena": "margi", // [cite: 181]
+    "pasang": "masang", // [cite: 181]
+    "masih": "masih", // [cite: 181]
+    "harimau": "maung", // [cite: 183]
+    "mayat": "mayit", // [cite: 183]
+    "kikir": "medit", // [cite: 184]
+    "tanam": "melak", // [cite: 184]
+    "berkilau": "mencrang", // [cite: 184]
+    "merayakan": "ngareah-reuah", // [cite: 198]
+    "mereka": "maranehna", // [cite: 198]
+    "pejam": "peureum", // [cite: 198, 205]
+    "merinding": "muringkak", // [cite: 180, 198]
+    "merpati": "japati", // [cite: 198]
+    "mertua": "mitoha", // [cite: 171, 198]
+    "minum": "nginum", // [cite: 187, 198]
+    "monyet": "wanara", // [cite: 187, 198]
+    "muda": "ngora", // [cite: 188]
+    "mudah": "gampil", // [cite: 184, 188, 198]
+    "mungkin": "meureun", // [cite: 189, 198]
+    "naik": "naek", // [cite: 190]
+    "menimba": "namba", // [cite: 190]
+    "tetapi": "namung", // [cite: 190]
+    "terlentang": "nangkarak", // [cite: 190]
+    "nongkrong": "nongkrong", // [cite: 192]
+    "telungkup": "nangkuban", // [cite: 192]
+    "berdiri": "ngadeg", // [cite: 192, 195]
+    "apa": "naon", // [cite: 193]
+    "menawar": "nawis", // [cite: 193]
+    "makan": "neda", // [cite: 183, 193, 218]
+    "barusan": "nembe", // [cite: 194]
+    "nenek": "nene", // [cite: 194]
+    "panjat": "nerekel", // [cite: 194]
+    "buka rahasia": "ngabolekerkeun", // [cite: 191, 195]
+    "mendirikan": "ngadegkeun", // [cite: 196]
+    "oleng": "ngagaleong", // [cite: 196]
+    "bergoyang": "ngageol", // [cite: 196]
+    "menari": "ngagitek", // [cite: 196]
+    "menggigil": "ngahodhod", // [cite: 195, 197]
+    "melamun": "ngalamun", // [cite: 190, 197]
+    "lewat": "ngalangkung", // [cite: 198]
+    "terbang": "ngapung", // [cite: 198]
+    "merasa": "rumaos", // [cite: 199, 225]
+    "bendahara": "panata harta", // [cite: 200]
+    "pemukul": "paneunggeul", // [cite: 200, 229]
+    "hidung": "pangambung", // [cite: 107, 201]
+    "pengantin": "panganten", // [cite: 201, 231]
+    "penitih": "panitik", // [cite: 202, 231]
+    "mata": "panon", // [cite: 187, 202]
+    "matahari": "panonpoe", // [cite: 187, 202]
+    "pintu": "panto", // [cite: 203, 219]
+    "penyakit": "panyawat", // [cite: 203, 231]
+    "curi": "paok", // [cite: 203, 214]
+    "sesama": "papada", // [cite: 204, 239]
+    "jalan": "papah", // [cite: 204, 269]
+    "capung": "papatong", // [cite: 204]
+    "telusuri": "papay", // [cite: 204]
+    "bertemu": "papendak", // [cite: 205, 217]
+    "peralatan": "parabot", // [cite: 207, 232]
+    "cukur": "paras", // [cite: 206]
+    "perawan": "parawan", // [cite: 206]
+    "padam": "pareum", // [cite: 207, 222]
+    "pare": "paria", // [cite: 207]
+    "serah": "parin", // [cite: 208, 252]
+    "jeram": "parung", // [cite: 208]
+    "persegi": "pasagi", // [cite: 209]
+    "lomba": "pasanggiri", // [cite: 209]
+    "bertengkar": "pasea", // [cite: 209, 230]
+    "bukit": "pasir", // [cite: 210, 212]
+    "berkaitan": "patali", // [cite: 59, 211]
+    "pensil": "patlot", // [cite: 212, 231]
+    "perut": "patuangan", // [cite: 212, 233]
+    "tampang": "patut", // [cite: 212]
+    "dapur": "pawon", // [cite: 213]
+    "cambuk": "pecut", // [cite: 213]
+    "lada": "pedes", // [cite: 156, 214]
+    "pesek": "pegek", // [cite: 214, 233]
+    "menanam": "pelak", // [cite: 215]
+    "gurih": "pelem", // [cite: 216]
+    "piknik": "pelesir", // [cite: 216, 233]
+    "tatap": "pelong", // [cite: 216]
+    "peluru": "pelor", // [cite: 217]
+    "belakang": "pengker", // [cite: 54, 217]
+    "pinter": "pinter", // [cite: 218, 219]
+    "daging pipi": "damis", // [cite: 74, 219]
+    "piit": "piit", // [cite: 208, 219]
+    "pisau": "peso", // [cite: 204, 219]
+    "plastik": "palastik", // [cite: 214, 220]
+    "pohon": "tangkal", // [cite: 215, 220]
+    "polisi": "pulisi", // [cite: 217, 220]
+    "pria": "pameget", // [cite: 217, 221]
+    "pukul": "teunggeul", // [cite: 201, 221]
+    "pulang": "mulih", // [cite: 175, 221]
+    "punggung": "tonggong", // [cite: 221, 222]
+    "putih": "bodas", // [cite: 52, 222]
+    "agak": "rada", // [cite: 225]
+    "gergaji": "ragaji", // [cite: 225]
+    "jatuh": "ragrag", // [cite: 226]
+    "luka": "raheut", // [cite: 226]
+    "bohong": "wadul", // [cite: 227, 286]
+    "giat": "rajin", // [cite: 227]
+    "kakak": "raka", // [cite: 227]
+    "intim": "raket", // [cite: 228]
+    "pakaian": "raksukan", // [cite: 228]
+    "bapak": "rama", // [cite: 229]
+    "rambut": "buuk", // [cite: 229]
+    "ramai": "rame", // [cite: 230]
+    "jari": "ramo", // [cite: 230]
+    "rawa": "ranca", // [cite: 231]
+    "basah kuyup": "rancucut", // [cite: 231]
+    "janda": "randa", // [cite: 232]
+    "cengkram": "ranggeum", // [cite: 233]
+    "renyah": "rangu", // [cite: 233]
+    "enak": "raos", // [cite: 234, 301]
+    "wajah": "raray", // [cite: 234]
+    "jembatan": "rawayan", // [cite: 234]
+    "riuh": "reang", // [cite: 235]
+    "uang kecil": "receh", // [cite: 235]
+    "seruput": "regot", // [cite: 235]
+    "rese": "rehe", // [cite: 236]
+    "teman": "rencang", // [cite: 236]
+    "hormat": "rengkuh", // [cite: 237]
+    "api": "seuneu", // [cite: 237]
+    "wangi": "seungit", // [cite: 238]
+    "ampas": "seupah", // [cite: 238]
+    "kukus": "seupan", // [cite: 239]
+    "sengat": "seureud", // [cite: 239]
+    "sirih": "seureuh", // [cite: 240]
+    "senyum": "seuri", // [cite: 240]
+    "hisap": "seuseup", // [cite: 241]
+    "siang": "siang", // [cite: 242]
+    "takut": "sieun", // [cite: 242]
+    "seperti": "siga", // [cite: 242, 297]
+    "taring": "sihung", // [cite: 243]
+    "biji": "siki", // [cite: 243]
+    "hantu": "siluman", // [cite: 243]
+    "belalang": "simeut", // [cite: 243]
+    "mampir": "simpang", // [cite: 243]
+    "sunyi": "simpe", // [cite: 244]
+    "kepala": "sirah", // [cite: 245, 299]
+    "mandi": "siram", // [cite: 245]
+    "semut": "sireum", // [cite: 246]
+    "iri": "sirik", // [cite: 246]
+    "danau": "situ", // [cite: 246]
+    "kaget": "soak", // [cite: 246]
+    "angsa": "soang", // [cite: 247]
+    "sahabat": "sobat", // [cite: 247]
+    "mata": "soca", // [cite: 247]
+    "ceroboh": "sologoto", // [cite: 248]
+    "parit": "solokan", // [cite: 248]
+    "ramah": "someah", // [cite: 248]
+    "rindu": "sono", // [cite: 249]
+    "sore": "sonten", // [cite: 249]
+    "sobek": "soweh", // [cite: 249]
+    "keponakan": "suan", // [cite: 249]
+    "jika": "sugan", // [cite: 250]
+    "kaki": "suku", // [cite: 250, 299]
+    "datang": "sumping", // [cite: 250]
+    "mulut": "sungut", // [cite: 251]
+    "jamur": "supa", // [cite: 252]
+    "sorak": "surak", // [cite: 252]
+    "kabur": "sureum", // [cite: 252]
+    "payudara": "susu", // [cite: 252]
+    "sungai": "susukan", // [cite: 253]
+    "tangga bambu": "taraje", // [cite: 254]
+    "bahu": "taraju", // [cite: 255]
+    "jidat": "tarang", // [cite: 255, 301]
+    "keras": "tarik", // [cite: 256]
+    "cepat": "gancang", // [cite: 256, 298]
+    "tanya": "taros", // [cite: 256]
+    "sandal": "tarumpah", // [cite: 257]
+    "tamu": "tatamu", // [cite: 257]
+    "tetangga": "tatangga", // [cite: 257]
+    "berdiri": "tatih", // [cite: 258]
+    "tahun": "taun", // [cite: 258]
+    "cari": "teang", // [cite: 260]
+    "jauh": "tebih", // [cite: 260]
+    "lapang": "tegal", // [cite: 260]
+    "tegel": "tehel", // [cite: 261]
+    "lagu": "tembang", // [cite: 262]
+    "lihat": "tenjo", // [cite: 263]
+    "leher": "beuheung", // [cite: 263, 302]
+    "kanan": "tengen", // [cite: 263]
+    "damai": "tengtrem", // [cite: 264]
+    "jumpa": "tepang", // [cite: 264]
+    "teras": "tepas", // [cite: 264]
+    "kemudian": "teras", // [cite: 265]
+    "tiri": "tere", // [cite: 265]
+    "kakak perempuan": "teteh", // [cite: 266]
+    "tidak": "teu", // [cite: 266]
+    "selam": "teuleum", // [cite: 268]
+    "berani": "teuneung", // [cite: 269]
+    "pukul": "teunggeul", // [cite: 269]
+    "dari": "ti", // [cite: 269]
+    "bisa": "tiasa", // [cite: 270, 302]
+    "tiang": "tihang", // [cite: 271]
+    "dingin": "tiris", // [cite: 271, 300]
+    "terpeleset": "tijalikeuh", // [cite: 272, 299]
+    "tenggorokan": "tikoro", // [cite: 273]
+    "meninggal": "pupus", // [cite: 273, 302]
+    "bekas": "tilas", // [cite: 274]
+    "tiga": "tilu", // [cite: 275]
+    "cemburu": "timburu", // [cite: 275]
+    "injak": "tincak", // [cite: 276]
+    "manggut": "unggeuk", // [cite: 277]
+    "gerak": "usik", // [cite: 278]
+    "utama": "utami", // [cite: 279]
+    "garam": "uyah", // [cite: 279]
+    "tusuk": "tojos", // [cite: 279]
+    "uang": "duit", // [cite: 280]
+    "uban": "huis", // [cite: 280]
+    "udel": "bujal", // [cite: 281]
+    "ular": "oray", // [cite: 281]
+    "ulat": "hileud", // [cite: 281]
+    "usia": "umur", // [cite: 283]
+    "baja": "waja", // [cite: 287]
+    "jawab": "waler", // [cite: 288]
+    "berani": "wani", // [cite: 292]
+    "kenal": "wanoh", // [cite: 293]
+    "gigi": "waos", // [cite: 294]
+    "kenyang": "wareg", // [cite: 295]
+    "warta": "wartos", // [cite: 295]
+    "cuci": "wasuh", // [cite: 296]
+    "watak": "watek", // [cite: 297]
+    "kentut": "hitut", // [cite: 297]
+    "kuning": "koneng", // [cite: 298]
+    "gelap": "poek", // [cite: 298]
+    "tangan": "leungeun", // [cite: 299, 302]
+    "punggung": "tonggong", // [cite: 299, 302]
+    "kuping": "ceuli", // [cite: 299, 302]
+    "hidung": "irung", // [cite: 300, 302]
+    "kepanasan": "hareudang", // [cite: 300, 302]
+    "hangat": "haneut", // [cite: 300]
+    "meletus": "bucat", // [cite: 301]
+    "sakit perut": "nyeuri beuteung", // [cite: 301]
+    "di atas": "di luhur", // [cite: 301]
+    "di bawah": "di handap", // [cite: 301]
+    "di dalam": "di jero", // [cite: 301]
+    "jelek": "awon", // [cite: 302]
+    "sakit": "gering", // [cite: 302]
+    "iya": "heu euh", // [cite: 93]
+    "dahulu": "heubeul", // [cite: 93]
+    "elang": "heulang", // [cite: 94]
+    "menyempit": "heureut", // [cite: 94]
+    "gurau": "heureuy", // [cite: 94]
+    "rajin": "hideng", // [cite: 95]
+    "rindang": "hieum", // [cite: 97]
+    "lupa": "hilap", // [cite: 97]
+    "ulat": "hileud", // [cite: 97]
+    "awas": "halik", // [cite: 97]
+    "ilir": "hilir", // [cite: 97]
+    "empuk": "hipu", // [cite: 98]
+    "kentut": "hitut", // [cite: 98]
+    "bimbang": "honcewang", // [cite: 98]
+    "gabah lembut": "hu ut", // [cite: 99]
+    "uban": "huis", // [cite: 100]
+    "hujan": "hujan", // [cite: 100]
+    "ladang": "huma", // [cite: 101]
+    "udang": "hurang", // [cite: 101]
+    "utang": "hutang", // [cite: 102]
+    "seperti": "jiga", // [cite: 110]
+    "jilid": "jilid", // [cite: 110]
+    "jiwa": "jiwa", // [cite: 110]
+    "jujur": "jujur", // [cite: 111]
+    "jumlah": "jumblah", // [cite: 112]
+    "salto": "jumpalit", // [cite: 112]
+    "jurang": "jungkrang", // [cite: 112]
+    "menjadi": "juntrung", // [cite: 113]
+    "sudut": "juru", // [cite: 114]
+    "janda": "randa", // [cite: 122]
+    "jari": "ramo", // [cite: 122]
+    "jari manis": "jarhiji", // [cite: 123]
+    "jari telunjuk": "curuk", // [cite: 123]
+    "jari tengah": "panengah", // [cite: 124]
+    "telinga": "ceuli", // [cite: 127]
+    "jengkel": "keuheul", // [cite: 127]
+    "jidat": "tarang", // [cite: 127]
+    "jijik": "geuleuh", // [cite: 128]
+    "semua": "kabeh", // [cite: 132]
+    "kini": "kiwari", // [cite: 132]
+    "jerit": "koceak", // [cite: 133]
+    "celana dalam": "kolor", // [cite: 134]
+    "tua": "kolot", // [cite: 134]
+    "kunci": "konci", // [cite: 134]
+    "kuning": "koneng", // [cite: 135]
+    "kalung": "kongkorong", // [cite: 135]
+    "upil": "korong", // [cite: 136]
+    "kursi": "korsi", // [cite: 137]
+    "gosok": "kosok", // [cite: 137]
+    "kue": "kueh", // [cite: 139]
+    "kupu-kupu": "kukupu", // [cite: 139]
+    "barat": "kulon", // [cite: 141]
+    "kentang": "kumeli", // [cite: 142]
+    "kumis": "kumis", // [cite: 142]
+    "kenapa": "kunaon", // [cite: 143]
+    "kera": "kunyuk", // [cite: 144]
+    "cacar": "kuris", // [cite: 145]
+    "kurus": "kuru", // [cite: 145]
+    "kerupuk": "kurupuk", // [cite: 146]
+    "kusir": "kusir", // [cite: 146]
+    "kura-kura": "kuya", // [cite: 147]
+    "karena": "lantaran", // [cite: 149]
+    "lentera": "lantera", // [cite: 149]
+    "pelan": "laun", // [cite: 150]
+    "mencair": "le eh", // [cite: 153]
+    "sayang": "nyaah", // [cite: 154]
+    "telat": "laat", // [cite: 155]
+    "halus": "lemes", // [cite: 156]
+    "lurus": "lempeng", // [cite: 156]
+    "langkah": "lengkah", // [cite: 157]
+    "cerah": "lenglang", // [cite: 157]
+    "lintah": "lentah", // [cite: 158]
+    "lemah": "letoy", // [cite: 159]
+    "lemas": "leuleus", // [cite: 160]
+    "lontong": "leupeut", // [cite: 162]
+    "lobang": "liang", // [cite: 164]
+    "alot": "liat", // [cite: 164]
+    "belok": "mengkol", // [cite: 166]
+    "minta": "menta", // [cite: 166]
+    "sering": "mindeng", // [cite: 171]
+    "mertua": "mitoha", // [cite: 171]
+    "beol": "modol", // [cite: 172]
+    "iya": "muhun", // [cite: 175]
+    "pulang": "mulih", // [cite: 175]
+    "mata kaki": "mumuncangan", // [cite: 176]
+    "kerbau": "munding", // [cite: 176]
+    "hanya": "mung", // [cite: 177]
+    "jatuh": "murag", // [cite: 178]
+    "demam": "muriang", // [cite: 179]
+    "selesai": "rengse", // [cite: 219]
+    "hening": "repeh", // [cite: 219]
+    "awan": "reueuk", // [cite: 219]
+    "bangga": "reueus", // [cite: 219]
+    "reot": "reyod", // [cite: 222]
+    "hemat": "rikrik", // [cite: 222]
+    "ringkas": "ringkes", // [cite: 222]
+    "sampah": "runtah", // [cite: 225]
+    "aneka": "rupa-rupa", // [cite: 226]
+    "terburu-buru": "rusuh", // [cite: 227]
+    "rawa": "ranca", // [cite: 229]
+    "intim": "raket", // [cite: 228]
+    "sama": "sarua", // [cite: 240]
+    "iri": "sirik", // [cite: 246]
+    "angsa": "soang", // [cite: 246]
+    "rindu": "sono", // [cite: 248]
+    "suara": "sora", // [cite: 248]
+    "jika": "sugan", // [cite: 250]
+    "sungut": "mulut", // [cite: 251]
+    "jamur": "supa", // [cite: 252]
+    "sorak": "surak", // [cite: 252]
+    "kabur": "sureum", // [cite: 252]
+    "payudara": "susu", // [cite: 252]
+    "sandal": "tarumpah", // [cite: 257]
+    "tamu": "tatamu", // [cite: 257]
+    "tetangga": "tatangga", // [cite: 257]
+    "berdiri": "tatih", // [cite: 258]
+    "tahun": "taun", // [cite: 258]
+    "cari": "teang", // [cite: 260]
+    "jauh": "tebih", // [cite: 260]
+    "lapang": "tegal", // [cite: 260]
+    "tegel": "tehel", // [cite: 261]
+    "leher": "tengek", // [cite: 263]
+    "kanan": "tengen", // [cite: 263]
+    "damai": "tengtrem", // [cite: 263]
+    "lihat": "tenjo", // [cite: 263]
+    "jumpa": "tepang", // [cite: 264]
+    "teras": "tepas", // [cite: 264]
+    "kemudian": "teras", // [cite: 265]
+    "tiri": "tere", // [cite: 266]
+    "tidak": "teu", // [cite: 266]
+    "berani": "teuneung", // [cite: 269]
+    "dingin": "tiis", // [cite: 271]
+    "tenggorokan": "tikoro", // [cite: 272]
+    "bekas": "tilas", // [cite: 274]
+    "teliti": "tilik", // [cite: 274]
+    "tiga": "tilu", // [cite: 275]
+    "kenal": "wawuh", // [cite: 278]
+    "kebal": "weduk", // [cite: 281]
+    "timur": "wetan", // [cite: 280]
+    "baru": "weuteuh", // [cite: 280]
+    "bijaksana": "wijaksana", // [cite: 281]
+    "bilangan": "wilangan", // [cite: 282]
+    "selamat": "wilujeng", // [cite: 282]
+    "biar": "wios", // [cite: 284]
+    "atap": "wuwung", // [cite: 286]
+    "watak": "watek", // [cite: 297]
+    "bahwa": "yen", // [cite: 293]
+    "usia": "yuswa", // [cite: 293]
+        };
+
+            input.addEventListener('input', function() {
+            let text = this.value;
+            if (!text || text.trim() === "") {
+                output.innerHTML = "Teks restorasi akan muncul di sini...";
+                return;
+            }
+
+            let tokens = text.split(/([ \n\r\t.,!?]+)/);
+            let translatedHtml = "";
+
+            for (let i = 0; i < tokens.length; i++) {
+                let token = tokens[i];
+                if (!token) continue;
+
+                let cleanWord = token.toLowerCase().trim();
+                
+                // PRIORITAS 1: Cek Kamus Buhun (Hijau + Tooltip)
+                if (buhunDict[cleanWord]) {
+                    let buhunData = buhunDict[cleanWord];
+                    translatedHtml += `<span class="buhun-word" data-meaning="${buhunData.meaning}">${buhunData.term}</span>`;
+                } 
+                // PRIORITAS 2: Cek Kamus Sunda Modern (Biru Cyan)
+                else if (modernDict[cleanWord]) {
+                    translatedHtml += `<span class="modern-sunda">${modernDict[cleanWord]}</span>`;
+                } 
+                // FALLBACK / LAPIS 3: Bahasa Asli (Abu-abu standar)
+                else {
+                    translatedHtml += token;
+                }
+            }
+            output.innerHTML = translatedHtml;
+        });
+
+        function copyResult() {
+            const outputDiv = document.getElementById('output');
+            const textToCopy = outputDiv.innerText || outputDiv.textContent;
+            if (textToCopy && textToCopy !== "Teks restorasi akan muncul di sini...") {
+                navigator.clipboard.writeText(textToCopy).then(() => alert('Berhasil disalin!'));
+            }
+        }
+    </script>
+</body>
+</html>
