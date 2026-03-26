@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara - Aetheric Frequency 432Hz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sundanese&display=swap" rel="stylesheet">
+    <style>
+        body { background: #050505; color: #2ecc71; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; }
+        .player-card { width: 100%; max-width: 600px; background: #0a0a0a; border: 2px solid #2ecc71; border-radius: 20px; padding: 30px; box-shadow: 0 0 20px rgba(46, 204, 113, 0.2); }
+        .header { text-align: center; margin-bottom: 25px; }
+        .aksara { font-family: 'Noto Sans Sundanese'; font-size: 3rem; color: #fff; margin-bottom: 10px; }
+        .status { font-size: 0.8rem; letter-spacing: 4px; color: #2ecc71; text-transform: uppercase; }
+        
+        /* Kontrol Audio */
+        .controls { display: flex; flex-direction: column; align-items: center; gap: 20px; margin: 30px 0; }
+        .btn-play { background: transparent; border: 2px solid #2ecc71; color: #2ecc71; border-radius: 50%; width: 80px; height: 80px; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+        .btn-play:hover { background: #2ecc71; color: #000; box-shadow: 0 0 15px #2ecc71; }
+        input[type=range] { width: 100%; accent-color: #2ecc71; }
+
+        /* Manual Alami Section */
+        .manual-box { background: #111; border-radius: 15px; padding: 20px; border-left: 5px solid #d4af37; margin-top: 20px; }
+        .manual-title { color: #d4af37; font-weight: bold; margin-bottom: 15px; font-size: 1rem; text-transform: uppercase; }
+        .step { font-size: 0.9rem; color: #ccc; margin-bottom: 12px; line-height: 1.5; }
+        .step b { color: #fff; }
+        .warning { font-size: 0.75rem; font-style: italic; color: #888; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="player-card">
+        <div class="header">
+            <div class="aksara">ᮠᮨᮔᮤᮀ</div>
+            <div class="status">Resonansi Alam : 432 Hz</div>
+        </div>
+
+        <div class="controls">
+            <button id="playBtn" class="btn-play" onclick="toggleFrequency()">▶</button>
+            <div id="freqLabel">Status: Off (Mute)</div>
+            <input type="range" id="volume" min="0" max="0.1" step="0.01" value="0.05">
+            <label style="font-size: 0.7rem;">Volume Output Skalar</label>
+        </div>
+
+        <div class="manual-box">
+            <div class="manual-title">Manual Alami : Step 2 (Non-Kristal)</div>
+            <div class="step">
+                <b>1. Pilar Basalt/Andesit:</b> Susun batu kali hitam yang berat di sekeliling area kandang. Ini berfungsi sebagai kapasitor untuk menahan guncangan frekuensi Matrix.
+            </div>
+            <div class="step">
+                <b>2. Filter Bio-Char:</b> Gunakan arang kayu sebagai alas kandang untuk menyerap radiasi elektromagnetik statis.
+            </div>
+            <div class="step">
+                <b>3. Grounding Tembaga:</b> Tanam kabel tembaga murni ke tanah untuk membuang polusi frekuensi transversal.
+            </div>
+            <div class="step">
+                <b>4. Vortex Suara:</b> Gunakan frekuensi 432Hz ini saat mengaduk air minum hewan secara Vortex (memutar).
+            </div>
+            <div class="warning">
+                *Tanpa Kristal, pemurnian dilakukan melalui media air, batu, dan suara.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx;
+        let oscillator;
+        let gainNode;
+        let isPlaying = false;
+
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            oscillator = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+
+            oscillator.type = 'sine'; // Gelombang sinus murni
+            oscillator.frequency.setValueAtTime(432, audioCtx.currentTime); // Frekuensi Alam
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            isPlaying = true;
+        }
+
+        function toggleFrequency() {
+            if (!audioCtx) {
+                initAudio();
+                document.getElementById('playBtn').innerText = "⏸";
+                document.getElementById('freqLabel').innerText = "Status: Terpancar (432Hz)";
+                return;
+            }
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+                document.getElementById('playBtn').innerText = "⏸";
+                document.getElementById('freqLabel').innerText = "Status: Terpancar (432Hz)";
+            } else if (audioCtx.state === 'running') {
+                audioCtx.suspend();
+                document.getElementById('playBtn').innerText = "▶";
+                document.getElementById('freqLabel').innerText = "Status: Off (Mute)";
+            }
+        }
+
+        // Update volume real-time
+        document.getElementById('volume').addEventListener('input', function() {
+            if (gainNode) {
+                gainNode.gain.setValueAtTime(this.value, audioCtx.currentTime);
+            }
+        });
+    </script>
+</body>
+</html>
