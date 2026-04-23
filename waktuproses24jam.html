@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Standalone Process Clock</title>
+    
+    <style>
+        :root { 
+            --gold: #d4af37; --bg: #050505; --panel: #0a0a0a;
+            --danger: #ff4757; --success: #2ed573; --cyan: #1e90ff; --warn: #ff9f43;
+        }
+        
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 40px 20px; box-sizing: border-box; 
+            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 70%);
+        }
+
+        .main-card { 
+            background: var(--panel); padding: 40px; border-radius: 30px; 
+            border: 1px solid #222; text-align: center; box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+            display: flex; flex-direction: column; align-items: center; max-width: 600px; width: 100%;
+        }
+
+        /* SETUP PANEL */
+        .setup-panel {
+            background: #111; border: 1px dashed var(--gold); border-radius: 15px;
+            padding: 20px; width: 100%; margin-bottom: 30px;
+        }
+        .setup-title { font-size: 0.8rem; color: var(--gold); letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
+        .time-inputs { display: flex; justify-content: center; gap: 10px; align-items: center; margin-bottom: 15px; }
+        .time-inputs input {
+            background: #000; border: 1px solid #333; color: #fff; font-size: 1.5rem;
+            font-family: monospace; width: 60px; text-align: center; border-radius: 8px; padding: 5px;
+        }
+        .time-inputs span { font-size: 1.5rem; font-weight: bold; color: #666; }
+        .btn-set { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .btn-set:hover { background: var(--gold); color: #000; }
+
+        /* ANALOG WALL CLOCK DESIGN */
+        .clock-outer {
+            padding: 15px; border-radius: 50%; background: linear-gradient(145deg, #222, #0a0a0a);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255,255,255,0.1);
+            margin-bottom: 25px;
+        }
+        .clock-face {
+            position: relative; width: 350px; height: 350px;
+            border-radius: 50%; border: 2px solid #111;
+            background: #0d0d0d; box-shadow: inset 0 0 30px rgba(0,0,0,0.9);
+        }
+        .clock-face::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 14px; height: 14px; background: var(--gold);
+            border-radius: 50%; transform: translate(-50%, -50%); z-index: 20;
+            box-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        /* Jarum Jam */
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; z-index: 10; }
+        .hr-hand { width: 8px; height: 90px; background: #fff; margin-left: -4px; z-index: 11; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+        .min-hand { width: 6px; height: 130px; background: #bbb; margin-left: -3px; z-index: 12; }
+        .sec-hand { width: 3px; height: 160px; background: var(--danger); margin-left: -1.5px; z-index: 15; }
+
+        /* Angka & Tick Marks */
+        .tick { position: absolute; width: 100%; height: 100%; z-index: 1; }
+        .tick::after { content: ''; position: absolute; top: 10px; left: 50%; width: 2px; height: 8px; background: #333; transform: translateX(-50%); }
+        .tick-main::after { width: 4px; height: 15px; background: var(--gold); }
+        .number { position: absolute; width: 100%; height: 100%; text-align: center; font-size: 1.5rem; font-weight: bold; color: #fff; padding-top: 35px; z-index: 2; font-family: 'Times New Roman', Times, serif; }
+
+        /* Digital Display & Duration */
+        .digital-readout {
+            font-family: monospace; font-size: 2.5rem; font-weight: bold;
+            color: var(--success); letter-spacing: 2px; margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(46, 213, 115, 0.3);
+        }
+        .stats-panel {
+            display: flex; justify-content: center; gap: 30px; width: 100%;
+            margin-bottom: 25px; border-top: 1px dashed #333; padding-top: 20px;
+        }
+        .stat-box { display: flex; flex-direction: column; align-items: center; }
+        .stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .stat-val { font-family: monospace; font-size: 1.2rem; font-weight: bold; }
+
+        /* Controls */
+        .controls { display: flex; gap: 15px; width: 100%; }
+        .btn { flex: 1; padding: 15px; border-radius: 12px; cursor: pointer; border: none; font-weight: 900; text-transform: uppercase; font-size: 1rem; transition: 0.2s; letter-spacing: 1px; }
+        .btn-start { background: var(--success); color: #000; box-shadow: 0 0 15px rgba(46, 213, 115, 0.2); }
+        .btn-stop { background: var(--danger); color: #fff; }
+        .btn-reset { background: #222; color: #fff; border: 1px solid #444; }
+
+        /* LOG PANEL */
+        .log-container { max-width: 800px; width: 100%; background: var(--panel); border: 1px solid #222; border-radius: 20px; padding: 25px; margin-top: 20px; }
+        .log-header { font-size: 1rem; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+        th { background: #000; color: #888; padding: 12px; border-bottom: 1px solid #333; }
+        td { padding: 12px; border-bottom: 1px solid #111; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <div style="letter-spacing: 5px; color: var(--gold); font-weight: bold; margin-bottom: 20px; font-size: 1.5rem; text-align: center;">
+        STANDALONE PROCESS CLOCK<br>
+        <span style="font-size: 0.7rem; color: #666; letter-spacing: 3px;">THE PERFECT ALIBI MACHINE</span>
+    </div>
+
+    <div class="main-card">
+        
+        <div class="setup-panel">
+            <div class="setup-title">Kalibrasi Waktu Awal (Suka-Suka)</div>
+            <div class="time-inputs">
+                <input type="number" id="setH" min="0" max="23" value="12"> <span>:</span>
+                <input type="number" id="setM" min="0" max="59" value="00"> <span>:</span>
+                <input type="number" id="setS" min="0" max="59" value="00">
+            </div>
+            <button class="btn-set" onclick="applyCustomTime()">Terapkan Waktu</button>
+        </div>
+
+        <div class="clock-outer">
+            <div class="clock-face" id="clockFace">
+                <div class="hand hr-hand" id="hrHand"></div>
+                <div class="hand min-hand" id="minHand"></div>
+                <div class="hand sec-hand" id="secHand"></div>
+            </div>
+        </div>
+
+        <div class="digital-readout" id="digitalTime">12:00:00</div>
+
+        <div class="stats-panel">
+            <div class="stat-box">
+                <div class="stat-label">Durasi Matrix (Nyata)</div>
+                <div class="stat-val" id="matrixDur" style="color: var(--cyan);">00:00:00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Durasi Proses (Jujur)</div>
+                <div class="stat-val" id="processDur" style="color: var(--success);">00:00:00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Waktu Termanipulasi</div>
+                <div class="stat-val" id="diffDur" style="color: var(--danger);">00:00:00</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-start" id="startBtn" onclick="toggleClock()">Mulai Jam</button>
+            <button class="btn btn-reset" onclick="resetAll()">Reset Sistem</button>
+        </div>
+    </div>
+
+    <div class="log-container">
+        <div class="log-header">Log Aktivitas Jam (Sesi Privat)</div>
+        <table id="logTable">
+            <thead>
+                <tr>
+                    <th>Waktu Mulai</th>
+                    <th>Waktu Berhenti</th>
+                    <th style="color: var(--cyan);">Lama Matrix</th>
+                    <th style="color: var(--success);">Lama Proses</th>
+                    <th style="color: var(--danger);">Korupsi Matrix</th>
+                </tr>
+            </thead>
+            <tbody id="logBody">
+                </tbody>
+        </table>
+    </div>
+
+<script>
+    const cosmicInflation = 0.923; // Faktor perlambatan waktu murni
+
+    let baseTimeSec = 12 * 3600; // Default jam 12:00:00
+    let running = false;
+    let systemStartTime = 0; // Timestamp kapan tombol start ditekan
+    
+    let accumulatedMatrixSec = 0;
+    let accumulatedProcessSec = 0;
+    
+    let sessionStartStr = ""; // Buat catetan log
+    let animationId;
+
+    // --- RENDER WAJAH JAM DINDING ---
+    const clockFace = document.getElementById('clockFace');
+    for (let i = 0; i < 60; i++) {
+        let tick = document.createElement('div');
+        tick.className = (i % 5 === 0) ? 'tick tick-main' : 'tick';
+        tick.style.transform = `rotate(${i * 6}deg)`;
+        clockFace.appendChild(tick);
+    }
+    const numerals = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    numerals.forEach((num, i) => {
+        let n = document.createElement('div');
+        n.className = 'number';
+        n.style.transform = `rotate(${i * 30}deg)`;
+        n.innerHTML = `<div style="transform: rotate(-${i * 30}deg)">${num}</div>`;
+        clockFace.appendChild(n);
+    });
+
+    // --- FUNGSI FORMAT WAKTU ---
+    function formatHHMMSS(totalSeconds) {
+        const h = Math.floor(totalSeconds / 3600) % 24;
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = Math.floor(totalSeconds % 60);
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    // --- TERAPKAN WAKTU AWAL ---
+    function applyCustomTime() {
+        if(running) return alert("Hentikan jam terlebih dahulu untuk kalibrasi ulang!");
+        
+        const h = parseInt(document.getElementById('setH').value) || 0;
+        const m = parseInt(document.getElementById('setM').value) || 0;
+        const s = parseInt(document.getElementById('setS').value) || 0;
+        
+        baseTimeSec = (h * 3600) + (m * 60) + s;
+        accumulatedMatrixSec = 0;
+        accumulatedProcessSec = 0;
+        
+        updateDisplays(baseTimeSec, 0, 0);
+    }
+
+    // --- UPDATE UI ---
+    function updateDisplays(currentClockSec, matrixDur, processDur) {
+        // 1. Digital Utama
+        document.getElementById('digitalTime').innerText = formatHHMMSS(currentClockSec);
+        
+        // 2. Jarum Jam Analog
+        const h = Math.floor(currentClockSec / 3600);
+        const m = Math.floor((currentClockSec % 3600) / 60);
+        const s = Math.floor(currentClockSec % 60);
+
+        const secDeg = s * 6; 
+        const minDeg = m * 6 + (s * 0.1); 
+        const hrDeg = (h % 12) * 30 + (m * 0.5); 
+
+        document.getElementById('secHand').style.transform = `rotate(${secDeg}deg)`;
+        document.getElementById('minHand').style.transform = `rotate(${minDeg}deg)`;
+        document.getElementById('hrHand').style.transform = `rotate(${hrDeg}deg)`;
+
+        // 3. Durasi Panel Bawah
+        document.getElementById('matrixDur').innerText = formatHHMMSS(matrixDur);
+        document.getElementById('processDur').innerText = formatHHMMSS(processDur);
+        
+        const diff = matrixDur - processDur;
+        document.getElementById('diffDur').innerText = formatHHMMSS(diff >= 0 ? diff : 0);
+    }
+
+    // --- ENGINE MESIN WAKTU ---
+    function engine() {
+        if (!running) return;
+        
+        const now = performance.now();
+        const deltaSec = (now - systemStartTime) / 1000;
+        
+        // Hitung total durasi sesi ini
+        const currentMatrixDur = accumulatedMatrixSec + deltaSec;
+        const currentProcessDur = currentMatrixDur * cosmicInflation; // Perlambatan murni
+        
+        // Waktu di jam dinding adalah: Waktu Awal + Total Durasi Proses
+        const currentClockSec = baseTimeSec + currentProcessDur;
+
+        updateDisplays(currentClockSec, currentMatrixDur, currentProcessDur);
+        
+        animationId = requestAnimationFrame(engine);
+    }
+
+    // --- KENDALI START / STOP ---
+    function toggleClock() {
+        const btn = document.getElementById('startBtn');
+        
+        if (!running) {
+            // START
+            running = true;
+            systemStartTime = performance.now();
+            sessionStartStr = formatHHMMSS(baseTimeSec + accumulatedProcessSec);
+            
+            btn.innerText = "Hentikan Jam";
+            btn.className = "btn btn-stop";
+            
+            // Disable inputs
+            document.querySelectorAll('.time-inputs input').forEach(el => el.disabled = true);
+            
+            engine();
+        } else {
+            // STOP
+            running = false;
+            const now = performance.now();
+            const deltaSec = (now - systemStartTime) / 1000;
+            
+            accumulatedMatrixSec += deltaSec;
+            accumulatedProcessSec = accumulatedMatrixSec * cosmicInflation;
+            
+            cancelAnimationFrame(animationId);
+            
+            btn.innerText = "Lanjut Putar";
+            btn.className = "btn btn-start";
+            
+            // Catat ke Log
+            logSession();
+        }
+    }
+
+    function resetAll() {
+        running = false;
+        cancelAnimationFrame(animationId);
+        
+        accumulatedMatrixSec = 0;
+        accumulatedProcessSec = 0;
+        applyCustomTime(); // Balik ke settingan form
+        
+        document.getElementById('startBtn').innerText = "Mulai Jam";
+        document.getElementById('startBtn').className = "btn btn-start";
+        document.querySelectorAll('.time-inputs input').forEach(el => el.disabled = false);
+    }
+
+    function logSession() {
+        const sessionStopStr = formatHHMMSS(baseTimeSec + accumulatedProcessSec);
+        const diffSec = accumulatedMatrixSec - accumulatedProcessSec;
+        
+        const row = `<tr>
+            <td style="color: #bbb;">${sessionStartStr}</td>
+            <td style="color: #fff; font-weight: bold;">${sessionStopStr}</td>
+            <td style="color: var(--cyan);">${formatHHMMSS(accumulatedMatrixSec)}</td>
+            <td style="color: var(--success);">${formatHHMMSS(accumulatedProcessSec)}</td>
+            <td style="color: var(--danger); font-weight: bold;">${formatHHMMSS(diffSec >= 0 ? diffSec : 0)}</td>
+        </tr>`;
+        
+        document.getElementById('logBody').insertAdjacentHTML('afterbegin', row);
+    }
+
+    // Inisialisasi awal UI
+    applyCustomTime();
+
+</script>
+</body>
+</html>

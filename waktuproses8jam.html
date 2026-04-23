@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuswantara OS - Absolute 8-Hour Clock</title>
+    <style>
+        :root { 
+            --gold: #d4af37; --bg: #050505; --panel: #0a0a0a;
+            --danger: #ff4757; --success: #2ed573; --cyan: #1e90ff; --warn: #ff9f43;
+            /* Zona Fase */
+            --color-z1: rgba(255, 215, 0, 0.15); /* Emas */
+            --color-z2: rgba(255, 69, 0, 0.15);  /* Oranye */
+            --color-z3: rgba(0, 255, 127, 0.15); /* Hijau */
+            --color-z4: rgba(30, 144, 255, 0.15); /* Biru */
+        }
+        
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 40px 20px; box-sizing: border-box; 
+            background-image: radial-gradient(circle at 50% 0%, #111 0%, #050505 70%);
+        }
+
+        .main-card { 
+            background: var(--panel); padding: 40px; border-radius: 30px; 
+            border: 1px solid #222; text-align: center; box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+            display: flex; flex-direction: column; align-items: center; max-width: 650px; width: 100%;
+        }
+
+        /* CALIBRATION PANEL */
+        .setup-panel {
+            background: #0d0d0d; border: 1px dashed var(--gold); border-radius: 15px;
+            padding: 20px; width: 100%; margin-bottom: 30px;
+        }
+        .setup-title { font-size: 0.8rem; color: var(--gold); letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; }
+        .setup-row { display: flex; justify-content: center; gap: 15px; align-items: center; margin-bottom: 15px; }
+        select, input {
+            background: #000; border: 1px solid #333; color: #fff; font-size: 1.2rem;
+            border-radius: 8px; padding: 8px; cursor: pointer;
+        }
+
+        /* ANALOG 8-HOUR CLOCK */
+        .clock-outer {
+            padding: 15px; border-radius: 50%; background: linear-gradient(145deg, #222, #0a0a0a);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 2px 2px rgba(255,255,255,0.1);
+            margin-bottom: 30px; position: relative;
+        }
+        .clock-face {
+            position: relative; width: 350px; height: 350px;
+            border-radius: 50%; border: 3px solid #111;
+            background: #000; overflow: hidden;
+        }
+        
+        /* 4 Zona Fase Background */
+        .zones-bg {
+            position: absolute; width: 100%; height: 100%;
+            background: conic-gradient(
+                var(--color-z1) 0deg 90deg, 
+                var(--color-z2) 90deg 180deg, 
+                var(--color-z3) 180deg 270deg, 
+                var(--color-z4) 270deg 360deg
+            );
+            z-index: 1;
+        }
+
+        .clock-face::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 16px; height: 16px; background: var(--gold);
+            border-radius: 50%; transform: translate(-50%, -50%); z-index: 20;
+        }
+
+        /* Jarum Jam (8 Jam cycle) */
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; z-index: 10; }
+        .hr-hand { width: 8px; height: 100px; background: #fff; margin-left: -4px; z-index: 11; }
+        .min-hand { width: 5px; height: 140px; background: var(--gold); margin-left: -2.5px; z-index: 12; opacity: 0.8; }
+        
+        /* Tick Marks (8 segmen) */
+        .tick { position: absolute; width: 100%; height: 100%; z-index: 2; }
+        .tick::after { content: ''; position: absolute; top: 10px; left: 50%; width: 2px; height: 10px; background: #444; transform: translateX(-50%); }
+        .tick-main::after { width: 4px; height: 20px; background: var(--gold); }
+        .number { position: absolute; width: 100%; height: 100%; text-align: center; font-size: 1.8rem; font-weight: bold; color: #fff; padding-top: 30px; z-index: 3; }
+
+        /* Digital UI */
+        .digital-box { margin-bottom: 25px; text-align: center; }
+        .nus-time-digital { font-size: 3rem; font-family: monospace; font-weight: bold; color: var(--gold); text-shadow: 0 0 20px rgba(212,175,55,0.3); line-height: 1; }
+        .nus-session { font-size: 0.9rem; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; margin-top: 10px; font-weight: bold;}
+        .nus-phase { font-size: 1.2rem; color: var(--success); letter-spacing: 2px; margin-top: 5px; }
+
+        /* Comparison Stats */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; border-top: 1px dashed #333; padding-top: 25px; margin-top: 10px; }
+        .stat-box { display: flex; flex-direction: column; align-items: center; }
+        .stat-label { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .stat-val { font-family: monospace; font-size: 1.1rem; font-weight: bold; }
+
+        /* Controls */
+        .controls { display: flex; gap: 15px; width: 100%; margin-top: 30px; }
+        .btn { flex: 1; padding: 18px; border-radius: 15px; cursor: pointer; border: none; font-weight: 900; text-transform: uppercase; font-size: 1rem; transition: 0.3s; }
+        .btn-start { background: var(--success); color: #000; box-shadow: 0 10px 20px rgba(46, 213, 115, 0.1); }
+        .btn-stop { background: var(--danger); color: #fff; }
+        .btn-reset { background: #222; color: #fff; border: 1px solid #444; }
+
+        /* Log Panel */
+        .log-panel { max-width: 900px; width: 100%; background: var(--panel); border: 1px solid #222; border-radius: 20px; padding: 30px; margin-top: 30px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
+        th { color: #555; text-transform: uppercase; padding-bottom: 15px; border-bottom: 1px solid #333; letter-spacing: 1px; }
+        td { padding: 12px 5px; border-bottom: 1px solid #111; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <div style="letter-spacing: 8px; color: var(--gold); font-weight: bold; margin-bottom: 30px; font-size: 1.5rem;">
+        NUSWANTARA STANDALONE OS<br>
+        <span style="font-size: 0.6rem; color: #555; letter-spacing: 4px;">ABSOLUTE 8-HOUR PROCESS CLOCK</span>
+    </div>
+
+    <div class="main-card">
+        <div class="setup-panel">
+            <div class="setup-title">Kalibrasi Sesi Awal</div>
+            <div class="setup-row">
+                <select id="setH">
+                    <option value="1">Jam 1</option><option value="2">Jam 2</option><option value="3">Jam 3</option><option value="4">Jam 4</option>
+                    <option value="5" selected>Jam 5</option><option value="6">Jam 6</option><option value="7">Jam 7</option><option value="8">Jam 8</option>
+                </select>
+                <input type="number" id="setM" min="0" max="89" value="00" placeholder="Menit (0-89)">
+                <select id="setSess">
+                    <option value="SIANG">SIANG</option>
+                    <option value="MALAM">MALAM</option>
+                </select>
+            </div>
+            <button onclick="applyCalibration()" style="background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 5px 20px; border-radius: 5px; cursor: pointer; font-size: 0.8rem;">Terapkan Kalibrasi</button>
+        </div>
+
+        <div class="clock-outer">
+            <div class="clock-face" id="clockFace">
+                <div class="zones-bg"></div>
+                <div class="hand hr-hand" id="hrHand"></div>
+                <div class="hand min-hand" id="minHand"></div>
+            </div>
+        </div>
+
+        <div class="digital-box">
+            <div class="nus-time-digital" id="digitalNus">05:00</div>
+            <div class="nus-session" id="digitalSess">SIANG</div>
+            <div class="nus-phase" id="digitalPhase">FASE DUHA</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-label">Lama Sesi (Masehi)</div>
+                <div class="stat-val" id="matrixDur" style="color: var(--cyan);">00:00:00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Lama Sesi (Proses)</div>
+                <div class="stat-val" id="processDur" style="color: var(--success);">00:00:00</div>
+            </div>
+        </div>
+        <div style="margin-top: 15px; font-size: 0.7rem; color: var(--danger); letter-spacing: 2px;">
+            KORUPSI MATRIKS: <span id="corruptionVal">00:00:00</span>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-start" id="startBtn" onclick="toggleClock()">Mulai Jam</button>
+            <button class="btn btn-reset" onclick="resetSystem()">Reset</button>
+        </div>
+    </div>
+
+    <div class="log-panel">
+        <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 20px; letter-spacing: 3px; font-weight: bold; text-transform: uppercase;">Log Alibi Waktu Proses</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Start Nus</th>
+                    <th>Stop Nus</th>
+                    <th style="color: var(--cyan);">Durasi Masehi</th>
+                    <th style="color: var(--success);">Durasi Proses</th>
+                    <th style="color: var(--danger);">Korupsi</th>
+                </tr>
+            </thead>
+            <tbody id="logBody"></tbody>
+        </table>
+    </div>
+
+<script>
+    // --- LOGIKA ENGINE NUSWANTARA ---
+    const cosmicInflation = 0.923; // Anti-Inflasi 2019 Base
+    const phaseDB = [
+        { name: "HENING", engine: "SIREPAN-HENING", range: [1, 2] },
+        { name: "FAJAR", engine: "HENING-FAJAR", range: [3, 4] },
+        { name: "DUHA", engine: "FAJAR-DUHA", range: [5, 6] },
+        { name: "KARYA", engine: "DUHA-KARYA", range: [7, 8] }
+    ];
+
+    let running = false;
+    let systemStartTime = 0;
+    let accMatrixSec = 0;
+    
+    // Keadaan Jam (Nuswantara)
+    let baseH = 5;
+    let baseM = 0;
+    let baseSess = "SIANG";
+    
+    let sessionStartLabel = "";
+    let animationId;
+
+    // --- RENDER WAJAH JAM ---
+    const clockFace = document.getElementById('clockFace');
+    for (let i = 0; i < 48; i++) {
+        let t = document.createElement('div');
+        t.className = (i % 6 === 0) ? 'tick tick-main' : 'tick';
+        t.style.transform = `rotate(${i * 7.5}deg)`;
+        clockFace.appendChild(t);
+    }
+    [8, 1, 2, 3, 4, 5, 6, 7].forEach((num, i) => {
+        let n = document.createElement('div');
+        n.className = 'number';
+        n.style.transform = `rotate(${i * 45}deg)`;
+        n.innerHTML = `<div style="transform: rotate(-${i * 45}deg)">${num}</div>`;
+        clockFace.appendChild(n);
+    });
+
+    function formatTime(s) {
+        const h = Math.floor(s / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = Math.floor(s % 60);
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+    }
+
+    function applyCalibration() {
+        if(running) return;
+        baseH = parseInt(document.getElementById('setH').value);
+        baseM = parseInt(document.getElementById('setM').value);
+        baseSess = document.getElementById('setSess').value;
+        updateUI(0, 0);
+    }
+
+    function updateUI(matrixDur, processDur) {
+        // 1. Hitung Waktu Nuswantara (1 Jam = 90 Menit Masehi = 5400 detik)
+        const totalStartSec = (baseH * 5400) + (baseM * 60);
+        const currentTotalSec = totalStartSec + processDur;
+        
+        let curH = Math.floor(currentTotalSec / 5400);
+        let curM = Math.floor((currentTotalSec % 5400) / 60);
+        let displayH = curH % 8 || 8;
+        
+        // Cek Sesi (SIANG/MALAM) - Berubah tiap 8 jam nuswantara
+        const sessionSwaps = Math.floor(curH / 8);
+        let currentSess = baseSess;
+        if (sessionSwaps % 2 !== 0) currentSess = (baseSess === "SIANG") ? "MALAM" : "SIANG";
+
+        // 2. Render Analog
+        const minDeg = (curM / 90) * 360; 
+        const hrDeg = (curH % 8) * 45 + (curM / 90) * 45;
+        document.getElementById('minHand').style.transform = `rotate(${minDeg}deg)`;
+        document.getElementById('hrHand').style.transform = `rotate(${hrDeg}deg)`;
+
+        // 3. Digital UI
+        document.getElementById('digitalNus').innerText = `${String(displayH).padStart(2,'0')}:${String(curM).padStart(2,'0')}`;
+        document.getElementById('digitalSess').innerText = currentSess;
+        
+        // Fase Logic (Tiap 2 jam Nus / 3 jam Masehi)
+        const phaseIdx = Math.floor((displayH - 1) / 2);
+        const phase = (currentSess === "SIANG") ? 
+            ["ISTIWA", "ASAR", "SANDIKALA", "SIREPAN"][phaseIdx] : 
+            ["HENING", "FAJAR", "DUHA", "KARYA"][phaseIdx];
+        document.getElementById('digitalPhase').innerText = `FASE ${phase}`;
+
+        // 4. Comparison Stats
+        document.getElementById('matrixDur').innerText = formatTime(matrixDur);
+        document.getElementById('processDur').innerText = formatTime(processDur);
+        document.getElementById('corruptionVal').innerText = formatTime(matrixDur - processDur);
+    }
+
+    function engine() {
+        if (!running) return;
+        const now = performance.now();
+        const deltaMatrix = (now - systemStartTime) / 1000;
+        const matrixDur = accMatrixSec + deltaMatrix;
+        const processDur = matrixDur * cosmicInflation;
+
+        updateUI(matrixDur, processDur);
+        animationId = requestAnimationFrame(engine);
+    }
+
+    function toggleClock() {
+        const btn = document.getElementById('startBtn');
+        if (!running) {
+            running = true;
+            systemStartTime = performance.now();
+            sessionStartLabel = document.getElementById('digitalNus').innerText + " " + baseSess;
+            btn.innerText = "Hentikan Sesi";
+            btn.className = "btn btn-stop";
+            engine();
+        } else {
+            running = false;
+            accMatrixSec += (performance.now() - systemStartTime) / 1000;
+            cancelAnimationFrame(animationId);
+            btn.innerText = "Lanjut Sesi";
+            btn.className = "btn btn-start";
+            logSession();
+        }
+    }
+
+    function logSession() {
+        const matrix = document.getElementById('matrixDur').innerText;
+        const process = document.getElementById('processDur').innerText;
+        const corruption = document.getElementById('corruptionVal').innerText;
+        const stopLabel = document.getElementById('digitalNus').innerText + " " + document.getElementById('digitalSess').innerText;
+
+        const row = `<tr>
+            <td>${sessionStartLabel}</td>
+            <td style="font-weight:bold">${stopLabel}</td>
+            <td style="color:var(--cyan)">${matrix}</td>
+            <td style="color:var(--success)">${process}</td>
+            <td style="color:var(--danger); font-weight:bold">-${corruption}</td>
+        </tr>`;
+        document.getElementById('logBody').insertAdjacentHTML('afterbegin', row);
+    }
+
+    function resetSystem() {
+        running = false;
+        cancelAnimationFrame(animationId);
+        accMatrixSec = 0;
+        document.getElementById('startBtn').innerText = "Mulai Jam";
+        document.getElementById('startBtn').className = "btn btn-start";
+        applyCalibration();
+    }
+
+    // Init
+    updateUI(0, 0);
+</script>
+</body>
+</html>
