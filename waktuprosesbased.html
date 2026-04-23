@@ -7,7 +7,8 @@
     <style>
         :root { 
             --gold: #d4af37; --bg: #050505; --panel: #0a0a0a;
-            --danger: #ff4757; --success: #2ed573; --cyan: #1e90ff; --text-dim: #888;
+            --danger: #ff4757; --success: #2ed573; --cyan: #1e90ff; 
+            --warn: #ff9f43; --text-dim: #888;
         }
         
         body { 
@@ -51,6 +52,7 @@
         .badge { align-self: flex-start; font-size: 0.65rem; font-family: monospace; padding: 4px 10px; border-radius: 20px; font-weight: bold; letter-spacing: 1px; margin-bottom: 15px; }
         .badge-core { background: rgba(30, 144, 255, 0.1); color: var(--cyan); border: 1px solid var(--cyan); }
         .badge-tool { background: rgba(46, 213, 115, 0.1); color: var(--success); border: 1px solid var(--success); }
+        .badge-private { background: rgba(255, 159, 67, 0.1); color: var(--warn); border: 1px solid var(--warn); }
         .badge-doc { background: rgba(255, 71, 87, 0.1); color: var(--danger); border: 1px solid var(--danger); }
 
         .card-title { font-size: 1.3rem; color: #fff; margin: 0 0 10px 0; letter-spacing: 1px; }
@@ -67,7 +69,7 @@
 
     <div class="header">
         <h1>Sunda Nuswantara OS</h1>
-        <p>TERMINAL ROOT v12.3</p>
+        <p>TERMINAL ROOT v12.4</p>
         <div class="sys-status">SYSTEM ONLINE // DECOMPRESSION AVOIDED</div>
     </div>
 
@@ -93,33 +95,57 @@
         <div class="category-title" style="border-color: var(--success);">2. Audit & Measurement (Instrumen Fisika)</div>
         <div class="grid">
             <a href="timeinflation.html" class="card">
-                <div class="badge badge-tool">AUDIT TOOL</div>
+                <div class="badge badge-tool">AUDIT TOOL V8</div>
                 <h3 class="card-title">Time Auditor: Evolution Logger</h3>
-                <p class="card-desc">Instrumen komparasi <em>real-time</em> Waktu Masehi vs Waktu Proses. Memiliki fitur proyeksi dinamis (Self-Correcting) dan pencatatan Checkpoint otomatis untuk membuktikan pemadatan waktu (Inflasi).</p>
+                <p class="card-desc">Instrumen komparasi <em>real-time</em> Waktu Masehi vs Waktu Proses. Fitur proyeksi dinamis (Self-Correcting) dan pencatatan Checkpoint (1 Jam - 1 Tahun).</p>
                 <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
             </a>
 
-            <a href="timeinflation3.html" class="card">
-                <div class="badge badge-tool">PRIVATE SESSION</div>
-                <h3 class="card-title">Honest Time Watch (Analog)</h3>
-                <p class="card-desc">Stopwatch linear murni berbasis akumulasi unit kerja (Entropi). Gunakan untuk kebutuhan aktivitas yang membutuhkan kepastian durasi absolut agar terhindar dari defisit waktu kosmik.</p>
+            <a href="timeinflation5.html" class="card">
+                <div class="badge badge-tool">AUDIT TOOL V9</div>
+                <h3 class="card-title">Time Auditor: 24H Mapper</h3>
+                <p class="card-desc">Mesin pemetaan fluktuasi waktu otomatis. Berjalan 24 jam penuh untuk merekam dan melacak di fase/jam berapa korupsi waktu matriks paling ganas terjadi.</p>
                 <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
             </a>
         </div>
 
-        <div class="category-title" style="border-color: var(--danger);">3. Research & Data (Makalah Ilmiah)</div>
+        <div class="category-title" style="border-color: var(--warn);">3. Private Time Engines (Mesin Isolasi Matrix)</div>
+        <div class="grid">
+            <a href="timeinflation3.html" class="card">
+                <div class="badge badge-private">SESSION TIMER</div>
+                <h3 class="card-title">Honest Time Watch (Analog)</h3>
+                <p class="card-desc">Stopwatch linear murni berbasis akumulasi unit kerja. Gunakan untuk aktivitas yang butuh kepastian durasi absolut (rebus telur, proses kimia, dll).</p>
+                <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
+            </a>
+
+            <a href="waktuproses24jam.html" class="card">
+                <div class="badge badge-private">STANDALONE 24H</div>
+                <h3 class="card-title">Standalone Process Clock</h3>
+                <p class="card-desc">Mesin pembuat alibi waktu. Jam dinding Masehi desentralisasi yang bisa dikalibrasi secara manual dan berjalan secara terisolasi menggunakan detak Waktu Proses.</p>
+                <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
+            </a>
+
+            <a href="waktuproses8jam.html" class="card">
+                <div class="badge badge-private">STANDALONE 8H</div>
+                <h3 class="card-title">Absolute 8-Hour Clock</h3>
+                <p class="card-desc">Jam dinding absolut berbasis 8 jam Nuswantara. Menggabungkan kebebasan kalibrasi manual, zona 4 fase energi, dan detak anti-inflasi murni.</p>
+                <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
+            </a>
+        </div>
+
+        <div class="category-title" style="border-color: var(--danger);">4. Research & Data (Makalah Ilmiah)</div>
         <div class="grid">
             <a href="timeinflation2.html" class="card">
                 <div class="badge badge-doc">WHITEPAPER</div>
                 <h3 class="card-title">Manifesto Resolusi Waktu</h3>
-                <p class="card-desc">Dokumen putih yang mengupas krisis "Decompressed Energy". Membahas dampak sistemik akselerasi waktu terhadap <em>burnout</em> biologis dan kelangkaan energi riil di dunia modern.</p>
+                <p class="card-desc">Dokumen putih yang mengupas krisis "Decompressed Energy". Membahas dampak sistemik akselerasi waktu terhadap <em>burnout</em> biologis dan energi riil.</p>
                 <div class="card-footer"><span>Buka Dokumen</span> <span class="arrow">→</span></div>
             </a>
 
             <a href="timeinflation4.html" class="card">
                 <div class="badge badge-doc">THEORY & EQUATIONS</div>
                 <h3 class="card-title">Teori Fundamental Waktu Proses</h3>
-                <p class="card-desc">Jurnal ilmiah tingkat lanjut mengenai dekonstruksi mekanika komputasi absolut Masehi. Berisi landasan matematis dan parameter pembuktian Waktu Proses sebagai standar baru fisika.</p>
+                <p class="card-desc">Jurnal ilmiah tingkat lanjut mengenai dekonstruksi mekanika komputasi absolut Masehi. Berisi landasan matematis dan persamaan Waktu Proses.</p>
                 <div class="card-footer"><span>Buka Dokumen</span> <span class="arrow">→</span></div>
             </a>
         </div>
