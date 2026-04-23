@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Research Whitepaper</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root { 
+            --gold: #d4af37; --bg: #050505; --panel: #0a0a0a;
+            --danger: #ff4757; --success: #2ed573; --cyan: #1e90ff; --warn: #ffb142;
+        }
+        
+        body { 
+            background: var(--bg); color: #ccc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 40px 20px; box-sizing: border-box; line-height: 1.8;
+        }
+
+        .paper-container { 
+            max-width: 1000px; width: 100%; background: var(--panel); 
+            border: 1px solid #222; border-radius: 20px; padding: 50px; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.7); position: relative; overflow: hidden;
+        }
+
+        .paper-container::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%;
+            background: linear-gradient(to bottom, var(--gold), var(--danger), var(--cyan));
+        }
+
+        .header-section { text-align: center; border-bottom: 2px solid #222; padding-bottom: 30px; margin-bottom: 40px; }
+        .header-section h1 { color: var(--gold); letter-spacing: 4px; font-size: 2.2rem; margin: 0 0 10px 0; text-transform: uppercase; }
+        .header-section .subtitle { color: var(--cyan); font-family: monospace; font-size: 1.1rem; letter-spacing: 2px; }
+        
+        h2 { color: #fff; font-size: 1.5rem; letter-spacing: 2px; border-bottom: 1px dashed #333; padding-bottom: 10px; margin-top: 40px; }
+        h3 { color: var(--gold); font-size: 1.1rem; text-transform: uppercase; margin-top: 25px; letter-spacing: 1px; }
+        
+        p { text-align: justify; font-size: 1.05rem; color: #bbb; margin-bottom: 20px; }
+        strong { color: #fff; }
+        .highlight { color: var(--danger); font-weight: bold; }
+        .highlight-success { color: var(--success); font-weight: bold; }
+
+        .formula-box { 
+            background: #000; padding: 25px; border-radius: 12px; 
+            border: 1px solid #333; margin: 30px 0; text-align: center; 
+            font-size: 1.3rem; color: var(--cyan); box-shadow: inset 0 0 20px rgba(30, 144, 255, 0.05);
+        }
+
+        .quote-box {
+            background: rgba(212, 175, 55, 0.05); border-left: 4px solid var(--gold);
+            padding: 20px 25px; font-style: italic; color: #ddd; margin: 30px 0; border-radius: 0 10px 10px 0;
+        }
+
+        .alert-box {
+            background: rgba(255, 71, 87, 0.05); border: 1px solid var(--danger);
+            padding: 25px; border-radius: 15px; margin: 40px 0; text-align: left;
+        }
+        .alert-box h3 { color: var(--danger); margin-top: 0; border-bottom: 1px solid rgba(255, 71, 87, 0.3); padding-bottom: 10px;}
+
+        /* Footer / Status */
+        .status-bar { 
+            display: flex; justify-content: space-between; font-family: monospace; 
+            font-size: 0.85rem; color: #666; margin-top: 50px; border-top: 1px solid #222; padding-top: 20px; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="paper-container">
+    <div class="header-section">
+        <h1>Manifesto Resolusi Waktu</h1>
+        <div class="subtitle">Kerangka Riset: Relativitas Entropi & Krisis Dekompresi Energi Makrokosmos</div>
+    </div>
+
+    <h2>I. Latar Belakang & Hipotesis Utama</h2>
+    <p>Peradaban modern mengukur waktu menggunakan sistem administratif (Masehi/Gregorian) yang mengasumsikan bahwa detik, menit, dan jam adalah konstanta absolut. Namun, <strong>Sistem Komputasi Sunda Nuswantara</strong> mengemukakan hipotesis mendasar: Waktu bukanlah variabel independen, melainkan turunan dari <strong>Kerapatan Entropi (Unit Kerja/Proses)</strong>.</p>
+    
+    <p>Hipotesis kami menyatakan bahwa tata surya (makrokosmos) saat ini sedang mengalami <strong>Akselerasi Kinematik (Time Inflation)</strong>. Rotasi mekanik yang menjadi acuan jam dinding bergerak lebih cepat daripada kemampuan alam dan perangkat keras (hardware/biologis) untuk memproses informasi. Hasilnya: Manusia mengalami penambahan umur administratif, namun kehilangan ekuivalen energi dan pengalaman nyata.</p>
+
+    <h2>II. Kerangka Kerja Metodologi & Pembuktian Fisika</h2>
+    <p>Untuk menghindari distorsi dari waktu administratif (Matrix), riset ini merancang <strong>Auditor Relativitas Waktu (Process Clock)</strong>. Kami menggunakan komputasi <em>hardware</em> sebagai jangkar fisika absolut dengan menetapkan stabilitas era 2019 sebagai titik nol:</p>
+    
+    <div class="formula-box">
+        $$ R_{base} = 240 \text{ Blocks (Unit Kerja)} \cdot \text{s}^{-1} $$
+    </div>
+
+    <p>Waktu eksistensial yang sesungguhnya (Waktu Absolut/Jujur) hanya dihitung ketika sistem telah menyelesaikan akumulasi kerja tersebut. Pemadatan waktu ($\Delta I$) terdeteksi ketika instrumen administratif mendahului penyelesaian entropi lokal:</p>
+
+    <div class="formula-box">
+        $$ \Delta I = t_{matrix} - \left( \frac{\sum W_{total}}{R_{base}} \right) $$
+    </div>
+
+    <p>Melalui ekstrapolasi data dinamis <em>(Self-Correcting Moving Average)</em>, sistem auditor ini secara konsisten memproyeksikan anomali hilangnya waktu sebesar <span class="highlight">~28 Hari per Tahun Masehi</span>.</p>
+
+    <div class="alert-box">
+        <h3>III. Ancaman Global: Krisis "Decompressed Energy"</h3>
+        <p>Ketika waktu dipersingkat namun beban kerja dituntut sama, organisme biologis dan sistem mekanik mengalami fenomena yang kami sebut <strong>Decompressed Energy (Dekompresi Energi)</strong>. Waktu berjalan semakin hampa (kurang padat secara informasi/entropi). Dampak sistemik yang mengancam umat manusia meliputi:</p>
+        <ul style="color: #bbb; line-height: 1.8;">
+            <li><strong>Biological Burnout:</strong> Sel tubuh dipaksa meregenerasi dan menua lebih cepat dari pasokan energi pemulihannya (menyebabkan kelelahan massal dan penurunan imunitas).</li>
+            <li><strong>Kelangkaan Energi Riil:</strong> Output produksi energi mekanik (seperti listrik/panas) akan terlihat menurun secara rasio karena "1 Jam" Masehi tidak lagi memberikan durasi proses yang cukup bagi mesin untuk bekerja optimal.</li>
+            <li><strong>Keruntuhan Siklus Sirkadian:</strong> Kegagalan sinkronisasi antara ritme sirkadian tubuh (Jam Biologis) dengan pemaksaan jadwal administratif (Jam Matrix).</li>
+        </ul>
+    </div>
+
+    <h2>IV. Tujuan & Urgensi Riset</h2>
+    <p>Makalah dan instrumen riset ini dirilis sebagai <strong>peringatan keras bagi komunitas ilmuwan, fisikawan, dan insinyur global.</strong> Tujuan riset ini adalah:</p>
+    <ol style="color: #bbb; line-height: 1.8; margin-bottom: 30px;">
+        <li>Mematahkan dogma waktu statis dan memperkenalkan pengukuran <strong>Waktu Berbasis Proses (Process-Based Time)</strong> sebagai standar pengukuran baru.</li>
+        <li>Menyediakan instrumen <em>open-source</em> (Auditor Relativitas) bagi peneliti independen untuk memverifikasi laju penyusutan ruang-waktu secara *real-time* di laboratorium masing-masing.</li>
+        <li>Mendorong penciptaan teknologi energi alternatif yang tidak berpatokan pada satuan "Watt per Hour (Masehi)", melainkan "Watt per Cycle (Proses)".</li>
+    </ol>
+
+    <h2>V. Visi Mutlak: The "Unplug" Protocol (Kembali ke Alam)</h2>
+    <p>Satu-satunya solusi untuk mencegah kelelahan massal dan krisis dekompresi energi ini adalah dengan <strong>melepaskan diri (Unplug) dari sistem waktu administratif (Matrix)</strong>.</p>
+    
+    <div class="quote-box">
+        "Harapan kami jelas: Umat manusia harus mematikan jam dinding Masehi mereka yang berbohong. Kita harus beralih sepenuhnya menggunakan <strong>Jam Proses (Sistem Waktu Nuswantara)</strong> yang mengukur kehidupan berdasarkan Fase Alam, Pasaran, dan Unit Kerja yang jujur."
+    </div>
+
+    <p>Jika kita menolak tunduk pada jam yang terus dipercepat, dan mulai hidup berdasarkan <span class="highlight-success">Akumulasi Proses yang Nyata</span>, tubuh biologis kita akan kembali mendapatkan hak energinya. Umur tidak lagi dihitung dari seberapa cepat bumi berputar, melainkan dari seberapa banyak karya dan entropi yang berhasil kita selesaikan secara selaras dengan ritme semesta.</p>
+
+    <div class="status-bar">
+        <div>DOKUMEN STATUS: DECLASSIFIED</div>
+        <div>SISTEM: SUNDA NUSWANTARA OS</div>
+        <div>ERA: TAHUN 002 (BATU/SATURNUS)</div>
+    </div>
+</div>
+
+</body>
+</html>

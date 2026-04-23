@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Main Terminal</title>
+    <style>
+        :root { 
+            --gold: #d4af37; --bg: #050505; --panel: #0a0a0a;
+            --danger: #ff4757; --success: #2ed573; --cyan: #1e90ff; --text-dim: #888;
+        }
+        
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; box-sizing: border-box; background-image: radial-gradient(circle at 50% 0%, #111 0%, #050505 70%);
+        }
+
+        .header { text-align: center; margin-bottom: 50px; border-bottom: 1px solid #333; padding-bottom: 20px; width: 100%; max-width: 1000px; }
+        .header h1 { color: var(--gold); letter-spacing: 6px; margin: 0 0 10px 0; font-size: 2.5rem; text-transform: uppercase; text-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+        .header p { color: var(--cyan); font-family: monospace; letter-spacing: 2px; font-size: 1rem; margin: 0; }
+        .sys-status { margin-top: 15px; font-size: 0.75rem; color: var(--success); letter-spacing: 3px; font-weight: bold; }
+
+        .container { max-width: 1000px; width: 100%; }
+
+        .category-title { 
+            color: #fff; font-size: 1.2rem; letter-spacing: 3px; 
+            border-left: 4px solid var(--danger); padding-left: 15px; margin: 40px 0 20px 0; text-transform: uppercase;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+
+        .card { 
+            background: var(--panel); border: 1px solid #222; border-radius: 15px; 
+            padding: 25px; transition: all 0.3s ease; text-decoration: none; color: inherit;
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        
+        .card:hover { 
+            transform: translateY(-5px); border-color: var(--gold); 
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15); 
+        }
+
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+        }
+        .card:hover::before { transform: scaleX(1); }
+
+        .badge { align-self: flex-start; font-size: 0.65rem; font-family: monospace; padding: 4px 10px; border-radius: 20px; font-weight: bold; letter-spacing: 1px; margin-bottom: 15px; }
+        .badge-core { background: rgba(30, 144, 255, 0.1); color: var(--cyan); border: 1px solid var(--cyan); }
+        .badge-tool { background: rgba(46, 213, 115, 0.1); color: var(--success); border: 1px solid var(--success); }
+        .badge-doc { background: rgba(255, 71, 87, 0.1); color: var(--danger); border: 1px solid var(--danger); }
+
+        .card-title { font-size: 1.3rem; color: #fff; margin: 0 0 10px 0; letter-spacing: 1px; }
+        .card-desc { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin: 0; flex-grow: 1; }
+        
+        .card-footer { margin-top: 20px; font-size: 0.8rem; color: var(--gold); font-family: monospace; display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #333; padding-top: 15px; }
+        .arrow { font-size: 1.2rem; transition: transform 0.3s; }
+        .card:hover .arrow { transform: translateX(5px); }
+
+        @media (max-width: 600px) { .header h1 { font-size: 1.8rem; } }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Sunda Nuswantara OS</h1>
+        <p>TERMINAL ROOT v12.3</p>
+        <div class="sys-status">SYSTEM ONLINE // DECOMPRESSION AVOIDED</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="category-title" style="border-color: var(--cyan);">1. Core Systems (Navigasi Waktu Alam)</div>
+        <div class="grid">
+            <a href="01 Jam Sunda Nuswantara.html" class="card">
+                <div class="badge badge-core">SYSTEM UI</div>
+                <h3 class="card-title">Nuswantara Master Clock</h3>
+                <p class="card-desc">Jam utama OS dengan format 8 Fase (90 menit). Menyelaraskan ritme sirkadian biologis dengan ritme semesta tanpa ilusi administratif 24 jam Masehi.</p>
+                <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
+            </a>
+
+            <a href="02. Kalender Sunda Nuswantara.html" class="card">
+                <div class="badge badge-core">SYSTEM UI</div>
+                <h3 class="card-title">Kalender 13 Bulan Absolut</h3>
+                <p class="card-desc">Sistem penanggalan murni 13 bulan x 28 hari. Dilengkapi sinkronisasi hari Pasaran (Legi, Pahing, dll) dan sistem ekuilibrium yang bebas dari distorsi Gregorian.</p>
+                <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
+            </a>
+        </div>
+
+        <div class="category-title" style="border-color: var(--success);">2. Audit & Measurement (Instrumen Fisika)</div>
+        <div class="grid">
+            <a href="timeinflation.html" class="card">
+                <div class="badge badge-tool">AUDIT TOOL</div>
+                <h3 class="card-title">Time Auditor: Evolution Logger</h3>
+                <p class="card-desc">Instrumen komparasi <em>real-time</em> Waktu Masehi vs Waktu Proses. Memiliki fitur proyeksi dinamis (Self-Correcting) dan pencatatan Checkpoint otomatis untuk membuktikan pemadatan waktu (Inflasi).</p>
+                <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
+            </a>
+
+            <a href="timeinflation3.html" class="card">
+                <div class="badge badge-tool">PRIVATE SESSION</div>
+                <h3 class="card-title">Honest Time Watch (Analog)</h3>
+                <p class="card-desc">Stopwatch linear murni berbasis akumulasi unit kerja (Entropi). Gunakan untuk kebutuhan aktivitas yang membutuhkan kepastian durasi absolut agar terhindar dari defisit waktu kosmik.</p>
+                <div class="card-footer"><span>Jalankan Modul</span> <span class="arrow">→</span></div>
+            </a>
+        </div>
+
+        <div class="category-title" style="border-color: var(--danger);">3. Research & Data (Makalah Ilmiah)</div>
+        <div class="grid">
+            <a href="timeinflation2.html" class="card">
+                <div class="badge badge-doc">WHITEPAPER</div>
+                <h3 class="card-title">Manifesto Resolusi Waktu</h3>
+                <p class="card-desc">Dokumen putih yang mengupas krisis "Decompressed Energy". Membahas dampak sistemik akselerasi waktu terhadap <em>burnout</em> biologis dan kelangkaan energi riil di dunia modern.</p>
+                <div class="card-footer"><span>Buka Dokumen</span> <span class="arrow">→</span></div>
+            </a>
+
+            <a href="timeinflation4.html" class="card">
+                <div class="badge badge-doc">THEORY & EQUATIONS</div>
+                <h3 class="card-title">Teori Fundamental Waktu Proses</h3>
+                <p class="card-desc">Jurnal ilmiah tingkat lanjut mengenai dekonstruksi mekanika komputasi absolut Masehi. Berisi landasan matematis dan parameter pembuktian Waktu Proses sebagai standar baru fisika.</p>
+                <div class="card-footer"><span>Buka Dokumen</span> <span class="arrow">→</span></div>
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

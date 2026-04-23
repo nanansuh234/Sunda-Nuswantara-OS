@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honest Time Watch - Private Session</title>
+    <style>
+        :root { 
+            --gold: #d4af37; --bg: #050505; --panel: #0a0a0a;
+            --danger: #ff4757; --success: #2ed573; --cyan: #1e90ff; --warn: #ff9f43;
+        }
+        
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 40px 20px; box-sizing: border-box; 
+        }
+
+        .main-card { 
+            background: var(--panel); padding: 40px; border-radius: 30px; 
+            border: 1px solid #222; text-align: center; box-shadow: 0 0 60px rgba(0,0,0,0.8);
+            display: flex; flex-direction: column; align-items: center; max-width: 550px; width: 100%;
+        }
+
+        /* ANALOG CLOCK DESIGN */
+        .clock-face {
+            position: relative; width: 320px; height: 320px;
+            border-radius: 50%; border: 6px solid #222;
+            background: radial-gradient(circle, #111 0%, #000 100%);
+            box-shadow: inset 0 0 40px rgba(212, 175, 55, 0.1), 0 0 20px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
+        /* Center Dot */
+        .clock-face::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 16px; height: 16px; background: var(--gold);
+            border-radius: 50%; transform: translate(-50%, -50%); z-index: 20;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* Hands */
+        .hand {
+            position: absolute; bottom: 50%; left: 50%;
+            transform-origin: bottom center; border-radius: 10px; z-index: 10;
+        }
+        .hr-hand {
+            width: 8px; height: 75px; background: var(--gold);
+            margin-left: -4px; z-index: 11;
+        }
+        .min-hand {
+            width: 6px; height: 110px; background: #fff;
+            margin-left: -3px; opacity: 0.8; z-index: 12;
+        }
+        .sec-hand {
+            width: 4px; height: 140px; background: var(--danger);
+            margin-left: -2px; z-index: 15;
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.4);
+        }
+
+        /* Tick Marks */
+        .tick { position: absolute; width: 100%; height: 100%; z-index: 1; }
+        .tick::after {
+            content: ''; position: absolute; top: 10px; left: 50%;
+            width: 2px; height: 8px; background: #444; transform: translateX(-50%);
+        }
+        .tick-main::after { width: 4px; height: 15px; background: var(--gold); }
+
+        /* Digital Readout inside Analog */
+        .digital-readout {
+            position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%);
+            font-family: monospace; font-size: 1.5rem; font-weight: bold;
+            color: var(--cyan); background: rgba(0,0,0,0.6); padding: 5px 15px;
+            border-radius: 10px; border: 1px solid #333; z-index: 5;
+            letter-spacing: 2px; display: flex; align-items: baseline; justify-content: center;
+        }
+        .ms-small { font-size: 0.5em; opacity: 0.7; margin-left: 2px;}
+
+        /* BLOCKS & MATRIX DISPLAY */
+        .blocks-display {
+            font-family: monospace; font-size: 1rem; color: #888;
+            margin-bottom: 25px; letter-spacing: 2px; display: flex; flex-direction: column; gap: 10px;
+        }
+        
+        .matrix-info {
+            font-size: 0.8rem; color: #555; background: #111; padding: 8px 15px; 
+            border-radius: 8px; border: 1px solid #222;
+        }
+        .matrix-val { color: var(--cyan); font-weight: bold; font-size: 1.1rem; margin-left: 5px;}
+
+        /* Controls */
+        .controls { display: flex; gap: 15px; width: 100%; }
+        .btn { 
+            flex: 1; padding: 15px; border-radius: 12px; cursor: pointer; 
+            border: none; font-weight: 900; text-transform: uppercase; 
+            font-size: 1rem; transition: 0.2s; letter-spacing: 1px;
+        }
+        .btn-start { background: var(--success); color: #000; box-shadow: 0 0 15px rgba(46, 213, 115, 0.2); }
+        .btn-stop { background: var(--warn); color: #000; box-shadow: 0 0 15px rgba(255, 159, 67, 0.4); }
+        .btn-reset { background: #222; color: #fff; border: 1px solid #444; }
+
+        /* PROMO & EDUKASI NUSWANTARA BANNER */
+        .promo-banner {
+            width: 100%; margin-top: 35px; background: linear-gradient(145deg, #111, #050505);
+            border: 1px solid var(--gold); border-radius: 15px; padding: 20px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); position: relative; overflow: hidden;
+        }
+        .promo-banner::before {
+            content: 'LIVE'; position: absolute; top: 10px; right: 10px;
+            background: rgba(255, 71, 87, 0.2); color: var(--danger); font-size: 0.6rem;
+            padding: 3px 8px; border-radius: 10px; border: 1px solid var(--danger); font-weight: bold;
+            animation: blink 2s infinite;
+        }
+        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
+        
+        .promo-title { font-size: 0.75rem; color: #888; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; }
+        .nus-date { font-size: 1.2rem; font-weight: bold; color: var(--success); letter-spacing: 1px; margin-bottom: 5px; }
+        .nus-time { font-size: 1.8rem; font-family: monospace; font-weight: bold; color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+        .nus-phase { font-size: 0.9rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+        .promo-desc { font-size: 0.75rem; color: #555; margin-top: 15px; border-top: 1px dashed #333; padding-top: 15px; font-style: italic; }
+
+    </style>
+</head>
+<body>
+
+    <div style="letter-spacing: 5px; color: var(--gold); font-weight: bold; margin-bottom: 20px; font-size: 1.3rem; text-align: center;">
+        HONEST TIME WATCH<br>
+        <span style="font-size: 0.65rem; color: #666; letter-spacing: 3px;">PURE ENTROPY TRACKER</span>
+    </div>
+
+    <div class="main-card">
+        
+        <div class="clock-face" id="clockFace">
+            <div class="hand hr-hand" id="hrHand"></div>
+            <div class="hand min-hand" id="minHand"></div>
+            <div class="hand sec-hand" id="secHand"></div>
+            <div class="digital-readout" id="digitalTime">
+                <span>00:00:00</span><span class="ms-small">.00</span>
+            </div>
+        </div>
+
+        <div class="blocks-display">
+            <div><span id="blockCount" style="color: var(--success); font-size: 1.6rem; font-weight: bold;">0</span> BLOCKS</div>
+            <div class="matrix-info">
+                MASEHI: <span class="matrix-val" id="matrixTimeDisplay">00:00:00<span class="ms-small">.00</span></span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-start" id="startBtn" onclick="startWatch()">Mulai</button>
+            <button class="btn btn-stop" id="stopBtn" onclick="stopWatch()" style="display: none;">Jeda</button>
+            <button class="btn btn-reset" onclick="resetWatch()">Reset</button>
+        </div>
+
+        <div class="promo-banner">
+            <div class="promo-title">SAAT INI DI BUMI NUSWANTARA:</div>
+            <div class="nus-date" id="promoDate">Tgl -- Bulan -- Tahun -- (--)</div>
+            <div class="nus-time" id="promoTime">00:00</div>
+            <div class="nus-phase" id="promoPhase">FASE ---</div>
+            
+            <div class="promo-desc">
+                "Keluarlah dari ilusi Masehi. Waktu bukanlah sekadar angka yang dipaksa seragam, melainkan harmoni antara rotasi kosmik, energi alam, dan ritme biologis manusia."
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    // --- ENGINE STOPWATCH JUJUR ---
+    const BPS_2019 = 240; 
+    const cosmicInflation = 0.923; // Faktor Waktu Jujur 2026 vs 2019
+
+    let running = false;
+    let startTime = 0;
+    let accumulatedMs = 0; 
+    let animationId;
+
+    // Bikin Garis Menit di Jam Analog
+    const clockFace = document.getElementById('clockFace');
+    for (let i = 0; i < 60; i++) {
+        let tick = document.createElement('div');
+        tick.className = (i % 5 === 0) ? 'tick tick-main' : 'tick';
+        tick.style.transform = `rotate(${i * 6}deg)`;
+        clockFace.appendChild(tick);
+    }
+
+    function updateDisplay(honestSeconds, matrixSeconds) {
+        const totalBlocks = honestSeconds * BPS_2019;
+        
+        // --- JARUM & DIGITAL JAM JUJUR ---
+        const h = Math.floor(honestSeconds / 3600);
+        const m = Math.floor((honestSeconds % 3600) / 60);
+        const s = Math.floor(honestSeconds % 60);
+        const ms = Math.floor((honestSeconds * 100) % 100);
+
+        const secDeg = (honestSeconds % 60) * 6; 
+        const minDeg = (honestSeconds / 60) * 6; 
+        const hrDeg = (h % 12) * 30 + (m / 60) * 30; 
+
+        document.getElementById('secHand').style.transform = `rotate(${secDeg}deg)`;
+        document.getElementById('minHand').style.transform = `rotate(${minDeg}deg)`;
+        document.getElementById('hrHand').style.transform = `rotate(${hrDeg}deg)`;
+
+        document.getElementById('digitalTime').innerHTML = 
+            `<span>${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}</span><span class="ms-small">.${String(ms).padStart(2, '0')}</span>`;
+        
+        document.getElementById('blockCount').innerText = Math.floor(totalBlocks).toLocaleString('id-ID');
+
+        // --- DIGITAL JAM MATRIX (MASEHI) ---
+        const mh = Math.floor(matrixSeconds / 3600);
+        const mm = Math.floor((matrixSeconds % 3600) / 60);
+        const ms_sec = Math.floor(matrixSeconds % 60);
+        const mms = Math.floor((matrixSeconds * 100) % 100);
+
+        document.getElementById('matrixTimeDisplay').innerHTML = 
+            `${String(mh).padStart(2, '0')}:${String(mm).padStart(2, '0')}:${String(ms_sec).padStart(2, '0')}<span class="ms-small">.${String(mms).padStart(2, '0')}</span>`;
+    }
+
+    function engine() {
+        if (!running) return;
+        const now = performance.now();
+        const deltaMs = now - startTime;
+        const totalRealMs = accumulatedMs + deltaMs;
+        
+        const matrixSeconds = totalRealMs / 1000;
+        const honestSeconds = matrixSeconds * cosmicInflation;
+
+        updateDisplay(honestSeconds, matrixSeconds);
+        animationId = requestAnimationFrame(engine);
+    }
+
+    function startWatch() {
+        if (!running) {
+            running = true;
+            startTime = performance.now();
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'block';
+            engine();
+        }
+    }
+
+    function stopWatch() {
+        if (running) {
+            running = false;
+            accumulatedMs += (performance.now() - startTime);
+            cancelAnimationFrame(animationId);
+            document.getElementById('startBtn').innerText = "Lanjut";
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'none';
+        }
+    }
+
+    function resetWatch() {
+        running = false;
+        cancelAnimationFrame(animationId);
+        accumulatedMs = 0;
+        updateDisplay(0, 0);
+        document.getElementById('startBtn').innerText = "Mulai";
+        document.getElementById('startBtn').style.display = 'block';
+        document.getElementById('stopBtn').style.display = 'none';
+    }
+
+    updateDisplay(0, 0);
+
+
+    // --- ENGINE PROMO JAM NUSWANTARA (LIVE) ---
+    const nMonths = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const nPasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const nPhases = ["Hening", "Fajar", "Duha", "Karya", "Istiwa", "Asar", "Sandikala", "Sirepan"];
+
+    function updateNuswantaraPromo() {
+        const now = new Date();
+        
+        const y = now.getFullYear();
+        let anchor = new Date(y, 2, 21); // 21 Maret
+        if (now < anchor) anchor = new Date(y - 1, 2, 21);
+        
+        const diffDays = Math.floor((now - anchor) / 86400000);
+        const mIdx = Math.floor(diffDays / 28);
+        const dNum = (diffDays % 28) + 1;
+        const nMonth = nMonths[mIdx > 12 ? 12 : mIdx];
+        
+        const totalDays = Math.floor((now - new Date(2025, 0, 1)) / 86400000); 
+        const pIdx = Math.abs((totalDays + 2) % 5);
+        const nPasaran = nPasarans[pIdx];
+        const nYear = y - 2024; 
+
+        const h = now.getHours();
+        const m = now.getMinutes();
+        const s = now.getSeconds();
+        const mTotalMin = ((h % 12) * 60) + m + (s/60);
+        const nTotalHours = mTotalMin / 90; 
+        const nHour = Math.floor(nTotalHours) || 8;
+        const nMin = Math.floor((nTotalHours % 1) * 90);
+
+        const seqIdx = Math.floor(h / 3);
+        const nPhase = nPhases[seqIdx];
+
+        document.getElementById('promoDate').innerText = `Tgl ${dNum} ${nMonth} 00${nYear} (${nPasaran})`;
+        document.getElementById('promoTime').innerText = `JAM ${String(nHour).padStart(2,'0')}:${String(nMin).padStart(2,'0')}`;
+        document.getElementById('promoPhase').innerText = `FASE ${nPhase}`;
+    }
+
+    setInterval(updateNuswantaraPromo, 1000);
+    updateNuswantaraPromo();
+
+</script>
+</body>
+</html>

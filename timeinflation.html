@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunda Nuswantara OS - Time Auditor</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root { 
+            --gold: #d4af37; --bg: #050505; --panel: #0a0a0a;
+            --danger: #ff4757; --success: #2ed573; --cyan: #1e90ff; --warn: #ffb142;
+        }
+        
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; 
+            display: flex; flex-direction: column; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 40px 20px; box-sizing: border-box; 
+        }
+
+        .layout-wrapper { 
+            display: grid; grid-template-columns: 280px 1fr; gap: 30px; 
+            max-width: 1200px; width: 100%; margin-bottom: 30px; align-items: start; 
+        }
+        
+        @media (max-width: 900px) { .layout-wrapper { grid-template-columns: 1fr; } }
+
+        /* SIDEBAR PROYEKSI */
+        .sidebar-proj { 
+            background: var(--panel); border: 1px solid #222; border-radius: 25px; 
+            padding: 25px; border-left: 4px solid var(--danger); box-shadow: 0 0 30px rgba(0,0,0,0.5); 
+            display: flex; flex-direction: column; gap: 12px; position: sticky; top: 20px;
+        }
+        .proj-header { color: var(--danger); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; font-weight: bold; text-align: center; border-bottom: 1px solid #222; padding-bottom: 15px; margin: 0; }
+        .conf-box { background: #111; padding: 10px; border-radius: 10px; text-align: center; font-size: 0.75rem; border: 1px solid #333; }
+        .conf-val { font-weight: bold; font-family: monospace; display: block; margin-top: 2px; }
+        .proj-item { background: #000; border: 1px solid #1a1a1a; padding: 12px; border-radius: 12px; text-align: center; }
+        .proj-label { font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .proj-val { font-family: monospace; font-size: 1rem; color: var(--gold); font-weight: bold; display: block; margin-top: 4px; }
+
+        /* MAIN DASHBOARD */
+        .main-card { background: var(--panel); padding: 35px; border-radius: 25px; border: 1px solid #222; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        .grid-clocks { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0; }
+        
+        .clock-box { background: #000; padding: 25px; border-radius: 20px; border: 1px solid #1a1a1a; display: flex; flex-direction: column; justify-content: center; min-height: 180px; }
+        .label { font-size: 0.75rem; letter-spacing: 2px; color: #666; margin-bottom: 8px; text-transform: uppercase; }
+        .time-val { font-family: monospace; font-size: 2.8rem; font-weight: bold; line-height: 1.2; }
+        .sub-display { margin-top: 15px; border-top: 1px dashed #222; padding-top: 15px; }
+
+        .audit-panel { background: rgba(255, 71, 87, 0.05); border: 1px dashed var(--danger); padding: 20px; border-radius: 15px; margin-top: 10px; display: flex; flex-direction: column; align-items: center;}
+        
+        /* UPDATE: Styling Format Hari */
+        .diff-text { font-size: 3rem; color: var(--danger); font-weight: bold; font-family: monospace; text-shadow: 0 0 15px rgba(255, 71, 87, 0.3); display: flex; align-items: baseline; justify-content: center; gap: 10px;}
+        .day-box { font-size: 0.5em; background: rgba(255, 71, 87, 0.1); padding: 5px 12px; border-radius: 8px; border: 1px solid rgba(255, 71, 87, 0.3); letter-spacing: 1px; color: #ffb142;}
+        .ms-small { font-size: 0.45em; opacity: 0.7; }
+
+        .btn { padding: 15px 40px; border-radius: 12px; cursor: pointer; border: none; font-weight: bold; text-transform: uppercase; font-size: 1rem; margin-top: 25px; transition: 0.3s; width: 100%; max-width: 320px; letter-spacing: 1px;}
+        .btn-start { background: var(--success); color: #000; box-shadow: 0 0 20px rgba(46, 213, 115, 0.2); }
+        .btn-stop { background: var(--danger); color: #fff; }
+
+        /* CHECKPOINT LOGGING PANEL */
+        .log-container { max-width: 1200px; width: 100%; background: var(--panel); border: 1px solid #222; border-radius: 25px; padding: 30px; margin-top: 10px; box-sizing: border-box; }
+        .log-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
+        .log-title { color: var(--gold); letter-spacing: 2px; font-weight: bold; font-size: 1.1rem; margin: 0; }
+        .log-badge { background: #111; color: var(--cyan); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid #222; font-family: monospace; }
+        
+        .table-wrapper { max-height: 400px; overflow-y: auto; border: 1px solid #1a1a1a; border-radius: 15px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+        th { background: #000; color: #888; padding: 15px; position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #333; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+        td { padding: 12px 15px; border-bottom: 1px solid #111; font-family: monospace; color: #ccc; }
+        
+        .event-badge { background: #222; padding: 3px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; }
+        .event-start { color: var(--success); border: 1px solid var(--success); }
+        .event-stop { color: var(--danger); border: 1px solid var(--danger); }
+        .event-milestone { color: var(--gold); border: 1px solid var(--gold); }
+        
+        .td-matrix { color: var(--cyan); }
+        .td-nus { color: var(--success); }
+        .td-loss { color: var(--danger); font-weight: bold; font-size: 1rem;}
+    </style>
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <div class="sidebar-proj">
+        <h3 class="proj-header">PROYEKSI DINAMIS</h3>
+        <div class="conf-box">
+            <span style="color: #666;">AKURASI DATA:</span>
+            <span class="conf-val" id="confLevel">MENUNGGU AUDIT...</span>
+        </div>
+        <div class="proj-item"><span class="proj-label">Estimasi 1 Jam</span><span class="proj-val" id="proj-1h">--</span></div>
+        <div class="proj-item"><span class="proj-label">Estimasi 6 Jam</span><span class="proj-val" id="proj-6h">--</span></div>
+        <div class="proj-item"><span class="proj-label">Estimasi 1 Hari</span><span class="proj-val" id="proj-1d">--</span></div>
+        <div class="proj-item"><span class="proj-label">Estimasi 1 Minggu</span><span class="proj-val" id="proj-1w">--</span></div>
+        <div class="proj-item"><span class="proj-label">Estimasi 1 Bulan</span><span class="proj-val" id="proj-1m">--</span></div>
+        <div class="proj-item" style="border-color: var(--danger);"><span class="proj-label">Estimasi 1 Tahun</span><span class="proj-val" id="proj-1y" style="color: var(--danger);">--</span></div>
+    </div>
+
+    <div class="main-card">
+        <div style="letter-spacing: 6px; color: var(--gold); font-weight: bold; margin-bottom: 20px; font-size: 1.2rem;">TIME AUDITOR - EVOLUTION LOGGER</div>
+
+        <div class="grid-clocks">
+            <div class="clock-box" style="color: var(--cyan); border-top: 4px solid var(--cyan);">
+                <div class="label">Jam Wilayah (Matrix Master)</div>
+                <div class="time-val" id="localClock">00:00:00</div>
+                <div class="sub-display" id="sessionDisplay" style="color: var(--danger); opacity: 0.3;">
+                    <div class="label" style="color: inherit;">Durasi Sesi Matrix</div>
+                    <div id="sessionMatrixVal" style="font-family: monospace; font-size: 1.8rem; font-weight: bold;">00:00:00</div>
+                </div>
+            </div>
+
+            <div class="clock-box" style="color: var(--success); border-top: 4px solid var(--success);">
+                <div class="label">Jam Proses (Jujur 2019)</div>
+                <div class="time-val" id="processTime">00:00:00</div>
+                <div class="sub-display" style="color: var(--gold);">
+                    <div class="label" style="color: inherit;">Akumulasi Blok Kerja</div>
+                    <div id="processBlocks" style="font-family: monospace; font-size: 1.8rem; font-weight: bold;">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="audit-panel">
+            <div class="label" style="color: var(--danger); letter-spacing: 3px; margin-bottom: 10px;">TOTAL KORUPSI WAKTU (SESI INI)</div>
+            
+            <div class="diff-text" id="timeDiff">
+                <span>00:00:00</span><span class="ms-small">.00</span>
+            </div>
+            
+            <div id="statusMsg" style="font-size: 0.85rem; margin-top: 10px; color: #555;">Sistem Siap Merekam Checkpoint...</div>
+        </div>
+
+        <button id="mainBtn" class="btn btn-start" onclick="toggleWatch()">Mulai Audit</button>
+    </div>
+</div>
+
+<div class="log-container">
+    <div class="log-header">
+        <h3 class="log-title">LOG PEMADATAN WAKTU (CHECKPOINTS)</h3>
+        <div class="log-badge">Merekam: START, STOP & MILESTONE SESI</div>
+    </div>
+    <div class="table-wrapper">
+        <table id="logTable">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Waktu Matrix (Masehi)</th>
+                    <th>Waktu Absolut (Nuswantara)</th>
+                    <th>Korupsi Terukur</th>
+                </tr>
+            </thead>
+            <tbody id="logBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const BPS_2019 = 240;
+    const cosmicInflation = 0.923; 
+    
+    // Database Kalender Nuswantara
+    const nMonths = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const nPasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const nPhases = ["Hening", "Fajar", "Duha", "Karya", "Istiwa", "Asar", "Sandikala", "Sirepan"];
+
+    // Daftar Milestone (Dalam Detik)
+    const milestones = [
+        { sec: 3600, label: "Tembus 1 Jam" },
+        { sec: 21600, label: "Tembus 6 Jam" },
+        { sec: 86400, label: "Tembus 1 Hari" },
+        { sec: 604800, label: "Tembus 1 Minggu" },
+        { sec: 2419200, label: "Tembus 1 Bulan" },
+        { sec: 31449600, label: "Tembus 1 Tahun" }
+    ];
+    let nextMilestoneIdx = 0;
+
+    let running = false;
+    let startTime = 0;
+    let totalBlocks = 0;
+    let localClockId, auditId;
+
+    // Default variable untuk mencatat teks murni log
+    let diffLogStr = "00:00:00.00"; 
+
+    // --- JAM WILAYAH LOKAL ---
+    function runLocalClock() {
+        const now = new Date();
+        document.getElementById('localClock').innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+        localClockId = requestAnimationFrame(runLocalClock);
+    }
+    runLocalClock();
+
+    function formatTime(totalSeconds) {
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function formatLoss(totalSec) {
+        if (totalSec < 60) return Math.floor(totalSec) + " Detik";
+        if (totalSec < 3600) return Math.floor(totalSec/60) + " Mnt " + Math.floor(totalSec%60) + " Dtk";
+        if (totalSec < 86400) return Math.floor(totalSec/3600) + " Jam " + Math.floor((totalSec%3600)/60) + " Mnt";
+        return Math.floor(totalSec/86400) + " Hari " + Math.floor((totalSec%86400)/3600) + " Jam";
+    }
+
+    // --- KONVERSI DUAL DIMENSI (NUSWANTARA) ---
+    function getNuswantaraFormat(now) {
+        const y = now.getFullYear();
+        let anchor = new Date(y, 2, 21); // 21 Maret
+        if (now < anchor) anchor = new Date(y - 1, 2, 21);
+        
+        const diffDays = Math.floor((now - anchor) / 86400000);
+        const mIdx = Math.floor(diffDays / 28);
+        const dNum = (diffDays % 28) + 1;
+        const nMonth = nMonths[mIdx > 12 ? 12 : mIdx];
+        
+        const totalDays = Math.floor((now - new Date(2025, 0, 1)) / 86400000); 
+        const pIdx = Math.abs((totalDays + 2) % 5);
+        const nPasaran = nPasarans[pIdx];
+        const nYear = y - 2024;
+
+        const h = now.getHours();
+        const m = now.getMinutes();
+        const s = now.getSeconds();
+        const mTotalMin = ((h % 12) * 60) + m + (s/60);
+        const nTotalHours = mTotalMin / 90; 
+        const nHour = Math.floor(nTotalHours) || 8;
+        const nMin = Math.floor((nTotalHours % 1) * 90);
+
+        const seqIdx = Math.floor(h / 3);
+        const nPhase = nPhases[seqIdx];
+
+        return `Tgl ${dNum} ${nMonth} 00${nYear} (${nPasaran}) <br> <span style="color:#aaa; font-size:0.75rem;">Jam ${String(nHour).padStart(2,'0')}:${String(nMin).padStart(2,'0')} - Fase ${nPhase}</span>`;
+    }
+
+    // --- SISTEM PENCATATAN CHECKPOINT ---
+    function recordLog(eventType, eventClass, recordedValue) {
+        const realNow = new Date();
+        
+        // Masehi
+        const tglMasehi = `${String(realNow.getDate()).padStart(2,'0')}/${String(realNow.getMonth()+1).padStart(2,'0')}/${realNow.getFullYear()}`;
+        const jamMasehi = realNow.toLocaleTimeString('id-ID', { hour12: false });
+        const masehiStr = `${tglMasehi} <br> <span style="color:#aaa; font-size:0.75rem;">${jamMasehi}</span>`;
+        
+        // Nuswantara
+        const nusStr = getNuswantaraFormat(realNow);
+
+        const row = `<tr>
+            <td><span class="event-badge ${eventClass}">${eventType}</span></td>
+            <td class="td-matrix">${masehiStr}</td>
+            <td class="td-nus">${nusStr}</td>
+            <td class="td-loss">${recordedValue}</td>
+        </tr>`;
+        
+        document.getElementById('logBody').insertAdjacentHTML('afterbegin', row);
+    }
+
+    // --- TOMBOL KENDALI ---
+    function toggleWatch() {
+        const btn = document.getElementById('mainBtn');
+        const sessionDisp = document.getElementById('sessionDisplay');
+
+        if (!running) {
+            // START
+            running = true;
+            startTime = performance.now();
+            totalBlocks = 0;
+            nextMilestoneIdx = 0; 
+            
+            btn.innerText = "Hentikan & Simpan Log";
+            btn.className = "btn btn-stop";
+            sessionDisp.style.opacity = "1";
+            document.getElementById('statusMsg').innerText = "AUDIT BERJALAN: Mengincar Checkpoint Berikutnya...";
+            
+            recordLog("START AUDIT", "event-start", "00:00:00.00");
+            
+            auditLoop();
+        } else {
+            // STOP
+            running = false;
+            cancelAnimationFrame(auditId);
+            btn.innerText = "Mulai Audit Baru";
+            btn.className = "btn btn-start";
+            sessionDisp.style.opacity = "0.3";
+            document.getElementById('statusMsg').innerText = "Audit Berhenti. Sesi dikunci di Log.";
+            
+            recordLog("STOP AUDIT", "event-stop", diffLogStr);
+        }
+    }
+
+    // --- LOOP UTAMA MESIN ---
+    function auditLoop() {
+        if (!running) return;
+
+        const now = performance.now();
+        const elapsedMs = now - startTime;
+        const elapsedSec = elapsedMs / 1000;
+
+        document.getElementById('sessionMatrixVal').innerText = formatTime(Math.floor(elapsedSec));
+
+        totalBlocks = elapsedSec * BPS_2019 * cosmicInflation; 
+        const processSec = totalBlocks / BPS_2019;
+        document.getElementById('processTime').innerText = formatTime(Math.floor(processSec));
+        document.getElementById('processBlocks').innerText = Math.floor(totalBlocks).toLocaleString('id-ID');
+
+        const diffSec = elapsedSec - processSec;
+
+        if (diffSec >= 0) {
+            // LOGIKA HARI + JAM
+            const totalHours = Math.floor(diffSec / 3600);
+            const dDays = Math.floor(totalHours / 24); // Hitung berapa hari
+            const dHrs = totalHours % 24; // Sisa jam setelah dipotong hari
+            
+            const dMin = Math.floor((diffSec % 3600) / 60);
+            const dSec = Math.floor(diffSec % 60);
+            const dMs = Math.floor((diffSec * 100) % 100);
+            
+            // Format String untuk Log (Tetap rapih)
+            if (dDays > 0) {
+                diffLogStr = `${dDays} Hari, ${String(dHrs).padStart(2,'0')}:${String(dMin).padStart(2,'0')}:${String(dSec).padStart(2,'0')}.${String(dMs).padStart(2,'0')}`;
+            } else {
+                diffLogStr = `${String(dHrs).padStart(2,'0')}:${String(dMin).padStart(2,'0')}:${String(dSec).padStart(2,'0')}.${String(dMs).padStart(2,'0')}`;
+            }
+            
+            // Render HTML dengan fitur "Day Box" kalau udah tembus 1 hari
+            let htmlRender = "";
+            if (dDays > 0) {
+                htmlRender += `<div class="day-box">${dDays} HARI</div>`;
+            }
+            htmlRender += `<span>${String(dHrs).padStart(2,'0')}:${String(dMin).padStart(2,'0')}:${String(dSec).padStart(2,'0')}</span><span class="ms-small">.${String(dMs).padStart(2,'0')}</span>`;
+            
+            document.getElementById('timeDiff').innerHTML = htmlRender;
+        }
+
+        // --- CHECKPOINT TRIGGER ---
+        if (nextMilestoneIdx < milestones.length) {
+            const target = milestones[nextMilestoneIdx];
+            if (elapsedSec >= target.sec) {
+                recordLog(target.label, "event-milestone", diffLogStr);
+                nextMilestoneIdx++; 
+            }
+        }
+
+        // --- PROYEKSI DINAMIS ---
+        if (elapsedSec > 3) {
+            const liveRate = diffSec / elapsedSec; 
+            document.getElementById('proj-1h').innerText = formatLoss(liveRate * 3600);
+            document.getElementById('proj-6h').innerText = formatLoss(liveRate * 21600);
+            document.getElementById('proj-1d').innerText = formatLoss(liveRate * 86400);
+            document.getElementById('proj-1w').innerText = formatLoss(liveRate * 604800);
+            document.getElementById('proj-1m').innerText = formatLoss(liveRate * 2419200);
+            document.getElementById('proj-1y').innerText = formatLoss(liveRate * 31449600);
+
+            const conf = document.getElementById('confLevel');
+            if (elapsedSec < 60) {
+                conf.innerText = "RENDAH (FLUKTUATIF)"; conf.style.color = "var(--warn)";
+            } else if (elapsedSec < 3600) {
+                conf.innerText = "MENENGAH (STABILISASI)"; conf.style.color = "var(--cyan)";
+            } else {
+                conf.innerText = "SANGAT PRESISI (KONVERGEN)"; conf.style.color = "var(--success)";
+            }
+        }
+
+        auditId = requestAnimationFrame(auditLoop);
+    }
+</script>
+</body>
+</html>
