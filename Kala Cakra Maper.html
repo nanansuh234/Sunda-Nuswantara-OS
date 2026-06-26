@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kala Cakra Mapper - Geospatial Module OS</title>
+    <style>
+        :root { 
+            --neon: #00ffcc; 
+            --bg: #050505; 
+            --card: #0d0d0d; 
+            --gold: #d4af37; 
+            --node: #ffaa00;
+            --leyline: rgba(0, 255, 204, 0.4);
+            --border: #222;
+        }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; width: 100%; max-width: 950px; }
+        .header h1 { letter-spacing: 5px; margin: 0; color: var(--gold); font-weight: normal; font-size: 1.8rem; }
+        .sub-header { font-size: 0.75rem; letter-spacing: 2px; color: #777; text-transform: uppercase; margin-top: 5px; }
+        
+        .app-container { display: grid; grid-template-columns: 1.2fr 2fr; gap: 20px; width: 100%; max-width: 950px; }
+        
+        /* Node Database Panel */
+        .db-panel { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; height: 550px; }
+        .db-title { font-size: 0.85rem; color: var(--neon); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .db-list-container { overflow-y: auto; flex-grow: 1; padding-right: 5px; }
+        
+        .node-item { background: #000; border: 1px solid #1a1a1a; padding: 12px; border-radius: 5px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; border-left: 3px solid #333; }
+        .node-item:hover, .node-item.active { border-left-color: var(--node); background: rgba(255, 170, 0, 0.05); }
+        .node-name { font-weight: bold; color: var(--gold); font-size: 0.9rem; margin-bottom: 3px; }
+        .node-desc { font-size: 0.75rem; color: #888; line-height: 1.4; }
+        
+        /* Radar Map Panel */
+        .map-panel { background: #000; border: 1px solid var(--border); border-radius: 8px; padding: 20px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background-image: radial-gradient(#111 1px, transparent 1px); background-size: 30px 30px; }
+        
+        .radar-container { position: relative; width: 450px; height: 450px; border-radius: 50%; border: 1px solid #333; box-shadow: inset 0 0 50px rgba(0,0,0,0.8); }
+        
+        /* Nawa Sanga Grid (9 Mata Angin) */
+        .grid-line { position: absolute; background: #222; }
+        .line-v { width: 1px; height: 100%; left: 50%; top: 0; }
+        .line-h { height: 1px; width: 100%; top: 50%; left: 0; }
+        .line-d1 { width: 1px; height: 100%; left: 50%; top: 0; transform: rotate(45deg); }
+        .line-d2 { width: 1px; height: 100%; left: 50%; top: 0; transform: rotate(-45deg); }
+        
+        .radar-ring { position: absolute; border: 1px dashed #333; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .ring-1 { width: 150px; height: 150px; }
+        .ring-2 { width: 300px; height: 300px; }
+
+        /* Compass Labels */
+        .compass { position: absolute; font-size: 0.6rem; color: #555; font-weight: bold; letter-spacing: 2px; }
+        .c-n { top: 5px; left: 50%; transform: translateX(-50%); }
+        .c-s { bottom: 5px; left: 50%; transform: translateX(-50%); }
+        .c-e { right: 5px; top: 50%; transform: translateY(-50%); }
+        .c-w { left: 5px; top: 50%; transform: translateY(-50%); }
+        
+        /* Nodes on Map */
+        .map-node { position: absolute; width: 8px; height: 8px; background: var(--node); border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 0 8px var(--node); transition: 0.3s; z-index: 10; display: none; }
+        .map-node::after { content: attr(data-label); position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-size: 0.55rem; color: #fff; white-space: nowrap; background: rgba(0,0,0,0.8); padding: 2px 4px; border-radius: 2px; border: 1px solid #333; }
+        .map-node.active { background: var(--neon); box-shadow: 0 0 15px var(--neon); transform: translate(-50%, -50%) scale(1.5); }
+
+        /* Ley Lines SVG */
+        .leyline-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+
+        .diagnostics { width: 100%; margin-top: 20px; background: rgba(0, 255, 204, 0.05); border: 1px solid var(--neon); padding: 15px; border-radius: 5px; font-size: 0.85rem; color: #ccc; line-height: 1.5; }
+        .diagnostics strong { color: var(--neon); }
+        
+        button.btn-activate { background: #000; border: 1px solid var(--neon); color: var(--neon); padding: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; width: 100%; margin-top: 15px; font-weight: bold; border-radius: 4px; transition: 0.2s; }
+        button.btn-activate:hover { background: var(--neon); color: #000; }
+        
+        /* Custom Scrollbar for DB List */
+        .db-list-container::-webkit-scrollbar { width: 5px; }
+        .db-list-container::-webkit-scrollbar-track { background: #111; }
+        .db-list-container::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>KALA CAKRA MAPPER</h1>
+        <div class="sub-header">Geospatial Module: Old World Grid & Ley Lines</div>
+    </div>
+
+    <div class="app-container">
+        
+        <div class="db-panel">
+            <div class="db-title">Database Simpul Absolut (21 Nodes)</div>
+            <div class="db-list-container" id="nodeList">
+                </div>
+            <button class="btn-activate" onclick="drawLeyLines()">Aktifkan Ley Lines Matriks</button>
+        </div>
+
+        <div class="map-panel">
+            <div class="radar-container" id="radarMap">
+                <div class="grid-line line-v"></div>
+                <div class="grid-line line-h"></div>
+                <div class="grid-line line-d1"></div>
+                <div class="grid-line line-d2"></div>
+                
+                <div class="radar-ring ring-1"></div>
+                <div class="radar-ring ring-2"></div>
+                
+                <div class="compass c-n">UTARA (WISNU)</div>
+                <div class="compass c-s">SELATAN (BRAHMA)</div>
+                <div class="compass c-e">TIMUR (ISWARA)</div>
+                <div class="compass c-w">BARAT (MAHADEWA)</div>
+
+                <svg class="leyline-svg" id="leylineCanvas"></svg>
+            </div>
+
+            <div class="diagnostics" id="diagBox">
+                Sistem *Standby*. Silakan pilih simpul untuk melihat matriks topografinya, atau klik "Aktifkan Ley Lines Matriks" untuk melihat koneksi sirkuit energinya.
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    // DATABASE GABUNGAN FULL (Bujangga Manik, Mud Flood Sites, Anomali) - DEDUPLICATED
+    const nodeDatabase = [
+        // --- ANCHOR BARAT & PUSAT MATRIKS ---
+        { id: "n1", name: "Gunung Padang (Cianjur)", desc: "Pusat Matriks. Node jangkar Eter. Bukti reset berlapis (multi-layer) yang tertimbun tanah secara masif.", x: 30, y: 50, elemen: "Eter (Siwa/Pusat)" },
+        { id: "n2", name: "Situs Cibalay / Arca Domas (Gn. Salak)", desc: "Node Api/Vulkanik barat. Area artefak dan panel megalitikum untuk menstabilkan tekanan magma teritorial.", x: 25, y: 45, elemen: "Api (Brahma)" },
+        { id: "n3", name: "Ujung Kulon (Semenanjung Barat)", desc: "Batas ujung portal samudera. Penstabil pasang surut energi elektromagnetik daratan pantai barat.", x: 10, y: 55, elemen: "Air (Wisnu)" },
+        { id: "n4", name: "Situs Lebak Sibedug (Banten Selatan)", desc: "Struktur piramida berundak (mirip Gn. Padang) tersembunyi rapat di pedalaman hutan. Menjaga resonansi teritorial barat.", x: 18, y: 58, elemen: "Bumi" },
+        { id: "n5", name: "Situs Pugung Raharjo (Lampung)", desc: "Sirkuit tata kota raksasa dengan benteng parit dan punden berundak. Mengunci grid energi antara Sumatera dan Sunda Dwipa.", x: 12, y: 35, elemen: "Bumi & Air" },
+        { id: "n6", name: "Candi Jiwa / Batujaya (Karawang)", desc: "Infrastruktur tata kota kuno yang tertimbun sedimen lumpur. Node air dan stabilitas kedaulatan pangan utara.", x: 32, y: 35, elemen: "Air & Bumi" },
+        
+        // --- TATAR SUNDA DALAM ---
+        { id: "n7", name: "Gunung Tampomas (Puncak Manik)", desc: "Menara transmisi utara. Digunakan untuk menembakkan sinyal resonansi melintasi dataran utara.", x: 42, y: 35, elemen: "Angin" },
+        { id: "n8", name: "Situs Bojongmenje (Rancaekek)", desc: "Candi terkubur lumpur di dataran cekungan Bandung. Node penyeimbang resonansi di area patahan/sesar.", x: 35, y: 52, elemen: "Bumi" },
+        { id: "n9", name: "Mandala Kendan (Nagreg)", desc: "Laboratorium vulkanik dan pusat penempaan material/semen kuno Old World. Pusat manufaktur struktur.", x: 38, y: 55, elemen: "Api & Bumi" },
+        { id: "n10", name: "Candi Cangkuang (Danau Leles)", desc: "Anomali arsitektur di tengah danau. Berfungsi sebagai Node Air (Coolant/Pendingin) meredam frekuensi vulkanik tatar Sunda.", x: 40, y: 58, elemen: "Air" },
+        { id: "n11", name: "Kabuyutan Galunggung", desc: "Pusat pertahanan frekuensi. Menjaga keseimbangan tekanan tektonik (Bumi) di area patahan selatan.", x: 45, y: 62, elemen: "Bumi" },
+        { id: "n12", name: "Situs Cipari (Kuningan)", desc: "Simpul pemukiman megalitik presisi. Ditemukan tertimbun abu vulkanik purba Gunung Ciremai.", x: 48, y: 45, elemen: "Bumi & Api" },
+        
+        // --- POROS TENGAH (ZONA TRANSISI ETHERIC) ---
+        { id: "n13", name: "Situs Liyangan (Temanggung)", desc: "Bukti mutlak Mud Flood. Tata kota dan peradaban lengkap yang terkubur puluhan meter oleh sedimen Gunung Sindoro.", x: 55, y: 50, elemen: "Api & Angin" },
+        { id: "n14", name: "Kompleks Di-Hyang (Dieng Plateau)", desc: "Kapasitor energi atmosfer (Abode of Gods). Pura-pura kecil berfungsi sebagai sekring penangkap kelistrikan uap air/eter.", x: 55, y: 45, elemen: "Eter & Air" },
+        { id: "n15", name: "Candi Sambisari & Kedulan (Sleman)", desc: "Simpul sirkuit yang ditemukan utuh tapi terkubur lebih dari 6 meter di bawah permukaan tanah akibat reset vulkanik Merapi.", x: 60, y: 58, elemen: "Bumi & Eter" },
+        { id: "n16", name: "Candi Sukuh & Cetho (Gn. Lawu)", desc: "Menara transmisi frekuensi tinggi. Selamat dari Mud Flood karena ketinggian ekstrem. Arsitektur piramida terpotong.", x: 68, y: 55, elemen: "Angin & Eter" },
+        
+        // --- POROS TIMUR (SIRKUIT MAJAPAHIT) ---
+        { id: "n17", name: "Situs Adan-Adan (Kediri)", desc: "Infrastruktur mandala raksasa dengan Makara besar. Terkubur lumpur vulkanik pasca-reset. Node transmisi poros timur.", x: 75, y: 55, elemen: "Bumi (Material)" },
+        { id: "n18", name: "Candi Penataran (Blitar)", desc: "Node penerima (receiver) paling stabil di Jawa Timur. Digunakan untuk sinkronisasi pergerakan matahari dan lempeng selatan.", x: 75, y: 65, elemen: "Angin & Bumi" },
+        { id: "n19", name: "Trowulan (Mojokerto)", desc: "Eks-pusat komando teritorial Majapahit. Area sirkuit air dan kanal-kanal pengunci eter yang tertimbun sedimen dangkal.", x: 80, y: 50, elemen: "Air & Eter" },
+        { id: "n20", name: "Situs Kumitir (Mojokerto)", desc: "Benteng/dinding penahan air raksasa peninggalan Old World yang terkubur dalam tanah. Bukti skala tata kota masif.", x: 82, y: 52, elemen: "Bumi & Air" },
+        { id: "n21", name: "Gunung Penanggungan / Pawitra", desc: "Gunung dengan puluhan simpul/teras piramida kecil di sekujur lerengnya. Menara pemancar (transmitter) utama poros timur.", x: 85, y: 48, elemen: "Eter (Pusat Timur)" }
+    ];
+
+    const nodeListEl = document.getElementById('nodeList');
+    const radarMap = document.getElementById('radarMap');
+    const diagBox = document.getElementById('diagBox');
+    const leylineCanvas = document.getElementById('leylineCanvas');
+
+    // Inisialisasi Database ke UI
+    function initNodes() {
+        nodeDatabase.forEach(node => {
+            // Buat List Item
+            const div = document.createElement('div');
+            div.className = 'node-item';
+            div.id = 'list-' + node.id;
+            div.innerHTML = `<div class="node-name">${node.name}</div><div class="node-desc">${node.desc}</div>`;
+            div.onclick = () => activateNode(node.id);
+            nodeListEl.appendChild(div);
+
+            // Buat Titik di Map
+            const mapNode = document.createElement('div');
+            mapNode.className = 'map-node';
+            mapNode.id = 'map-' + node.id;
+            // Gunakan hanya kata pertama untuk label di radar agar tidak kepanjangan
+            mapNode.setAttribute('data-label', node.name.split(' ')[0] + ' ' + (node.name.split(' ')[1] || ''));
+            mapNode.style.left = node.x + '%';
+            mapNode.style.top = node.y + '%';
+            mapNode.style.display = 'block';
+            mapNode.onclick = () => activateNode(node.id);
+            radarMap.appendChild(mapNode);
+        });
+    }
+
+    function activateNode(nodeId) {
+        // Reset all active states
+        document.querySelectorAll('.node-item').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.map-node').forEach(el => el.classList.remove('active'));
+
+        // Set new active state
+        document.getElementById('list-' + nodeId).classList.add('active');
+        document.getElementById('map-' + nodeId).classList.add('active');
+
+        // Scroll list if necessary
+        document.getElementById('list-' + nodeId).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // Update Diagnostics
+        const node = nodeDatabase.find(n => n.id === nodeId);
+        diagBox.innerHTML = `<strong>KORDINAT TERKUNCI:</strong> ${node.name}<br><br>
+        <strong>Karakteristik Elemen:</strong> ${node.elemen}<br>
+        <strong>Fungsi Sinkronisasi:</strong> ${node.desc}<br><br>
+        <em>Gunakan kalkulator Dewasa Ayu untuk mencari tanggal presisi aktivasi frekuensi node ini.</em>`;
+    }
+
+    function drawLeyLines() {
+        leylineCanvas.innerHTML = ''; // Clear existing lines
+        
+        // Asumsikan n1 (Gunung Padang) sebagai pusat jangkar barat
+        // Dan n13 (Liyangan/Dieng) sebagai hub tengah, n21 (Penanggungan) sebagai jangkar timur.
+        // Kita tarik garis bypass energi Eter utama (Sirkuit Utama)
+        
+        const mainCircuit = [nodeDatabase[0], nodeDatabase[13], nodeDatabase[20]]; // Padang -> Di-Hyang -> Penanggungan
+        
+        // Gambar sirkuit utama (garis tebal)
+        for (let i = 0; i < mainCircuit.length - 1; i++) {
+            drawLine(mainCircuit[i], mainCircuit[i+1], "var(--neon)", "2", "0");
+        }
+
+        // Gambar cabang (garis putus-putus) dari Padang ke sisa node
+        nodeDatabase.forEach((node, index) => {
+            if (node.id === "n1" || node.id === "n14" || node.id === "n21") return; 
+            
+            // Logika sederhana: node barat ke Padang, node timur ke Dieng/Penanggungan
+            let startNode = nodeDatabase[0]; // Padang
+            if (node.x > 70) startNode = nodeDatabase[20]; // Penanggungan
+            else if (node.x > 45) startNode = nodeDatabase[13]; // Di-Hyang
+            
+            drawLine(startNode, node, "var(--neon)", "1", "5,5");
+        });
+
+        diagBox.innerHTML = `<strong>Sirkuit Ley Lines Aktif!</strong><br><br>Garis tebal menunjukkan Jalur Tulang Punggung (Backbone Circuit) pengunci Eter dari Gunung Padang hingga Penanggungan. Garis putus-putus menunjukkan cabang transmisi ke masing-masing kapasitor teritorial.`;
+    }
+
+    function drawLine(nodeA, nodeB, color, width, dash) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        // Radar ukuran 450x450
+        line.setAttribute("x1", (nodeA.x / 100) * 450);
+        line.setAttribute("y1", (nodeA.y / 100) * 450);
+        line.setAttribute("x2", (nodeB.x / 100) * 450);
+        line.setAttribute("y2", (nodeB.y / 100) * 450);
+        line.setAttribute("stroke", color);
+        line.setAttribute("stroke-width", width);
+        if (dash !== "0") line.setAttribute("stroke-dasharray", dash);
+        line.setAttribute("opacity", "0.5");
+        leylineCanvas.appendChild(line);
+    }
+
+    // Run on load
+    initNodes();
+</script>
+</body>
+</html>

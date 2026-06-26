@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex Time Decompressor - Nuswantara OS</title>
+    <style>
+        :root { 
+            --neon: #00ffcc; 
+            --bg: #050505; 
+            --card: #0d0d0d; 
+            --gold: #d4af37; 
+            --entropy: #ff3333; 
+            --border: #222;
+        }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; width: 100%; max-width: 700px; }
+        .header h1 { letter-spacing: 4px; margin: 0; color: var(--gold); font-weight: normal; font-size: 1.6rem; }
+        .sub-header { font-size: 0.75rem; letter-spacing: 2px; color: #777; text-transform: uppercase; margin-top: 5px; }
+        
+        .app-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 25px; width: 100%; max-width: 700px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        
+        .input-section { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; background: #000; padding: 15px; border-radius: 5px; border: 1px solid #1a1a1a; }
+        .input-group { display: flex; justify-content: space-between; align-items: center; }
+        .input-group label { font-size: 0.8rem; color: var(--neon); text-transform: uppercase; letter-spacing: 1px; }
+        input[type="number"] { background: #111; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px; font-size: 1.1rem; width: 100px; text-align: center; font-family: monospace; outline: none; transition: 0.3s; }
+        input[type="number"]:focus:not(:disabled) { border-color: var(--neon); }
+        input[type="number"]:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        button { background: #1a1a1a; border: 1px solid var(--gold); color: var(--gold); padding: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; border-radius: 4px; transition: 0.2s; width: 100%; margin-top: 10px; }
+        button:hover { background: var(--gold); color: #000; }
+
+        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .result-box { background: #050505; border: 1px solid #1a1a1a; padding: 20px; border-radius: 5px; text-align: center; position: relative; overflow: hidden; }
+        .result-box.linear { border-bottom: 3px solid #555; }
+        .result-box.vortex { border-bottom: 3px solid var(--entropy); background: radial-gradient(circle at center, #1a0505 0%, #050505 100%); }
+        
+        .res-label { font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        .res-value { font-size: 2.5rem; font-weight: bold; font-family: monospace; }
+        .res-sub { font-size: 0.8rem; color: #aaa; margin-top: 5px; }
+
+        .explanation { background: rgba(255, 51, 51, 0.05); border-left: 3px solid var(--entropy); padding: 15px; margin-top: 25px; font-size: 0.85rem; line-height: 1.6; color: #ccc; }
+        .explanation span { color: var(--entropy); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>VORTEX TIME DECOMPRESSOR</h1>
+        <div class="sub-header">Algoritma Pemotongan Entropi Waktu (Spiral Memusat)</div>
+    </div>
+
+    <div class="app-container">
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label>Tahun Awal Entropi (Start Node)</label>
+                <input type="number" id="startYear" value="2019" disabled title="Titik awal pusaran entropi makro">
+            </div>
+            <div class="input-group">
+                <label>Tahun Target Reset (Gregorian)</label>
+                <input type="number" id="targetYear" value="2030">
+            </div>
+            <div class="input-group">
+                <label>Kompresi Hari per Tahun (Sasih)</label>
+                <input type="number" id="entropyRate" value="28" disabled title="Siklus pengali tetap 28 hari">
+            </div>
+            <button onclick="calculateVortex()">Eksekusi Dekompresi</button>
+        </div>
+
+        <div class="result-grid">
+            <div class="result-box linear">
+                <div class="res-label">Ilusi Matriks (Linear)</div>
+                <div class="res-value" id="linearYears" style="color: #aaa;">-</div>
+                <div class="res-sub">Jarak Tahun Standar</div>
+            </div>
+            <div class="result-box vortex">
+                <div class="res-label">Waktu Aktual (Spiral Memusat)</div>
+                <div class="res-value" id="vortexYears" style="color: var(--entropy);">-</div>
+                <div class="res-sub" id="vortexDaysDetail">Jarak Tahun Persepsi</div>
+            </div>
+        </div>
+
+        <div class="explanation" id="analysisText">
+            Menunggu kalkulasi matriks waktu...
+        </div>
+
+    </div>
+
+<script>
+    function calculateVortex() {
+        const startYear = parseInt(document.getElementById('startYear').value); // 2019
+        const targetYear = parseInt(document.getElementById('targetYear').value);
+        const entropyRate = parseInt(document.getElementById('entropyRate').value); // Lock di 28
+
+        if (targetYear <= startYear) {
+            alert("Tahun target harus lebih besar dari tahun awal (2019).");
+            return;
+        }
+
+        const linearDiff = targetYear - startYear;
+        const baseDaysInYear = 364; // Kalender Nuswantara 13 x 28
+        
+        let totalPerceivedDays = 0;
+        let singularityHitYear = null;
+
+        // Looping Deret Aritmatika (Auto-Multiplier Kala Uga)
+        for (let i = 1; i <= linearDiff; i++) {
+            // Tahun 1 = 28x1, Tahun 2 = 28x2, Tahun 3 = 28x3...
+            let entropyLoss = entropyRate * i; 
+            let currentDaysInYear = baseDaysInYear - entropyLoss;
+
+            // Jika waktu spiral memusat sampai 0 atau minus, itu adalah Singularity (Reset Total)
+            if (currentDaysInYear <= 0) {
+                currentDaysInYear = 0;
+                if (!singularityHitYear) {
+                    singularityHitYear = startYear + i;
+                }
+            }
+
+            totalPerceivedDays += currentDaysInYear;
+        }
+
+        // Konversi total hari spiral ke hitungan tahun standar
+        const perceivedYears = (totalPerceivedDays / baseDaysInYear).toFixed(2);
+        
+        // Output UI Numerik
+        document.getElementById('linearYears').innerText = linearDiff;
+        document.getElementById('vortexYears').innerText = perceivedYears;
+        
+        const savingRatio = (((linearDiff - perceivedYears) / linearDiff) * 100).toFixed(1);
+
+        // Output Analisis Teks
+        let analysisHTML = `Jarak dari titik awal ${startYear} menuju tahun ${targetYear} secara linear adalah ${linearDiff} tahun. Namun, dengan algoritma pemusatan Kala Uga (berkurang progresif kelipatan ${entropyRate} hari per tahun):<br><br>
+        Jarak aktual persepsi menuju titik tersebut hanyalah <span style="font-size: 1.1rem; font-weight: bold; color: var(--entropy);">${perceivedYears} Tahun</span>.`;
+
+        // Detektor Singularity
+        if (singularityHitYear) {
+             analysisHTML += `<br><br><span style="color:var(--neon); font-weight:bold;">SINGULARITY ALERT:</span> Persepsi waktu mencapai titik nol pada tahun <strong>${singularityHitYear}</strong>. Matriks linear akan terdistorsi sepenuhnya di titik pusaran ini.`;
+        } else {
+             analysisHTML += `<br><br>Sistem mencatat kompresi entropi total sebesar <strong>${savingRatio}%</strong> dari rentang waktu linear.`;
+        }
+
+        document.getElementById('analysisText').innerHTML = analysisHTML;
+    }
+    
+    // Auto-calculate on load
+    calculateVortex();
+</script>
+</body>
+</html>

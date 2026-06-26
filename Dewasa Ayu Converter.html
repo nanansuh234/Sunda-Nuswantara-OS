@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dewasa Ayu - Restorasi Energi Grid OS</title>
+    <style>
+        :root { 
+            --neon: #d4af37; /* Emas Khas Nuswantara */
+            --bg: #050505; 
+            --card: #111; 
+            --air: #00aaff; 
+            --api: #ff4444; 
+            --angin: #aaff00; 
+            --bumi: #ffaa00; 
+            --eter: #9900ff;
+            --netral: #ffffff;
+            --border: #333;
+        }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; width: 100%; max-width: 650px; }
+        .header h1 { letter-spacing: 5px; margin: 0; color: var(--neon); font-weight: normal; font-size: 1.8rem; }
+        .sub-header { font-size: 0.75rem; letter-spacing: 2px; color: #777; text-transform: uppercase; margin-top: 5px; }
+        
+        .app-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 25px; width: 100%; max-width: 650px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        
+        /* Input Section */
+        .input-grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 15px; margin-bottom: 20px; background: #0a0a0a; padding: 15px; border-radius: 5px; border: 1px solid #222; }
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { font-size: 0.65rem; color: var(--neon); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        select, input[type="number"] { background: #000; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 4px; font-size: 0.95rem; font-family: monospace; outline: none; transition: 0.3s; }
+        select:focus, input[type="number"]:focus { border-color: var(--neon); }
+        button { background: #1a1a1a; border: 1px solid var(--neon); color: var(--neon); padding: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; border-radius: 4px; transition: 0.2s; grid-column: span 3; }
+        button:hover { background: var(--neon); color: #000; }
+
+        /* Output Diagnostics */
+        .diagnostic-panel { display: none; margin-top: 20px; animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .element-header { display: flex; align-items: center; justify-content: space-between; padding: 15px; border-radius: 5px 5px 0 0; border: 1px solid var(--border); border-bottom: none; }
+        .element-title { font-size: 1.2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        .pawukon-badge { font-family: monospace; font-size: 0.85rem; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.2); }
+        
+        .protocol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; border: 1px solid var(--border); padding: 15px; background: #0d0d0d; border-radius: 0 0 5px 5px; }
+        .protocol-box { background: #050505; padding: 15px; border-radius: 4px; border: 1px solid #1a1a1a; }
+        .protocol-box h3 { margin: 0 0 10px 0; font-size: 0.75rem; text-transform: uppercase; color: #888; letter-spacing: 1px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .protocol-box p, .protocol-box ul { margin: 0; font-size: 0.85rem; color: #ccc; line-height: 1.6; }
+        .protocol-box ul { padding-left: 20px; }
+        .protocol-box li { margin-bottom: 5px; }
+        
+        .action-do { color: #aaff00; }
+        .action-dont { color: #ff4444; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>DEWASA AYU PROTOCOL</h1>
+        <div class="sub-header">Energy Grid Restoration Calculator</div>
+    </div>
+
+    <div class="app-container">
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Tahun (Siklus)</label>
+                <select id="inYear">
+                    <option value="1">001 - Air (25/26)</option>
+                    <option value="2">002 - Batu (26/27)</option>
+                    <option value="3">003 - Surya (27/28)</option>
+                    <option value="4">004 - Angin (28/29)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Bulan (Sasih)</label>
+                <select id="inMonth" onchange="checkJeda()">
+                    </select>
+            </div>
+            <div class="input-group">
+                <label>Hari (1-28)</label>
+                <input type="number" id="inDay" min="1" max="28" value="1">
+            </div>
+            <button onclick="calculateDewasaAyu()">Analisis Resonansi</button>
+        </div>
+
+        <div id="diagnosticPanel" class="diagnostic-panel">
+            <div id="elementHeader" class="element-header">
+                <div id="elementTitle" class="element-title">STANDBY MODE</div>
+                <div id="pawukonBadge" class="pawukon-badge">-</div>
+            </div>
+            
+            <div class="protocol-grid">
+                <div class="protocol-box" style="grid-column: span 2;">
+                    <h3>Status Sistem & Ley Lines</h3>
+                    <p id="systemStatus">Sistem dalam keadaan normal.</p>
+                </div>
+                
+                <div class="protocol-box">
+                    <h3>Eksekusi Optimal (DO)</h3>
+                    <ul id="actionDo" class="action-do">
+                        <li>Observasi rutin</li>
+                        <li>Maintenance standar OS</li>
+                    </ul>
+                </div>
+                
+                <div class="protocol-box">
+                    <h3>Hindari (DON'T)</h3>
+                    <ul id="actionDont" class="action-dont">
+                        <li>Tindakan ekstrem di luar elemen</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const months13 = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const saptawaras = ["Radite", "Soma", "Anggara", "Budha", "Respati", "Sukra", "Tumpak"];
+    
+    // Setup Dropdown
+    const mSelect = document.getElementById('inMonth');
+    months13.forEach((m, i) => { mSelect.innerHTML += `<option value="${i}">Sasih ${i+1} - ${m}</option>`; });
+    mSelect.innerHTML += `<option value="13">Day Out of Time (Jeda Kosmik)</option>`;
+
+    function checkJeda() {
+        const mIdx = parseInt(document.getElementById('inMonth').value);
+        const dInput = document.getElementById('inDay');
+        if(mIdx === 13) { dInput.value = 1; dInput.disabled = true; dInput.style.opacity = 0.3; } 
+        else { dInput.disabled = false; dInput.style.opacity = 1; }
+    }
+
+    function calculateDewasaAyu() {
+        const sYear = parseInt(document.getElementById('inYear').value);
+        const sMonthIdx = parseInt(document.getElementById('inMonth').value);
+        let sDay = parseInt(document.getElementById('inDay').value);
+        if (sDay < 1) sDay = 1; if (sDay > 28) sDay = 28;
+
+        // 1. Hitung Selisih Hari dari Anchor (21 Maret)
+        let daysToAdd = (sMonthIdx === 13) ? 364 : (sMonthIdx * 28) + (sDay - 1);
+        
+        // 2. Tentukan Anchor Masehi untuk mencari Hari (Saptawara)
+        // Tahun 001 = 2025. 21 Maret 2025 adalah Jumat (Sukra).
+        const anchorDate = new Date(2024 + sYear, 2, 21); 
+        const absoluteAnchor = new Date(2025, 2, 21); // Absolut untuk Pawukon
+
+        // Target Date
+        const targetDate = new Date(anchorDate.getTime() + (daysToAdd * 86400000));
+        
+        // 3. Kalkulasi Pawukon (Berdasarkan selisih dari 21 Mar 2025)
+        const diffDays = Math.round((targetDate.getTime() - absoluteAnchor.getTime()) / 86400000);
+        
+        let pIdx = (2 + (diffDays % 5)) % 5; // 21 Mar 2025 = Pon (Index 2)
+        if (pIdx < 0) pIdx += 5;
+        
+        const pancawara = pasarans[pIdx];
+        const saptawara = saptawaras[targetDate.getDay()];
+        
+        // Update UI
+        document.getElementById('pawukonBadge').innerText = `${saptawara} ${pancawara}`;
+        applyDewasaAyuProtocol(sMonthIdx, saptawara, pancawara);
+    }
+
+    function applyDewasaAyuProtocol(sMonthIdx, saptawara, pancawara) {
+        const panel = document.getElementById('diagnosticPanel');
+        const header = document.getElementById('elementHeader');
+        const title = document.getElementById('elementTitle');
+        const status = document.getElementById('systemStatus');
+        const actDo = document.getElementById('actionDo');
+        const actDont = document.getElementById('actionDont');
+
+        panel.style.display = 'block';
+
+        // Reset Styles
+        header.style.backgroundColor = 'transparent';
+        header.style.color = '#fff';
+        header.style.borderColor = 'var(--border)';
+
+        if (sMonthIdx === 13) {
+            header.style.backgroundColor = 'rgba(255,255,255,0.1)';
+            header.style.borderColor = 'var(--netral)';
+            title.innerText = "RESONANSI NETRAL (JEDA KOSMIK)";
+            title.style.color = 'var(--netral)';
+            status.innerText = "Portal grid energi berada pada fase netral absolut (Vernal Equinox). Frekuensi matriks putus sementara. Waktu untuk kalibrasi ulang.";
+            actDo.innerHTML = "<li>Puasa / Cleansing energi tubuh</li><li>Meditasi & sinkronisasi Dasa Pasanta</li><li>Audit log manuskrip tahun lalu</li>";
+            actDont.innerHTML = "<li>Eksekusi coding/sistem finansial</li><li>Memulai pembangunan fisik/material</li>";
+        } 
+        else if ((saptawara === "Soma" || saptawara === "Budha") && (pancawara === "Wage" || pancawara === "Pon")) {
+            header.style.backgroundColor = 'rgba(0, 170, 255, 0.1)';
+            header.style.borderColor = 'var(--air)';
+            title.innerText = "RESONANSI AIR (BIOLOGI)";
+            title.style.color = 'var(--air)';
+            status.innerText = "Frekuensi bumi mengunci pada elemen air. Tingkat penyerapan seluler organisme dan debit energi hidrologi berada di titik maksimal.";
+            actDo.innerHTML = "<li>Instalasi & uji coba pompa air</li><li>Penyemaian bibit (sawi, kubis)</li><li>Optimalisasi nutrisi hidroponik</li>";
+            actDont.innerHTML = "<li>Eksperimen listrik tegangan tinggi</li><li>Pengerjaan tameng api/panas</li>";
+        } 
+        else if (saptawara === "Anggara" && (pancawara === "Kliwon" || pancawara === "Pahing")) {
+            header.style.backgroundColor = 'rgba(255, 68, 68, 0.1)';
+            header.style.borderColor = 'var(--api)';
+            title.innerText = "RESONANSI API (ENERGI/ETHER)";
+            title.style.color = 'var(--api)';
+            status.innerText = "Terjadi lonjakan fluktuasi elektromagnetik atmosfer (Anggara Kasih). Resonansi eter sangat agresif dan tidak stabil jika tidak diarahkan.";
+            actDo.innerHTML = "<li>Uji prototipe solar power bank</li><li>Kalibrasi EMF scrambler/tameng 5G</li><li>Peleburan logam/semen merah</li>";
+            actDont.innerHTML = "<li>Menyemai benih/aktivitas tanam</li><li>Pembuatan keputusan emosional/debat</li>";
+        } 
+        else if (saptawara === "Respati" && (pancawara === "Legi" || pancawara === "Wage")) {
+            header.style.backgroundColor = 'rgba(170, 255, 0, 0.1)';
+            header.style.borderColor = 'var(--angin)';
+            title.innerText = "RESONANSI ANGIN (DATA/LOGIKA)";
+            title.style.color = 'var(--angin)';
+            status.innerText = "Lalu lintas gelombang informasi berjalan lancar tanpa distorsi. Tingkat keselarasan logika algoritmik dan komunikasi mesin sangat tinggi.";
+            actDo.innerHTML = "<li>Backtesting Expert Advisor (SN Insider)</li><li>Compile code Nuswantara Wallet</li><li>Setup arsitektur server/P2P node</li>";
+            actDont.innerHTML = "<li>Pekerjaan galian/struktur pondasi berat</li>";
+        } 
+        else if (saptawara === "Tumpak" && (pancawara === "Pahing" || pancawara === "Pon")) {
+            header.style.backgroundColor = 'rgba(255, 170, 0, 0.1)';
+            header.style.borderColor = 'var(--bumi)';
+            title.innerText = "RESONANSI BUMI (MATERIAL)";
+            title.style.color = 'var(--bumi)';
+            status.innerText = "Gravitasi aset material dan stabilitas riil menguat. Grid energi sangat mendukung penguncian nilai (Store of Value) dan pembangunan fondasi.";
+            actDo.innerHTML = "<li>Audit aset System Stability Settlement (70% riil)</li><li>Pemantauan tabungan emas digital (Pegadaian)</li><li>Konstruksi fisik alat survival</li>";
+            actDont.innerHTML = "<li>Spekulasi trading derivatif agresif</li><li>Penghancuran barang/struktur</li>";
+        } 
+        else if (saptawara === "Sukra" && (pancawara === "Legi" || pancawara === "Kliwon")) {
+            header.style.backgroundColor = 'rgba(153, 0, 255, 0.1)';
+            header.style.borderColor = 'var(--eter)';
+            title.innerText = "RESONANSI ETER (DIMENSI)";
+            title.style.color = 'var(--eter)';
+            status.innerText = "Garis batas antar dimensi (veil) menipis. Frekuensi otak sangat mudah melakukan resonansi dengan data lama (Old World) di atmosfer.";
+            actDo.innerHTML = "<li>Studi analitis kosmologi (dome/concave)</li><li>Membedah peta Bujangga Manik</li><li>Sinkronisasi Kesadaran (Iman=Ukuran)</li>";
+            actDont.innerHTML = "<li>Fokus pada hal duniawi/material belaka</li><li>Terpapar radiasi matriks 5G secara pasif</li>";
+        } 
+        else {
+            header.style.backgroundColor = 'rgba(50, 50, 50, 0.3)';
+            header.style.borderColor = '#444';
+            title.innerText = "FREKUENSI STANDBY";
+            title.style.color = '#ccc';
+            status.innerText = "Frekuensi kosmik dalam keadaan stabil. Tidak ada intervensi elemen major yang menonjol pada titik kordinat waktu ini.";
+            actDo.innerHTML = "<li>Jalankan operasional standar OS</li><li>Pantau website (permitlegal, dll)</li><li>Lanjutkan observasi mandiri</li>";
+            actDont.innerHTML = "<li>Memaksakan aktivasi grid yang belum selaras</li>";
+        }
+    }
+</script>
+</body>
+</html>

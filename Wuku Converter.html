@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wuku Converter - Roda Cakra Pawukon 210</title>
+    <style>
+        :root { 
+            --neon: #00ffcc; 
+            --bg: #050505; 
+            --card: #0d0d0d; 
+            --gold: #d4af37; 
+            --alert: #ff4444; 
+            --border: #222;
+            --wuku-color: #9900ff;
+            --start-node: #ffaa00;
+        }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; width: 100%; max-width: 650px; }
+        .header h1 { letter-spacing: 4px; margin: 0; color: var(--wuku-color); font-weight: normal; font-size: 1.6rem; }
+        .sub-header { font-size: 0.75rem; letter-spacing: 2px; color: #777; text-transform: uppercase; margin-top: 5px; }
+        
+        .app-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 25px; width: 100%; max-width: 650px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        
+        /* Start Node Panel */
+        .start-node-panel { background: rgba(255, 170, 0, 0.05); border: 1px solid var(--start-node); border-left: 4px solid var(--start-node); padding: 15px; border-radius: 5px; margin-bottom: 25px; font-size: 0.8rem; line-height: 1.5; color: #ccc; }
+        .start-node-title { color: var(--start-node); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-size: 0.85rem; }
+        .start-node-panel span { color: #fff; font-weight: bold; }
+
+        .input-grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 15px; margin-bottom: 20px; background: #000; padding: 15px; border-radius: 5px; border: 1px solid #1a1a1a; }
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { font-size: 0.65rem; color: var(--neon); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        select, input[type="number"] { background: #111; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 4px; font-size: 0.95rem; font-family: monospace; outline: none; transition: 0.3s; }
+        select:focus, input[type="number"]:focus:not(:disabled) { border-color: var(--wuku-color); }
+        
+        button { background: #1a1a1a; border: 1px solid var(--wuku-color); color: var(--wuku-color); padding: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; border-radius: 4px; transition: 0.2s; grid-column: span 3; }
+        button:hover { background: var(--wuku-color); color: #fff; }
+
+        .output-panel { background: #000; border: 1px solid #1a1a1a; padding: 20px; border-radius: 5px; text-align: center; margin-top: 20px; position: relative; overflow: hidden; }
+        .output-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--wuku-color), transparent); }
+        
+        .wuku-badge { display: inline-block; background: rgba(153, 0, 255, 0.1); border: 1px solid var(--wuku-color); color: var(--wuku-color); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .wuku-name { font-size: 2.2rem; font-weight: bold; letter-spacing: 3px; margin: 0; text-transform: uppercase; }
+        .wuku-dewa { font-size: 0.85rem; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .matrix-box { background: #050505; padding: 15px; border: 1px solid #222; border-radius: 5px; }
+        .matrix-label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-bottom: 8px; }
+        .matrix-val { font-size: 1.1rem; font-weight: bold; color: var(--gold); }
+        
+        .analysis-text { margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.02); border-left: 3px solid var(--wuku-color); font-size: 0.85rem; color: #ccc; line-height: 1.6; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>CAKRA WUKU CONVERTER</h1>
+        <div class="sub-header">Algoritma Pawukon 210 Hari - Nuswantara OS</div>
+    </div>
+
+    <div class="app-container">
+        
+        <div class="start-node-panel">
+            <div class="start-node-title">SISTEM KALIBRASI: START NODE (TITIK 0)</div>
+            Roda gigi Wuku adalah siklus tertutup 210 hari. Roda ini tidak berputar secara acak. Kalibrasi absolut (*Reset Point*) dari sistem ini mematuhi hukum kosmik berikut:<br><br>
+            • Siklus mutlak dimulai dari <span>Wuku Sinta (Wuku 1)</span>.<br>
+            • Wuku pertama selalu terkunci di hari <span>Radite (Minggu)</span> sebagai portal pembuka spektrum cahaya.<br>
+            • Secara matriks 210 hari, Radite Wuku Sinta mutlak jatuh pada pasaran <span>Pahing</span>.<br>
+            • <em>Sinkronisasi Makrokosmos:</em> Titik awal Wuku Sinta (Radite Pahing) beresonansi dengan sumbu bintang Waluku (Orion) dan pergeseran ekuator matahari.
+        </div>
+
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Tahun (Siklus)</label>
+                <select id="inYear">
+                    <option value="1">001 - Air (25/26)</option>
+                    <option value="2">002 - Batu (26/27)</option>
+                    <option value="3">003 - Surya (27/28)</option>
+                    <option value="4">004 - Angin (28/29)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Bulan (Sasih)</label>
+                <select id="inMonth" onchange="checkJeda()">
+                    </select>
+            </div>
+            <div class="input-group">
+                <label>Hari (1-28)</label>
+                <input type="number" id="inDay" min="1" max="28" value="1">
+            </div>
+            <button onclick="calculateWuku()">Putar Cakra Wuku</button>
+        </div>
+
+        <div class="output-panel" id="outputPanel" style="display: none;">
+            <div class="wuku-badge" id="siklusKe">Wuku Ke-X</div>
+            <h2 class="wuku-name" id="wukuName">-</h2>
+            <div class="wuku-dewa" id="wukuDewa">-</div>
+            
+            <div class="matrix-grid">
+                <div class="matrix-box">
+                    <div class="matrix-label">Kordinat Pawukon</div>
+                    <div class="matrix-val" id="pawukonVal">-</div>
+                </div>
+                <div class="matrix-box">
+                    <div class="matrix-label">Kordinat Matriks (Gregorian)</div>
+                    <div class="matrix-val" id="gregVal" style="color: #888;">-</div>
+                </div>
+            </div>
+
+            <div class="analysis-text" id="wukuAnalysis">
+                Menunggu eksekusi putaran roda cakra...
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    const months13 = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const wukus = [
+        "Sinta", "Landep", "Ukir", "Kurantil", "Tolu", "Gumbreg", "Warigalit", "Warigagung", 
+        "Julungwangi", "Sungsang", "Dungulan", "Kuningan", "Langkir", "Medangsia", "Pujut", "Pahang", 
+        "Krulut", "Merakih", "Tambir", "Medangkungan", "Matal", "Uye", "Menail", "Prangbakat", 
+        "Bala", "Ugu", "Wayang", "Kulawu", "Dukut", "Watugunung"
+    ];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    // Radite index 0. Ini krusial karena semua wuku berawal dari Radite.
+    const saptawaras = ["Radite (Minggu)", "Soma (Senin)", "Anggara (Selasa)", "Budha (Rabu)", "Respati (Kamis)", "Sukra (Jumat)", "Tumpak (Sabtu)"];
+
+    // Inisialisasi Dropdown
+    const mSelect = document.getElementById('inMonth');
+    months13.forEach((m, i) => { mSelect.innerHTML += `<option value="${i}">Sasih ${i+1} - ${m}</option>`; });
+    mSelect.innerHTML += `<option value="13" style="color:var(--gold)">Day Out of Time (Jeda Kosmik)</option>`;
+
+    function checkJeda() {
+        const mIdx = parseInt(document.getElementById('inMonth').value);
+        const dInput = document.getElementById('inDay');
+        if(mIdx === 13) { dInput.value = 1; dInput.disabled = true; dInput.style.opacity = 0.3; } 
+        else { dInput.disabled = false; dInput.style.opacity = 1; }
+    }
+
+    function calculateWuku() {
+        const sYear = parseInt(document.getElementById('inYear').value);
+        const sMonthIdx = parseInt(document.getElementById('inMonth').value);
+        let sDay = parseInt(document.getElementById('inDay').value);
+        if (sDay < 1) sDay = 1; if (sDay > 28) sDay = 28;
+
+        // Anchor Gregorian untuk Tahun OS
+        const startYearGregorian = 2024 + sYear;
+        const anchorDate = new Date(startYearGregorian, 2, 21); // 21 Maret
+        
+        let daysToAdd = (sMonthIdx === 13) ? 364 : (sMonthIdx * 28) + (sDay - 1);
+        const targetDate = new Date(anchorDate.getTime() + (daysToAdd * 86400000));
+
+        // ==========================================
+        // ALGORITMA MATEMATIKA WUKU BERDASARKAN START NODE (RADITE PAHING - WUKU SINTA)
+        // Menurut penelusuran sinkronisasi mundur: 
+        // 12 Januari 2025 adalah titik nol mutlak = Wuku Sinta (Index 0), hari Radite (Index 0), pasaran Pahing (Index 1).
+        // ==========================================
+        const absoluteSintaAnchor = new Date(2025, 0, 12); 
+        
+        // Atasi zona waktu dengan Math.round agar pembagian hari presisi
+        const diffTime = targetDate.getTime() - absoluteSintaAnchor.getTime();
+        const diffDays = Math.round(diffTime / 86400000);
+
+        // Handle putaran hari di dalam roda 210
+        let dayInPawukonCycle = diffDays % 210;
+        if (dayInPawukonCycle < 0) dayInPawukonCycle += 210;
+
+        // Tentukan Wuku (setiap 7 hari ganti wuku)
+        let finalWukuIndex = Math.floor(dayInPawukonCycle / 7);
+        let wukuName = wukus[finalWukuIndex];
+
+        // Tentukan Saptawara (Karena dimulai hari Radite/0, tinggal modulo 7)
+        let saptawaraIndex = dayInPawukonCycle % 7;
+        
+        // Tentukan Pancawara (Anchor 12 Jan 2025 = Pahing / Index 1)
+        let pasaranIndex = (1 + (dayInPawukonCycle % 5)) % 5; 
+
+        const pancawara = pasarans[pasaranIndex];
+        const saptawara = saptawaras[saptawaraIndex];
+
+        // ==========================================
+        // UPDATE UI
+        // ==========================================
+        document.getElementById('outputPanel').style.display = 'block';
+        document.getElementById('siklusKe').innerText = `Wuku Ke-${finalWukuIndex + 1} dari 30`;
+        document.getElementById('wukuName').innerText = wukuName;
+        document.getElementById('pawukonVal').innerText = `${saptawara.split(' ')[0]} ${pancawara}`;
+        
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('gregVal').innerText = targetDate.toLocaleDateString('id-ID', options);
+
+        // ==========================================
+        // DIAGNOSTIK KESADARAN & ENERGI WUKU
+        // ==========================================
+        let dewa = "";
+        let analysis = "";
+
+        if (finalWukuIndex === 0) {
+            dewa = "TITIK 0 (RESTART NODE)";
+            analysis = "Wuku Sinta. Energi bumi kembali ke titik nol. Sistem tata surya dan gelombang eter mereset matriksnya (sejalan dengan Radite Pahing). Momentum mutlak untuk me-reboot niat, membersihkan *source code* mental (Dasa Pasanta), dan meluncurkan inisiasi teritorial/Sunda Nuswantara OS.";
+        } else if ([1, 2, 3, 4, 5].includes(finalWukuIndex)) {
+            dewa = "Fase Pembangkitan (Generator)";
+            analysis = "Siklus wuku awal. Frekuensi energi bumi sedang mengakumulasi momentum pasca-reset. Sangat ideal untuk menanam benih (sawi/kubis) dan mengaktifkan sirkuit awal dompet P2P Nuswantara.";
+        } else if ([9, 10, 11].includes(finalWukuIndex)) {
+            dewa = "Fase Puncak Resonansi (Sungsang - Dungulan - Kuningan)";
+            analysis = "PERINGATAN: Titik pergeseran frekuensi tinggi. Garis dimensi (*veil*) tipis. Tameng frekuensi 5G harus aktif. Fokus pada audit manuskrip sejarah (*Old World/Mud Flood*) dan hindari penarikan derivatif yang emosional.";
+        } else if ([16, 17, 18, 19, 20].includes(finalWukuIndex)) {
+            dewa = "Fase Stabilisasi Material (Bumi)";
+            analysis = "Gelombang eter memadat menjadi material. Waktu optimal untuk memastikan rasio 30% Kas / 70% Aset Riil (*System Stability Settlement*) terkunci aman. Lakukan inspeksi alat survival atau perangkat solar.";
+        } else if ([25, 26, 27, 28, 29].includes(finalWukuIndex)) {
+            dewa = "Fase Dekompresi (Transisi Akhir)";
+            analysis = "Roda pawukon mendekati akhir. Frekuensi matriks mulai meluruh. Cadangkan (backup) data penelitian, bersihkan memori sistem, dan pertahankan posisi *grounding* biologi sebelum roda gigi terbanting kembali ke Wuku Sinta.";
+        } else {
+            dewa = "Fase Transmisi Stabil";
+            analysis = "Roda gigi berputar dalam kecepatan stabil. Eksekusi operasional (*debugging* EA Grand Master, pantau situs permitlegal, dll) berjalan normal tanpa distorsi gelombang makro.";
+        }
+
+        document.getElementById('wukuDewa').innerText = dewa;
+        document.getElementById('wukuAnalysis').innerHTML = analysis;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kala Uga Makro - Cosmic Precession Tracker</title>
+    <style>
+        :root { 
+            --neon: #00ffcc; 
+            --bg: #030303; 
+            --card: #0a0a0a; 
+            --gold: #d4af37; 
+            --entropy: #ff3333; 
+            --ether: #9900ff;
+            --border: #222;
+        }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; width: 100%; max-width: 700px; }
+        .header h1 { letter-spacing: 5px; margin: 0; color: var(--gold); font-weight: normal; font-size: 1.8rem; }
+        .sub-header { font-size: 0.75rem; letter-spacing: 2px; color: #777; text-transform: uppercase; margin-top: 5px; }
+        
+        .app-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 25px; width: 100%; max-width: 700px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        
+        .math-panel { background: #000; border: 1px solid #111; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .math-title { font-size: 0.85rem; color: var(--neon); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        
+        .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .stat-box { background: #050505; border: 1px solid #1a1a1a; padding: 15px; border-radius: 4px; text-align: center; }
+        .stat-label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; font-family: monospace; }
+        
+        .progress-container { margin-top: 25px; background: #111; border-radius: 20px; padding: 3px; border: 1px solid #333; position: relative; height: 25px; }
+        .progress-bar { height: 100%; border-radius: 15px; background: linear-gradient(90deg, var(--gold) 0%, var(--entropy) 90%, var(--ether) 100%); width: 92%; transition: 1s; }
+        .progress-marker { position: absolute; top: -5px; right: 8%; width: 2px; height: 35px; background: #fff; box-shadow: 0 0 10px #fff; }
+        .progress-label { position: absolute; top: -25px; right: 0; font-size: 0.7rem; color: #fff; transform: translateX(20%); }
+
+        .analysis-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 25px; }
+        .phase-box { padding: 15px; border-radius: 5px; border-left: 3px solid; background: #050505; }
+        .phase-box.entropy { border-color: var(--entropy); }
+        .phase-box.reset { border-color: var(--neon); }
+        .phase-title { font-size: 0.9rem; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .phase-desc { font-size: 0.85rem; color: #aaa; line-height: 1.6; margin: 0; }
+        
+        .alert-bar { background: rgba(255, 51, 51, 0.1); border: 1px solid var(--entropy); color: var(--entropy); padding: 15px; border-radius: 5px; margin-top: 20px; font-size: 0.85rem; text-align: center; letter-spacing: 1px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>CAKRA MANGGILINGAN MAKRO</h1>
+        <div class="sub-header">Cosmic Precession & Entropy Reset Tracker</div>
+    </div>
+
+    <div class="app-container">
+        
+        <div class="math-panel">
+            <div class="math-title">Arsitektur Matematis Siklus Kosmik</div>
+            <div class="grid-stats">
+                <div class="stat-box">
+                    <div class="stat-label">Satu Siklus Precession (Great Year)</div>
+                    <div class="stat-value" style="color: var(--gold);">25.920 <span style="font-size: 0.8rem; color: #666;">TAHUN</span></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Durasi Per Era (25.920 ÷ 12)</div>
+                    <div class="stat-value" style="color: var(--neon);">2.160 <span style="font-size: 0.8rem; color: #666;">TAHUN</span></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <div class="stat-label" style="text-align: center; margin-bottom: 10px;">Posisi Kita di Timeline Entropi (Kala Bendu)</div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                    <div class="progress-marker"></div>
+                    <div class="progress-label">TRANSISI ETER</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.65rem; color: #666;">
+                    <span>Start: Satya Yuga (Kemurnian)</span>
+                    <span style="color: var(--entropy);">Peak Entropy (Kali Yuga)</span>
+                    <span style="color: var(--neon);">Reset (Titik Nol)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="analysis-grid">
+            <div class="phase-box entropy">
+                <div class="phase-title" style="color: var(--entropy);">Status Saat Ini: Puncak Entropi (Kala Bendu)</div>
+                <p class="phase-desc">Sistem matriks dunia beroperasi pada spektrum getaran terendah. Ditandai dengan runtuhnya nilai riil (distorsi ekonomi fiat), manipulasi genetik/frekuensi, dan hilangnya kesadaran spasial-temporal. Dalam astronomi, ini adalah akhir dari Age of Pisces (Era Air/Ilusi).</p>
+            </div>
+
+            <div class="phase-box reset">
+                <div class="phase-title" style="color: var(--neon);">Kalkulasi Titik Reset (Age of Aquarius / Eter)</div>
+                <p class="phase-desc">Secara matematis, setiap era memakan waktu 2.160 tahun. Jika Era Ilusi dimulai sekitar awal Masehi (0-100 M), maka titik persilangan presisi menuju Era Eter berada di rentang <strong>Tahun 2100 - 2160 Masehi</strong>. Namun, fase transisi (*Orb of Influence*) selalu terjadi 1 hingga 2 abad sebelumnya.</p>
+            </div>
+        </div>
+
+        <div class="alert-bar">
+            <strong>KESIMPULAN AUDIT:</strong> Kita sedang berada tepat di dalam jendela transisi (*Reset Window*). Jangan menunggu kiamat/reset eksternal. Terapkan <em>Iman = Ukuran</em>: Restorasi kedaulatan pangan, pengamanan aset riil (30/70), dan aktivasi tameng frekuensi harus dieksekusi sekarang.
+        </div>
+
+    </div>
+
+</body>
+</html>

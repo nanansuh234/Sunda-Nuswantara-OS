@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kala Uga Node Tracker - Root: Sunda Nuswantara</title>
+    <style>
+        :root { --neon: #00ffcc; --bg: #0a0a0a; --card: #151515; --alert: #ff4444; --sync: #d4af37; }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 15px; width: 100%; max-width: 600px; }
+        .header h1 { letter-spacing: 4px; margin: 0; color: var(--neon); font-weight: normal; }
+        .sub-header { font-size: 0.8rem; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-top: 5px; }
+        
+        .converter-card { background: var(--card); border: 1px solid #333; border-radius: 10px; padding: 25px; width: 100%; max-width: 600px; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+        
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { font-size: 0.7rem; color: var(--neon); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        select, input[type="number"] { background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 5px; font-size: 1rem; font-family: monospace; outline: none; transition: 0.3s; }
+        select:focus, input[type="number"]:focus { border-color: var(--neon); }
+        
+        .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .data-box { background: #000; border: 1px solid #222; padding: 15px; border-radius: 5px; }
+        .data-box.highlight { border-color: #333; }
+        .data-label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .data-value { font-size: 1.2rem; font-weight: bold; color: #fff; }
+        .data-sub { font-size: 0.8rem; color: #888; margin-top: 5px; font-family: monospace; }
+        
+        .sync-panel { background: #111; border-left: 3px solid #333; padding: 15px; border-radius: 0 5px 5px 0; transition: 0.3s; }
+        .sync-panel.active { border-color: var(--sync); background: rgba(212, 175, 55, 0.05); box-shadow: inset 5px 0 15px rgba(212, 175, 55, 0.1); }
+        .sync-title { font-size: 0.8rem; text-transform: uppercase; font-weight: bold; color: #666; margin-bottom: 8px; }
+        .sync-panel.active .sync-title { color: var(--sync); }
+        .sync-desc { font-size: 0.9rem; color: #ccc; line-height: 1.5; }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>KALA UGA OS</h1>
+        <div class="sub-header">Root Module: Sunda Nuswantara Calendar</div>
+    </div>
+
+    <div class="converter-card">
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Tahun (Siklus)</label>
+                <select id="inYear" onchange="processTime()">
+                    <option value="1">001 - Air (25/26)</option>
+                    <option value="2">002 - Batu (26/27)</option>
+                    <option value="3">003 - Surya (27/28)</option>
+                    <option value="4">004 - Angin (28/29)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Bulan (Sasih)</label>
+                <select id="inMonth" onchange="toggleDayInput(); processTime()">
+                    </select>
+            </div>
+            <div class="input-group">
+                <label>Hari (1-28)</label>
+                <input type="number" id="inDay" min="1" max="28" value="1" onchange="processTime()">
+            </div>
+        </div>
+
+        <div class="output-grid">
+            <div class="data-box highlight" style="grid-column: span 2; border-color: var(--neon); background: rgba(0, 255, 204, 0.05);">
+                <div class="data-label" style="color: var(--neon);">Matriks Pawukon (Cakra Frekuensi)</div>
+                <div class="data-value" id="pawukonData" style="color: var(--neon);">-</div>
+                <div class="data-sub" id="pawukonDetail">-</div>
+            </div>
+            <div class="data-box">
+                <div class="data-label">Konfirmasi Sinkronisasi (Masehi)</div>
+                <div class="data-value" id="gregDate">-</div>
+                <div class="data-sub" id="gregDay">-</div>
+            </div>
+            <div class="data-box">
+                <div class="data-label">Posisi Koordinat OS</div>
+                <div class="data-value" id="osCoordinates">-</div>
+                <div class="data-sub">Grid Anchor: 21 Maret</div>
+            </div>
+        </div>
+
+        <div class="sync-panel" id="syncStatus">
+            <div class="sync-title">Status Resonansi Grid</div>
+            <div class="sync-desc" id="syncMessage">Menunggu kalibrasi koordinat waktu...</div>
+        </div>
+    </div>
+
+<script>
+    const months13 = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const saptawaras = ["Radite (Minggu)", "Soma (Senin)", "Anggara (Selasa)", "Budha (Rabu)", "Respati (Kamis)", "Sukra (Jumat)", "Tumpak (Sabtu)"];
+    
+    // Inisialisasi Dropdown Bulan
+    function initMonths() {
+        const mSelect = document.getElementById('inMonth');
+        months13.forEach((m, i) => {
+            mSelect.innerHTML += `<option value="${i}">Sasih ${i+1} - ${m}</option>`;
+        });
+        mSelect.innerHTML += `<option value="13" style="color:var(--sync)">Day Out of Time (Jeda Kosmik)</option>`;
+    }
+
+    // Disable input hari jika "Jeda Kosmik" dipilih
+    function toggleDayInput() {
+        const mIdx = parseInt(document.getElementById('inMonth').value);
+        const dayInput = document.getElementById('inDay');
+        if (mIdx === 13) {
+            dayInput.value = 1;
+            dayInput.disabled = true;
+            dayInput.style.opacity = 0.3;
+        } else {
+            dayInput.disabled = false;
+            dayInput.style.opacity = 1;
+        }
+    }
+
+    // Engine Utama: Konversi dari Sunda Nuswantara -> Masehi & Pawukon
+    function processTime() {
+        const sYear = parseInt(document.getElementById('inYear').value);
+        const sMonthIdx = parseInt(document.getElementById('inMonth').value);
+        let sDay = parseInt(document.getElementById('inDay').value);
+        
+        // Proteksi Limit Hari
+        if (sDay < 1) sDay = 1;
+        if (sDay > 28) sDay = 28;
+        document.getElementById('inDay').value = sDay;
+
+        // 1. Kalkulasi Anchor Gregorian (Masehi)
+        const gregBaseYear = 2024 + sYear;
+        const anchorDate = new Date(gregBaseYear, 2, 21); // 21 Maret jam 00:00
+
+        // 2. Hitung jumlah hari
+        let daysToAdd = 0;
+        if (sMonthIdx === 13) {
+            daysToAdd = 364; 
+        } else {
+            daysToAdd = (sMonthIdx * 28) + (sDay - 1);
+        }
+
+        const targetDateMs = anchorDate.getTime() + (daysToAdd * 86400000);
+        const targetDate = new Date(targetDateMs);
+
+        // Render Gregorian Output
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('gregDate').innerText = targetDate.toLocaleDateString('id-ID', options);
+        document.getElementById('gregDay').innerText = saptawaras[targetDate.getDay()];
+
+        // Render OS Coordinates
+        if (sMonthIdx === 13) {
+            document.getElementById('osCoordinates').innerText = "NODE NETRAL (JEDA)";
+        } else {
+            document.getElementById('osCoordinates').innerText = `Tahun 00${sYear} : Sasih ${sMonthIdx+1} : Hari ${sDay}`;
+        }
+
+        // 3. Kalkulasi Matriks Pawukon (Base: 21 Maret 2025 = Jumat Pon)
+        const absoluteAnchor = new Date(2025, 2, 21);
+        const diffTime = targetDate.getTime() - absoluteAnchor.getTime();
+        const diffDays = Math.round(diffTime / 86400000);
+
+        let pIdx = (2 + (diffDays % 5)) % 5;
+        if (pIdx < 0) pIdx += 5; // Handle perulangan mundur
+        const pancawara = pasarans[pIdx];
+        const saptawara = saptawaras[targetDate.getDay()];
+
+        document.getElementById('pawukonData').innerText = `${saptawara.split(' ')[0]} ${pancawara}`;
+        document.getElementById('pawukonDetail').innerText = `Elemen Kosmik: ${pancawara} | Elemen Planet: ${saptawara.split(' ')[0]}`;
+
+        // 4. Deteksi Resonansi Energi (Dewasa Ayu - Extended Version)
+        const syncPanel = document.getElementById('syncStatus');
+        const syncMsg = document.getElementById('syncMessage');
+        syncPanel.className = 'sync-panel'; // Reset class
+        syncPanel.style.borderLeftColor = "#333"; // Reset border manual
+
+        if (sMonthIdx === 13) {
+            syncPanel.classList.add('active');
+            syncPanel.style.borderLeftColor = "var(--sync)";
+            syncMsg.innerHTML = "<strong>MOMENTUM EKUINOKS (DAY OUT OF TIME):</strong> Portal grid netral. Momen krusial untuk reset kesadaran. Jangan lakukan eksekusi finansial atau coding berat hari ini. Lakukan <em>cleansing</em> energi.";
+        } 
+        // ELEMEN AIR: Biologi & Kedaulatan Pangan
+        else if ((saptawara.includes("Soma") || saptawara.includes("Budha")) && (pancawara === "Wage" || pancawara === "Pon")) {
+            syncPanel.classList.add('active');
+            syncPanel.style.borderLeftColor = "#00aaff"; // Aksen Biru
+            syncMsg.innerHTML = "<strong>RESONANSI AIR (BIOLOGI):</strong> Siklus seluler dan hidrologi sedang di titik puncak. Momentum paling presisi untuk instalasi pompa air, penyemaian bibit (sawi, kubis), dan optimalisasi sistem hidroponik.";
+        } 
+        // ELEMEN API: Kelistrikan & Energi Atmosfer
+        else if (saptawara.includes("Anggara") && (pancawara === "Kliwon" || pancawara === "Pahing")) {
+            syncPanel.classList.add('active');
+            syncPanel.style.borderLeftColor = "#ff4444"; // Aksen Merah
+            syncMsg.innerHTML = "<strong>TRANSISI API (ENERGI/ETHER):</strong> Fluktuasi elektromagnetik atmosfer tinggi. Waktu yang tepat untuk menguji prototipe kelistrikan surya, kalibrasi EMF scrambler, atau eksperimen frekuensi. Hati-hati <em>short circuit</em>.";
+        } 
+        // ELEMEN ANGIN: Logika, Coding & Komunikasi Data
+        else if (saptawara.includes("Respati") && (pancawara === "Legi" || pancawara === "Wage")) {
+            syncPanel.classList.add('active');
+            syncPanel.style.borderLeftColor = "#aaff00"; // Aksen Hijau Muda
+            syncMsg.innerHTML = "<strong>SINKRONISASI ANGIN (DATA/LOGIKA):</strong> Arus data dan logika algoritmik berjalan sangat mulus. Fokuskan eksekusi pada <em>backtesting Expert Advisor</em>, <em>debugging</em> kode, dan pengujian fitur P2P dompet digital.";
+        } 
+        // ELEMEN BUMI: Material, Konstruksi & Ekonomi Real
+        else if (saptawara.includes("Tumpak") && (pancawara === "Pahing" || pancawara === "Pon")) {
+            syncPanel.classList.add('active');
+            syncPanel.style.borderLeftColor = "#ffaa00"; // Aksen Oranye
+            syncMsg.innerHTML = "<strong>NODE BUMI (MATERIAL/ASET):</strong> Gravitasi material menguat. Eksekusi paling stabil untuk audit aset <em>System Stability Settlement</em>, rekap tabungan emas, pergeseran dana ke sektor riil, atau pembuatan prototipe fisik semen merah.";
+        } 
+        // ELEMEN ETER: Kosmologi, Dimensi & Audit Sejarah
+        else if (saptawara.includes("Sukra") && (pancawara === "Legi" || pancawara === "Kliwon")) {
+            syncPanel.classList.add('active');
+            syncPanel.style.borderLeftColor = "#9900ff"; // Aksen Ungu
+            syncMsg.innerHTML = "<strong>RESONANSI ETER (KESADARAN 5D):</strong> Garis batas antar dimensi menipis. Frekuensi sangat ideal untuk melakukan studi analitis kosmologi (dome/concave), membedah peta teritorial kuno, atau sinkronisasi kesadaran Dasa Pasanta.";
+        } 
+        // STANDBY
+        else {
+            syncMsg.innerHTML = "Frekuensi kosmik standar (Standby). Operasi berjalan normal. Silakan lanjutkan rutinitas operasional OS dan observasi mandiri tanpa dorongan spektrum ekstrem.";
+        }
+    }
+
+    // Run On Load
+    initMonths();
+    
+    // Auto-set ke waktu hari ini (berdasarkan perhitungan real-time)
+    let now = new Date();
+    let anchor = new Date(now.getFullYear(), 2, 21);
+    if (now < anchor) anchor = new Date(now.getFullYear() - 1, 2, 21);
+    
+    let currentSundaYear = anchor.getFullYear() - 2024;
+    let diffDaysToday = Math.round((now.getTime() - anchor.getTime()) / 86400000);
+    
+    document.getElementById('inYear').value = currentSundaYear > 0 && currentSundaYear <= 4 ? currentSundaYear : 1;
+    
+    if (diffDaysToday === 364) {
+        document.getElementById('inMonth').value = 13;
+        toggleDayInput();
+    } else {
+        document.getElementById('inMonth').value = Math.floor(diffDaysToday / 28);
+        document.getElementById('inDay').value = (diffDaysToday % 28) + 1;
+    }
+
+    processTime();
+</script>
+</body>
+</html>

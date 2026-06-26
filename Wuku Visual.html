@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roda Cakra Pawukon - Nuswantara OS</title>
+    <style>
+        :root { 
+            --neon: #00ffcc; 
+            --bg: #050505; 
+            --card: #0d0d0d; 
+            --gold: #d4af37; 
+            --wuku-color: #9900ff;
+            --border: #222;
+        }
+        body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; margin: 0; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; width: 100%; max-width: 700px; }
+        .header h1 { letter-spacing: 5px; margin: 0; color: var(--wuku-color); font-weight: normal; font-size: 1.6rem; }
+        .sub-header { font-size: 0.75rem; letter-spacing: 2px; color: #777; text-transform: uppercase; margin-top: 5px; }
+        
+        .app-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 25px; width: 100%; max-width: 700px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; }
+        
+        /* CAKRA WHEEL CSS */
+        .wheel-container { position: relative; width: 320px; height: 320px; margin: 20px 0; }
+        svg { width: 100%; height: 100%; transform: rotate(-90deg); } /* Start di atas (jam 12) */
+        
+        .progress-ring { stroke: var(--wuku-color); stroke-dasharray: 534; stroke-dashoffset: 534; transition: stroke-dashoffset 1s ease-out; filter: drop-shadow(0 0 8px var(--wuku-color)); }
+        .indicator-dot { fill: var(--neon); transition: 1s ease-out; filter: drop-shadow(0 0 5px var(--neon)); }
+        
+        .wheel-center { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+        .wuku-display { font-size: 2.2rem; font-weight: bold; font-family: monospace; line-height: 1; text-shadow: 0 0 10px rgba(153, 0, 255, 0.4); color: var(--wuku-color); margin-bottom: 5px; }
+        .day-display { font-size: 1rem; color: #fff; letter-spacing: 2px; background: #111; padding: 5px 15px; border-radius: 15px; border: 1px solid #333; }
+        .cycle-display { font-size: 0.7rem; color: #888; margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Input Controls */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; margin-top: 25px; background: #000; padding: 15px; border-radius: 5px; border: 1px solid #1a1a1a; box-sizing: border-box; }
+        .input-group { display: flex; flex-direction: column; }
+        .input-group label { font-size: 0.65rem; color: var(--neon); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        select, input[type="number"] { background: #111; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 4px; font-size: 0.9rem; font-family: monospace; outline: none; }
+        select:focus, input[type="number"]:focus:not(:disabled) { border-color: var(--wuku-color); }
+        
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 10px; }
+        button { background: #1a1a1a; border: 1px solid var(--wuku-color); color: var(--wuku-color); padding: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; border-radius: 4px; transition: 0.2s; }
+        button:hover { background: var(--wuku-color); color: #fff; }
+        .btn-sync { border-color: var(--neon); color: var(--neon); }
+        .btn-sync:hover { background: var(--neon); color: #000; }
+
+        .diagnostics-panel { width: 100%; margin-top: 20px; background: #050505; border: 1px solid #222; border-radius: 5px; padding: 20px; box-sizing: border-box; }
+        .diag-title { font-size: 0.85rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .diag-val { font-size: 1.1rem; color: var(--gold); font-weight: bold; margin-bottom: 15px; }
+        .diag-desc { font-size: 0.85rem; color: #ccc; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>RODA CAKRA PAWUKON</h1>
+        <div class="sub-header">Pemetaan Siklus 210 Hari & Koordinat Wuku</div>
+    </div>
+
+    <div class="app-container">
+        
+        <div class="wheel-container">
+            <svg id="wukuSvg" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="85" fill="none" stroke="#111" stroke-width="6"/>
+                <circle cx="100" cy="100" r="72" fill="none" stroke="#0a0a0a" stroke-width="20"/>
+                
+                <g id="wukuTicks"></g>
+
+                <line x1="100" y1="15" x2="100" y2="5" stroke="#ffaa00" stroke-width="3" />
+                
+                <circle id="progressRing" class="progress-ring" cx="100" cy="100" r="85" fill="none" stroke-width="6" stroke-linecap="round"/>
+                
+                <circle id="indicatorDot" class="indicator-dot" cx="100" cy="15" r="4" />
+            </svg>
+            <div class="wheel-center">
+                <div class="wuku-display" id="wukuDisplay">SINTA</div>
+                <div class="day-display" id="dayDisplay">HARI 1 / 7</div>
+                <div class="cycle-display" id="cycleDisplay">Posisi Roda: 0 / 210</div>
+            </div>
+        </div>
+
+        <div class="input-grid">
+            <div class="input-group">
+                <label>Tahun (Siklus OS)</label>
+                <select id="inYear">
+                    <option value="1">001 - Air (25/26)</option>
+                    <option value="2">002 - Batu (26/27)</option>
+                    <option value="3">003 - Surya (27/28)</option>
+                    <option value="4">004 - Angin (28/29)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Bulan (Sasih)</label>
+                <select id="inMonth" onchange="checkJeda()">
+                    </select>
+            </div>
+            <div class="input-group">
+                <label>Hari (1-28)</label>
+                <input type="number" id="inDay" min="1" max="28" value="1">
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button onclick="calculateManual()">Putar Sesuai Input</button>
+            <button class="btn-sync" onclick="syncToday()">Sinkronisasi Hari Ini</button>
+        </div>
+
+        <div class="diagnostics-panel">
+            <div class="diag-title">Koordinat Kosmik Absolut</div>
+            <div class="diag-val" id="diagVal">-</div>
+            <div class="diag-desc" id="diagDesc">Sistem sedang mereset roda gigi...</div>
+        </div>
+
+    </div>
+
+<script>
+    const months13 = ["Wiwitan", "Gangga", "Bija", "Trubus", "Teja", "Baskara", "Kartika", "Huma", "Phala", "Lumbung", "Reswara", "Purnaka", "Suwung"];
+    const wukus = [
+        "Sinta", "Landep", "Ukir", "Kurantil", "Tolu", "Gumbreg", "Warigalit", "Warigagung", 
+        "Julungwangi", "Sungsang", "Dungulan", "Kuningan", "Langkir", "Medangsia", "Pujut", "Pahang", 
+        "Krulut", "Merakih", "Tambir", "Medangkungan", "Matal", "Uye", "Menail", "Prangbakat", 
+        "Bala", "Ugu", "Wayang", "Kulawu", "Dukut", "Watugunung"
+    ];
+    const pasarans = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const saptawaras = ["Radite (Minggu)", "Soma (Senin)", "Anggara (Selasa)", "Budha (Rabu)", "Respati (Kamis)", "Sukra (Jumat)", "Tumpak (Sabtu)"];
+
+    // Anchor Absolute Start Node: 12 Januari 2025 (Wuku Sinta, Radite Pahing)
+    const absoluteSintaAnchor = new Date(2025, 0, 12); 
+
+    // Init Dropdowns
+    const mSelect = document.getElementById('inMonth');
+    months13.forEach((m, i) => { mSelect.innerHTML += `<option value="${i}">Sasih ${i+1} - ${m}</option>`; });
+    mSelect.innerHTML += `<option value="13" style="color:var(--gold)">Day Out of Time (Jeda Kosmik)</option>`;
+
+    // Draw 30 Wuku Ticks on SVG (Roda Gigi)
+    function initSVG() {
+        const ticksGroup = document.getElementById('wukuTicks');
+        for(let i = 0; i < 30; i++) {
+            // 360 degrees / 30 wukus = 12 degrees per wuku
+            const angle = i * 12; 
+            const rad = (angle - 90) * (Math.PI / 180);
+            const x1 = 100 + 72 * Math.cos(rad);
+            const y1 = 100 + 72 * Math.sin(rad);
+            const x2 = 100 + 82 * Math.cos(rad);
+            const y2 = 100 + 82 * Math.sin(rad);
+            
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", "#222");
+            line.setAttribute("stroke-width", "2");
+            ticksGroup.appendChild(line);
+        }
+    }
+
+    function checkJeda() {
+        const mIdx = parseInt(document.getElementById('inMonth').value);
+        const dInput = document.getElementById('inDay');
+        if(mIdx === 13) { dInput.value = 1; dInput.disabled = true; dInput.style.opacity = 0.3; } 
+        else { dInput.disabled = false; dInput.style.opacity = 1; }
+    }
+
+    function executeWheel(targetDate) {
+        // Reset waktu ke tengah malam agar presisi
+        targetDate.setHours(0,0,0,0);
+        
+        const diffTime = targetDate.getTime() - absoluteSintaAnchor.getTime();
+        const diffDays = Math.round(diffTime / 86400000);
+
+        // Putaran hari dalam roda 210
+        let cyclePos = diffDays % 210;
+        if (cyclePos < 0) cyclePos += 210;
+
+        // Tentukan Index Wuku (0-29) dan Hari di dalam Wuku (1-7)
+        let wukuIndex = Math.floor(cyclePos / 7);
+        let dayInWuku = (cyclePos % 7) + 1;
+        
+        let wukuName = wukus[wukuIndex];
+        let saptawara = saptawaras[cyclePos % 7];
+        let pancawara = pasarans[(1 + (cyclePos % 5)) % 5]; // Start node adalah Pahing (Index 1)
+
+        // ==========================================
+        // UPDATE VISUAL RODA GIGI
+        // ==========================================
+        const totalCircumference = 534; // 2 * PI * r(85)
+        const progressOffset = totalCircumference - ((cyclePos + 1) / 210) * totalCircumference;
+        document.getElementById('progressRing').style.strokeDashoffset = progressOffset;
+
+        // Putar Jarum Titik
+        const indicatorAngle = ((cyclePos + 1) / 210) * 360;
+        // Transform rotate berputar dari center (100, 100)
+        document.getElementById('indicatorDot').setAttribute('transform', `rotate(${indicatorAngle} 100 100)`);
+
+        // Update Text Center
+        document.getElementById('wukuDisplay').innerText = wukuName;
+        document.getElementById('dayDisplay').innerText = `HARI ${dayInWuku} / 7`;
+        document.getElementById('cycleDisplay').innerText = `Titik Roda: ${cyclePos + 1} / 210`;
+
+        // Update Diagnostics
+        document.getElementById('diagVal').innerText = `Wuku ${wukuIndex + 1} (${wukuName}) | ${saptawara.split(' ')[0]} ${pancawara}`;
+        
+        let logicText = `Saat ini roda berada pada ruas ke-<strong>${wukuIndex + 1}</strong> dari 30 gigi Wuku, menempati hari ke-<strong>${dayInWuku}</strong> di dalam ruas tersebut. Titik kordinat absolut mencatat hari sebagai ${saptawara} beresonansi dengan pasaran ${pancawara}. `;
+        
+        // Peringatan Transisi (Tumpak -> Radite)
+        if (dayInWuku === 7) {
+            logicText += `<br><br><span style="color:var(--alert);">HARI TERAKHIR (TUMPAK):</span> Siklus wuku <em>${wukuName}</em> akan selesai malam ini. Persiapkan reset gelombang untuk memasuki ruas wuku baru besok hari.`;
+        } else if (dayInWuku === 1) {
+            logicText += `<br><br><span style="color:var(--neon);">PORTAL TERBUKA (RADITE):</span> Hari pertama dari Wuku <em>${wukuName}</em>. Roda gigi baru saja berpindah. Fokus pada sinkronisasi niat (Iman=Ukuran) untuk seminggu ke depan.`;
+        }
+
+        document.getElementById('diagDesc').innerHTML = logicText;
+    }
+
+    function calculateManual() {
+        const sYear = parseInt(document.getElementById('inYear').value);
+        const sMonthIdx = parseInt(document.getElementById('inMonth').value);
+        let sDay = parseInt(document.getElementById('inDay').value);
+        if (sDay < 1) sDay = 1; if (sDay > 28) sDay = 28;
+
+        const startYearGregorian = 2024 + sYear;
+        const anchorDate = new Date(startYearGregorian, 2, 21);
+        let daysToAdd = (sMonthIdx === 13) ? 364 : (sMonthIdx * 28) + (sDay - 1);
+        const targetDate = new Date(anchorDate.getTime() + (daysToAdd * 86400000));
+        
+        executeWheel(targetDate);
+    }
+
+    function syncToday() {
+        const today = new Date();
+        executeWheel(today);
+        
+        // Coba auto-update input form (Estimasi Kalender Sunda OS)
+        let anchor = new Date(today.getFullYear(), 2, 21);
+        if (today < anchor) anchor = new Date(today.getFullYear() - 1, 2, 21);
+        let sundaYear = anchor.getFullYear() - 2024;
+        let diffDaysToday = Math.round((today.getTime() - anchor.getTime()) / 86400000);
+        
+        if (sundaYear > 0 && sundaYear <= 4) document.getElementById('inYear').value = sundaYear;
+        if (diffDaysToday === 364) {
+            document.getElementById('inMonth').value = 13;
+            checkJeda();
+        } else {
+            document.getElementById('inMonth').value = Math.floor(diffDaysToday / 28);
+            document.getElementById('inDay').value = (diffDaysToday % 28) + 1;
+            document.getElementById('inDay').disabled = false;
+            document.getElementById('inDay').style.opacity = 1;
+        }
+    }
+
+    // Initialize the wheel and sync to today instantly
+    initSVG();
+    syncToday();
+</script>
+</body>
+</html>
